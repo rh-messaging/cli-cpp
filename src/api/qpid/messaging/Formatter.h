@@ -17,8 +17,9 @@
  * */
 
 
-struct Formatter
-{
+class Formatter {
+
+public:
 /* ** Printer functions 
  * directly prints messages onto std::cout
  * */
@@ -35,6 +36,13 @@ void printMessageAsDict(qpid::messaging::Message&);
 
 void printStatistics(qpid::types::Variant::Map&);
 
+/* format Variant into proper formatted string using above formatting methods */
+std::string formatVariant(const qpid::types::Variant);
+
+/* recursive python map formatter {'key': 'value' } */
+std::string formatMap(const qpid::types::Variant::Map&);
+
+private:
 /* ** Formaters functions 
  * used for unified formatting of certain datatypes
  * */
@@ -56,8 +64,7 @@ std::string formatInt(unsigned long long int);
 std::string formatFloat(float in_data);
 
 
-/* recursive python map formatter {'key': 'value' } */
-std::string formatMap(const qpid::types::Variant::Map&);
+
 /* list variant into python dict */
 std::string formatList(const qpid::types::Variant::List&);
 
@@ -73,8 +80,7 @@ std::string formatContentSize(qpid::messaging::Message&);
 std::string formatBogus(const qpid::types::Variant&);
 
 
-/* format Variant into proper formatted string using above formatting methods */
-std::string formatVariant(const qpid::types::Variant);
+
 
 /* Support message content related functions */
 bool isMapMsg(qpid::messaging::Message& msg);
