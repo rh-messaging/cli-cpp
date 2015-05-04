@@ -3,7 +3,7 @@ PROJECT(dtests-proton-cpp)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
-set(QPID_MESSAGING_DIR /usr/ CACHE String "QPID Messaging Directory")
+set(QPID_MESSAGING_DIR /usr CACHE String "QPID Messaging Directory")
 set(QPID_INCLUDE_DIR ${QPID_MESSAGING_DIR}/include/qpid CACHE String "QPID Messaging Include Directory")
 set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib64 CACHE String "QPID Messaging Library Directory")
 
