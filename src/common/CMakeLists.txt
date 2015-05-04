@@ -19,6 +19,7 @@ add_library(dtests-cpp-common
 	options/OptionsHelper.cpp
 
 	Client.cpp
+	Utils.cpp
 )
 
 target_link_libraries(dtests-cpp-common
@@ -46,21 +47,4 @@ endif(COMMAND cmake_policy)
 target_link_libraries(dtests-cpp-common-options
 	dtests-cpp-common
 	dtests-cpp-contrib
-)
-
-
-# This is for the legacy code
-add_library(dtests-cpp-legacy
-
-	Utils.cpp
-	options/OptionParser.cpp
-)
-
-target_link_libraries(dtests-cpp-legacy
-	qpidmessaging
-)
-
-target_include_directories(
-	dtests-cpp-legacy PUBLIC
-	/usr/include/qpid
 )
