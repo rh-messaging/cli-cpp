@@ -3,15 +3,18 @@ PROJECT(dtests-proton-cpp)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
-set(QPID_MESSAGING_DIR /usr CACHE String "QPID Messaging Directory")
+set(QPID_MESSAGING_DIR /usr/ CACHE String "QPID Messaging Directory")
+set(QPID_INCLUDE_DIR ${QPID_MESSAGING_DIR}/include/qpid CACHE String "QPID Messaging Include Directory")
+set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib64 CACHE String "QPID Messaging Library Directory")
 
 include_directories(
-	${QPID_MESSAGING_DIR}/include
+	${QPID_INCLUDE_DIR}
+	
 	common
 )
 
 link_directories(
-	${QPID_MESSAGING_DIR}/lib64
+	${QPID_LIBRARY_DIR}/lib64
 )
 
 # TODO: move this to a common directory
@@ -57,6 +60,16 @@ set(
 	# qpid-send
 )
 
+# This is for the legacy code
+add_library(dtests-cpp-legacy
+
+	common/OptionParser.cpp
+)
+
+target_link_libraries(dtests-cpp-legacy
+	qpidmessaging
+	dtests-cpp-common
+)
 
 foreach(client ${qpid_messaging_clients})
 
