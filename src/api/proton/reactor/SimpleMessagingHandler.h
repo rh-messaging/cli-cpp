@@ -10,6 +10,7 @@
 
 #include <proton/cpp/Container.h>
 #include <proton/cpp/Event.h>
+#include <proton/cpp/MessagingHandler.h>
 #include <proton/cpp/MessagingEvent.h>
 
 #include <proton/url.h>
