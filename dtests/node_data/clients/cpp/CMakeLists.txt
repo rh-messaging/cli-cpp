@@ -18,15 +18,15 @@ include_directories(
 )
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_C_FLAGS "-Wall -Wshadow " CACHE STRING 
+	set(CMAKE_C_FLAGS "-Wall -Wshadow " CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
-	set(CMAKE_CXX_FLAGS "-Wall -O2 -g -pipe" CACHE STRING 
+	set(CMAKE_CXX_FLAGS "-Wall -O2 -g -pipe" CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
-	#set(CMAKE_CXX_FLAGS "-Wall -Weffc++ -Wshadow -pipe" CACHE STRING 
+	#set(CMAKE_CXX_FLAGS "-Wall -Weffc++ -Wshadow -pipe" CACHE STRING
 	#	"Flags used by the compiler during all build types." FORCE
 	#)
 endif (CMAKE_COMPILER_IS_GNUCXX)
@@ -39,3 +39,4 @@ add_custom_target(distclean
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)
 add_subdirectory(src/api/proton)
+add_subdirectory(src/api/qpid)

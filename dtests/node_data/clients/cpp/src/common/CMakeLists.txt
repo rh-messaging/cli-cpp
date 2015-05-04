@@ -12,27 +12,27 @@ include_directories(
 
 
 add_library(dtests-cpp-common
-	
+
 	exceptions/BaseException.cpp
 	exceptions/IOException.cpp
 	options/BaseOptionsParser.cpp
 	options/OptionsHelper.cpp
-	
+
 	Client.cpp
 )
 
 target_link_libraries(dtests-cpp-common
-	qpid-proton 
-	boost_log 
+	qpid-proton
+	boost_log
 	boost_log_setup
-	boost_filesystem 
+	boost_filesystem
 	boost_system
 	pthread
-)	
+)
 
 cmake_policy(SET CMP0003 OLD)
 add_library(dtests-cpp-common-options
-	
+
 	options/modern/ModernOptionsParser.cpp
 	options/modern/SenderOptionsParser.cpp
 	options/modern/ReceiverOptionsParser.cpp
@@ -46,4 +46,21 @@ endif(COMMAND cmake_policy)
 target_link_libraries(dtests-cpp-common-options
 	dtests-cpp-common
 	dtests-cpp-contrib
+)
+
+
+# This is for the legacy code
+add_library(dtests-cpp-legacy
+
+	Utils.cpp
+	options/OptionParser.cpp
+)
+
+target_link_libraries(dtests-cpp-legacy
+	qpidmessaging
+)
+
+target_include_directories(
+	dtests-cpp-legacy PUBLIC
+	/usr/include/qpid
 )
