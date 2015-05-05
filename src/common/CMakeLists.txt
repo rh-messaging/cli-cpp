@@ -20,6 +20,7 @@ add_library(dtests-cpp-common
 
 	Client.cpp
 	Utils.cpp
+        ContentType.cpp
 )
 
 target_link_libraries(dtests-cpp-common
