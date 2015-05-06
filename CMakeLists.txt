@@ -38,5 +38,5 @@ add_custom_target(distclean
 
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)
-add_subdirectory(src/api/proton)
+# add_subdirectory(src/api/proton)
 add_subdirectory(src/api/qpid)
