@@ -59,7 +59,7 @@ struct Options : OptionParser
           
           close_sleep(0),
           
-          action(""),
+          action("ack"),
 
           tx_size(0),
           tx_action("commit"),
@@ -174,7 +174,7 @@ int main(int argc, char** argv)
                     session.reject(message);
                 else if (options.action == "release")
                     session.release(message);
-                else if (options.action != "noack")
+                else if (options.action.find("ack") == 0)
                     session.acknowledge(message);
 
                 // define message rate --count + --duration
