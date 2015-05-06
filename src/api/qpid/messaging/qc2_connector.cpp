@@ -17,6 +17,7 @@
 #include <qpid/messaging/Session.h>
 #include <qpid/types/Exception.h>
 
+#include "ObjectCloser.h"
 #include "Utils.h"
 
 using namespace std;
@@ -77,61 +78,6 @@ void hold_mode_exit(int signum) {
   * 1 - General Error
   * 2 - Bad Usage Error
   */
-
-
-/** Simple string formatter.
-  * string str_fmt( const string& in_str, int in_indx )
-  *
-  *   const string& in_str   - input string
-  *   int in_indx            - integer index
-  */
-string str_fmt( const string& in_str, int in_indx )
-{
-  string str_int(in_str);
-
-  if ( !in_str.empty() )
-  {
-    // string not empty
-    boost::regex regex("%[ 0-9]*[ds]");  // boost regexp
-
-    if (boost::regex_search(in_str, regex))
-    {
-      // formating *printf substring found
-      ostringstream stm;
-      stm << boost::format( in_str ) % in_indx;
-
-      str_int = stm.str();
-    }
-  }
-
-  // return the string value
-  return(str_int);
-}
-
-/** Closes all objects in given list/vector
-  * void close_objects( vector<T>& in_list )
-  *
-  * vector<T>& in_list vector of objects
-  */
-template <class T>
-int close_objects(vector<T>& in_list) {
-  int int_ret = 0;
-
-  for (unsigned int indx = 0; indx < in_list.size(); indx++) {
-    if (in_list.at(indx) != NULL) {
-      try {
-        in_list.at(indx).close();
-      }
-      catch(const qpid::types::Exception& error) {
-        cerr << error.what() << endl;
-        int_ret |= 1;
-      }
-    }
-  }
-
-  return(int_ret);
-}
-
 
 
 int main (int argc, char ** argv) {
