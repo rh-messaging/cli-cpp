@@ -10,10 +10,9 @@ include_directories(
 	common/options/modern
 )
 
-
-add_library(dtests-cpp-common
-
-	exceptions/BaseException.cpp
+if (ENABLE_MODERN) 
+    set(COMMON_MODERN_SRC
+        exceptions/BaseException.cpp
 	exceptions/IOException.cpp
 	options/BaseOptionsParser.cpp
 	options/OptionsHelper.cpp
@@ -22,15 +21,28 @@ add_library(dtests-cpp-common
         formatter/AbstractFormatter.cpp
 
 	Client.cpp
-	Utils.cpp
-        ContentType.cpp
+	ContentType.cpp
         MessageHeader.cpp
+    )
+        
+endif (ENABLE_MODERN)
+
+add_library(dtests-cpp-common
+        ${COMMON_MODERN_SRC}
+
+	Utils.cpp
 )
+
+if (ENABLE_BOOST_LOG) 
+    set(BOOST_LOG_LIBRARIES
+        boost_log
+	boost_log_setup
+    )
+endif(ENABLE_BOOST_LOG)
 
 target_link_libraries(dtests-cpp-common
 	qpid-proton
-	boost_log
-	boost_log_setup
+        ${BOOST_LOG_LIBRARIES}
 	boost_filesystem
 	boost_system
 	pthread
