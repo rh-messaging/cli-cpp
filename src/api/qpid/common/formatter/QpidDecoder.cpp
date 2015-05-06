@@ -102,8 +102,10 @@ void QpidDecoder::decodeProperties(Writer *writer) const {
     
     Variant::Map properties = message.getProperties();
     
-    decodeValue(writer, properties);
-    writer->endProperties();
+    if (properties.size() > 0) {
+        decodeValue(writer, properties);
+        writer->endProperties();
+    }
 }
 
 void QpidDecoder::decodeContent(Writer *writer) const {
@@ -129,7 +131,7 @@ void QpidDecoder::decodeValue(Writer *writer, const Variant &in_data) const {
   } else if (varType == VAR_VOID) {
     decodeValue(writer, string("None"));
   } else if (varType == VAR_MAP) {
-      decodeValue(writer, in_data.asMap());
+      super::decodeValue(writer, static_cast<std::map<string, Variant> >(in_data.asMap()));
   } else if (varType == VAR_LIST) {
       decodeValue(writer, in_data.asList());
   }

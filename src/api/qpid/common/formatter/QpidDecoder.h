@@ -54,7 +54,7 @@ private:
     void write(Writer *writer, HeaderProperty property, BooleanReader reader) const;
     void write(Writer *writer, HeaderProperty property, ShortIntReader reader) const;
     
-    void decodeValue(Writer *writer, const Variant &variant) const;
+    virtual void decodeValue(Writer *writer, const Variant &variant) const;
 };
 
 } } }
