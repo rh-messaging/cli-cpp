@@ -27,6 +27,12 @@ if (ENABLE_MODERN)
         
 endif (ENABLE_MODERN)
 
+if (ENABLE_PROTON)
+    set(COMMON_PROTON_LIBRARIES
+        qpid-proton
+    )
+endif(ENABLE_PROTON)
+
 add_library(dtests-cpp-common
         ${COMMON_MODERN_SRC}
 
@@ -41,7 +47,7 @@ if (ENABLE_BOOST_LOG)
 endif(ENABLE_BOOST_LOG)
 
 target_link_libraries(dtests-cpp-common
-	qpid-proton
+	${COMMON_PROTON_LIBRARIES}
         ${BOOST_LOG_LIBRARIES}
 	boost_filesystem
 	boost_system
