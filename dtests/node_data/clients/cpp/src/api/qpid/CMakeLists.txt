@@ -9,7 +9,7 @@ set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib64 CACHE String "QPID Messaging Li
 
 include_directories(
 	${QPID_INCLUDE_DIR}
-	
+	.
 	common
 )
 
