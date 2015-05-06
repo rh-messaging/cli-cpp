@@ -1,5 +1,8 @@
 // aac0_receiver client
 
+// TODO: --log-lib wiring
+// TODO: --duration-mode=before-receive
+
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Receiver.h>
@@ -91,7 +94,6 @@ struct Options : OptionParser
 
         add("log-msgs", log_msgs, "message[s] reporting style (dict|body|upstream|none)");
         add("log-stats", log_stats, "report various statistic/debug information");
-        // TODO: --log-lib wiring
         add("log-lib", log_lib, "client logging library level");
     }
 
