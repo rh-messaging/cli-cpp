@@ -61,12 +61,12 @@ string AbstractDecoder::decodeValue(const string &in_data) const {
     return string("None");
   }
   
-  string int_result = string("'");
+  // string int_result = string("'");
   
-  int_result.append(quoteStringEscape(in_data));
-  int_result.append("'");
+  // int_result.append(quoteStringEscape(in_data));
+  // int_result.append("'");
 
-  return int_result;
+  return in_data;
 }
 
 void AbstractDecoder::decodeValue(Writer *writer, const string &in_data) const {

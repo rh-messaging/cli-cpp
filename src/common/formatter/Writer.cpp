@@ -7,10 +7,9 @@
 
 #include "Writer.h"
 
-Writer::Writer() {
-}
+const char *Writer::BOGUS_FORMAT_MESSAGE = "!!!FORMATTING ERROR, BUG!!!";
 
-Writer::Writer(const Writer& orig) {
+Writer::Writer() {
 }
 
 Writer::~Writer() {

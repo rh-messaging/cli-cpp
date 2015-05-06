@@ -16,8 +16,9 @@ using std::string;
 
 class Writer {
 public:
+    static const char *BOGUS_FORMAT_MESSAGE;
+    
     Writer();
-    Writer(const Writer& orig);
     virtual ~Writer();
     
     virtual void startHeader() = 0;
@@ -41,7 +42,7 @@ public:
     virtual void writeBogus(const string &str) = 0;
     
 private:
-
+    
 };
 
 #endif	/* WRITER_H */
