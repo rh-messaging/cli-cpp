@@ -10,6 +10,9 @@
 #include <unistd.h>
 #endif
 
+#include <boost/regex.hpp>
+#include <boost/format.hpp>
+
 #include "Utils.h"
 
 
@@ -93,6 +96,36 @@ void set_stdx_unbuffered()
   std::cout.setf(std::ios::unitbuf);
   std::cerr.setf(std::ios::unitbuf);
 }
+
+/** Simple string formatter.
+  * string str_fmt( const string& in_str, int in_indx )
+  *
+  *   const string& in_str   - input string
+  *   int in_indx            - integer index
+  */
+std::string str_fmt( const std::string& in_str, int in_indx )
+{
+  std::string str_int(in_str);
+
+  if ( !in_str.empty() )
+  {
+    // string not empty
+    boost::regex regex("%[ 0-9]*[ds]");  // boost regexp
+
+    if (boost::regex_search(in_str, regex))
+    {
+      // formating *printf substring found
+      std::ostringstream stm;
+      stm << boost::format( in_str ) % in_indx;
+
+      str_int = stm.str();
+    }
+  }
+
+  // return the string value
+  return(str_int);
+}
+
 
 // --------------------------------------------------------------------------
 // timestamping methods
