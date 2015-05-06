@@ -22,6 +22,9 @@ cmake_policy(SET CMP0003 OLD)
 add_library(
 	dtests-qpid-messaging-common
 
+        common/formatter/QpidDecoder.cpp
+
+        # TODO: make reusable
 	messaging/BrokerAgent.cpp
 	messaging/Formatter.cpp
 )
