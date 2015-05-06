@@ -33,6 +33,17 @@
 #include "Formatter.h"
 #include "Utils.h"
 
+#ifdef ENABLE_MODERN
+#include "formatter/AbstractFormatter.h"
+#include "formatter/AbstractDecoder.h"
+#include "formatter/Writer.h"
+#include "formatter/StringWriter.h"
+#include "formatter/QpidDecoder.h"
+
+using dtests::qpid::messaging::QpidDecoder;
+
+#endif // ENABLE_MODERN
+
 using namespace qpid::messaging;
 using namespace qpid::types;
 
@@ -123,7 +134,15 @@ int main(int argc, char** argv)
     double *ptsdata = NULL;
 
     Options options;
+#ifdef ENABLE_MODERN
+#warning Using unstable code
+    AbstractFormatter formatter = AbstractFormatter();
+    
+    std::ostringstream stream;
+    StringWriter writer = StringWriter(&stream);
+#else
     Formatter formatter;
+#endif
     if (options.parse(argc, argv) && options.checkAddress()) {
 
         // init timestamping
@@ -170,9 +189,31 @@ int main(int argc, char** argv)
                 if (options.logMsgs == "body") {
                     std::cout << message.getContent() << std::endl;
                 } else if (options.logMsgs == "dict") {
+#ifdef ENABLE_MODERN
+                    QpidDecoder decoder = QpidDecoder(message); 
+                                        
+                    formatter.printMessage(&decoder, &writer);
+                    
+                    writer.endLine();
+                    std::cout << writer.toString();
+                    
+                    
+#else
                     formatter.printMessageAsDict(message);
+#endif
+      
                 } else if (options.logMsgs == "upstream") {
+#ifdef ENABLE_MODERN
+                    QpidDecoder decoder = QpidDecoder(message); 
+                                        
+                    formatter.printMessage(&decoder, &writer);
+                    
+                    writer.endLine();
+                    std::cout << writer.toString();
+                    
+#else
                     formatter.printMessage(message, options.verbose);
+#endif
                 }
 
                 // define message rate --count + --duration

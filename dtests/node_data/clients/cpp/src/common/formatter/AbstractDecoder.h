@@ -43,11 +43,11 @@ public:
     virtual void decodeContent(Writer *writer) const = 0;
     
 protected:
-    string decodeValue(bool) const;
-    void decodeValue(Writer *writer, bool) const;
+    virtual string decodeValue(bool) const;
+    virtual void decodeValue(Writer *writer, bool) const;
     
-    string decodeValue(const string &) const;
-    void decodeValue(Writer *writer, const string &) const;
+    virtual string decodeValue(const string &) const;
+    virtual void decodeValue(Writer *writer, const string &) const;
     
     template <typename T> 
     string decodeValue(T number) const {
@@ -59,8 +59,8 @@ protected:
     }
     
     
-    string decodeValue(float number) const;
-    void decodeValue(Writer *writer, float number) const;
+    virtual string decodeValue(float number) const;
+    virtual void decodeValue(Writer *writer, float number) const;
     
 
     template <typename T, typename Y>
@@ -71,7 +71,7 @@ protected:
                 iterator != valuesMap.end(); iterator++) 
         {
             writer->write(iterator->first);
-            decodeValue(writer, iterator->second);
+            decodeValue(writer, static_cast<T>(iterator->second));
            
         }
         writer->endMap();
@@ -85,7 +85,7 @@ protected:
                 iterator != inputList.end(); 
                 iterator++)
         {
-             decodeValue(writer, *iterator);
+             decodeValue(writer, static_cast<T>(*iterator));
         }
         writer->endList();
     }
