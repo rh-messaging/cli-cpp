@@ -36,7 +36,30 @@ add_custom_target(distclean
    COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
 )
 
+set(ENABLE_PROTON OFF CACHE BOOL "Enable proton clients")
+set(ENABLE_QPID ON CACHE BOOL "Enable qpid clients")
+set(ENABLE_BOOST_LOG ON CACHE BOOL "Enable boost log usage")
+set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
+
+if (ENABLE_MODERN) 
+    add_definitions(-DENABLE_MODERN) 
+endif(ENABLE_MODERN)
+
+if (ENABLE_BOOST_LOG) 
+    add_definitions(-DENABLE_BOOST_LOG) 
+endif(ENABLE_BOOST_LOG)
+
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)
-# add_subdirectory(src/api/proton)
-add_subdirectory(src/api/qpid)
+
+if (ENABLE_PROTON)
+    add_definitions(-DENABLE_PROTON) 
+    add_subdirectory(src/api/proton)
+endif(ENABLE_PROTON)
+
+
+if (ENABLE_QPID) 
+    add_definitions(-DENABLE_QPID)    
+    add_subdirectory(src/api/qpid)
+endif(ENABLE_QPID)
+ 

@@ -3,6 +3,7 @@ PROJECT(dtests-proton-cpp)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
+
 set(PROTON_DIR /usr CACHE String "Proton directory")
 
 include_directories(
