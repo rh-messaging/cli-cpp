@@ -17,10 +17,14 @@ add_library(dtests-cpp-common
 	exceptions/IOException.cpp
 	options/BaseOptionsParser.cpp
 	options/OptionsHelper.cpp
+        formatter/Writer.cpp
+        formatter/AbstractDecoder.cpp
+        formatter/AbstractFormatter.cpp
 
 	Client.cpp
 	Utils.cpp
         ContentType.cpp
+        MessageHeader.cpp
 )
 
 target_link_libraries(dtests-cpp-common
