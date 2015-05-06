@@ -2,6 +2,7 @@
 
 // TODO: --log-lib wiring
 // TODO: --duration-mode=before-receive
+// TODO: --duration <float>
 
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
