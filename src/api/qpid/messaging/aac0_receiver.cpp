@@ -7,6 +7,7 @@
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Receiver.h>
+#include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
 #include <qpid/messaging/Address.h>
 
@@ -33,8 +34,12 @@ struct Options : OptionParser
     std::string duration_mode;
     
     int close_sleep;
+
+    bool process_replyto;
     
     std::string action;
+    std::string action_le;
+    int action_size;
 
     int tx_size;
     std::string tx_action;
@@ -59,8 +64,12 @@ struct Options : OptionParser
           duration_mode("after-receive"),
           
           close_sleep(0),
+
+          process_replyto(false),
           
           action("ack"),
+          action_le(""),
+          action_size(1),
 
           tx_size(0),
           tx_action("commit"),
@@ -84,7 +93,11 @@ struct Options : OptionParser
         
         add("close-sleep,s", close_sleep, "sleep before sender/receiver/session/connection.close()");
         
+        add("process-reply-to", process_replyto, "send the message with replyto header available");
+
         add("action", action, "action on acquired message");
+        add("action-loopend", action_le, "action on acquired message at the end of processing loop");
+        add("action-size", action_size, "frequency of actions on messages (every N message[s])");
 
         add("tx-size", tx_size, "transactional mode: batch message count size");
         add("tx-action", tx_action, "transactional action at the end of tx batch");
@@ -135,6 +148,7 @@ int main(int argc, char** argv)
                 session = connection.createSession();
             ts_snap_store(ptsdata, 'D', options.log_stats);
             Receiver receiver = session.createReceiver(options.address);
+            Sender sender = NULL;
             // set receiver's capacity (if defined as > -1)
             if (options.capacity > -1)
                 receiver.setCapacity(options.capacity);
@@ -171,12 +185,20 @@ int main(int argc, char** argv)
                 if( (options.duration > 0) && (options.duration_mode == "after-receive") )
                     sleep4next(ts, options.count, options.duration, i+1);
 
-                if (options.action == "reject")
+                // action on acquired message[s]
+                if (options.action.find("ack") == 0) {
+                    if (options.action_size == 1) {
+                        // actions on every message
+                        session.acknowledge(message);
+                    } else {
+                        // actions on message block
+                        if( (((i+1) % abs(options.action_size)) == 0) )
+                            session.acknowledgeUpTo(message);
+                    }
+                } else if (options.action == "reject")
                     session.reject(message);
                 else if (options.action == "release")
                     session.release(message);
-                else if (options.action.find("ack") == 0)
-                    session.acknowledge(message);
 
                 // define message rate --count + --duration
                 if( (options.duration > 0) && (options.duration_mode == "after-receive-action") )
@@ -203,6 +225,12 @@ int main(int argc, char** argv)
                 if( (options.duration > 0) && (options.duration_mode == "after-receive-action-tx-action") )
                     sleep4next(ts, options.count, options.duration, i+1);
 
+                // process reply-to (if enabled)
+                if( (options.process_replyto) && (!message.getReplyTo().getName().empty()) ) {
+                    sender = session.createSender(message.getReplyTo().getName());
+                    sender.send(message);
+                }
+
                 // get message size
                 if (i == 0)
                     message_size = message.getContent().size();
@@ -211,6 +239,15 @@ int main(int argc, char** argv)
                     break;
             }
             ts_snap_store(ptsdata, 'F', options.log_stats);
+
+            // end of message stream, action-eldloop if enabled
+            // Note: at this point we do not have a message anymore
+            //       and performed action is done on session without message instance
+            //       qpid::messaging allows here just acknowledge
+            if (!options.action_le.empty()) {
+                if (options.action_le.find("ack") == 0)
+                    session.acknowledge();
+            }
 
             // end of message stream, tx-loopend-action if enabled
             if (tx_batch_flag == true) {
