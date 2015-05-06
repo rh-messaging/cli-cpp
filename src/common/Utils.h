@@ -3,6 +3,7 @@
 
 #include <string>
 
+
 // get_time ()
 // get current time downto miliseconds (as double) since epoch
 // inspired by python's time.time()
@@ -34,6 +35,15 @@ std::string get_env(std::string in_var);
 // sets stdout/err as non-buffered operations
 // --------------------------------------------------------------------------
 void set_stdx_unbuffered();
+
+
+/** Simple string formatter.
+  * string str_fmt( const string& in_str, int in_indx )
+  *
+  *   const string& in_str   - input string
+  *   int in_indx            - integer index
+  */
+std::string str_fmt( const std::string& in_str, int in_indx );
 
 // ---------------------------------------------------------------------------
 // timestamping methods
