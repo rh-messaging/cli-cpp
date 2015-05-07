@@ -14,7 +14,7 @@ using dtests::common::log::info;
 using dtests::common::log::debug;
 
 /*
- * 
+ * This test checks the ability to log a single message to a file
  */
 int main(int argc, char** argv) {
 	const char *logFileName = "ut_logger_test.log";
@@ -31,7 +31,6 @@ int main(int argc, char** argv) {
 	Logger::initLogger(logConfiguration);
 	
 	Logger logger = Logger(debug);
-	
 	
 	logger << "This is a test"; 
 	
