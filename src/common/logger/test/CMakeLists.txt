@@ -10,6 +10,6 @@ add_executable(ut_logger_test
 target_link_libraries(ut_logger_test
            dtests-cpp-common)
 
-add_test(NAME PrinterTest 
+add_test(NAME Logger 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
     COMMAND ut_logger_test)
