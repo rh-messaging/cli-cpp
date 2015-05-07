@@ -7,7 +7,7 @@
 
 #include "Logger.h"
 
-using dtests::common::log::debug;
+using namespace dtests::common::log;
 
 Logger::LogConfiguration Logger::logConfiguration = { 
 	.minimumLevel = debug,
@@ -22,6 +22,9 @@ Logger::Logger(LogLevel level)
 }
 
 Logger::~Logger() {
+	if (level >= logConfiguration.minimumLevel) { 
+		printer.print('\n');
+	}
 }
 
 void Logger::initLogger(LogConfiguration logConfiguration) {
@@ -114,5 +117,36 @@ Logger &Logger::operator<<(const char *str) {
 	}
 	
 	return *this;
+}
+
+
+Logger Logger::operator()(LogLevel logLevel) {
+	Logger ret = Logger(logLevel);
+	
+	switch (logLevel) {
+		case trace: {
+			ret << "[trace]: ";
+			break;
+		}
+		case debug: {
+			ret << "[debug]: ";
+			break;
+		}
+
+		case info: {
+			ret << "[info ]: ";
+			break;
+		}
+		case warning: {
+			ret << "[warn ]: ";
+			break;
+		}
+		case error: {
+			ret << "[error]: ";
+			break;
+		}
+	}
+	
+	return ret;
 }
 
