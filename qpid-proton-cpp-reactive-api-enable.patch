@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae5f7cc..edeb674 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,7 @@ set (BINDINGS_DIR ${LIB_INSTALL_DIR}/proton/bindings)
+ 
+ set (SYSINSTALL_BINDINGS OFF CACHE BOOL "If SYSINSTALL_BINDINGS is OFF then proton bindings will be installed underneath ${BINDINGS_DIR} and each user will need to modify their interpreter configuration to load the appropriate binding. If SYSINSTALL_BINDINGS is ON, then each language interpreter will be queried for the appropriate directory and proton bindings will be installed and available system wide with no additional per user configuration.")
+ 
+-set (BINDING_LANGS PERL PHP PYTHON RUBY)
++set (BINDING_LANGS PERL PHP PYTHON RUBY CPP)
+ 
+ foreach (LANG ${BINDING_LANGS})
+   set (SYSINSTALL_${LANG} OFF CACHE BOOL "Install ${LANG} bindings into interpreter specified location.")
+diff --git a/proton-c/bindings/CMakeLists.txt b/proton-c/bindings/CMakeLists.txt
+index 0c64be3..ec97a9a 100644
+--- a/proton-c/bindings/CMakeLists.txt
++++ b/proton-c/bindings/CMakeLists.txt
+@@ -109,7 +109,7 @@ if (EMSCRIPTEN_FOUND)
+ endif (EMSCRIPTEN_FOUND)
+ 
+ # Don't build cpp by default until more complete
+-set (DEFAULT_CPP OFF)
++set (DEFAULT_CPP ON)
+ 
+ # Shouldn't need to modify below here when adding new language binding
+ foreach(BINDING ${BINDINGS})

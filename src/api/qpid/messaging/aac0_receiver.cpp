@@ -11,6 +11,7 @@
 #include <qpid/messaging/Session.h>
 #include <qpid/messaging/Address.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <typeinfo>
@@ -73,7 +74,7 @@ struct Options : OptionParser
 
           tx_size(0),
           tx_action("commit"),
-          tx_le_action("commit"),
+          tx_le_action("None"),
           
           sync_mode("none"),
           capacity(-1),
@@ -116,6 +117,14 @@ struct Options : OptionParser
         if (timeout == -1) return Duration::FOREVER;
         else return timeout*Duration::SECOND;
     }
+
+    void transformValues()
+    {
+         std::transform(tx_le_action.begin(), tx_le_action.end(), tx_le_action.begin(), ::tolower);
+         std::transform(tx_action.begin(), tx_action.end(), tx_action.begin(), ::tolower);
+         if (tx_size < 0)
+             tx_size = -tx_size;
+    }
 };
 
 
@@ -135,14 +144,14 @@ int main(int argc, char** argv)
 
         // init timestamping
         ptsdata = ts_init((double *) &tsdata, options.log_stats);
-
+        options.transformValues();
         ts_snap_store(ptsdata, 'B', options.log_stats);
         Connection connection(options.broker, options.conn_opts);
         try {
             connection.open();
             ts_snap_store(ptsdata, 'C', options.log_stats);
             Session session;
-            if (options.tx_size != 0)
+            if( (options.tx_size != 0) || (options.tx_le_action != "none") )
                 session = connection.createTransactionalSession();
             else
                 session = connection.createSession();
@@ -158,7 +167,7 @@ int main(int argc, char** argv)
             Message message;
             long int message_size;
             int i = 0;
-            bool tx_batch_flag = (options.tx_size != 0);
+            bool tx_open_batch_flag = false;
             double ts = get_time();
 
             ts_snap_store(ptsdata, 'E', options.log_stats);
@@ -206,18 +215,18 @@ int main(int argc, char** argv)
 
                 if(options.tx_size != 0) {
                     // transactions enabled
-                    if( (((i+1) % abs(options.tx_size)) == 0) ) {
+                    if( (((i+1) % options.tx_size) == 0) ) {
                         // end of transactional batch
                         if (options.tx_action == "commit") {
                             session.commit();
-                            tx_batch_flag = false;
+                            tx_open_batch_flag = false;
                         }
                         else if (options.tx_action == "rollback") {
                             session.rollback();
-                            tx_batch_flag = false;
+                            tx_open_batch_flag = false;
                         }
                     } else {
-                        tx_batch_flag = true;
+                        tx_open_batch_flag = true;
                     }
                 }
 
@@ -250,7 +259,7 @@ int main(int argc, char** argv)
             }
 
             // end of message stream, tx-loopend-action if enabled
-            if (tx_batch_flag == true) {
+            if (tx_open_batch_flag == true) {
                 if (options.tx_le_action == "commit")
                     session.commit();
                 else if (options.tx_le_action == "rollback")

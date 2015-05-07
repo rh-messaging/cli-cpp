@@ -2,6 +2,7 @@
 
 // TODO: --log-lib wiring
 // TODO: --duration <float>
+// TODO: --content-type <typeid>
 
 #include <qpid/messaging/Address.h>
 #include <qpid/messaging/Connection.h>
@@ -99,7 +100,7 @@ struct Options : OptionParser
 
           tx_size(0),
           tx_action("commit"),
-          tx_le_action("commit"),
+          tx_le_action("None"),
           
           sync_mode("session"),
           capacity(-1),
@@ -250,6 +251,16 @@ struct Options : OptionParser
         }
     }
 
+    void transformValues()
+    {
+         std::transform(msg_durable.begin(), msg_durable.end(), msg_durable.begin(), ::tolower);
+         std::transform(tx_le_action.begin(), tx_le_action.end(), tx_le_action.begin(), ::tolower);
+         std::transform(tx_action.begin(), tx_action.end(), tx_action.begin(), ::tolower);
+         if (tx_size < 0)
+             tx_size = -tx_size;
+    }
+
+
 };
 
 Variant::Map getSenderStats(Sender &snd) {
@@ -279,20 +290,18 @@ int main(int argc, char** argv)
 
         // init timestamping
         ptsdata = ts_init((double *) &tsdata, options.log_stats);
-
+        options.transformValues();
         bool msg_content_fmt = ( (options.msg_content.find('%') != std::string::npos) && \
                                  (options.msg_content.find('d') != std::string::npos) && \
                                  (options.msg_content.find('d', options.msg_content.find('%')) != std::string::npos) );
-        // convert options.msg_durable to lowcase
-        std::transform(options.msg_durable.begin(), options.msg_durable.end(),
-                       options.msg_durable.begin(), ::tolower);
+
         ts_snap_store(ptsdata, 'B', options.log_stats);
         Connection connection(options.broker, options.conn_opts);
         try {
             connection.open();
             ts_snap_store(ptsdata, 'C', options.log_stats);
             Session session;
-            if (options.tx_size != 0)
+            if( (options.tx_size != 0) || (options.tx_le_action != "none") )
                 session = connection.createTransactionalSession();
             else
                 session = connection.createSession();
@@ -371,12 +380,10 @@ int main(int argc, char** argv)
             }
             /* Durability settings */
             // default = "" supports for 3 state durability
-            if ( (options.msg_durable == "yes") || (options.msg_durable == "true") ||
-             (options.msg_durable == "True") ) {
+            if ( (options.msg_durable == "yes") || (options.msg_durable == "true") ) {
               message.setDurable(true);
             }
-            else if ( (options.msg_durable == "no") ||
-             (options.msg_durable == "false") || (options.msg_durable == "True") ) {
+            else if ( (options.msg_durable == "no") || (options.msg_durable == "false")  ) {
                 message.setDurable(false);
             }
 
@@ -384,7 +391,7 @@ int main(int argc, char** argv)
                 message.setTtl(Duration(options.msg_ttl));
             if (options.msg_priority > -1)
                 message.setPriority(options.msg_priority);
-            bool tx_batch_flag = (options.tx_size != 0);
+            bool tx_open_batch_flag = false;
             std::time_t start = std::time(0);
             double ts = get_time();
             ts_snap_store(ptsdata, 'E', options.log_stats);
@@ -444,18 +451,18 @@ int main(int argc, char** argv)
 
                 if (options.tx_size != 0) {
                     // transactions enabled
-                    if (((count+1) % abs(options.tx_size)) == 0) {
+                    if (((count+1) % options.tx_size) == 0) {
                         // end of transactional batch
                         if (options.tx_action == "commit") {
                             session.commit();
-                            tx_batch_flag = false;
+                            tx_open_batch_flag = false;
                         }
                         else if (options.tx_action == "rollback") {
                             session.rollback();
-                            tx_batch_flag = false;
+                            tx_open_batch_flag = false;
                         }
                     } else {
-                        tx_batch_flag = true;
+                        tx_open_batch_flag = true;
                     }
                 }
 
@@ -465,7 +472,7 @@ int main(int argc, char** argv)
             }
             ts_snap_store(ptsdata, 'F', options.log_stats);
             // end of message stream, tx-loopend-action if enabled
-            if (tx_batch_flag == true) {
+            if (tx_open_batch_flag == true) {
                 if (options.tx_le_action == "commit")
                     session.commit();
                 else if (options.tx_le_action == "rollback")
@@ -507,4 +514,4 @@ int main(int argc, char** argv)
     return 1;
 }
 
-
+// eof
