@@ -10,6 +10,7 @@
 #include <cstring>
 
 #include "output/Printer.h"
+#include "TestUtils.h"
 
 /*
  * 
@@ -17,6 +18,7 @@
 int main(int argc, char** argv) {
 	char writeString[] = "This is a test";
 	char testFileName[] = "printer-test.log";
+	
 	
 	FILE *writeStream = fopen(testFileName, "w+");
 	
@@ -26,23 +28,13 @@ int main(int argc, char** argv) {
 	}
 	
 	Printer printer = Printer(writeStream);
-	
 	printer.print(writeString);
+	fclose(writeStream);
 	
-	char buffer[256] = { 0 };
-	
-	FILE *readStream = fopen(testFileName, "r+"); 
-	if (!readStream) {
-		fprintf(stderr, "Unable to open output file for reading");
+	size_t len = strlen(writeString);
+	bool ret = assertFileContent(testFileName, writeString, len);
+	if (!ret) {
 		return 1;
-	}
-	
-	fread(buffer, sizeof(buffer), 1, readStream);
-	
-	if (strncmp(writeString, buffer, strlen(buffer)) != 0) {
-		fprintf(stderr, "The strings are different: %s != %s", 
-			writeString, buffer);
-		return 2;
 	}
 	
 	return 0;

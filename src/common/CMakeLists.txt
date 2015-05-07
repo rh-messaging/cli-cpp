@@ -21,6 +21,7 @@ if (ENABLE_MODERN)
         formatter/StringWriter.cpp
         formatter/AbstractDecoder.cpp
         formatter/AbstractFormatter.cpp
+        logger/Logger.cpp
 
 	Client.cpp
 	ContentType.cpp
@@ -28,7 +29,12 @@ if (ENABLE_MODERN)
     )
 
     if (BUILD_WITH_UNIT_TESTS)
+        set(TEST_SUPPORT_SRC
+            TestUtils.cpp
+        )
+
         add_subdirectory(output/test)
+        add_subdirectory(logger/test)
      endif (BUILD_WITH_UNIT_TESTS)
         
 endif (ENABLE_MODERN)
@@ -41,6 +47,7 @@ endif(ENABLE_PROTON)
 
 add_library(dtests-cpp-common
         ${COMMON_MODERN_SRC}
+        ${TEST_SUPPORT_SRC}
 
 	Utils.cpp
 )
