@@ -68,37 +68,37 @@ void Printer::print(unsigned int val) {
 	}
 }
 
-void Printer::print(long val) {
+void Printer::print(long int val) {
 	switch (base) {
 		case HEXADECIMAL: {
-			fprintf(stream, "%#llx", val);
+			fprintf(stream, "%#lx", val);
 			break;
 		}
 		case OCTAL: {
-			fprintf(stream, "%#llo", val);
+			fprintf(stream, "%#lo", val);
 			break;
 		}
 		case DECIMAL: 
 		default: {
-			fprintf(stream, "%lld", val);
+			fprintf(stream, "%ld", val);
 			break;
 		}
 	}
 }
 
-void Printer::print(unsigned long val) {
+void Printer::print(unsigned long int val) {
 	switch (base) {
 		case HEXADECIMAL: {
-			fprintf(stream, "%llx", val);
+			fprintf(stream, "%lx", val);
 			break;
 		}
 		case OCTAL: {
-			fprintf(stream, "%#llo", val);
+			fprintf(stream, "%#lo", val);
 			break;
 		}
 		case DECIMAL: 
 		default: {
-			fprintf(stream, "%llu", val);
+			fprintf(stream, "%lu", val);
 			break;
 		}
 	}
@@ -111,12 +111,12 @@ void Printer::print(double d) {
 			break;
 		}
 		case OCTAL: {
-			fprintf(stream, "%#llo", d);
+			fprintf(stream, "%#lg", d);
 			break;
 		}
 		case DECIMAL: 
 		default: {
-			fprintf(stream, "%llu", d);
+			fprintf(stream, "%lg", d);
 			break;
 		}
 	}
