@@ -110,6 +110,9 @@ public:
      */
     Logger &operator<<(const char *str);
     
+    
+    Logger operator()(LogLevel level);
+    
 private:
     
     static LogConfiguration logConfiguration;

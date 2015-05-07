@@ -13,3 +13,16 @@ target_link_libraries(ut_logger_test
 add_test(NAME LoggerTest 
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
     COMMAND ut_logger_test)
+
+
+cmake_policy(SET CMP0003 OLD)
+add_executable(ut_logger_test_stdout
+	ut_logger_test_stdout.cpp
+)
+
+target_link_libraries(ut_logger_test_stdout
+           dtests-cpp-common)
+
+add_test(NAME LoggerTestStdOut 
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
+    COMMAND ut_logger_test_stdout)
