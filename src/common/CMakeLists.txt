@@ -12,6 +12,7 @@ include_directories(
 
 if (ENABLE_MODERN) 
     set(COMMON_MODERN_SRC
+        output/Printer.cpp            
         exceptions/BaseException.cpp
 	exceptions/IOException.cpp
 	options/BaseOptionsParser.cpp
@@ -25,6 +26,10 @@ if (ENABLE_MODERN)
 	ContentType.cpp
         MessageHeader.cpp
     )
+
+    if (BUILD_WITH_UNIT_TESTS)
+        add_subdirectory(output/test)
+     endif (BUILD_WITH_UNIT_TESTS)
         
 endif (ENABLE_MODERN)
 

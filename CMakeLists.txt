@@ -6,6 +6,11 @@ cmake_minimum_required(VERSION 2.4)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/lib)
 
+
+
+
+enable_testing()
+
 include_directories(
 	src/contrib/
 	src/common/
@@ -37,6 +42,11 @@ set(ENABLE_PROTON OFF CACHE BOOL "Enable proton clients")
 set(ENABLE_QPID ON CACHE BOOL "Enable qpid clients")
 set(ENABLE_BOOST_LOG ON CACHE BOOL "Enable boost log usage")
 set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
+set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
+
+if (BUILD_WITH_UNIT_TESTS)
+    set (CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin)
+endif (BUILD_WITH_UNIT_TESTS)
 
 if (ENABLE_MODERN) 
     add_definitions(-DENABLE_MODERN) 
