@@ -7,20 +7,20 @@
 
 #include "AbstractFormatter.h"
 
-AbstractFormatter::AbstractFormatter() {
-}
+AbstractFormatter::AbstractFormatter() { }
 
-AbstractFormatter::AbstractFormatter(const AbstractFormatter& orig) {
-}
+AbstractFormatter::AbstractFormatter(const AbstractFormatter& orig) { }
 
-AbstractFormatter::~AbstractFormatter() {
-}
-
+AbstractFormatter::~AbstractFormatter() { }
 
 void AbstractFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const {
-    decoder->decodeHeader(writer);
-    decoder->decodeProperties(writer);
-    decoder->decodeContent(writer);
+	writer->startHeader();
+	decoder->decodeHeader(writer);
+	decoder->decodeProperties(writer);
+	
+	writer->startContent();
+	decoder->decodeContent(writer);
+	writer->endContent();
 }
 
 

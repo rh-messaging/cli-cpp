@@ -9,79 +9,79 @@
 #include "Writer.h"
 
 StringWriter::StringWriter(ostringstream *stream)
-    : super(),
-    stream(stream)
-{
-}
-
+	: super(),
+	stream(stream) { }
 
 StringWriter::~StringWriter() {
-    stream->flush();
+	stream->flush();
 }
 
 void StringWriter::startHeader() {
-    (*stream) << HEADER_START;
+	(*stream) << HEADER_START;
 }
 
 void StringWriter::endHeader() {
-    (*stream) << HEADER_END;
+	(*stream) << HEADER_END;
 }
 
 void StringWriter::startProperties() {
-    (*stream) << PROPERTIES_START;
+	(*stream) << ' ';
+	write("properties");
+	(*stream) << VALUE_SEPARATOR << ' ';
 }
 
 void StringWriter::endProperties() {
-    (*stream) << PROPERTIES_END;
+	
 }
 
 void StringWriter::startContent() {
-    (*stream) << CONTENT_START;
+	(*stream) << FIELD_SEPARATOR << ' ';
+	write("content");
+	(*stream) << VALUE_SEPARATOR << ' ';
 }
 
 void StringWriter::endContent() {
-    (*stream) << CONTENT_END;
+	(*stream) << CONTENT_END;
 }
 
 void StringWriter::startMap() {
-    (*stream) << SECTION_START;
+	(*stream) << SECTION_START;
 }
 
 void StringWriter::endMap() {
-    (*stream) << SECTION_END;
+	(*stream) << SECTION_END;
 }
 
 void StringWriter::startList() {
-    (*stream) << SECTION_START;
+	(*stream) << SECTION_START;
 }
 
-
 void StringWriter::endList() {
-    (*stream) << SECTION_END;
+	(*stream) << SECTION_END;
 }
 
 void StringWriter::write(const string &str) {
-    (*stream) << VALUE_START << str << VALUE_END;
-    
+	(*stream) << VALUE_START << str << VALUE_END;
+
 }
+
 void StringWriter::write(const KeyValue &keyValue) {
-    write(keyValue.first);
-    (*stream) << ' ' << VALUE_SEPARATOR << ' ';
-    write(keyValue.second);
-    (*stream) << ' ' << FIELD_SEPARATOR << ' ';
+	write(keyValue.first);
+	(*stream) << VALUE_SEPARATOR << ' ';
+	write(keyValue.second);
+	(*stream) << FIELD_SEPARATOR << ' ';
 }
 
 void StringWriter::writeBogus(const string &str) {
-    (*stream) <<  Writer::BOGUS_FORMAT_MESSAGE << VALUE_SEPARATOR << str;
+	(*stream) << Writer::BOGUS_FORMAT_MESSAGE << VALUE_SEPARATOR << str;
 }
 
-
 void StringWriter::endLine() {
-        (*stream) << std::endl;
+	(*stream) << std::endl;
 }
 
 string StringWriter::toString() const {
-    stream->flush();
-    return stream->str();
+	stream->flush();
+	return stream->str();
 }
 

@@ -66,6 +66,10 @@ protected:
     template <typename T, typename Y>
     void decodeValue(Writer *writer, const map<T, Y> &valuesMap) const {
         
+        if (valuesMap.size() == 0) {
+            return;
+        }
+        
         writer->startMap();
         for(typename map<T, Y>::const_iterator iterator = valuesMap.begin(); 
                 iterator != valuesMap.end(); iterator++) 
@@ -79,6 +83,10 @@ protected:
     
     template <typename T>
     void decodeValue(Writer *writer, const list<T> &inputList) {
+        
+        if (inputList.size() == 0) {
+            return 0;
+        }
         
         writer->startList();
         for(typename list<T>::const_iterator iterator = inputList.begin(); 
