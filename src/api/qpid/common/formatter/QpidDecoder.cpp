@@ -79,7 +79,7 @@ void QpidDecoder::writeContentSize(Writer *writer) const {
 }
 
 void QpidDecoder::decodeHeader(Writer *writer) const {
-    writer->startHeader();
+    
     
     write(writer, MessageHeader::REDELIVERED, &Message::getRedelivered);
     writeReplyTo(writer);
@@ -93,25 +93,20 @@ void QpidDecoder::decodeHeader(Writer *writer) const {
     write(writer, MessageHeader::DURABLE, &Message::getDurable);
     writeTTL(writer);
     writeContentSize(writer);
-    
-    writer->endHeader();
 }
 
 void QpidDecoder::decodeProperties(Writer *writer) const {
-    writer->startProperties();
-    
     Variant::Map properties = message.getProperties();
     
     if (properties.size() > 0) {
+	writer->startProperties();
         decodeValue(writer, properties);
         writer->endProperties();
     }
 }
 
 void QpidDecoder::decodeContent(Writer *writer) const {
-    writer->startContent(); 
     super::decodeValue(message.getContent());
-    writer->endContent();
 }
 
 

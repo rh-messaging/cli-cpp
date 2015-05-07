@@ -86,3 +86,10 @@ foreach(client ${qpid_messaging_clients})
 	)
 
 endforeach(client)
+
+
+if (ENABLE_MODERN) 
+    if (BUILD_WITH_UNIT_TESTS)
+        add_subdirectory(common/formatter/test)
+     endif (BUILD_WITH_UNIT_TESTS)
+endif (ENABLE_MODERN) 
