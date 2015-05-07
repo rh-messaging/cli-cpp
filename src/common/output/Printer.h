@@ -50,7 +50,7 @@ public:
     * Prints an unsigned long integer
     * @param val Value
     */
-    void print(unsigned long val);
+    void print(unsigned long int val);
 
     /**
     * Prints a double
