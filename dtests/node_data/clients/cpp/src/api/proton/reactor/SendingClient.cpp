@@ -77,6 +77,8 @@ int SendingClient::run(int argc, char **argv) const {
 
 	SimpleMessagingHandler handler = SimpleMessagingHandler(address);
 	Container(handler).run();
+	
+	return 0;
 
 }
 
