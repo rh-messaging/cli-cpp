@@ -16,8 +16,9 @@
  */
 int main(int argc, char** argv) {
 	char writeString[] = "This is a test";
+	char testFileName[] = "printer-test.log";
 	
-	FILE *writeStream = fopen("test.log", "w+");
+	FILE *writeStream = fopen(testFileName, "w+");
 	
 	if (!writeStream) {
 		fprintf(stderr, "Unable to open output file for writing");
@@ -30,7 +31,7 @@ int main(int argc, char** argv) {
 	
 	char buffer[256] = { 0 };
 	
-	FILE *readStream = fopen("test.log", "r+"); 
+	FILE *readStream = fopen(testFileName, "r+"); 
 	if (!readStream) {
 		fprintf(stderr, "Unable to open output file for reading");
 		return 1;
