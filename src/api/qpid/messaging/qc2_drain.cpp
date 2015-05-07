@@ -167,7 +167,7 @@ int main(int argc, char** argv)
             Duration timeout = options.getTimeout();
             int count = options.getCount();
             Message message;
-            long int message_size;
+            long int message_size = 0;
             int i = 0;
             bool tx_batch_flag = (options.tx_batch_size != 0);
             double ts = get_time();
