@@ -10,4 +10,6 @@ add_executable(ut_printer_test
 target_link_libraries(ut_printer_test
            dtests-cpp-common)
 
-add_test(NAME PrinterTest COMMAND ut_printer_test)
+add_test(NAME PrinterTest 
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
+    COMMAND ut_printer_test)
