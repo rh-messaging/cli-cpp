@@ -177,8 +177,6 @@ map<string, string> Data::readMap() const {
 void Data::writeList(const list<string>& list) {
 	pn_type_t type = pn_data_get_array_type(data);
 
-	size_t arraySize = pn_data_get_array(data);
-
 	switch (type) {
 		case PN_ARRAY: {
 			logger(debug) << "Processing array";
