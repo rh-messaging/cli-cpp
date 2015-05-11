@@ -18,7 +18,7 @@ Logger::Logger(LogLevel level)
 	: level(level),
 	printer(Logger::logConfiguration.stream)
 {
-
+	printer.flush();
 }
 
 Logger::~Logger() {
@@ -124,6 +124,9 @@ Logger Logger::operator()(LogLevel logLevel) {
 	Logger ret = Logger(logLevel);
 	
 	switch (logLevel) {
+		case none: {
+			break;
+		}
 		case trace: {
 			ret << "[trace]: ";
 			break;
@@ -132,7 +135,6 @@ Logger Logger::operator()(LogLevel logLevel) {
 			ret << "[debug]: ";
 			break;
 		}
-
 		case info: {
 			ret << "[info ]: ";
 			break;
