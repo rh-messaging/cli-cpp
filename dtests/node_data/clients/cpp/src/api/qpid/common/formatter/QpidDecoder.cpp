@@ -46,7 +46,8 @@ void QpidDecoder::write(Writer *writer,HeaderProperty property, BooleanReader re
 void QpidDecoder::write(Writer *writer,HeaderProperty property, ShortIntReader reader) const {
     uint8_t value = (message.*reader)();
     
-    writer->write(KeyValue(property.name, super::decodeValue(value)));
+    writer->write(KeyValue(property.name, 
+	    super::decodeValue(static_cast<int>(value))));
 }
 
 
