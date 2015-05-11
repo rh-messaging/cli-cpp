@@ -75,9 +75,15 @@ protected:
         for(typename map<T, Y>::const_iterator iterator = valuesMap.begin(); 
                 iterator != valuesMap.end(); iterator++) 
         {
-            writer->write(iterator->first);
-            decodeValue(writer, static_cast<T>(iterator->second));
-           
+            if (iterator != valuesMap.begin()) {
+                writer->endField();
+            }
+            
+            KeyValue kv = KeyValue(iterator->first, 
+                    static_cast<T>(iterator->second));
+            
+            writer->write(kv, false);
+            
         }
         writer->endMap();
     }

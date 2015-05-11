@@ -37,8 +37,11 @@ public:
     void startList();
     void endList();
     
+    void endField();
+    
     void write(const string &str);
     void write(const KeyValue &keyValue);
+    void write(const KeyValue &keyValue, bool separator);
         
     void writeBogus(const string &str);
     

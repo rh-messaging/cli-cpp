@@ -36,8 +36,11 @@ public:
     virtual void startList() = 0;
     virtual void endList() = 0;
     
+    virtual void endField() = 0;
+    
     virtual void write(const string &str) = 0;
     virtual void write(const KeyValue &keyValue) = 0;
+    virtual void write(const KeyValue &keyValue, bool separator) = 0;
         
     virtual void writeBogus(const string &str) = 0;
     
