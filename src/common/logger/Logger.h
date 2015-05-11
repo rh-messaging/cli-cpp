@@ -20,6 +20,7 @@ namespace log {
     
 
  enum LogLevel {
+        none,
         trace,
         debug,
         info,
@@ -31,7 +32,11 @@ namespace log {
 
 using dtests::common::log::LogLevel;
 
+class LoggerWrapper;
+
 class Logger {
+    friend class LoggerWrapper;
+    
 public:
    
     
@@ -40,7 +45,7 @@ public:
         FILE *stream;
     };
     
-    Logger(LogLevel level);
+   
     virtual ~Logger(); 
     
     static void initLogger(LogConfiguration logConfiguration);
@@ -114,12 +119,11 @@ public:
     Logger operator()(LogLevel level);
     
 private:
-    
     static LogConfiguration logConfiguration;
     LogLevel level;
     Printer printer;
     
-    
+     Logger(LogLevel level);
 
 };
 

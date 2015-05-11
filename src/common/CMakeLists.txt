@@ -22,6 +22,7 @@ if (ENABLE_MODERN)
         formatter/AbstractDecoder.cpp
         formatter/AbstractFormatter.cpp
         logger/Logger.cpp
+        logger/LoggerWrapper.cpp
 
 	Client.cpp
 	ContentType.cpp

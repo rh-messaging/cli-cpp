@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 #include "TestUtils.h"
 
 using namespace dtests::common::log;
@@ -22,10 +23,9 @@ int main(int argc, char** argv) {
 	logConfiguration.minimumLevel = debug;
 	logConfiguration.stream = stdout;
 	
+	LoggerWrapper::initLogger(logConfiguration);
 	
-	Logger::initLogger(logConfiguration);
-	
-	Logger logger = Logger(debug);
+	Logger logger = LoggerWrapper::getLogger();
 	
 	logger(debug) << "This is a test"; 
 	logger(trace) << "This shall not appear"; 

@@ -28,6 +28,7 @@ using std::scientific;
 
 
 
+
 /**
  * A decoder is a proxy object used to transform messaging objects into a 
  * standard object/pattern that can be used by the formatter

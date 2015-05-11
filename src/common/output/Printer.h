@@ -74,11 +74,16 @@ public:
     /**
      * Prints a char * string
      * @param str A pointer to a null terminated string
-     *  This prevents the compiler from  casting a regular, temporary, string to
+     * This prevents the compiler from  casting a regular, temporary, string to
      * a const void pointer, which would cause the print(const void *) method 
-      * to be called
+     * to be called
      */
     void print(const char *str);
+    
+    /**
+     * Flushes the output stream
+     */
+    void flush();
 private:
     Base base;
     FILE *stream;
