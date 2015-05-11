@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 #include "TestUtils.h"
 
 using dtests::common::log::info;
@@ -28,16 +29,19 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
-	Logger::initLogger(logConfiguration);
+	// Logger::initLogger(logConfiguration);
+	LoggerWrapper::initLogger(logConfiguration);
 	
-	Logger logger = Logger(debug);
+	Logger logger = LoggerWrapper::getLogger();
 	
-	logger << "This is a test"; 
+	logger(info) << "This is a test"; 
 	
 	fclose(logConfiguration.stream);
-	size_t len = strlen("This is a test");
 	
-	bool ret = assertFileContent(logFileName, "This is a test", len);
+	const char *message = "[info ]: This is a test";
+	size_t len = strlen(message);
+	
+	bool ret = assertFileContent(logFileName, message, len);
 	if (ret != 0) {
 		return 1;
 	}
