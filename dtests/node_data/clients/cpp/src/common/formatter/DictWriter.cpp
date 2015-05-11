@@ -5,76 +5,76 @@
  * Created on May 6, 2015, 4:13 PM
  */
 
-#include "StringWriter.h"
+#include "DictWriter.h"
 #include "Writer.h"
 
-StringWriter::StringWriter(ostringstream *stream)
+DictWriter::DictWriter(ostringstream *stream)
 	: super(),
 	stream(stream) { }
 
-StringWriter::~StringWriter() {
+DictWriter::~DictWriter() {
 	stream->flush();
 }
 
-void StringWriter::startHeader() {
+void DictWriter::startHeader() {
 	(*stream) << HEADER_START;
 }
 
-void StringWriter::endHeader() {
+void DictWriter::endHeader() {
 	(*stream) << HEADER_END;
 }
 
-void StringWriter::startProperties() {
+void DictWriter::startProperties() {
 	(*stream) << ' ';
 	write("properties");
 	(*stream) << VALUE_SEPARATOR << ' ';
 }
 
-void StringWriter::endProperties() {
+void DictWriter::endProperties() {
 	
 }
 
-void StringWriter::startContent() {
+void DictWriter::startContent() {
 	(*stream) << FIELD_SEPARATOR << ' ';
 	write("content");
 	(*stream) << VALUE_SEPARATOR << ' ';
 }
 
-void StringWriter::endContent() {
+void DictWriter::endContent() {
 	(*stream) << CONTENT_END;
 }
 
-void StringWriter::startMap() {
+void DictWriter::startMap() {
 	(*stream) << SECTION_START;
 }
 
-void StringWriter::endMap() {
+void DictWriter::endMap() {
 	(*stream) << SECTION_END;
 }
 
-void StringWriter::startList() {
+void DictWriter::startList() {
 	(*stream) << SECTION_START;
 }
 
-void StringWriter::endList() {
+void DictWriter::endList() {
 	(*stream) << SECTION_END;
 }
 
-void StringWriter::endField() {
+void DictWriter::endField() {
 	(*stream) << FIELD_SEPARATOR << ' ';
 }
 
-void StringWriter::write(const string &str) {
+void DictWriter::write(const string &str) {
 	(*stream) << VALUE_START << str << VALUE_END;
 
 }
 
-void StringWriter::write(const KeyValue &keyValue) {
+void DictWriter::write(const KeyValue &keyValue) {
 	write(keyValue, true);
 }
 
 
-void StringWriter::write(const KeyValue &keyValue, bool separator) {
+void DictWriter::write(const KeyValue &keyValue, bool separator) {
 	write(keyValue.first);
 	(*stream) << VALUE_SEPARATOR << ' ';
 	write(keyValue.second);
@@ -85,15 +85,15 @@ void StringWriter::write(const KeyValue &keyValue, bool separator) {
 }
 
 
-void StringWriter::writeBogus(const string &str) {
+void DictWriter::writeBogus(const string &str) {
 	(*stream) << Writer::BOGUS_FORMAT_MESSAGE << VALUE_SEPARATOR << str;
 }
 
-void StringWriter::endLine() {
+void DictWriter::endLine() {
 	(*stream) << std::endl;
 }
 
-string StringWriter::toString() const {
+string DictWriter::toString() const {
 	stream->flush();
 	return stream->str();
 }
