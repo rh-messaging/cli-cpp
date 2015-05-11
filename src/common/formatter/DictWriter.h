@@ -17,10 +17,10 @@
 using std::string;
 using std::ostringstream;
 
-class StringWriter: public Writer {
+class DictWriter: public Writer {
 public:
-    StringWriter(ostringstream *stream);
-    virtual ~StringWriter();
+    DictWriter(ostringstream *stream);
+    virtual ~DictWriter();
     
     void startHeader();
     void endHeader();
