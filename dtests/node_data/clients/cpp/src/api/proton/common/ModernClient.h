@@ -8,15 +8,13 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_MODERNCLIENT_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_MODERNCLIENT_H_
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-
 #include <optparse/OptionParser.h>
 
 #include <string>
 
 #include "Client.h"
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 
 namespace dtests {
 namespace proton {

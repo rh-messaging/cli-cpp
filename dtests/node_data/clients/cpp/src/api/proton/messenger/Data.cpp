@@ -10,7 +10,9 @@
 namespace dtests {
 namespace proton {
 namespace messenger {
-
+	
+using namespace dtests::common::log;
+	
 Data::Data(size_t capacity)
 	: super(),
 	  data(NULL),
@@ -40,14 +42,14 @@ Data::Data(const string& string)
 
 Data::~Data() {
 	if (release) {
-		BOOST_LOG_TRIVIAL(trace) << "Auto releasing internal data pointer";
+		logger(trace) << "Auto releasing internal data pointer";
 
 		pn_data_free(data);
 	}
 }
 
 void Data::init(size_t capacity) {
-	BOOST_LOG_TRIVIAL(trace) << "Trying to create a new data storage of size "
+	logger(trace) << "Trying to create a new data storage of size "
 						<< capacity;
 
 	data = pn_data(capacity);
@@ -83,23 +85,23 @@ string Data::readString() const {
 	pn_type_t type = pn_data_type(data);
 	switch (type) {
 			case PN_ARRAY: {
-				BOOST_LOG_TRIVIAL(debug) << "Processing array";
+				logger(debug) << "Processing array";
 				break;
 			}
 			case PN_LIST: {
-				BOOST_LOG_TRIVIAL(debug) << "Processing list";
+				logger(debug) << "Processing list";
 				break;
 			}
 			case PN_MAP: {
-				BOOST_LOG_TRIVIAL(debug) << "Processing map";
+				logger(debug) << "Processing map";
 				break;
 			}
 			case PN_STRING: {
-				BOOST_LOG_TRIVIAL(debug) << "Processing string";
+				logger(debug) << "Processing string";
 
 				pn_bytes_t bytes = pn_data_get_string(data);
 				if (bytes.size > sizeof(buffer)) {
-					BOOST_LOG_TRIVIAL(warning) << "Data size is bigger than " <<
+					logger(warning) << "Data size is bigger than " <<
 							"the storage buffer, therefore some content may " <<
 							"be lost";
 				}
@@ -107,13 +109,13 @@ string Data::readString() const {
 				break;
 			}
 			default: {
-				BOOST_LOG_TRIVIAL(warning) << "Unknown data type: " << type;
+				logger(warning) << "Unknown data type: " << type;
 				break;
 			}
 	}
 
 	pn_data_format(data, buffer, &buffsize);
-	BOOST_LOG_TRIVIAL(debug) << "Content: " << buffer;
+	logger(debug) << "Content: " << buffer;
 
 	return string(buffer);
 }
@@ -179,19 +181,19 @@ void Data::writeList(const list<string>& list) {
 
 	switch (type) {
 		case PN_ARRAY: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing array";
+			logger(debug) << "Processing array";
 			break;
 		}
 		case PN_LIST: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing list";
+			logger(debug) << "Processing list";
 			break;
 		}
 		case PN_MAP: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing map";
+			logger(debug) << "Processing map";
 			break;
 		}
 		default: {
-			BOOST_LOG_TRIVIAL(warning) << "Unknown data type: " << type;
+			logger(warning) << "Unknown data type: " << type;
 			break;
 		}
 	}
@@ -202,19 +204,19 @@ list<string> Data::readList() const {
 
 	switch (type) {
 		case PN_ARRAY: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing array";
+			logger(debug) << "Processing array";
 			break;
 		}
 		case PN_LIST: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing list";
+			logger(debug) << "Processing list";
 			break;
 		}
 		case PN_MAP: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing map";
+			logger(debug) << "Processing map";
 			break;
 		}
 		default: {
-			BOOST_LOG_TRIVIAL(warning) << "Unknown data type: " << type;
+			logger(warning) << "Unknown data type: " << type;
 			break;
 		}
 	}

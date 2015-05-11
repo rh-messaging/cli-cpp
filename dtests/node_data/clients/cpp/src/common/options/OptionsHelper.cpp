@@ -6,9 +6,12 @@
  */
 
 #include "OptionsHelper.h"
+#include "logger/LoggerWrapper.h"
 
 namespace algo = boost::algorithm;
 namespace fs = boost::filesystem;
+
+using namespace dtests::common::log;
 
 using dtests::common::IOException;
 
@@ -55,6 +58,8 @@ OptionsSetter::~OptionsSetter() {
 
 
 string OptionsSetter::getContent() {
+	Logger logger = LoggerWrapper::getLogger();
+	
 	if (options.is_set("msg-content")) {
 		return options["msg-content"];
 	}
@@ -64,7 +69,7 @@ string OptionsSetter::getContent() {
 		fs::path file(contentFile);
 
 		if (!exists(file)) {
-			BOOST_LOG_TRIVIAL(error) << "The file " << contentFile << " does"
+			logger(error) << "The file " << contentFile << " does"
 					<< " not exist";
 			throw IOException("The file " + contentFile + " does not exist");
 		}
@@ -77,7 +82,7 @@ string OptionsSetter::getContent() {
 			inputStream >> content;
 		}
 
-		BOOST_LOG_TRIVIAL(debug) << "Read from file " << content;
+		logger(debug) << "Read from file " << content;
 
 		return content;
 	}

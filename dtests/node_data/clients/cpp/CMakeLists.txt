@@ -40,7 +40,6 @@ add_custom_target(distclean
 
 set(ENABLE_PROTON OFF CACHE BOOL "Enable proton clients")
 set(ENABLE_QPID ON CACHE BOOL "Enable qpid clients")
-set(ENABLE_BOOST_LOG ON CACHE BOOL "Enable boost log usage")
 set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
 
@@ -51,13 +50,6 @@ endif (BUILD_WITH_UNIT_TESTS)
 if (ENABLE_MODERN) 
     add_definitions(-DENABLE_MODERN) 
 endif(ENABLE_MODERN)
-
-if (ENABLE_BOOST_LOG) 
-    add_definitions(
-        -DENABLE_BOOST_LOG
-        -DBOOST_LOG_DYN_LINK
-    ) 
-endif(ENABLE_BOOST_LOG)
 
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)

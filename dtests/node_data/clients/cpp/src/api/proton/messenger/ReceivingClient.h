@@ -10,15 +10,15 @@
 
 #include <optparse/OptionParser.h>
 
-#include <boost/log/trivial.hpp>
-
+#include "Message.h"
+#include "Messenger.h"
 
 #include "ModernClient.h"
 #include "options/modern/ReceiverOptionsParser.h"
 #include "options/OptionsHelper.h"
 
-#include "Message.h"
-#include "Messenger.h"
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 
 namespace dtests {
 namespace proton {

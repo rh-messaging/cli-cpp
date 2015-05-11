@@ -7,8 +7,8 @@
 
 #include <cstdlib>
 
-#include "logger/Logger.h"
-#include "logger/LoggerWrapper.h"
+#include <logger/Logger.h>
+#include <logger/LoggerWrapper.h>
 #include "TestUtils.h"
 
 using dtests::common::log::info;
