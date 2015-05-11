@@ -38,11 +38,11 @@ int main(int argc, char** argv) {
 	
 	fclose(logConfiguration.stream);
 	
-	const char *message = "[info ]: This is a test";
+	const char *message = "[info ]: This is a test\n";
 	size_t len = strlen(message);
 	
 	bool ret = assertFileContent(logFileName, message, len);
-	if (ret != 0) {
+	if (!ret) {
 		return 1;
 	}
 
