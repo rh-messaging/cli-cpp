@@ -10,8 +10,6 @@
 
 #include <proton/codec.h>
 
-#include <boost/log/trivial.hpp>
-
 #include <string>
 #include <list>
 #include <map>
@@ -21,6 +19,9 @@
 
 #include "exceptions/ProtonException.h"
 #include "exceptions/DataSerializationException.h"
+
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 
 namespace dtests {
 namespace proton {

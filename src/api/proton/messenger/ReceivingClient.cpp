@@ -12,6 +12,7 @@ namespace proton {
 namespace messenger {
 
 using dtests::proton::common::ModernClient;
+using namespace dtests::common::log;
 
 using namespace std;
 
@@ -33,11 +34,11 @@ void ReceivingClient::setMessengerOptions(const OptionsSetter &setter,
 
 Message ReceivingClient::get(const Messenger& messenger) const {
 	Message message = messenger.get();
-	BOOST_LOG_TRIVIAL(info)<< "Correlation ID: " <<
+	logger(info)<< "Correlation ID: " <<
 	message.getCorrelationId();
-	BOOST_LOG_TRIVIAL(info)<< "Message ID: " << message.getMessageId();
-	BOOST_LOG_TRIVIAL(info)<< "Subject: " << message.getSubject();
-	BOOST_LOG_TRIVIAL(debug)<< "Received data: " <<
+	logger(info)<< "Message ID: " << message.getMessageId();
+	logger(info)<< "Subject: " << message.getSubject();
+	logger(debug)<< "Received data: " <<
 	message.getBody().readString();
 	return message;
 }
@@ -96,12 +97,12 @@ int ReceivingClient::run(int argc, char** argv) const {
 
 	if (count > 0) {
 		for (int i = 0; i < count; i++) {
-			BOOST_LOG_TRIVIAL(debug) << "Retrieving message " << i << " of " <<
+			logger(debug) << "Retrieving message " << i << " of " <<
 					count;
 
 			if (messenger.getIncomingCount() == 0) {
 				if (count != i) {
-					BOOST_LOG_TRIVIAL(warning) << "Received less messages than " <<
+					logger(warning) << "Received less messages than " <<
 							"asked for";
 					break;
 				}
@@ -121,7 +122,7 @@ int ReceivingClient::run(int argc, char** argv) const {
 	if (options.is_set("close-sleep")) {
 		int closeSleep = static_cast<int>(options.get("close-sleep"));
 
-		BOOST_LOG_TRIVIAL(debug) << "Sleeping for " << closeSleep <<
+		logger(debug) << "Sleeping for " << closeSleep <<
 					" milliseconds before closing the connection";
 
 		// TODO: duplicated stuff -> Check Utils.msleep
