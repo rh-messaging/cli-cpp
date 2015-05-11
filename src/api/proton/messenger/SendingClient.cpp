@@ -14,6 +14,7 @@ namespace messenger {
 using namespace std;
 
 using dtests::proton::common::ModernClient;
+using namespace dtests::common::log;
 
 namespace fs = boost::filesystem;
 
@@ -99,18 +100,18 @@ int SendingClient::run(int argc, char** argv) const {
 	for (int i = 0; i < count; i++) {
 		messenger.put(message);
 
-		BOOST_LOG_TRIVIAL(info) << "Correlation ID: " <<
+		logger(info) << "Correlation ID: " <<
 				message.getCorrelationId();
 
-		BOOST_LOG_TRIVIAL(info) << "Message ID: " << message.getMessageId();
+		logger(info) << "Message ID: " << message.getMessageId();
 
-		BOOST_LOG_TRIVIAL(debug) << "Link capacity: " <<
+		logger(debug) << "Link capacity: " <<
 				messenger.getCapacity();
 	}
 
 #ifdef ENABLE_BLOCKING
 	if (options.is_set("close-sleep")) {
-		BOOST_LOG_TRIVIAL(info) << "Sleeping before sending";
+		logger(info) << "Sleeping before sending";
 		int closeSleep = static_cast<int>(options.get("close-sleep"));
 		usleep(1000 * closeSleep);
 	}
@@ -127,12 +128,12 @@ int SendingClient::run(int argc, char** argv) const {
 	messenger.send();
 #endif // ENABLE_BLOCKING
 
-	BOOST_LOG_TRIVIAL(info) << "Sent!";
+	logger(info) << "Sent!";
 
 	if (options.is_set("close-sleep")) {
 		int closeSleep = static_cast<int>(options.get("close-sleep"));
 
-		BOOST_LOG_TRIVIAL(debug) << "Sleeping for " << closeSleep <<
+		logger(debug) << "Sleeping for " << closeSleep <<
 					" milliseconds before closing the connection";
 
 		// TODO: duplicated stuff -> Check Utils.msleep

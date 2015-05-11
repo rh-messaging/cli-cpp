@@ -9,7 +9,6 @@
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_MESSENGER_H_
 
 #include <proton/messenger.h>
-#include <boost/log/trivial.hpp>
 
 #include <string>
 
@@ -17,6 +16,9 @@
 #include "Message.h"
 #include "ProtonError.h"
 #include "IOException.h"
+
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 
 namespace dtests {
 namespace proton {

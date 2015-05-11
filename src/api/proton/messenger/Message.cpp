@@ -10,6 +10,8 @@
 namespace dtests {
 namespace proton {
 namespace messenger {
+	
+using namespace dtests::common::log;
 
 Message::Message(const string &address)
 	: super(),
@@ -24,7 +26,7 @@ Message::~Message() {
 
 
 void Message::init(const string &address) {
-	BOOST_LOG_TRIVIAL(trace) << "Creating a new message object for " << address;
+	logger(trace) << "Creating a new message object for " << address;
 	message = pn_message();
 
 	if (message == NULL) {
@@ -50,10 +52,10 @@ Data Message::getBody() const {
 		const char* subject = pn_message_get_subject(message);
 	    pn_data_format(body, buffer, &buffsize);
 
-	    BOOST_LOG_TRIVIAL(debug) << "Address: " << pn_message_get_address(message);
-	    BOOST_LOG_TRIVIAL(debug) << "Subject: " <<
+	    logger(debug) << "Address: " << pn_message_get_address(message);
+	    logger(debug) << "Subject: " <<
 	    		subject ? subject : "(no subject)";
-	    BOOST_LOG_TRIVIAL(debug) << "Content: " << buffer;
+	    logger(debug) << "Content: " << buffer;
 	*/
 
 	return Data(body);
@@ -67,7 +69,7 @@ string Message::getId(GetDataFunc getDataFunc, GetIdFunc getIdFunc,
 	Data d = Data(id);
 
 	if (d.isEmpty()) {
-		BOOST_LOG_TRIVIAL(warning) << "The " << idTypeName << " ID is not set";
+		logger(warning) << "The " << idTypeName << " ID is not set";
 
 		return string("");
 	}
@@ -77,17 +79,17 @@ string Message::getId(GetDataFunc getDataFunc, GetIdFunc getIdFunc,
 
 	switch (data.type) {
 		case PN_STRING: {
-			BOOST_LOG_TRIVIAL(debug) << "Processing string-based " <<
+			logger(debug) << "Processing string-based " <<
 					idTypeName << " ID";
 
-			BOOST_LOG_TRIVIAL(trace) << "Obtained " << idTypeName << " ID: "
+			logger(trace) << "Obtained " << idTypeName << " ID: "
 					<< d.readString();
 
 			ret = d.readString();
 			break;
 		}
 		default: {
-			BOOST_LOG_TRIVIAL(warning) << "Unhandled data type " << data.type;
+			logger(warning) << "Unhandled data type " << data.type;
 		}
 	}
 
@@ -102,11 +104,11 @@ void Message::setId(GetDataFunc getDataFunc, const string& dataName,
 	Data d = Data(id);
 
 	if (!d.isEmpty()) {
-		BOOST_LOG_TRIVIAL(warning) << "The " << dataName << " ID seems to" <<
+		logger(warning) << "The " << dataName << " ID seems to" <<
 				"already set. It's data structure size is " << d.size() <<
 				" instead of 0";
 
-		BOOST_LOG_TRIVIAL(debug) << "Previously set correlation ID data: " <<
+		logger(debug) << "Previously set correlation ID data: " <<
 				d.readString();
 	}
 
@@ -205,7 +207,7 @@ void Message::setProperties(const map<string, string> &properties) {
 	pn_data_t *propertiesData = pn_message_properties(message);
 
 	if (propertiesData == NULL) {
-		BOOST_LOG_TRIVIAL(trace) << "The message does not seem to have any "
+		logger(trace) << "The message does not seem to have any "
 				<< "property set";
 	}
 

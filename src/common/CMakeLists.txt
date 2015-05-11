@@ -53,16 +53,8 @@ add_library(dtests-cpp-common
 	Utils.cpp
 )
 
-if (ENABLE_BOOST_LOG) 
-    set(BOOST_LOG_LIBRARIES
-        boost_log
-	boost_log_setup
-    )
-endif(ENABLE_BOOST_LOG)
-
 target_link_libraries(dtests-cpp-common
 	${COMMON_PROTON_LIBRARIES}
-        ${BOOST_LOG_LIBRARIES}
 	boost_filesystem
 	boost_system
 	pthread

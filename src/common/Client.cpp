@@ -7,6 +7,10 @@
 
 #include "Client.h"
 
+using namespace dtests::common::log;
+
+Logger Client::logger = LoggerWrapper::getLogger();
+
 Client::Client() {
 	// TODO Auto-generated constructor stub
 

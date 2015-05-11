@@ -13,10 +13,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-
 #include <optparse/OptionParser.h>
 
 #include <vector>
@@ -24,6 +20,8 @@
 #include <string>
 
 #include "IOException.h"
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
 
 using namespace std;
 

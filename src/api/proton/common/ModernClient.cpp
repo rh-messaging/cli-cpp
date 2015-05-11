@@ -11,9 +11,8 @@ namespace dtests {
 namespace proton {
 namespace common {
 
-namespace logging = boost::log;
-
 using std::string;
+using namespace dtests::common::log; 
 
 ModernClient::ModernClient()
 	: super()
@@ -27,24 +26,30 @@ ModernClient::~ModernClient() {
 }
 
 void ModernClient::logInfo() const {
-	logging::core::get()->set_filter
-	(
-	        logging::trivial::severity >= logging::trivial::info
-	);
+	Logger::LogConfiguration logConfiguration; 
+	
+	logConfiguration.minimumLevel = info;
+	logConfiguration.stream = stdout;
+	
+	LoggerWrapper::initLogger(logConfiguration);
 }
 
 void ModernClient::logDebug() const {
-	logging::core::get()->set_filter
-	(
-	        logging::trivial::severity >= logging::trivial::debug
-	);
+	Logger::LogConfiguration logConfiguration; 
+	
+	logConfiguration.minimumLevel = debug;
+	logConfiguration.stream = stdout;
+	
+	LoggerWrapper::initLogger(logConfiguration);
 }
 
 void ModernClient::logTrace() const {
-	logging::core::get()->set_filter
-	(
-	        logging::trivial::severity >= logging::trivial::trace
-	);
+	Logger::LogConfiguration logConfiguration; 
+	
+	logConfiguration.minimumLevel = trace;
+	logConfiguration.stream = stdout;
+	
+	LoggerWrapper::initLogger(logConfiguration);
 }
 
 void ModernClient::setLogLevel(const optparse::Values &options) const {

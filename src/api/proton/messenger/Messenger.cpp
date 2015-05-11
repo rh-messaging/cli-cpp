@@ -12,6 +12,7 @@ namespace proton {
 namespace messenger {
 
 using namespace dtests::common;
+using namespace dtests::common::log;
 
 Messenger::Messenger(const string& address)
 	: super(),
@@ -26,7 +27,7 @@ Messenger::~Messenger() {
 }
 
 void Messenger::init() {
-	BOOST_LOG_TRIVIAL(info) << "Initializing messenger";
+	logger(info) << "Initializing messenger";
 	messenger = pn_messenger(NULL);
 
 	if (messenger == NULL) {
@@ -35,14 +36,14 @@ void Messenger::init() {
 }
 
 void Messenger::start() {
-	BOOST_LOG_TRIVIAL(info) << "Starting messenger";
+	logger(info) << "Starting messenger";
 
 	pn_messenger_start(messenger);
 }
 
 
 void Messenger::stop() {
-	BOOST_LOG_TRIVIAL(info) << "Stopping messenger";
+	logger(info) << "Stopping messenger";
 
 	pn_messenger_stop(messenger);
 }
@@ -84,11 +85,11 @@ bool Messenger::isBlocking() const {
 
 
 void Messenger::put(const char* data, size_t size) const {
-	BOOST_LOG_TRIVIAL(debug) << "Putting " << size << " bytes on the outgoing "
+	logger(debug) << "Putting " << size << " bytes on the outgoing "
 			<< "queue: " << data;
 
 	if (isBlocking()) {
-		BOOST_LOG_TRIVIAL(debug) << "The messenger is in blocking mode";
+		logger(debug) << "The messenger is in blocking mode";
 	}
 
 	pn_message_t *message = pn_message();
@@ -100,53 +101,53 @@ void Messenger::put(const char* data, size_t size) const {
 
 	pn_messenger_put(messenger, message);
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to put message in the messenger";
+		logger(error) << "Failed to put message in the messenger";
 		pn_error_t *error = pn_messenger_error(messenger);
 
 		throw ProtonError::handleError<IOException>(error,
 				"Failed to put message in the messenger");
 	}
 
-	BOOST_LOG_TRIVIAL(trace) << "Successfully put the data";
+	logger(trace) << "Successfully put the data";
 }
 
 void Messenger::put(const Message& message) const {
 	if (isBlocking()) {
-		BOOST_LOG_TRIVIAL(debug) << "The messenger is in blocking mode";
+		logger(debug) << "The messenger is in blocking mode";
 	}
 
 	pn_message_t *data = message.getMessage();
 
 	pn_messenger_put(messenger, data);
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to put message in the messenger";
+		logger(error) << "Failed to put message in the messenger";
 		pn_error_t *error = pn_messenger_error(messenger);
 
 		throw ProtonError::handleError<IOException>(error,
 				"Failed to put message in the messenger");
 	}
 
-	BOOST_LOG_TRIVIAL(trace) << "Successfully put the data";
+	logger(trace) << "Successfully put the data";
 }
 
 
 void Messenger::send(int messageCount) const {
 	if (isBlocking()) {
-		BOOST_LOG_TRIVIAL(debug) << "The messenger is in blocking mode";
+		logger(debug) << "The messenger is in blocking mode";
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Sending " << messageCount << " messages";
+	logger(debug) << "Sending " << messageCount << " messages";
 
 	pn_messenger_send(messenger, messageCount);
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to send message";
+		logger(error) << "Failed to send message";
 		pn_error_t *error = pn_messenger_error(messenger);
 
 		throw ProtonError::handleError<IOException>(error,
 				"Failed to send message");
 	}
 
-	BOOST_LOG_TRIVIAL(trace) << "Successfully sent the messages";
+	logger(trace) << "Successfully sent the messages";
 }
 
 Message Messenger::newMessage() const {
@@ -171,7 +172,7 @@ void Messenger::receive(int count) const {
 	pn_messenger_recv(messenger, count);
 
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to receive message";
+		logger(error) << "Failed to receive message";
 		pn_error_t *error = pn_messenger_error(messenger);
 
 		throw ProtonError::handleError<IOException>(error,
@@ -186,7 +187,7 @@ Message Messenger::get() const {
 	pn_message_t *message = ret.getMessage();
 	pn_messenger_get(messenger, message);
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to receive messages from the " <<
+		logger(error) << "Failed to receive messages from the " <<
 				"incoming queue";
 		pn_error_t *error = pn_messenger_error(messenger);
 
@@ -205,7 +206,7 @@ int Messenger::getIncomingCount() const {
 void Messenger::subscribe() const {
 	pn_messenger_subscribe(messenger, address.c_str());
 	if (failed()) {
-		BOOST_LOG_TRIVIAL(error) << "Failed to subscribe to the receiving " <<
+		logger(error) << "Failed to subscribe to the receiving " <<
 				"address " << address;
 		pn_error_t *error = pn_messenger_error(messenger);
 
