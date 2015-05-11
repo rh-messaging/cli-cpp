@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
 	logger(trace) << "This shall not appear"; 
 	logger(info) << "This is another log message";
 	logger(error) << "And another log message";
+	logger(debug) << "And a debug after the error message";
 
 	return 0;
 }
