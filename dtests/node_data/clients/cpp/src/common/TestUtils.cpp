@@ -2,7 +2,7 @@
 
 
 bool assertFileContent(const char *filename, const char *expected, size_t size) { 
-	char buffer[256] = { 0 };
+	char buffer[size + 1] = { 0 };
 	FILE *readStream = fopen(filename, "r"); 
 	
 	if (!readStream) {
@@ -11,9 +11,9 @@ bool assertFileContent(const char *filename, const char *expected, size_t size) 
 		goto error;
 	}
 	
-	fread(buffer, size + 1, 1, readStream);
+	fread(buffer, size, 1, readStream);
 	
-	if (assertEquals(expected, buffer, size) != 0) {
+	if (!assertEquals(expected, buffer, size)) {
 		goto error;
 	}
 	
@@ -27,9 +27,10 @@ bool assertFileContent(const char *filename, const char *expected, size_t size) 
 
 
 bool assertEquals(const char *expected, const char *actual, size_t size) { 
-	fprintf(stderr, "The strings are different\nE: %s\nA: ", 
-			expected);
 	if (strncmp(expected, actual, size) != 0) {
+		fprintf(stderr, "The strings are different\nE: %s\nA: ", 
+			expected);
+		
 		for (size_t i = 0; i < size; i++) {
 			if (expected[i] == actual[i]) {
 				fprintf(stderr, "%c", actual[i]);
