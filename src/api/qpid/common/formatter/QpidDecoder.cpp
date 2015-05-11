@@ -106,7 +106,8 @@ void QpidDecoder::decodeProperties(Writer *writer) const {
 }
 
 void QpidDecoder::decodeContent(Writer *writer) const {
-    super::decodeValue(message.getContent());
+    string content = super::decodeValue(message.getContent());
+    writer->write(content);
 }
 
 
