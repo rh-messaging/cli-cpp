@@ -18,7 +18,7 @@ if (ENABLE_MODERN)
 	options/BaseOptionsParser.cpp
 	options/OptionsHelper.cpp
         formatter/Writer.cpp
-        formatter/StringWriter.cpp
+        formatter/DictWriter.cpp
         formatter/AbstractDecoder.cpp
         formatter/AbstractFormatter.cpp
         logger/Logger.cpp

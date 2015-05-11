@@ -37,7 +37,7 @@
 #include "formatter/AbstractFormatter.h"
 #include "formatter/AbstractDecoder.h"
 #include "formatter/Writer.h"
-#include "formatter/StringWriter.h"
+#include "formatter/DictWriter.h"
 #include "formatter/QpidDecoder.h"
 
 using dtests::qpid::messaging::QpidDecoder;
@@ -139,7 +139,7 @@ int main(int argc, char** argv)
     AbstractFormatter formatter = AbstractFormatter();
     
     std::ostringstream stream;
-    StringWriter writer = StringWriter(&stream);
+    DictWriter writer = DictWriter(&stream);
 #else
     Formatter formatter;
 #endif
