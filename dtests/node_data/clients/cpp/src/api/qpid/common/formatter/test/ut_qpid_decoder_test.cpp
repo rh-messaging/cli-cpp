@@ -16,6 +16,8 @@
 #include "formatter/StringWriter.h"
 #include "formatter/QpidDecoder.h"
 
+#include "TestUtils.h"
+
 using dtests::qpid::messaging::QpidDecoder;
 
 using namespace std;
@@ -25,8 +27,8 @@ using namespace qpid::types;
 static const char *expected = "{'redelivered': 'False', 'reply_to': "
 	"'reply.to.queue', 'subject': 'None', 'content_type': 'text/plain', "
 	"'user_id': 'None', 'id': 'None', 'correlation_id': 'None', "
-	"'priority': '', 'durable': 'False', 'ttl': '0', 'size': '12',  "
-	"'properties': {'key1''value1'}, 'content': 'Test Content'}";
+	"'priority': '4', 'durable': 'False', 'ttl': '0', 'size': '12',  "
+	"'properties': {'key1': 'value1'}, 'content': 'Test content'}";
 
 static Message buildMessage(const char *content) {
 	Message message = Message();
@@ -34,6 +36,7 @@ static Message buildMessage(const char *content) {
 	message.setContentType(ContentType::TEXT_PLAIN);
 	message.setContent(content);
 	
+	message.setPriority(4);
 	message.setReplyTo(Address("reply.to.queue"));
 	
 	Variant::Map properties = Variant::Map();
@@ -59,17 +62,14 @@ int main(int argc, char** argv) {
                                         
 	formatter.printMessage(&decoder, &writer);
                     
-	string ret = writer.toString();
+	string actual = writer.toString();
+	
+	bool ret = assertEquals(expected, actual.c_str(), strlen(expected));
 		
-	if (ret != expected) {
-		std::cerr << "The strings do not match:" << std::endl;
-		std::cerr << "Expected: " << expected << std::endl;
-		std::cerr << "Got: " << ret << std::endl;
-		
+	if (!ret) {
 		return 1;
 	}
 
-	
 	return 0;
 }
 
