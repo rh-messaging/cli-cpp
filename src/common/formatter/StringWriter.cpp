@@ -60,17 +60,30 @@ void StringWriter::endList() {
 	(*stream) << SECTION_END;
 }
 
+void StringWriter::endField() {
+	(*stream) << FIELD_SEPARATOR << ' ';
+}
+
 void StringWriter::write(const string &str) {
 	(*stream) << VALUE_START << str << VALUE_END;
 
 }
 
 void StringWriter::write(const KeyValue &keyValue) {
+	write(keyValue, true);
+}
+
+
+void StringWriter::write(const KeyValue &keyValue, bool separator) {
 	write(keyValue.first);
 	(*stream) << VALUE_SEPARATOR << ' ';
 	write(keyValue.second);
-	(*stream) << FIELD_SEPARATOR << ' ';
+	
+	if (separator) { 
+		endField();
+	}
 }
+
 
 void StringWriter::writeBogus(const string &str) {
 	(*stream) << Writer::BOGUS_FORMAT_MESSAGE << VALUE_SEPARATOR << str;
