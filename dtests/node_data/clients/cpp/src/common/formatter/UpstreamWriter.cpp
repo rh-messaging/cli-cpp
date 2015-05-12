@@ -39,10 +39,6 @@ void UpstreamWriter::startContent() {
 	writePlain("content=");
 }
 
-void UpstreamWriter::endContent() {
-	(*stream) << CONTENT_END;
-}
-
 void UpstreamWriter::startMap() {
 	(*stream) << SECTION_START;
 }

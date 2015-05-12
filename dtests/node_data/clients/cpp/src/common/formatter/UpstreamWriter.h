@@ -37,7 +37,7 @@ public:
     void endProperties() {};
     
     void startContent();
-    void endContent();
+    void endContent() {};
     
     void startMap();
     void endMap();
