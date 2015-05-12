@@ -17,6 +17,8 @@
 #define UNDERLINE "\x1B[04m"
 
 bool assertFileContent(const char *filename, const char *expected, size_t size);
+
+bool assertEquals(const char *expected, const char *actuals);
 bool assertEquals(const char *expected, const char *actuals, size_t size);
 
 #endif	/* TESTUTILS_H */
