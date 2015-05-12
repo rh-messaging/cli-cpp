@@ -22,7 +22,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "Formatter.h"
+#include "formatter/Formatter.h"
 
 
 class BrokerAgent

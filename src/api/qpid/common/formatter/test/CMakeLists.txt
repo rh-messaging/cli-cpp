@@ -38,3 +38,15 @@ target_link_libraries(ut_qpid_upstream_writer
 add_test(NAME UpstreamWriterTest
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
     COMMAND ut_qpid_upstream_writer)
+
+cmake_policy(SET CMP0003 OLD)
+add_executable(ut_qpid_dict_statistics
+	ut_qpid_dict_statistics.cpp
+)
+
+target_link_libraries(ut_qpid_dict_statistics
+           dtests-qpid-messaging-common)
+
+add_test(NAME QpidStatisticsTest
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
+    COMMAND ut_qpid_dict_statistics)

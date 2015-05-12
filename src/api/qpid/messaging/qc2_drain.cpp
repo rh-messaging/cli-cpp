@@ -30,22 +30,14 @@
 #include <typeinfo>
 
 #include "OptionParser.h"
-#include "Formatter.h"
 #include "Utils.h"
-
-#ifdef ENABLE_MODERN
-#include "formatter/DictFormatter.h"
-#include "formatter/AbstractDecoder.h"
-#include "formatter/Writer.h"
-#include "formatter/DictWriter.h"
-#include "formatter/QpidDecoder.h"
-
-using dtests::qpid::messaging::QpidDecoder;
-
-#endif // ENABLE_MODERN
+#include "formatter/FormatUtil.h"
 
 using namespace qpid::messaging;
 using namespace qpid::types;
+
+using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printMessageUpstream;
 
 struct Options : OptionParser
 {
@@ -134,15 +126,7 @@ int main(int argc, char** argv)
     double *ptsdata = NULL;
 
     Options options;
-#ifdef ENABLE_MODERN
-#warning Using unstable code
-    DictFormatter formatter = DictFormatter();
-    
-    std::ostringstream stream;
-    DictWriter writer = DictWriter(&stream);
-#else
-    Formatter formatter;
-#endif
+
     if (options.parse(argc, argv) && options.checkAddress()) {
 
         // init timestamping
@@ -189,31 +173,9 @@ int main(int argc, char** argv)
                 if (options.logMsgs == "body") {
                     std::cout << message.getContent() << std::endl;
                 } else if (options.logMsgs == "dict") {
-#ifdef ENABLE_MODERN
-                    QpidDecoder decoder = QpidDecoder(message); 
-                                        
-                    formatter.printMessage(&decoder, &writer);
-                    
-                    writer.endLine();
-                    std::cout << writer.toString();
-                    
-                    
-#else
-                    formatter.printMessageAsDict(message);
-#endif
-      
+                    printMessageDict(message);    
                 } else if (options.logMsgs == "upstream") {
-#ifdef ENABLE_MODERN
-                    QpidDecoder decoder = QpidDecoder(message); 
-                                        
-                    formatter.printMessage(&decoder, &writer);
-                    
-                    writer.endLine();
-                    std::cout << writer.toString();
-                    
-#else
-                    formatter.printMessage(message, options.verbose);
-#endif
+                    printMessageUpstream(message, options.verbose);
                 }
 
                 // define message rate --count + --duration
