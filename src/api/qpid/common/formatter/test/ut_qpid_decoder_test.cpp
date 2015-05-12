@@ -23,52 +23,67 @@ using namespace std;
 using namespace qpid::messaging;
 using namespace qpid::types;
 
+/*
 static const char *expected = "{'redelivered': 'False', 'reply_to': "
 	"'reply.to.queue', 'subject': 'None', 'content_type': 'text/plain', "
 	"'user_id': 'None', 'id': 'None', 'correlation_id': 'None', "
 	"'priority': '4', 'durable': 'False', 'ttl': '0', 'size': '12',  "
 	"'properties': {'key1': 'value1'}, 'content': 'Test content'}";
+ */
 
-static Message buildMessage(const char *content) {
+bool testKeyValue() {
+	// Note: the size is none because the content type is not text/plain
+	const char *expected = "'redelivered': 'False', 'reply_to': "
+	"'None', 'subject': 'None', 'content_type': 'None', "
+	"'user_id': 'None', 'id': 'None', 'correlation_id': 'None', "
+	"'priority': '0', 'durable': 'False', 'ttl': '0', 'size': 'None'";
+	
+	
+	std::ostringstream stream;
+	DictWriter writer = DictWriter(&stream);
 	Message message = Message();
+
+	QpidDecoder decoder = QpidDecoder(message);
+	decoder.decodeHeader(&writer);
+
+	string decodedStr = stream.str();
+	stream.clear();
 	
-	message.setContentType(ContentType::TEXT_PLAIN);
-	message.setContent(content);
+	return assertEquals(expected, decodedStr.c_str());
+}
+
+
+bool testMap() {
+	const char *expected = " 'properties': {'key1': 'value1'}";
 	
-	message.setPriority(4);
-	message.setReplyTo(Address("reply.to.queue"));
+	std::ostringstream stream;
+	DictWriter writer = DictWriter(&stream);
+	Message message = Message();
 	
 	Variant::Map properties = Variant::Map();
 	properties["key1"] = "value1";
-	
 	message.setProperties(properties);
 
-	return message;
+	QpidDecoder decoder = QpidDecoder(message);
+	decoder.decodeProperties(&writer);
+	
+	string decodedStr = stream.str();
+	stream.clear();
+	
+	return assertEquals(expected, decodedStr.c_str());
 }
 
 /*
  * 
  */
 int main(int argc, char** argv) {
-	 DictFormatter formatter = DictFormatter();
-    
-	std::ostringstream stream;
-	DictWriter writer = DictWriter(&stream);
+	if (!testKeyValue()) {
+		return EXIT_FAILURE;
+	}
 	
-	Message message = buildMessage("Test content");
-	
-	QpidDecoder decoder = QpidDecoder(message); 
-                                        
-	formatter.printMessage(&decoder, &writer);
-                    
-	string actual = writer.toString();
-	
-	bool ret = assertEquals(expected, actual.c_str(), strlen(expected));
-		
-	if (!ret) {
-		return 1;
+	if (!testMap()) {
+		return EXIT_FAILURE;
 	}
 
-	return 0;
 }
 
