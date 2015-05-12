@@ -34,7 +34,7 @@
 #include "Utils.h"
 
 #ifdef ENABLE_MODERN
-#include "formatter/AbstractFormatter.h"
+#include "formatter/DictFormatter.h"
 #include "formatter/AbstractDecoder.h"
 #include "formatter/Writer.h"
 #include "formatter/DictWriter.h"
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
     Options options;
 #ifdef ENABLE_MODERN
 #warning Using unstable code
-    AbstractFormatter formatter = AbstractFormatter();
+    DictFormatter formatter = DictFormatter();
     
     std::ostringstream stream;
     DictWriter writer = DictWriter(&stream);
