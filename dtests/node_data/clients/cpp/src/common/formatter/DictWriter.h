@@ -5,8 +5,8 @@
  * Created on May 6, 2015, 4:13 PM
  */
 
-#ifndef STRINGWRITER_H
-#define	STRINGWRITER_H
+#ifndef DICTWRITER_H
+#define	DICTWRITER_H
 
 #include <string>
 #include <sstream>
