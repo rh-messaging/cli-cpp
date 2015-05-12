@@ -43,6 +43,11 @@ public:
     virtual void decodeProperties(Writer *writer) const = 0;
     virtual void decodeContent(Writer *writer) const = 0;
     
+    template <typename T, typename Y>
+    void decodeStatistics(Writer *writer, const map<T, Y> &valuesMap) const {
+        decodeValue(writer, valuesMap);
+    }
+    
 protected:
     virtual string decodeValue(bool) const;
     virtual void decodeValue(Writer *writer, bool) const;

@@ -25,16 +25,20 @@ public:
      */
     virtual void printMessage(const AbstractDecoder *dec, Writer *wr) const = 0;
 
-    /* Print message "python dictionary style" to be easily evaluated
-     * by python code. Print all available headers.
-     */
-    // void printMessageAsDict(const AbstractDecoder *decoder, Writer *writer) const;
-
+  
     /**
      * Print message processing statistics
      * @param decoder
      */
-    // void printStatistics(const AbstractDecoder *decoder, Writer *writer) const;
+    
+    template <typename T, typename Y>
+    void printStatistics(const AbstractDecoder *decoder, Writer *writer, 
+        const map<T, Y> &valuesMap) const 
+    {
+        writer->startStatistics();
+        decoder->decodeStatistics(writer, valuesMap);
+        writer->endStatistics();
+    }
 
     /* format Variant into proper formatted string using above formatting methods */
     // string formatVariant(const qpid::types::Variant);
