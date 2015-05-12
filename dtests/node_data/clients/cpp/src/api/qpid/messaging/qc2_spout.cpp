@@ -37,11 +37,15 @@
 #include <boost/format.hpp>
 
 #include "OptionParser.h"
-#include "Formatter.h"
 #include "Utils.h"
+#include "formatter/FormatUtil.h"
 
 using namespace qpid::messaging;
 using namespace qpid::types;
+
+using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printMessageUpstream;
+using dtests::qpid::messaging::printStatistics;
 
 typedef std::vector<std::string> string_vector;
 
@@ -226,7 +230,7 @@ int main(int argc, char** argv)
     double *ptsdata = NULL;
 
     Options options;
-    Formatter formatter;
+    
     if (options.parse(argc, argv) && options.checkAddress()) {
 
         // init timestamping
@@ -357,7 +361,8 @@ int main(int argc, char** argv)
 
                 if (options.logStats.find("endpoints") != std::string::npos) {
                   Variant::Map stats = getSenderStats(sender);
-                  formatter.printStatistics(stats);
+		  
+		  printStatistics(message, stats);
                 }
 
                 if (options.sync_mode == "action")
@@ -367,9 +372,9 @@ int main(int argc, char** argv)
                 if (options.logMsgs == "body") {
                     std::cout << message.getContent() << std::endl;
                 } else if (options.logMsgs == "dict") {
-                    formatter.printMessageAsDict(message);
+		    printMessageDict(message);
                 } else if (options.logMsgs == "upstream") {
-                    formatter.printMessage(message, false);
+		    printMessageUpstream(message, false); 
                 }
 
                 // define message rate --count + --duration
