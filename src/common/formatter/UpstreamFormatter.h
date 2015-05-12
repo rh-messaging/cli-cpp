@@ -5,8 +5,8 @@
  * Created on May 11, 2015, 5:55 PM
  */
 
-#ifndef DICTFORMATTER_H
-#define	DICTFORMATTER_H
+#ifndef UPSTREAMFORMATTER_H
+#define	UPSTREAMFORMATTER_H
 
 #include "AbstractFormatter.h"
 
