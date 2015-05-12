@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "TestUtils.h"
 
 
@@ -25,6 +27,9 @@ bool assertFileContent(const char *filename, const char *expected, size_t size) 
 	return false;
 }
 
+bool assertEquals(const char *expected, const char *actual) {
+	return assertEquals(expected, actual, strlen(expected));
+}
 
 bool assertEquals(const char *expected, const char *actual, size_t size) { 
 	if (strncmp(expected, actual, size) != 0) {
