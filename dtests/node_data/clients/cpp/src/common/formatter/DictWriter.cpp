@@ -8,6 +8,8 @@
 #include "DictWriter.h"
 #include "Writer.h"
 
+const char *DictWriter::STATISTICS_START = "STATS ";
+
 DictWriter::DictWriter(ostringstream *stream)
 	: super(),
 	stream(stream) { }
@@ -57,6 +59,15 @@ void DictWriter::startList() {
 }
 
 void DictWriter::endList() {
+	(*stream) << SECTION_END;
+}
+
+
+void DictWriter::startStatistics() {
+	(*stream) << STATISTICS_START;
+}
+
+void DictWriter::endStatistics() {
 	(*stream) << SECTION_END;
 }
 

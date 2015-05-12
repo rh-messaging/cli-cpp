@@ -39,6 +39,9 @@ public:
     virtual void startList() = 0;
     virtual void endList() = 0;
     
+    virtual void startStatistics() = 0;
+    virtual void endStatistics() = 0;
+    
     virtual void endField() = 0;
     
     virtual void write(const string &str) = 0;

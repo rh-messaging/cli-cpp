@@ -43,6 +43,9 @@ public:
     void startList();
     void endList();
     
+    void startStatistics();
+    void endStatistics();
+    
     void endField();
     
     void write(const string &str);
@@ -70,6 +73,9 @@ private:
     
     static const char CONTENT_START = SECTION_START;
     static const char CONTENT_END = SECTION_END;
+    
+    static const char *STATISTICS_START;
+    static const char STATISTICS_END = SECTION_END;
     
     static const char VALUE_START = '\'';
     static const char VALUE_END = '\'';

@@ -45,6 +45,12 @@ public:
     void startList();
     void endList();
     
+    // NO-OP
+    void startStatistics() {};
+    
+    // NO-OP
+    void endStatistics() {};
+    
     void endField();
     
     void write(const string &str);
