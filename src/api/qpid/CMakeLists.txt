@@ -23,10 +23,14 @@ add_library(
 	dtests-qpid-messaging-common
 
         common/formatter/QpidDecoder.cpp
+        common/formatter/FormatUtil.cpp
+        
+        # legacy code that should not be used
+        common/formatter/Formatter.cpp
 
         # TODO: make reusable
 	messaging/BrokerAgent.cpp
-	messaging/Formatter.cpp
+	
 )
 
 target_link_libraries(
