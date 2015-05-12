@@ -5,8 +5,8 @@
  * Created on May 6, 2015, 4:13 PM
  */
 
-#ifndef STRINGWRITER_H
-#define	STRINGWRITER_H
+#ifndef UPSTREAMWRITER_H
+#define UPSTREAMWRITER_H
 
 #include <string>
 #include <sstream>
@@ -80,5 +80,5 @@ private:
     void writePlain(const string &str);
 };
 
-#endif	/* STRINGWRITER_H */
+#endif	/* UPSTREAMWRITER_H */
 
