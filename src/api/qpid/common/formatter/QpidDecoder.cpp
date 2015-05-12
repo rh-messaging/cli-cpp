@@ -72,6 +72,8 @@ void QpidDecoder::writeContentSize(Writer *writer) const {
     if (size == 0) {
         if (message.getContentType() != ContentType::TEXT_PLAIN) {
             writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name, "None"));
+	    
+	    return;
         }
     }
         
