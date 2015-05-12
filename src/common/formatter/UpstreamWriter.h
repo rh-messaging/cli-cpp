@@ -17,22 +17,24 @@
 using std::string;
 using std::ostringstream;
 
-class DictWriter: public Writer {
+class UpstreamWriter: public Writer {
 public:
-    DictWriter(ostringstream *stream);
-    virtual ~DictWriter();
+    UpstreamWriter(ostringstream *stream);
+    virtual ~UpstreamWriter();
     
-    // NO-OP method
-    void start() {};
+    void start();
+    void end();
     
-    // NO-OP method
-    void end() {};
+    // NO-OP
+    void startHeader() {}
     
-    void startHeader();
-    void endHeader();
+    // NO-OP
+    void endHeader() {}
     
     void startProperties();
-    void endProperties();
+    
+    // NO-OP
+    void endProperties() {};
     
     void startContent();
     void endContent();
@@ -59,17 +61,14 @@ public:
 private:
     typedef Writer super;
     
+    static const char *START;
+    static const char END = ')';
+    
     static const char SECTION_START = '{';
     static const char SECTION_END = '}';
     
-    static const char HEADER_START = SECTION_START;
-    static const char HEADER_END = SECTION_END;
-    
-    static const char PROPERTIES_START = SECTION_START;
-    static const char PROPERTIES_END = SECTION_END;
-    
-    static const char CONTENT_START = SECTION_START;
-    static const char CONTENT_END = SECTION_END;
+    static const char CONTENT_START = '(';
+    static const char CONTENT_END = ')';
     
     static const char VALUE_START = '\'';
     static const char VALUE_END = '\'';
@@ -77,6 +76,8 @@ private:
     static const char FIELD_SEPARATOR = ',' ;
     
     ostringstream *stream;
+    
+    void writePlain(const string &str);
 };
 
 #endif	/* STRINGWRITER_H */

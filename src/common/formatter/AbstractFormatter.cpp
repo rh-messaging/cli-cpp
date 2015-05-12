@@ -13,16 +13,5 @@ AbstractFormatter::AbstractFormatter(const AbstractFormatter& orig) { }
 
 AbstractFormatter::~AbstractFormatter() { }
 
-void AbstractFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const {
-	writer->startHeader();
-	decoder->decodeHeader(writer);
-	decoder->decodeProperties(writer);
-	
-	writer->startContent();
-	decoder->decodeContent(writer);
-	writer->endContent();
-}
-
-
 
 

@@ -19,8 +19,11 @@ if (ENABLE_MODERN)
 	options/OptionsHelper.cpp
         formatter/Writer.cpp
         formatter/DictWriter.cpp
+        formatter/UpstreamWriter.cpp
         formatter/AbstractDecoder.cpp
         formatter/AbstractFormatter.cpp
+        formatter/DictFormatter.cpp
+        formatter/UpstreamFormatter.cpp
         logger/Logger.cpp
         logger/LoggerWrapper.cpp
 
