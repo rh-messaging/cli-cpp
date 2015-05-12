@@ -21,6 +21,9 @@ public:
     Writer();
     virtual ~Writer();
     
+    virtual void start() = 0;
+    virtual void end() = 0;
+    
     virtual void startHeader() = 0;
     virtual void endHeader() = 0;
     

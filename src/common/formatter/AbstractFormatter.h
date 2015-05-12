@@ -23,7 +23,7 @@ public:
      * Print message "upstream style" => 'Message(...)'
      * additional data could be aquired by 'bool verbose' parameter
      */
-    void printMessage(const AbstractDecoder *decoder, Writer *writer) const;
+    virtual void printMessage(const AbstractDecoder *dec, Writer *wr) const = 0;
 
     /* Print message "python dictionary style" to be easily evaluated
      * by python code. Print all available headers.
@@ -42,6 +42,8 @@ public:
     /* recursive python map formatter {'key': 'value' } */
     // std::string formatMap(const qpid::types::Variant::Map&);
 protected:
+    
+    
 };
 
 #endif	/* ABSTRACTFORMATTER_H */
