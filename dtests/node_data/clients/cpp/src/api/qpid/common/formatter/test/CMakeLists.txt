@@ -14,6 +14,18 @@ add_test(NAME QpidDecoderTest
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
     COMMAND ut_qpid_decoder_test)
 
+cmake_policy(SET CMP0003 OLD)
+add_executable(ut_qpid_dict_writer
+	ut_qpid_dict_writer.cpp
+)
+
+target_link_libraries(ut_qpid_dict_writer
+           dtests-qpid-messaging-common)
+
+add_test(NAME DictWriterTest
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin
+    COMMAND ut_qpid_dict_writer)
+
 
 cmake_policy(SET CMP0003 OLD)
 add_executable(ut_qpid_upstream_writer
