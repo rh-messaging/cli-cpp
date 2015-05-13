@@ -21,13 +21,13 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/lib)
 
 
 if( CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message("64 bits compiler detected" )
+    message(STATUS "64 bits compiler detected")
     set(DTEST_BUILD_PLATFORM 64)
-    set(DTEST_BUILD_PLATFORM_NAME "x64" )
+    set(DTEST_BUILD_PLATFORM_NAME "x64")
 else(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    MESSAGE( "32 bits compiler detected" )
+    message(STATUS "32 bits compiler detected")
     set(DTEST_BUILD_PLATFORM 32)
-    set(DTEST_BUILD_PLATFORM_NAME "x84" )
+    set(DTEST_BUILD_PLATFORM_NAME "x84")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 find_package(Boost 1.36.0)
