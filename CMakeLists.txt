@@ -3,11 +3,56 @@ PROJECT(dtests-cpp-contrib)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
+INCLUDE (CheckIncludeFile)
+INCLUDE (CheckIncludeFileCXX)
+
+macro (FailIfNotSet VARIABLE name)
+	if (NOT ${VARIABLE}) 
+		set(MSG "** A required include file, " ${name} ", was not found on your system **")
+		message(FATAL_ERROR ${MSG})
+	endif (NOT ${VARIABLE}) 
+endmacro(FailIfNotSet)
+
+CHECK_INCLUDE_FILE_CXX(cstdio HAVE_CSTDIO)
+FailIfNotSet(HAVE_CSTDIO cstdio)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/lib)
 
 
+if( CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message("64 bits compiler detected" )
+    set(DTEST_BUILD_PLATFORM 64)
+    set(DTEST_BUILD_PLATFORM_NAME "x64" )
+else(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    MESSAGE( "32 bits compiler detected" )
+    set(DTEST_BUILD_PLATFORM 32)
+    set(DTEST_BUILD_PLATFORM_NAME "x84" )
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
+find_package(Boost 1.36.0)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+else(Boost_FOUND)
+    set(BOOST_VERSION 141) 
+    set(BOOST_NON_DEFAULT_INCLUDE_DIR "/usr/include/boost${BOOST_VERSION}/")
+    set(BOOST_NON_DEFAULT_LIBRARY_DIR "/usr/lib/boost${BOOST_VERSION}/")
+
+    if (UNIX)
+	if (EXISTS "${BOOST_NON_DEFAULT_INCLUDE_DIR}")
+	        include_directories(${BOOST_NON_DEFAULT_INCLUDE_DIR})
+	else (EXISTS "${BOOST_NON_DEFAULT_INCLUDE_DIR}") 
+		message(FATAL_ERROR "Boost ${BOOST_VERSION} headers were not found in ${BOOST_NON_DEFAULT_INCLUDE_DIR}")
+	endif (EXISTS "${BOOST_NON_DEFAULT_INCLUDE_DIR}") 
+
+	if (EXISTS "${BOOST_NON_DEFAULT_LIBRARY_DIR}")
+	       	link_directories(${BOOST_NON_DEFAULT_LIBRARY_DIR})
+	else (EXISTS "${BOOST_NON_DEFAULT_LIBRARY_DIR}") 
+		message(FATAL_ERROR "Boost ${BOOST_VERSION} libraries were not found")
+	endif (EXISTS "${BOOST_NON_DEFAULT_LIBRARY_DIR}") 
+
+    endif(UNIX)
+endif(Boost_FOUND)
 
 enable_testing()
 

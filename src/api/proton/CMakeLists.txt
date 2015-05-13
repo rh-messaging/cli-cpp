@@ -12,9 +12,15 @@ include_directories(
         .
 )
 
-link_directories(
-	${PROTON_DIR}/lib64
-)
+if (${DTEST_BUILD_PLATFORM} EQUAL "64")
+	link_directories(
+		${PROTON_DIR}/lib64
+	)
+else(${DTEST_BUILD_PLATFORM} EQUAL "64")
+	link_directories(
+		${PROTON_DIR}/lib
+	)
+endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
 cmake_policy(SET CMP0003 OLD)
 add_library(
@@ -26,6 +32,7 @@ add_library(
 target_link_libraries(
 	dtests-proton-common
 
+	qpid-proton
 	dtests-cpp-contrib
 	dtests-cpp-common
 	dtests-cpp-common-options
