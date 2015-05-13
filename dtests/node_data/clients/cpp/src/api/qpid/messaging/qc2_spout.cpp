@@ -420,7 +420,7 @@ int main(int argc, char** argv)
 
             if (options.logStats.find("endpoints") != std::string::npos) {
                 Variant::Map stats = getSenderStats(sender);
-                formatter.printStatistics(stats);
+                printStatistics(message, stats);
             }
 
             session.close();
