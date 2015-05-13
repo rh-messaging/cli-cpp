@@ -3,12 +3,17 @@ PROJECT(dtests-cpp-common)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
+# CHECK_INCLUDE_FILE(qpid/types/Exception.h HAVE_QPID_TYPES_EXCEPTION)
+# FailIfNotSet(HAVE_QPID_TYPES_EXCEPTION qpid/types/Exception.h)
+
 include_directories(
 	common/
 	common/exceptions
 	common/options
 	common/options/modern
 )
+
+
 
 if (ENABLE_MODERN) 
     set(COMMON_MODERN_SRC
@@ -43,12 +48,6 @@ if (ENABLE_MODERN)
         
 endif (ENABLE_MODERN)
 
-if (ENABLE_PROTON)
-    set(COMMON_PROTON_LIBRARIES
-        qpid-proton
-    )
-endif(ENABLE_PROTON)
-
 add_library(dtests-cpp-common
         ${COMMON_MODERN_SRC}
         ${TEST_SUPPORT_SRC}
@@ -57,7 +56,6 @@ add_library(dtests-cpp-common
 )
 
 target_link_libraries(dtests-cpp-common
-	${COMMON_PROTON_LIBRARIES}
 	boost_filesystem
 	boost_system
 	pthread
