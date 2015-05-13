@@ -6,6 +6,11 @@ cmake_minimum_required(VERSION 2.4)
 set(QPID_MESSAGING_DIR /usr CACHE String "QPID Messaging Directory")
 set(QPID_INCLUDE_DIR ${QPID_MESSAGING_DIR}/include/qpid CACHE String "QPID Messaging Include Directory")
 set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib CACHE String "QPID Messaging Library Directory")
+set(QPID_WITH_GET_CONTENT_OBJECT OFF CACHE Bool "QPID Messaging contains 'GetContentObject")
+
+if (QPID_WITH_GET_CONTENT_OBJECT) 
+    add_definitions(-DNGETCONTENTOBJECT)
+endif (QPID_WITH_GET_CONTENT_OBJECT) 
 
 
 if (${DTEST_BUILD_PLATFORM} EQUAL "64")
