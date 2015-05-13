@@ -65,9 +65,11 @@ void printStatistics(const Message &message, const Variant::Map &stats) {
 	DictFormatter formatter = DictFormatter();
 	formatter.printStatistics(&decoder, &writer, stats);
 #else
-	Formatter formatter; 
+	Formatter formatter;
 	
-	formatter.printStatistics(stats);
+	Variant::Map tmp = const_cast<Variant::Map &>(stats);
+	
+	formatter.printStatistics(tmp);
 #endif // ENABLE_MODERN
 }
 	
