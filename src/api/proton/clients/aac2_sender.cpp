@@ -5,7 +5,7 @@
  *      Author: opiske
  */
 
-#include "SendingClient.h"
+#include "messenger/SendingClient.h"
 
 using dtests::proton::messenger::SendingClient;
 

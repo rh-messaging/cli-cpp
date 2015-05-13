@@ -39,6 +39,7 @@ add_custom_target(distclean
 )
 
 set(ENABLE_PROTON OFF CACHE BOOL "Enable proton clients")
+set(ENABLE_PROTON_REACTOR OFF CACHE BOOL "Enable proton reactor clients")
 set(ENABLE_QPID ON CACHE BOOL "Enable qpid clients")
 set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
