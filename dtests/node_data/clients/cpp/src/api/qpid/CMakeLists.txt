@@ -5,7 +5,12 @@ cmake_minimum_required(VERSION 2.4)
 
 set(QPID_MESSAGING_DIR /usr CACHE String "QPID Messaging Directory")
 set(QPID_INCLUDE_DIR ${QPID_MESSAGING_DIR}/include/qpid CACHE String "QPID Messaging Include Directory")
-set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib64 CACHE String "QPID Messaging Library Directory")
+set(QPID_LIBRARY_DIR ${QPID_MESSAGING_DIR}/lib CACHE String "QPID Messaging Library Directory")
+
+
+if (${DTEST_BUILD_PLATFORM} EQUAL "64")
+	set(QPID_LIBRARY_DIR ${QPID_LIBRARY_DIR}64 )
+endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
 include_directories(
 	${QPID_INCLUDE_DIR}
@@ -14,7 +19,7 @@ include_directories(
 )
 
 link_directories(
-	${QPID_LIBRARY_DIR}/lib64
+	${QPID_LIBRARY_DIR}
 )
 
 # TODO: move this to a common directory
