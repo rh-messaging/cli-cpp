@@ -10,8 +10,6 @@
 
 #include <optparse/OptionParser.h>
 
-#include <boost/log/trivial.hpp>
-
 #include <proton/cpp/Container.h>
 
 #include "ModernClient.h"
