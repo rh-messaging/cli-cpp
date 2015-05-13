@@ -5,7 +5,7 @@
  *      Author: opiske
  */
 
-#include "ReceivingClient.h"
+#include "messenger/ReceivingClient.h"
 
 using dtests::proton::messenger::ReceivingClient;
 

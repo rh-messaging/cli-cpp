@@ -9,6 +9,7 @@ set(PROTON_DIR /usr CACHE String "Proton directory")
 include_directories(
 	${PROTON_DIR}/include
 	common
+        .
 )
 
 link_directories(
@@ -75,58 +76,39 @@ target_link_libraries(
 )
 
 
-# Qpid Proton Reactor clients
-cmake_policy(SET CMP0003 OLD)
-add_executable(aac1_sender
-	clients/aac1_sender.cpp
-)
-
-target_include_directories(
-	aac1_sender PUBLIC
-	reactor
-)
-
+set(proton-reactor-clients
+	aac1_sender
 	
-target_link_libraries(aac1_sender
-	dtests-proton-reactor
 )
 
-#cmake_policy(SET CMP0003 OLD)
-# add_executable(aac1_receiver
-#	clients/aac1_receiver.cpp)
-	
-#target_link_libraries(aac1_receiver
-#	dtests-proton-reactor
-#)
-
-
-# Qpid Proton Messenger clients
-cmake_policy(SET CMP0003 OLD)
-add_executable(aac2_sender
-	clients/aac2_sender.cpp
+set(proton-messenger-clients
+	aac2_sender
+        aac2_receiver
 )
 
-target_include_directories(
-	aac2_sender PUBLIC
-	messenger
-	messenger/exceptions
-)
-	
-target_link_libraries(aac2_sender
-	dtests-proton-messenger
-)
+ 
+if (ENABLE_PROTON_REACTOR)
+    foreach(client ${proton-reactor-clients})
+            cmake_policy(SET CMP0003 OLD)
+            add_executable(${client}
+                    clients/${client}.cpp
+            )
 
-cmake_policy(SET CMP0003 OLD)
-add_executable(aac2_receiver
-	clients/aac2_receiver.cpp
-)
 
-target_include_directories(
-	aac2_receiver PUBLIC
-	messenger
-	messenger/exceptions
-)
-	
-target_link_libraries(aac2_receiver
-	dtests-proton-messenger
-)
+            target_link_libraries(${client}
+                    dtests-proton-reactor
+            )
+    endforeach(client)
+endif(ENABLE_PROTON_REACTOR)
+
+foreach(client ${proton-messenger-clients})
+        cmake_policy(SET CMP0003 OLD)
+	add_executable(${client}
+		clients/${client}.cpp
+	)
+
+
+	target_link_libraries(${client}
+		dtests-proton-messenger
+	)
+endforeach(client)

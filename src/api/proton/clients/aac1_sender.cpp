@@ -5,7 +5,7 @@
  *      Author: opiske
  */
 
-#include "SendingClient.h"
+#include "reactor/SendingClient.h"
 
 using dtests::proton::reactor::SendingClient;
 
