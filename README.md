@@ -34,4 +34,4 @@ Enable/Disable Flags:
 
 With flags
 -DQPID_WITH_GET_CONTENT_OBJECT -> Whether qpid code contains getContentObject (defines NGETCONTENTOBJECT)
--DQPID_SOURCE_WITH_SYS_EPOCH -> Whether qpid code contains getContentObject (defines QPIDSYSEPOCH if set [ default ] or QPID_SOURCE_WITH_SYS_EPOCH if unset)
+-DQPID_SOURCE_WITH_SYS_EPOCH -> Defines QPIDSYSEPOCH if set [ default ] or QPID_SOURCE_WITH_SYS_EPOCH if unset
