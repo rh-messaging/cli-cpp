@@ -125,6 +125,10 @@ set(qpid_messaging_clients
 	# qpid-send
 
         ${qpid_messaging_ll_clients}
+
+        aac0_connector
+        aac0_receiver
+        aac0_sender
 )
 
 
