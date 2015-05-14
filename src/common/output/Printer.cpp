@@ -21,8 +21,7 @@ Printer::Printer(const Printer& orig)
 }
 
 Printer::~Printer() {
-	flush();
-
+	
 }
 
 void Printer::flush() {
