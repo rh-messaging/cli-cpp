@@ -97,7 +97,7 @@ protected:
     void decodeValue(Writer *writer, const list<T> &inputList) {
         
         if (inputList.size() == 0) {
-            return 0;
+            return;
         }
         
         writer->startList();
