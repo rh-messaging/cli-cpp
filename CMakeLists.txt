@@ -76,8 +76,8 @@ add_custom_target(distclean
    COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
 )
 
-set(ENABLE_PROTON OFF CACHE BOOL "Enable proton clients")
-set(ENABLE_PROTON_REACTOR OFF CACHE BOOL "Enable proton reactor clients")
+set(ENABLE_QPID_PROTON OFF CACHE BOOL "Enable qpid proton clients")
+set(ENABLE_QPID_PROTON_REACTOR OFF CACHE BOOL "Enable qpid proton reactor clients")
 set(ENABLE_QPID ON CACHE BOOL "Enable qpid clients")
 set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
@@ -89,18 +89,18 @@ endif (BUILD_WITH_UNIT_TESTS)
 if (ENABLE_MODERN) 
     add_definitions(-DENABLE_MODERN) 
 else (ENABLE_MODERN) 
-    if (ENABLE_PROTON)
+    if (ENABLE_QPID_PROTON)
         message(FATAL_ERROR "Modern code is a requirement for proton code")
-    endif(ENABLE_PROTON)
+    endif(ENABLE_QPID_PROTON)
 endif(ENABLE_MODERN)
 
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)
 
-if (ENABLE_PROTON)
-    add_definitions(-DENABLE_PROTON) 
-    add_subdirectory(src/api/proton)
-endif(ENABLE_PROTON)
+if (ENABLE_QPID_PROTON)
+    add_definitions(-DENABLE_QPID_PROTON) 
+    add_subdirectory(src/api/qpid-proton)
+endif(ENABLE_QPID_PROTON)
 
 
 if (ENABLE_QPID) 
