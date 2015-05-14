@@ -17,11 +17,14 @@
 #include <typeinfo>
 
 #include "OptionParser.h"
-#include "Formatter.h"
 #include "Utils.h"
+#include "formatter/FormatUtil.h"
 
 using namespace qpid::messaging;
 using namespace qpid::types;
+
+using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printStatistics;
 
 struct Options : OptionParser
 {
@@ -139,7 +142,7 @@ int main(int argc, char** argv)
     double *ptsdata = NULL;
 
     Options options;
-    Formatter formatter;
+    
     if (options.parse(argc, argv)) {
 
         // init timestamping
@@ -187,7 +190,7 @@ int main(int argc, char** argv)
                 if (options.log_msgs == "body") {
                     std::cout << message.getContent() << std::endl;
                 } else if (options.log_msgs == "dict") {
-                    formatter.printMessageAsDict(message);
+                    printMessageDict(message);
                 }
 
                 // define message rate --count + --duration
