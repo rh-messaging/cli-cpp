@@ -38,10 +38,7 @@ static Message buildMessage(const char *content) {
 	message.setPriority(4);
 	message.setReplyTo(Address("reply.to.queue"));
 	
-	Variant::Map properties = Variant::Map();
-	properties["key1"] = "value1";
-	
-	message.setProperties(properties);
+	message.setProperty("key1", "value1");
 
 	return message;
 }
