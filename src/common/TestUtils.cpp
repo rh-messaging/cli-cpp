@@ -4,27 +4,41 @@
 
 
 bool assertFileContent(const char *filename, const char *expected, size_t size) { 
-	char buffer[size + 1] = { 0 };
-	FILE *readStream = fopen(filename, "r"); 
+	FILE *readStream = NULL;
+	char *buffer = NULL;
+	bool ret = false;
+	
+	buffer = (char *) malloc(size + 1); 
+	if (!buffer) {
+		fprintf(stderr, "Unable to allocate %i bytes for memory buffer",
+			size);
+		goto err_sys;
+	}
+	bzero(buffer, size + 1);
+	
+	readStream = fopen(filename, "r"); 
 	
 	if (!readStream) {
 		fprintf(stderr, "Unable to open output file %s for reading", 
 			filename);
-		goto error;
+		goto err_test;
 	}
 	
 	fread(buffer, size, 1, readStream);
 	
 	if (!assertEquals(expected, buffer, size)) {
-		goto error;
+		goto err_test;
 	}
 	
-	fclose(readStream);
-	return true;
+	ret = true;
 	
-	error:	
+	err_test:
 	fclose(readStream);
-	return false;
+	
+	err_sys:
+	free(buffer);
+
+	return ret;
 }
 
 bool assertEquals(const char *expected, const char *actual) {
