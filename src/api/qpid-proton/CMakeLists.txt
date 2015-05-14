@@ -94,7 +94,7 @@ set(proton-messenger-clients
 )
 
  
-if (ENABLE_PROTON_REACTOR)
+if (ENABLE_QPID_PROTON_REACTOR)
     foreach(client ${proton-reactor-clients})
             cmake_policy(SET CMP0003 OLD)
             add_executable(${client}
@@ -106,7 +106,7 @@ if (ENABLE_PROTON_REACTOR)
                     dtests-proton-reactor
             )
     endforeach(client)
-endif(ENABLE_PROTON_REACTOR)
+endif(ENABLE_QPID_PROTON_REACTOR)
 
 foreach(client ${proton-messenger-clients})
         cmake_policy(SET CMP0003 OLD)
