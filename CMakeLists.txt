@@ -88,6 +88,10 @@ endif (BUILD_WITH_UNIT_TESTS)
 
 if (ENABLE_MODERN) 
     add_definitions(-DENABLE_MODERN) 
+else (ENABLE_MODERN) 
+    if (ENABLE_PROTON)
+        message(FATAL_ERROR "Modern code is a requirement for proton code")
+    endif(ENABLE_PROTON)
 endif(ENABLE_MODERN)
 
 add_subdirectory(src/contrib)
