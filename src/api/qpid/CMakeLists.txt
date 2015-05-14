@@ -32,7 +32,6 @@ include_directories(
 	${QPID_INCLUDE_DIR}
 	.
 	common
-        common/formatter
 )
 
 link_directories(

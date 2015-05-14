@@ -22,11 +22,15 @@
 #include <boost/format.hpp>
 
 #include "OptionParser.h"
-#include "Formatter.h"
+#include "formatter/Formatter.h"
 #include "Utils.h"
+#include "formatter/FormatUtil.h"
 
 using namespace qpid::messaging;
 using namespace qpid::types;
+
+using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printStatistics;
 
 typedef std::vector<std::string> string_vector;
 
@@ -285,7 +289,7 @@ int main(int argc, char** argv)
     double *ptsdata = NULL;
 
     Options options;
-    Formatter formatter;
+    
     if (options.parse(argc, argv)) {
 
         // init timestamping
@@ -432,7 +436,8 @@ int main(int argc, char** argv)
 
                 if (options.log_stats.find("endpoints") != std::string::npos) {
                   Variant::Map stats = getSenderStats(sender);
-                  formatter.printStatistics(stats);
+		  
+		  printStatistics(message, stats);
                 }
 
                 if (options.sync_mode == "action")
@@ -442,7 +447,7 @@ int main(int argc, char** argv)
                 if (options.log_msgs == "body") {
                     std::cout << message.getContent() << std::endl;
                 } else if (options.log_msgs == "dict") {
-                    formatter.printMessageAsDict(message);
+                    printMessageDict(message);
                 }
 
                 // define message rate --count + --duration
@@ -488,7 +493,8 @@ int main(int argc, char** argv)
 
             if (options.log_stats.find("endpoints") != std::string::npos) {
                 Variant::Map stats = getSenderStats(sender);
-                formatter.printStatistics(stats);
+
+		printStatistics(message, stats);
             }
 
             session.close();
