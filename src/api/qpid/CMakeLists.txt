@@ -12,7 +12,7 @@ set(QPID_WITH_GET_CONTENT_OBJECT OFF CACHE Bool "QPID Messaging contains 'GetCon
 set(QPID_VERSION "0.18" CACHE String "QPID Version") 
 set(QPID_SOURCE "/usr/src/debug/qpid-${QPID_VERSION}/cpp" CACHE String "QPID Version")
 set(QPID_SOURCE_INCLUDE_DIR "${QPID_SOURCE}/include" CACHE String "QPID source code include dir")
-set(ENABLE_QPID_LL OFF CACHE BOOL "Enable qpid low level clients")
+set(ENABLE_QPID_CLIENT OFF CACHE BOOL "Enable qpid (own) clients")
 
 set(QPID_SOURCE_WITH_SYS_EPOCH ON CACHE BOOL "Use QPIDSYSEPOCH")
 
@@ -38,11 +38,11 @@ link_directories(
 	${QPID_LIBRARY_DIR}
 )
 
-if (ENABLE_QPID_LL)
+if (ENABLE_QPID_CLIENT)
 	set(qpid_low_level_sources
 		common/Statistics.cpp
 	)
-endif (ENABLE_QPID_LL)
+endif (ENABLE_QPID_CLIENT)
 
 # TODO: move this to a common directory
 cmake_policy(SET CMP0003 OLD)
@@ -73,8 +73,8 @@ target_link_libraries(
 # These binaries depend on the qpid source code, therefore they may note be 
 # compiled unless qpid-cpp-mrg-debuginfo and qpid-qmf-debuginfo have been 
 # installed or the qpid source code is present somehow.
-if (ENABLE_QPID_LL) 
-    add_definitions(-DENABLE_QPID_LL)
+if (ENABLE_QPID_CLIENT) 
+    add_definitions(-DENABLE_QPID_CLIENT)
 
     include_directories(
 	${QPID_SOURCE_INCLUDE_DIR}
@@ -98,7 +98,7 @@ if (ENABLE_QPID_LL)
     target_link_libraries(
 	qpidclient
     )
-endif(ENABLE_QPID_LL)
+endif(ENABLE_QPID_CLIENT)
 
 set(qpid_messaging_clients
 	qc2_connector
