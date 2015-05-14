@@ -59,10 +59,8 @@ bool testMap() {
 	std::ostringstream stream;
 	DictWriter writer = DictWriter(&stream);
 	Message message = Message();
-	
-	Variant::Map properties = Variant::Map();
-	properties["key1"] = "value1";
-	message.setProperties(properties);
+
+	message.setProperty("key1", "value1");
 
 	QpidDecoder decoder = QpidDecoder(message);
 	decoder.decodeProperties(&writer);
