@@ -5,15 +5,10 @@
  *      Author: opiske
  */
 
-#include "ReceivingClient.h"
-
-using dtests::proton::messenger::ReceivingClient;
+#include <cstdlib>
 
 int main(int argc, char** argv) {
-	ReceivingClient client = ReceivingClient();
-
-	return client.run(argc, argv);
-
+	return EXIT_SUCCESS;
 }
 
 
