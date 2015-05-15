@@ -103,19 +103,18 @@ set(proton-messenger-clients
 )
 
  
-if (ENABLE_QPID_PROTON_REACTOR)
-    foreach(client ${proton-reactor-clients})
-            cmake_policy(SET CMP0003 OLD)
-            add_executable(${client}
-                    clients/${client}.cpp
-            )
+foreach(client ${proton-reactor-clients})
+        cmake_policy(SET CMP0003 OLD)
+        add_executable(${client}
+                clients/${client}.cpp
+        )
 
 
-            target_link_libraries(${client}
-                    dtests-proton-reactor
-            )
-    endforeach(client)
-endif(ENABLE_QPID_PROTON_REACTOR)
+        target_link_libraries(${client}
+                dtests-proton-reactor
+        )
+endforeach(client)
+
 
 foreach(client ${proton-messenger-clients})
         cmake_policy(SET CMP0003 OLD)
