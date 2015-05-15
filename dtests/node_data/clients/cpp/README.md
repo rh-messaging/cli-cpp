@@ -9,8 +9,8 @@ git clone git@github.com:cliffjansen/qpid-proton.git -b cpp-work
 cd qpid-proton
 curl "http://pastebin.test.redhat.com/pastebin.php?dl=281175" -o default-cpp-on.patch
 patch -p1 < default-cpp-on.patch
-cmake -DSYSINSTALL_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/opt/devel/qpid-proton -DDEFAULT_CPP=ON .
-make
+cmake -DSYSINSTALL_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/opt/devel/qpid-proton -DDEFAULT_CPP=ON -DBUILD_TESTING=ON .
+make all test
 sudo make install
      
 Clients:
@@ -26,10 +26,10 @@ cmake -DENABLE_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton -DENABLE_MODERN=ON 
 
 ------------- Build details --------------
 Enable/Disable Flags:
--DENABLE_PROTON -> Enable proton (messaging/reactor clients)
+-DEENABLE_QPID_PROTON -> Enable qpid proton support (messaging/reactor clients)
 -DENABLE_MODERN -> Enable new and/or refactored code. It is a requirement for -DENABLE_PROTON
--DENABLE_QPID -> Enable qpid messaging clients
--DENABLE_QPID_LL -> Enable qpid low level* messaging clients. It requires qpid source code on the build host
+-DENABLE_QPID_MESSAGING -> Enable qpid messaging clients
+-DENABLE_QPID_CLIENT -> Enable qpid clients. It requires qpid source code on the build host
 -DBUILD_WITH_UNIT_TESTS -> Builds the unit tests for the client and enables a new target ('make test')
 
 With flags
