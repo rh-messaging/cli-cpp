@@ -26,7 +26,7 @@ cmake -DENABLE_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton -DENABLE_MODERN=ON 
 
 ------------- Build details --------------
 Enable/Disable Flags:
--DEENABLE_QPID_PROTON -> Enable qpid proton support (messaging/reactor clients)
+-DENABLE_QPID_PROTON -> Enable qpid proton support (messaging/reactor clients)
 -DENABLE_MODERN -> Enable new and/or refactored code. It is a requirement for -DENABLE_PROTON
 -DENABLE_QPID_MESSAGING -> Enable qpid messaging clients
 -DENABLE_QPID_CLIENT -> Enable qpid clients. It requires qpid source code on the build host
