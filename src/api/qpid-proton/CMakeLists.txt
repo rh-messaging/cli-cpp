@@ -93,13 +93,13 @@ target_link_libraries(
 
 
 set(proton-reactor-clients
-	aac1_sender
-	aac1_receiver
+	aac3_sender
+	aac3_receiver
 )
 
 set(proton-messenger-clients
-	aac2_sender
-        aac2_receiver
+	aac4_sender
+        aac4_receiver
 )
 
  
