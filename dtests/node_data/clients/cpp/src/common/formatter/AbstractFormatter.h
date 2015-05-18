@@ -13,6 +13,10 @@
 #include "AbstractDecoder.h"
 #include "Writer.h"
 
+/**
+ * An abstract formatter provides a base interface on which message formatters 
+ * can be implemented
+ */
 class AbstractFormatter {
 public:
     AbstractFormatter();

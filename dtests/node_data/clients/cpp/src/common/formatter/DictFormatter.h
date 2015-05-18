@@ -10,6 +10,10 @@
 
 #include "AbstractFormatter.h"
 
+/**
+ * Implements a Python dictionary formatter (ie.: saves data in a dict-based 
+ * format)
+ */
 class DictFormatter: public AbstractFormatter {
 public:
     DictFormatter();
