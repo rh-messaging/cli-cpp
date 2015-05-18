@@ -39,22 +39,77 @@ public:
     AbstractDecoder(const AbstractDecoder& orig);
     virtual ~AbstractDecoder();
     
+    /**
+     * Decodes the message header
+     * @param writer a pointer to a writer object that can write the decoded 
+     * message header
+     */
     virtual void decodeHeader(Writer *writer) const = 0;
+    
+    /**
+     * Decodes the message properties
+     * @param writer a pointer to a writer object that can write the decoded 
+     * message properties
+     */
     virtual void decodeProperties(Writer *writer) const = 0;
+    
+    /**
+     * Decodes the message content
+     * @param writer a pointer to a writer object that can write the decoded 
+     * message content
+     */
     virtual void decodeContent(Writer *writer) const = 0;
     
+    
+    /**
+     * Decodes the performance statistics
+     * @param writer a pointer to a writer object that can write the decoded 
+     * message content
+     * @param valuesMap the performance statistics map (as in map<string, Y>)
+     */
     template <typename T, typename Y>
     void decodeStatistics(Writer *writer, const map<T, Y> &valuesMap) const {
         decodeValue(writer, valuesMap);
     }
     
 protected:
+    
+    /**
+     * Decodes a boolean value
+     * @param the boolean value
+     * @return the decoded value as a string
+     */
     virtual string decodeValue(bool) const;
+    
+    /**
+     * Decodes a boolean value
+     * @param writer a pointer to a writer object that can write the decoded 
+     * value
+     * @param the boolean value
+     */
     virtual void decodeValue(Writer *writer, bool) const;
     
+    /**
+     * Decodes a string
+     * @param the string value
+     * @return the decoded string value
+     */
     virtual string decodeValue(const string &) const;
+    
+    
+    /**
+     * Decodes a string
+     * @param writer a pointer to a writer object that can write the decoded 
+     * value
+     * @param the string value
+     */
     virtual void decodeValue(Writer *writer, const string &) const;
     
+    /**
+     * Decodes a number
+     * @param number the number to decode
+     * @return the decoded number as a string
+     */
     template <typename T> 
     string decodeValue(T number) const {
         ostringstream ret;
@@ -65,10 +120,28 @@ protected:
     }
     
     
+    /**
+     * Decodes a number
+     * @param number the number to decode
+     * @return the decoded number as a string
+     */
     virtual string decodeValue(float number) const;
+    
+    /**
+     * Decodes a number
+     * @param writer a pointer to a writer object that can write the decoded 
+     * value
+     * @param number the number to decode
+     */
     virtual void decodeValue(Writer *writer, float number) const;
     
 
+    /**
+     * Decodes a map
+     * @param writer a pointer to a writer object that can write the decoded 
+     * map
+     * @param valuesMap the map to decode
+     */
     template <typename T, typename Y>
     void decodeValue(Writer *writer, const map<T, Y> &valuesMap) const {
         
@@ -93,6 +166,13 @@ protected:
         writer->endMap();
     }
     
+    
+    /**
+     * Decodes a list
+     * @param writer a pointer to a writer object that can write the decoded 
+     * map
+     * @param inputList the list to decode
+     */
     template <typename T>
     void decodeValue(Writer *writer, const list<T> &inputList) {
         

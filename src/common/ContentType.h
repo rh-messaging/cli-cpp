@@ -12,10 +12,13 @@
 
 using std::string;
 
+/**
+ * RFC 2046-based list of supported content types (media types) in the 
+ * messaging systems
+ */
 class ContentType {
 public:
     static const char *TEXT_PLAIN;
-    
     
 private:
     

@@ -15,15 +15,37 @@ namespace common {
 
 using namespace std;
 
+/**
+ * Base exception class
+ */
 class BaseException {
 public:
 	BaseException();
+        
+        /**
+         * Constructor
+         * @param message the exception message
+         */
 	BaseException(const string &message);
+        
+        /**
+         * Copy constructor
+         * @param other
+         */
 	BaseException(const BaseException &other);
 
 	virtual ~BaseException();
 
+        /**
+         * Sets the exception message
+         * @param message the exception message
+         */
 	void setMessage(const string &message);
+        
+        /**
+         * Gets the exception message
+         * @return the exception message
+         */
 	string getMessage() const;
 
 	BaseException &operator=(const BaseException &rhs);

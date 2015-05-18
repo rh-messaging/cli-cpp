@@ -17,6 +17,9 @@ namespace common {
 
 using namespace std;
 
+/**
+ * Input/ouput exception
+ */
 class IOException: public BaseException {
 public:
 	IOException(const string &message);
