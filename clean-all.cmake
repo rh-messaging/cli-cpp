@@ -22,3 +22,7 @@ foreach(subdir ${cmake_dirs})
 
 	endforeach(file)
 endforeach(subdir)
+
+if (EXISTS ${CMAKE_BINARY_DIR}/target/doc)
+    file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/target/doc)
+endif (EXISTS ${CMAKE_BINARY_DIR}/target/doc)
