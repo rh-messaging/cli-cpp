@@ -76,6 +76,11 @@ add_custom_target(distclean
    COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
 )
 
+
+add_custom_target(documentation
+   COMMAND ${CMAKE_COMMAND} -P documentation.cmake
+)
+
 set(ENABLE_QPID_PROTON OFF CACHE BOOL "Enable qpid proton clients")
 set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
 set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
