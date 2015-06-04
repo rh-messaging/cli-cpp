@@ -4,6 +4,7 @@ set(cmake_generated CMakeCache.txt
                     Makefile
                     CMakeFiles
                     CTestTestfile.cmake
+                    Testing 
 )
 
 # In all project subdirectories
