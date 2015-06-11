@@ -12,6 +12,11 @@
 
 #include "options/modern/ModernOptionsParser.h"
 
+
+/**
+ * SenderOptionsParser offers a common interface for implementing command-line 
+ * options parsers for both newer sender C++ clients
+ */
 class SenderOptionsParser: public ModernOptionsParser {
 public:
 	SenderOptionsParser();
