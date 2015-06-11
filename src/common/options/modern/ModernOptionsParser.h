@@ -18,6 +18,11 @@ using namespace std;
 
 using namespace optparse;
 
+
+/**
+ * ModernOptionsParser offers a common interface for implementing command-line 
+ * options parsers for both newer C++ clients
+ */
 class ModernOptionsParser: public BaseOptionsParser {
 public:
 	ModernOptionsParser();

@@ -30,6 +30,18 @@ vector<string> split(const string &, const string &);
 map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
 
+/**
+ * An utility class template to help set options values/command values to their 
+ * respective class instances. For example, given an instance of this class, 
+ * a command line option named msg-reply-to and a bean named 'message' of type 
+ * Message:
+ * 
+ * setter.set("msg-reply-to", &message, &Message::setReplyTo);
+ *
+ * Thefore reducing all the clutter of reading the option value, testing for 
+ * empty/null/invalid/etc and setting it on the target object instance
+ * 
+ */
 class OptionsSetter {
 public:
 	OptionsSetter(const optparse::Values &options);
@@ -37,6 +49,12 @@ public:
 
 	string getContent();
 
+        /**
+         * Set an option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         */
 	template<typename T, typename Y>
 	void set(const string &name, T *obj, Y setter) const {
 		if (options.is_set(name)) {
@@ -47,9 +65,12 @@ public:
 	}
 
 
-
 	/**
-	 * NOTE: probably there's a better way to do these methods, so this code
+	 * Set a number option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         * NOTE: probably there's a better way to do these methods, so this code
 	 * should be checked in the future
 	 */
 	template<typename T, typename Y>
@@ -61,6 +82,15 @@ public:
 		}
 	}
 
+        
+        /**
+	 * Set a boolean option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         * NOTE: probably there's a better way to do these methods, so this code
+	 * should be checked in the future
+	 */
 	template<typename T, typename Y>
 	void setBoolean(const string &name, T *obj, Y setter) const {
 		if (options.is_set(name)) {
@@ -75,6 +105,15 @@ public:
 		}
 	}
 
+        
+        /**
+	 * Set a map option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         * NOTE: probably there's a better way to do these methods, so this code
+	 * should be checked in the future
+	 */
 	template<typename T, typename Y>
 	void setMap(const string &name, T *obj, Y setter,
 			const string &keySeparator = ";",
