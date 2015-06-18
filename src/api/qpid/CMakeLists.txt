@@ -39,6 +39,10 @@ link_directories(
 )
 
 if (ENABLE_QPID_CLIENT)
+        set(qpid_client_link_libraries
+            qpidcommon
+        )
+
 	set(qpid_low_level_sources
 		common/Statistics.cpp
 	)
@@ -68,6 +72,7 @@ target_link_libraries(
 	qpidtypes
 	boost_regex
 	dtests-cpp-legacy
+	${qpid_client_link_libraries}
 )
 
 # These binaries depend on the qpid source code, therefore they may note be 
