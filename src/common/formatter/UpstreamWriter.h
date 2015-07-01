@@ -17,6 +17,9 @@
 using std::string;
 using std::ostringstream;
 
+/**
+ * Upstream-specific data writer
+ */
 class UpstreamWriter: public Writer {
 public:
     UpstreamWriter(ostringstream *stream);

@@ -10,6 +10,9 @@
 
 #include <cstdio>
 
+/**
+ * Prints (writes) data to a FILE stream
+ */
 class Printer {
 public:
     /**
