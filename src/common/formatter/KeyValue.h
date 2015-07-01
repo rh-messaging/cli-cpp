@@ -14,6 +14,9 @@
 using std::pair;
 using std::string;
 
+/**
+ * An abstraction for key/value data
+ */
 typedef pair<string, string> KeyValue;
 
 

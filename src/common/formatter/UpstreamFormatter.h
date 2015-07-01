@@ -10,6 +10,9 @@
 
 #include "AbstractFormatter.h"
 
+/**
+ * Upstream-specific data formatter
+ */
 class UpstreamFormatter: public AbstractFormatter {
 public:
     UpstreamFormatter();
