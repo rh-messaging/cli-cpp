@@ -17,6 +17,10 @@
 using std::string;
 using std::ostringstream;
 
+
+/**
+ * Python dictionary data writer
+ */
 class DictWriter: public Writer {
 public:
     DictWriter(ostringstream *stream);

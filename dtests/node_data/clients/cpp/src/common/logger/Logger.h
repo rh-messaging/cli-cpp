@@ -34,6 +34,9 @@ using dtests::common::log::LogLevel;
 
 class LoggerWrapper;
 
+/**
+ * Implements a simple logger
+ */
 class Logger {
     friend class LoggerWrapper;
     
