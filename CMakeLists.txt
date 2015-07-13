@@ -30,8 +30,8 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(DTEST_BUILD_PLATFORM_NAME "x84")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-set(BOOST_INCLUDE_DIR "/usr/include" CACHE String "Boost directory")
-set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost directory")
+set(BOOST_INCLUDE_DIR "/usr/include" CACHE String "Boost include directory")
+set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost library directory")
 
 
 if (EXISTS "${BOOST_INCLUDE_DIR}")
