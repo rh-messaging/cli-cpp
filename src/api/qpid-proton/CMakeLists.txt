@@ -4,7 +4,7 @@ PROJECT(dtests-proton-cpp)
 cmake_minimum_required(VERSION 2.4)
 
 
-set(PROTON_DIR /usr CACHE String "Proton directory")
+set(PROTON_DIR /usr CACHE String "QPID Proton base directory")
 
 # Do not change. Please see the comments on the aac{1,2}_* clients
 set(QPID_PROTON_WITH_MESSAGING_API OFF CACHE BOOL 
