@@ -161,6 +161,11 @@ To clean all code, including the build script cache:
 ```make distclean```
 
 
+To run quality checks on the code:
+
+```make check```
+
+
 # References
 
 * [QPid Proton: QE building tips] (https://mojo.redhat.com/docs/DOC-1029945)
