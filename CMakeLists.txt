@@ -112,3 +112,13 @@ if (ENABLE_QPID_MESSAGING)
     add_subdirectory(src/api/qpid)
 endif(ENABLE_QPID_MESSAGING)
  
+set(CPPCHECK_EXECUTABLE "/usr/bin/cppcheck" CACHE STRING "Path to cppcheck")
+set(CPPCHECK_FLAGS "--report-progress" "-v" "--enable=all" "--xml"
+        CACHE STRING "Options for cppcheck")
+
+set(CPPCHECK_DEFS "-DENABLE_MODERN" "-DENABLE_PROTON" "-DENABLE_QPID_MESSAGING" 
+    CACHE STRING "Defines for cppcheck")
+
+add_custom_target(check
+   COMMAND ${CPPCHECK_EXECUTABLE} ${CPPCHECK_DEFS} ${CPPCHECK_FLAGS} ${CMAKE_BINARY_DIR}
+)
