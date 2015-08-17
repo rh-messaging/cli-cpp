@@ -20,6 +20,10 @@ namespace dtests {
 namespace proton {
 namespace common {
 
+/**
+ * An implementation of a the CPP client that uses the newer format for command
+ * line options, logger, etc.
+ */
 class ModernClient: public Client {
 public:
 	ModernClient();
@@ -28,6 +32,10 @@ public:
 	virtual int run(int argc, char **argv) const = 0;
 
 protected:
+        /**
+         * Given the command line options, it sets the log level accordingly
+         * @param options the command line options
+         */
 	void setLogLevel(const optparse::Values &options) const;
 
 private:

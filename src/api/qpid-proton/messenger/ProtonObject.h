@@ -15,9 +15,12 @@ namespace dtests {
 namespace proton {
 namespace messenger {
 
+/**
+ * A base class for proton-specific objects
+ */
 class ProtonObject {
 public:
-	ProtonObject();
+    ProtonObject();
     virtual ~ProtonObject();
 protected:
     static Logger logger;

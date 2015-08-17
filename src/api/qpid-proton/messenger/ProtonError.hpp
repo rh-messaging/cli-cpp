@@ -22,7 +22,10 @@ namespace proton {
 namespace messenger {
 
 using namespace dtests::common::log;
-    
+
+/**
+ * A template-based error container for proton-based error data
+ */
 class ProtonError {
 public:
 	template <typename T>
@@ -30,6 +33,13 @@ public:
 };
 
 
+/**
+ * Process any proton error data and transforms it to the given parameterized 
+ * class type (usually an Exception-based object with a string constructor)
+ * @param error the proton error
+ * @param message the error message to prefix the internal proton error message
+ * @return An instance of type T with the given proton error data
+ */
 template <typename T>
 T ProtonError::handleError(pn_error_t *error, const string &message) {
     Logger logger = LoggerWrapper::getLogger();
