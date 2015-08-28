@@ -337,7 +337,7 @@ int main(int argc, char** argv)
                 }
                 std::stringstream spoutid;
                 spoutid << sid << ":" << count;
-                message.getProperties()["spout-id"] = spoutid.str();
+                message.getProperties()["spout_id"] = spoutid.str();
 
                 if (options.id != "")
                   message.setMessageId(options.id);
