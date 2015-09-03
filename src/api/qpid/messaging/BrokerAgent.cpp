@@ -402,14 +402,18 @@ BrokerAgent::searchMap(std::string key, const qpid::types::Variant::Map & in_dat
       //std::cout << "== FOUND " << map_iter->second.asString() << std::endl;
       return map_iter->second;
     }
-    else if (map_iter->second.getType() == qpid::types::VAR_MAP && recursive == true) {
-      const qpid::types::Variant::Map & tmp_map = map_iter->second.asMap();
-      const qpid::types::Variant & tmp_result = this->searchMap(key, tmp_map);
-      //std::cout << "STYPE " << tmp_result.getType() << std::endl;
-      if (tmp_result.getType() != qpid::types::VAR_VOID) { // if result is not VOID, then return
-        return tmp_result;
+  }
+  if (recursive == true) {
+    for (map_iter = in_data.begin(); map_iter != in_data.end(); map_iter++) {
+      if (map_iter->second.getType() == qpid::types::VAR_MAP) {
+        const qpid::types::Variant::Map & tmp_map = map_iter->second.asMap();
+        const qpid::types::Variant & tmp_result = this->searchMap(key, tmp_map);
+        //std::cout << "STYPE " << tmp_result.getType() << std::endl;
+        if (tmp_result.getType() != qpid::types::VAR_VOID) { // if result is not VOID, then return
+          return tmp_result;
+        }
+        //otherwise continue searching
       }
-      //otherwise continue searching
     }
   }
 
