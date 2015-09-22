@@ -9,11 +9,12 @@
 // For GCC >= 4.6 it saves the previously set unused warning state. For older 
 // versions, it restores the default 'warning' behavior (default GCC level). 
 #if defined __GNUC__
-# if ((__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || (__GNUC__ >= 5)
+# if ((__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || (__GNUC__ >= 5))
 #   pragma GCC diagnostic push
 # endif
 
 # pragma GCC diagnostic ignored "-Wunused"
+# endif // __GNUC__
           
 
 // Duration duration_since_epoch(string in_var)
@@ -30,7 +31,8 @@ static qpid::sys::Duration duration_since_epoch()
 #endif
 }
 
-# if ((__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || (__GNUC__ >= 5)
+#if defined __GNUC__
+# if ((__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || (__GNUC__ >= 5))
 #   pragma GCC diagnostic pop
 # else
 # pragma GCC diagnostic warning "-Wunused"
