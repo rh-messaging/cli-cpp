@@ -166,4 +166,21 @@ if (ENABLE_MODERN)
     if (BUILD_WITH_UNIT_TESTS)
         add_subdirectory(common/formatter/test)
      endif (BUILD_WITH_UNIT_TESTS)
-endif (ENABLE_MODERN) 
+endif (ENABLE_MODERN)
+
+
+install(TARGETS 
+            dtests-qpid-messaging-common
+            dtests-cpp-legacy
+            ${qpid_messaging_clients}
+           
+	LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
+	RUNTIME DESTINATION ${CPP_RUNTIME_DIR}
+        ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
+)
+
+
+InstallHeaders(src/api/qpid qpid)
+InstallHeaders(src/api/qpid/common qpid/common)
+InstallHeaders(src/api/qpid/common/formatter qpid/common/formatter)
+InstallHeaders(src/api/qpid/messaging qpid/messaging)

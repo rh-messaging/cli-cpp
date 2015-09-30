@@ -56,6 +56,11 @@ include_directories(
 	src/common/options
 )
 
+SET(CPP_RUNTIME_DIR "bin")
+SET(CPP_LIBRARY_DIR "lib")
+SET(CPP_INCLUDE_DIR "include")
+
+INCLUDE(${CMAKE_BINARY_DIR}/dist/CMakeInstall.cmake)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_C_FLAGS "-Wall -Wshadow " CACHE STRING
