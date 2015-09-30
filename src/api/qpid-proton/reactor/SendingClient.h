@@ -8,6 +8,8 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 
+#ifdef REACTOR_ENABLED
+
 #include <optparse/OptionParser.h>
 
 #include <proton/cpp/Container.h>
@@ -41,5 +43,7 @@ private:
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
+
+#endif // REACTOR_ENABLED
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_ */
