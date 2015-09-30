@@ -7,6 +7,8 @@
 
 #include "SendingClient.h"
 
+#ifdef REACTOR_ENABLED
+
 using proton::reactor::Message;
 using proton::reactor::Container;
 
@@ -85,3 +87,5 @@ int SendingClient::run(int argc, char **argv) const {
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
+
+#endif // REACTOR_ENABLED
