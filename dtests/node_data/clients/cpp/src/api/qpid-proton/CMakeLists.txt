@@ -132,3 +132,21 @@ foreach(client ${proton-messenger-clients})
 	)
 endforeach(client)
 
+
+install(TARGETS 
+            dtests-proton-common 
+            dtests-proton-messenger 
+            dtests-proton-reactor 
+            ${proton-reactor-clients} 
+            ${proton-messenger-clients}
+	LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
+	RUNTIME DESTINATION ${CPP_RUNTIME_DIR}
+        ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
+)
+
+
+InstallHeaders(src/api/qpid-proton qpid-proton)
+InstallHeaders(src/api/qpid-proton/common qpid-proton/common)
+InstallHeaders(src/api/qpid-proton/messenger qpid-proton/messenger)
+InstallHeaders(src/api/qpid-proton/messenger/exceptions qpid-proton/messenger/exceptions)
+InstallHeaders(src/api/qpid-proton/reactor qpid-proton/reactor)

@@ -78,3 +78,19 @@ target_link_libraries(dtests-cpp-common-options
 	dtests-cpp-common
 	dtests-cpp-contrib
 )
+
+
+install(TARGETS dtests-cpp-common dtests-cpp-common-options
+	LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
+	RUNTIME DESTINATION ${CPP_LIBRARY_DIR}
+        ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
+)
+
+
+InstallHeaders(src/common common)
+InstallHeaders(src/common/exceptions common/exceptions)
+InstallHeaders(src/common/formatter common/formatter)
+InstallHeaders(src/common/logger common/logger)
+InstallHeaders(src/common/options common/options)
+InstallHeaders(src/common/options/modern common/options/modern)
+InstallHeaders(src/common/output common/output)
