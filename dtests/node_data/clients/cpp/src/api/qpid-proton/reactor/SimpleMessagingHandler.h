@@ -8,6 +8,8 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
 
+#ifdef REACTOR_ENABLED
+
 #include <proton/cpp/Container.h>
 #include <proton/cpp/Event.h>
 #include <proton/cpp/MessagingHandler.h>
@@ -52,5 +54,7 @@ private:
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
+
+#endif // REACTOR_ENABLED
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_ */

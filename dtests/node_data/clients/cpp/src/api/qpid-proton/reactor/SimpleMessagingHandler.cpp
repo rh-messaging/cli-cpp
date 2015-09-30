@@ -7,6 +7,8 @@
 
 #include "SimpleMessagingHandler.h"
 
+#ifdef REACTOR_ENABLED
+
 using proton::reactor::MessagingHandler;
 using proton::reactor::Event;
 using proton::reactor::Message;
@@ -79,3 +81,5 @@ void SimpleMessagingHandler::onConnectionClosed(Event &e) {
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
+
+#endif // REACTOR_ENABLED
