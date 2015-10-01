@@ -22,14 +22,14 @@ Crawls Brew, Koji, etc.
 %autosetup -n dtests/dtests/node_data/clients/cpp
 
 %build
-cmake -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON -DCMAKE_INSTALL_PREFIX=%{buildroot}/opt
+cmake -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON -DCMAKE_INSTALL_PREFIX=%{buildroot}/opt/dtests
 make
 
 %install
 make install
 
 %files
-/opt
+/opt/dtests
 
 %changelog
 * Wed Sep 30 2015 Middleware Messaging <opiske@redhat.com> - 20150930
