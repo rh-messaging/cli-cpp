@@ -3,7 +3,7 @@
 
 Summary:            DTests C++ client code and runtime (for writing custom unit tests)
 Name:               dtests-cpp-runtime
-Version:            20150930
+Version:            20151001
 Release:            1%{?dist}
 License:            GPLv2+
 Group:              System Environment/Tools
