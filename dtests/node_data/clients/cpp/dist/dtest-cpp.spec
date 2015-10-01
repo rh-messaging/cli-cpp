@@ -32,8 +32,5 @@ make install
 /opt
 
 %changelog
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.5-21
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Fri Jul 02 2010 Kamil Dudka <kdudka@redhat.com> 2.1.5-20
-- handle multi-partition devices with spaces in mount points properly (#608502)
+* Wed Sep 30 2015 Middleware Messaging <opiske@redhat.com> - 20150930
+- Initial release
