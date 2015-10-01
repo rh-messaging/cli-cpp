@@ -1,7 +1,7 @@
 %global _enable_debug_package 0
 %global debug_package %{nil}
 
-Summary:            DTest C++ client code and runtime (for writing custom unit tests)
+Summary:            DTests C++ client code and runtime (for writing custom unit tests)
 Name:               dtests-cpp-runtime
 Version:            20150930
 Release:            1%{?dist}
@@ -16,7 +16,7 @@ BuildRequires:      qpid-proton-c-devel
 BuildRequires:      qpid-qmf-devel
 
 %description
-Crawls Brew, Koji, etc.
+C++ clients, tools and runtime libraries
 
 %prep
 %autosetup -n dtests/dtests/node_data/clients/cpp
