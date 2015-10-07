@@ -6,7 +6,7 @@ Name:               dtests-cpp-runtime
 Version:            20151001
 Release:            1%{?dist}
 License:            GPLv2+
-Group:              System Environment/Tools
+Group:              Development/Tools
 Source:             dtests-%{version}.tar.gz
 URL:                http://ooo.englab.brq.redhat.com/c/dtests/
 BuildRequires:      cmake
