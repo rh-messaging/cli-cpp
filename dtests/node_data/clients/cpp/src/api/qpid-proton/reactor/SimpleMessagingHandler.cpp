@@ -7,12 +7,10 @@
 
 #include "SimpleMessagingHandler.h"
 
-#ifdef REACTOR_ENABLED
-
-using proton::reactor::MessagingHandler;
-using proton::reactor::Event;
-using proton::reactor::Message;
-using proton::reactor::Connection;
+using proton::messaging_handler;
+using proton::message;
+using proton::event;
+using proton::url;
 
 namespace dtests {
 namespace proton {
@@ -20,11 +18,10 @@ namespace reactor {
 
 
 
-SimpleMessagingHandler::SimpleMessagingHandler(const string &url)
+SimpleMessagingHandler::SimpleMessagingHandler(const string &url_str)
 	: super(),
-	  url(url)
-	{
-
+	broker_url(url_str)
+{
 
 }
 
@@ -32,54 +29,34 @@ SimpleMessagingHandler::~SimpleMessagingHandler() {
 
 }
 
-string SimpleMessagingHandler::getHost() const {
-	pn_url_t *urlPtr = pn_url_parse(url.c_str());
 
-	if (!urlPtr) {
-		//pn_incref(pnUrl); TODO: handle error
-	}
+void SimpleMessagingHandler::on_start(event &e) {
+	connection &conn = e.container().connect(broker_url);
 
-	pn_incref(urlPtr);
-	const char *host = pn_url_get_host(urlPtr);
-
-	string ret = string("localhost");
-	if (host) {
-		ret = string(host);
-	}
-
-	pn_decref(urlPtr);
-	return ret;
+	conn.create_sender(broker_url.path());
 }
 
-void SimpleMessagingHandler::onStart(Event &e) {
-	string host = getHost();
+void SimpleMessagingHandler::on_sendable(event &e) {
+	message m;
 
-	Connection conn = e.getContainer().connect(host);
-	e.getContainer().createSender(url);
+	m.body("Hello World!");
+	
+	e.sender().send(m);
+	e.sender().close();
 }
 
-void SimpleMessagingHandler::onSendable(Event &e) {
-	Message m;
-
-	m.setBody("Hello World!");
-	e.getSender().send(m);
-	e.getSender().close();
-}
-
-void SimpleMessagingHandler::onMessage(Event &e) {
+void SimpleMessagingHandler::on_message(event &e) {
 
 }
 
-void SimpleMessagingHandler::onAccepted(Event &e) {
-	e.getConnection().close();
+void SimpleMessagingHandler::on_accepted(event &e) {
+	e.connection().close();
 }
 
-void SimpleMessagingHandler::onConnectionClosed(Event &e) {
+void SimpleMessagingHandler::on_connection_closed(event &e) {
 
 }
 
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
-
-#endif // REACTOR_ENABLED

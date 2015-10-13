@@ -15,8 +15,6 @@ if (QPID_PROTON_WITH_MESSAGING_API)
     add_definitions(-DQPID_PROTON_WITH_MESSAGING_API) 
 endif(QPID_PROTON_WITH_MESSAGING_API)
 
-if (QPID_PROTON_WITH_REACTOR_API)
-endif (QPID_PROTON_WITH_REACTOR_API)
 
 include_directories(
 	${PROTON_DIR}/include
@@ -92,7 +90,7 @@ target_link_libraries(
 	dtests-cpp-common-options
 	dtests-proton-common
         # Temporarily disabled because this is not yet available
-	# qpid-proton-cpp
+	qpid-proton-cpp
 )
 
 

@@ -8,22 +8,24 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 
-#ifdef REACTOR_ENABLED
 
-#include <optparse/OptionParser.h>
-
-#include <proton/cpp/Container.h>
+#include <proton/message.hpp>
+#include <proton/container.hpp>
 
 #include "ModernClient.h"
 #include "SimpleMessagingHandler.h"
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
 
-using proton::reactor::Message;
+
+
+using proton::message;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
+    
+typedef void (message::*string_setter)(const string &);
 
 using dtests::proton::common::ModernClient;
 
@@ -37,13 +39,12 @@ public:
 private:
 	typedef ModernClient super;
 
-	void setMessageOptions(const OptionsSetter &setter, Message& message) const;
+	void setMessageOptions(const OptionsSetter &setter, message &msg) const;
 };
 
 } /* namespace reactor */
-} /* namespace proton */
+ } /* namespace proton */
 } /* namespace dtests */
 
-#endif // REACTOR_ENABLED
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_ */
