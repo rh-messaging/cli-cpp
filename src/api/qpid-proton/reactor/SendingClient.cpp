@@ -5,18 +5,19 @@
  *      Author: opiske
  */
 
+#include <proton/message.hpp>
 #include "SendingClient.h"
 
-#ifdef REACTOR_ENABLED
 
-using proton::reactor::Message;
-using proton::reactor::Container;
+using proton::message;
+using proton::container;
+
 
 namespace dtests {
 namespace proton {
 namespace reactor {
 
-using std::string;
+using namespace std;
 using dtests::proton::common::ModernClient;
 
 SendingClient::SendingClient()
@@ -29,22 +30,41 @@ SendingClient::~SendingClient() {
 
 }
 
+
 void SendingClient::setMessageOptions(const OptionsSetter &setter,
-		Message& message) const
+		message &msg) const
 {
 	/*
-	setter.set("msg-reply-to", &message, &Message::setReplyTo);
-	setter.set("msg-correlation-id", &message, &Message::setCorrelationId);
+	 * Why the cast, you might ask? Because reply_to is overloaded, 
+	 * and the compiler is not smart enough to pick the correct one. 
+	 * Therefore we cast it (but not really) so that the compiler knows 
+	 * we are talking about reactor_type member function pointer (which is
+	 * defined in the header file analogous to this one.
+	 */
+	setter.set("msg-reply-to", &msg, 
+		static_cast<string_setter>(&message::reply_to));
+	
+	// setter.set("msg-correlation-id", &msg, 
+	//	static_cast<reactor_setter>(&message::correlation_id));
+	
+	// setter.set("msg-content-type", &message, 
+	//	static_cast<string_setter>(&message::content_type));
+	
+	/*
+	
+	 */
+/*
 	setter.set("msg-id", &message, &Message::setMessageId);
 	setter.set("msg-user-id", &message, &Message::setUserId);
 	setter.set("msg-subject", &message, &Message::setSubject);
-	setter.set("msg-content-type", &message, &Message::setContentType);
+	
 	setter.setNumber("msg-ttl", &message, &Message::setTimeToLive);
 	setter.setNumber("msg-priority", &message, &Message::setPriority);
 	setter.setBoolean("msg-durable", &message, &Message::setDurable);
 	setter.setMap("msg-properties", &message, &Message::setProperties);
-	*/
+*/	
 }
+ 
 
 
 int SendingClient::run(int argc, char **argv) const {
@@ -73,12 +93,12 @@ int SendingClient::run(int argc, char **argv) const {
 	OptionsSetter setter = OptionsSetter(options);
 	const string content = setter.getContent();
 
-	Message message = Message();
+	message msg = message();
 
-	message.setBody(content);
+	msg.body(content);
 
 	SimpleMessagingHandler handler = SimpleMessagingHandler(address);
-	Container(handler).run();
+	container(handler).run();
 	
 	return 0;
 
@@ -87,5 +107,3 @@ int SendingClient::run(int argc, char **argv) const {
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
-
-#endif // REACTOR_ENABLED

@@ -6,8 +6,14 @@
  */
 #include <cstdlib>
 
+#include <reactor/SendingClient.h>
+
+using dtests::proton::reactor::SendingClient;
+
 int main(int argc, char** argv) {
-	return EXIT_SUCCESS;
+	SendingClient client = SendingClient();
+
+	return client.run(argc, argv);
 
 }
 

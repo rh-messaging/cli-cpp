@@ -8,18 +8,19 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
 
-#ifdef REACTOR_ENABLED
 
-#include <proton/cpp/Container.h>
-#include <proton/cpp/Event.h>
-#include <proton/cpp/MessagingHandler.h>
-#include <proton/cpp/MessagingEvent.h>
+#include <proton/container.hpp>
+#include <proton/messaging_handler.hpp>
+#include <proton/connection.hpp>
 
-#include <proton/url.h>
+#include <proton/url.hpp>
 
-using proton::reactor::MessagingHandler;
-using proton::reactor::Event;
-using proton::reactor::Message;
+using proton::messaging_handler;
+using proton::message;
+using proton::event;
+using proton::connection;
+using proton::sender;
+using proton::url;
 
 namespace dtests {
 namespace proton {
@@ -28,25 +29,22 @@ namespace reactor {
 using std::string;
 
 
-class SimpleMessagingHandler: public MessagingHandler {
+class SimpleMessagingHandler: public messaging_handler {
 public:
 	SimpleMessagingHandler(const string &url);
 	virtual ~SimpleMessagingHandler();
 
-	void onStart(Event &e);
-	void onSendable(Event &e);
-	void onMessage(Event &e);
-	void onAccepted(Event &e);
-	void onConnectionClosed(Event &e);
+	void on_start(event &e);
+	void on_sendable(event &e);
+	void on_message(event &e);
+	void on_accepted(event &e);
+	void on_connection_closed(event &e);
 
 private:
-	typedef MessagingHandler super;
+	typedef messaging_handler super;
 
-	string url;
-
-	// Connection conn;
-
-	string getHost() const;
+        url broker_url;
+	// string url;
 };
 
 
@@ -55,6 +53,5 @@ private:
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif // REACTOR_ENABLED
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_ */
