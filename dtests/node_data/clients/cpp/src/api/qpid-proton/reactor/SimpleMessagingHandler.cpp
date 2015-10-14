@@ -38,7 +38,6 @@ void SimpleMessagingHandler::on_start(event &e) {
 	logger(debug) << "Starting messaging handler";
 	connection &conn = e.container().connect(broker_url);
 	logger(debug) << "Connected to " << broker_url.path();
-	
 }
 
 void SimpleMessagingHandler::on_sendable(event &e) {
@@ -48,14 +47,6 @@ void SimpleMessagingHandler::on_sendable(event &e) {
 	conn.create_sender(broker_url.path());
 	
 	logger(debug) << "Ready to send";
-	/*
-	message m;
-
-	m.body("Hello World!");
-	
-	e.sender().send(m);
-	e.sender().close();
-	 */
 }
 
 void SimpleMessagingHandler::on_message(event &e) {
