@@ -44,12 +44,12 @@ public:
 
 protected:
 	static Logger logger;
-	
+	url broker_url;
 	
 private:
 	typedef messaging_handler super;
 
-        url broker_url;
+        
 	
 };
 
