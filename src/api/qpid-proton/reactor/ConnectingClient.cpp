@@ -61,7 +61,7 @@ int ConnectingClient::run(int argc, char** argv) const {
 
 	OptionsSetter setter = OptionsSetter(options);
 	
-	SimpleMessagingHandler handler = SimpleMessagingHandler(address);
+	ConnectorHandler handler = ConnectorHandler(address);
 	container(handler).run();
 	
 	return 0;

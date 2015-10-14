@@ -27,6 +27,8 @@ public:
     ConnectorHandler(const string &url);
     
     virtual ~ConnectorHandler();
+    
+    void on_start(event &e);
 private:
 
     typedef SimpleMessagingHandler super;
