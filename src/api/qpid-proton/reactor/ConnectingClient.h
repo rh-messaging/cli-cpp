@@ -14,7 +14,6 @@
 #ifndef CONNECTINGCLIENT_H
 #define CONNECTINGCLIENT_H
 
-#include <proton/message.hpp>
 #include <proton/container.hpp>
 
 #include "ModernClient.h"
@@ -40,7 +39,8 @@ public:
 private:
     typedef ModernClient super;
 
-    void setMessageOptions(const OptionsSetter &setter, message &msg) const;
+    void setMessageHandlerOptions(const OptionsSetter &setter, 
+	SimpleMessagingHandler &handler) const;
 
 };
 

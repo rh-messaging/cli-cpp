@@ -13,7 +13,6 @@
 
 #include "ConnectingClient.h"
 
-using proton::message;
 using proton::container;
 
 namespace dtests {
@@ -29,8 +28,8 @@ ConnectingClient::~ConnectingClient()
 {
 }
 
-void ConnectingClient::setMessageOptions(const OptionsSetter &setter,
-		message &msg) const
+void ConnectingClient::setMessageHandlerOptions(const OptionsSetter &setter,
+		SimpleMessagingHandler &handler) const
 {
 	
 	
@@ -61,12 +60,7 @@ int ConnectingClient::run(int argc, char** argv) const {
 	const string address = options["broker-url"];
 
 	OptionsSetter setter = OptionsSetter(options);
-	const string content = setter.getContent();
-
-	message msg = message();
-
-	msg.body(content);
-
+	
 	SimpleMessagingHandler handler = SimpleMessagingHandler(address);
 	container(handler).run();
 	
