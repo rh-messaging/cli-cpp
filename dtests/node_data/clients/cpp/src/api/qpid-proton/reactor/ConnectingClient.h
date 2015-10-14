@@ -17,7 +17,7 @@
 #include <proton/container.hpp>
 
 #include "ModernClient.h"
-#include "SimpleMessagingHandler.h"
+#include "ConnectorHandler.h"
 #include "options/modern/ConnectorOptionsParser.h"
 #include "options/OptionsHelper.h"
 
