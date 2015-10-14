@@ -16,6 +16,9 @@
 namespace dtests {
 namespace proton {
 namespace reactor {
+	
+using namespace dtests::common;
+using namespace dtests::common::log;
 
 ConnectorHandler::ConnectorHandler(const string &url)
 	: super(url)
@@ -24,6 +27,16 @@ ConnectorHandler::ConnectorHandler(const string &url)
 
 ConnectorHandler::~ConnectorHandler()
 {
+}
+
+void ConnectorHandler::on_start(event &e) {
+	logger(debug) << "Starting messaging handler";
+	connection &conn = e.container().connect(broker_url);
+	logger(debug) << "Connected to " << broker_url.path();
+	
+	logger(debug) << "Closing connection";
+	conn.close();
+	logger(debug) << "Connection closed";
 }
 
 } /* namespace reactor */
