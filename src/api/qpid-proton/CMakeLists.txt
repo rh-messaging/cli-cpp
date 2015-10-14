@@ -80,6 +80,7 @@ add_library(
 	
 	reactor/SimpleMessagingHandler.cpp
 	reactor/SendingClient.cpp
+	reactor/ConnectingClient.cpp
 )
 
 target_link_libraries(
@@ -95,6 +96,7 @@ target_link_libraries(
 
 
 set(proton-reactor-clients
+	aac3_connector
 	aac3_sender
 	aac3_receiver
 )
