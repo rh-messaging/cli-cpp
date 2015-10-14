@@ -67,6 +67,7 @@ add_library(dtests-cpp-common-options
 	options/modern/ModernOptionsParser.cpp
 	options/modern/SenderOptionsParser.cpp
 	options/modern/ReceiverOptionsParser.cpp
+	options/modern/ConnectorOptionsParser.cpp
 )
 
 if(COMMAND cmake_policy)
