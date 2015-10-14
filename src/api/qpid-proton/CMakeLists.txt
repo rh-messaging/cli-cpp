@@ -79,6 +79,7 @@ add_library(
 	dtests-proton-reactor
 	
 	reactor/SimpleMessagingHandler.cpp
+	reactor/ConnectorHandler.cpp
 	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp
 )
