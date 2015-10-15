@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   ConnectorHandler.h
  * Author: opiske
@@ -29,6 +23,8 @@ public:
     virtual ~ConnectorHandler();
     
     void on_start(event &e);
+    void on_connection_opened(event& e);
+
 private:
 
     typedef CommonHandler super;
