@@ -70,8 +70,32 @@ public:
          * @param name the option to set
          * @param obj the bean (object) to set the option to
          * @param setter the (bean) setter to set the option
+	 * @param defdefaultValue the default value to use if unset
          * NOTE: probably there's a better way to do these methods, so this code
 	 * should be checked in the future
+	 */
+	template<typename T, typename Y, typename K>
+	void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
+		if (options.is_set(name)) {
+			int value = static_cast<K>(options.get(name));
+
+			(obj->*setter)(value);
+		}
+		else {
+		    (obj->*setter)(defaultValue);
+		}
+	}
+	
+	
+	/**
+	 * Set a number option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         * NOTE #1: probably there's a better way to do these methods, so this code
+	 * should be checked in the future
+	 * NOTE #2: the code uses an integer by default. For other types, 
+	 * use the setNumber with default values
 	 */
 	template<typename T, typename Y>
 	void setNumber(const string &name, T *obj, Y setter) const {
