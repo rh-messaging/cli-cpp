@@ -40,7 +40,7 @@ private:
     typedef ModernClient super;
 
     void setMessageHandlerOptions(const OptionsSetter &setter, 
-	CommonHandler &handler) const;
+	ConnectorHandler &handler) const;
 
 };
 

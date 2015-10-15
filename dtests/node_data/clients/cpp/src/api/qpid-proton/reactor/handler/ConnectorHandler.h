@@ -8,26 +8,38 @@
 #ifndef CONNECTORHANDLER_H
 #define CONNECTORHANDLER_H
 
+#include <list>
+#include <proton/messaging_handler.hpp>
+#include <proton/connection.hpp>
+
 #include "CommonHandler.h"
 
-#include <proton/messaging_handler.hpp>
+using proton::connection;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
 
-class ConnectorHandler: public CommonHandler {
-public:
+using std::list;
+
+class ConnectorHandler : public CommonHandler {
+  public:
     ConnectorHandler(const string &url);
-    
+
     virtual ~ConnectorHandler();
-    
+
     void on_start(event &e);
     void on_connection_opened(event& e);
+    void setCount(int count);
+    int getCount() const;
 
-private:
+
+
+  private:
 
     typedef CommonHandler super;
+    int count;
+
 };
 
 } /* namespace reactor */
