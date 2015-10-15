@@ -29,7 +29,7 @@ ConnectingClient::~ConnectingClient()
 }
 
 void ConnectingClient::setMessageHandlerOptions(const OptionsSetter &setter,
-		SimpleMessagingHandler &handler) const
+		CommonHandler &handler) const
 {
 	
 	

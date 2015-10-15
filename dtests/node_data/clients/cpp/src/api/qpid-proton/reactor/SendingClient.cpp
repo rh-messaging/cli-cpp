@@ -97,7 +97,7 @@ int SendingClient::run(int argc, char **argv) const {
 
 	msg.body(content);
 
-	SimpleMessagingHandler handler = SimpleMessagingHandler(address);
+	CommonHandler handler = CommonHandler(address);
 	container(handler).run();
 	
 	return 0;

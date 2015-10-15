@@ -14,7 +14,7 @@
 #ifndef CONNECTORHANDLER_H
 #define CONNECTORHANDLER_H
 
-#include "SimpleMessagingHandler.h"
+#include "CommonHandler.h"
 
 #include <proton/messaging_handler.hpp>
 
@@ -22,7 +22,7 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
-class ConnectorHandler: public SimpleMessagingHandler {
+class ConnectorHandler: public CommonHandler {
 public:
     ConnectorHandler(const string &url);
     
@@ -31,7 +31,7 @@ public:
     void on_start(event &e);
 private:
 
-    typedef SimpleMessagingHandler super;
+    typedef CommonHandler super;
 };
 
 } /* namespace reactor */
