@@ -78,7 +78,7 @@ cmake_policy(SET CMP0003 OLD)
 add_library(
 	dtests-proton-reactor
 	
-	reactor/SimpleMessagingHandler.cpp
+	reactor/CommonHandler.cpp
 	reactor/ConnectorHandler.cpp
 	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp

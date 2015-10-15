@@ -31,10 +31,10 @@ namespace reactor {
 using std::string;
 
 
-class SimpleMessagingHandler: public messaging_handler {
+class CommonHandler: public messaging_handler {
 public:
-	SimpleMessagingHandler(const string &url);
-	virtual ~SimpleMessagingHandler();
+	CommonHandler(const string &url);
+	virtual ~CommonHandler();
 
 	void on_start(event &e);
 	void on_sendable(event &e);
