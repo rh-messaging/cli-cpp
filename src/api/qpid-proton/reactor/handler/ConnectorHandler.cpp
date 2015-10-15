@@ -11,15 +11,32 @@ ConnectorHandler::ConnectorHandler(const string &url)
 	: super(url)
 {
 	logger(debug) << "Initializing the connector handler";
+	
 }
 
 ConnectorHandler::~ConnectorHandler()
 {
 }
 
+void ConnectorHandler::setCount(int count)
+{
+	this->count = count;
+}
+
+int ConnectorHandler::getCount() const
+{
+	return count;
+}
+
 void ConnectorHandler::on_start(event &e) {
 	logger(debug) << "Starting messaging handler";
-	e.container().connect(broker_url);
+
+        for (int i = 0; i < getCount(); i++) { 
+            logger(trace) << "Creating connection " << i << " of " << getCount();
+            
+            e.container().connect(broker_url);
+        }
+	
 }
 
 
@@ -32,6 +49,8 @@ void ConnectorHandler::on_connection_opened(event& e) {
 	conn.close();
 	logger(debug) << "Connection closed";
 }
+
+
 
 } /* namespace reactor */
 } /* namespace proton */
