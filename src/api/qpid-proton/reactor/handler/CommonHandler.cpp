@@ -58,10 +58,6 @@ void CommonHandler::on_accepted(event &e) {
 	e.connection().close();
 }
 
-void CommonHandler::on_connection_closed(event &e) {
-	logger(debug) << "Closed";
-}
-
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
