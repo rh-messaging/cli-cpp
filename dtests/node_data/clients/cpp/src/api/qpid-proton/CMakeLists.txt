@@ -78,8 +78,8 @@ cmake_policy(SET CMP0003 OLD)
 add_library(
 	dtests-proton-reactor
 	
-	reactor/CommonHandler.cpp
-	reactor/ConnectorHandler.cpp
+	reactor/handler/CommonHandler.cpp
+	reactor/handler/ConnectorHandler.cpp
 	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp
 )
@@ -151,3 +151,4 @@ InstallHeaders(src/api/qpid-proton/common qpid-proton/common)
 InstallHeaders(src/api/qpid-proton/messenger qpid-proton/messenger)
 InstallHeaders(src/api/qpid-proton/messenger/exceptions qpid-proton/messenger/exceptions)
 InstallHeaders(src/api/qpid-proton/reactor qpid-proton/reactor)
+InstallHeaders(src/api/qpid-proton/reactor/handler qpid-proton/reactor/handler)
