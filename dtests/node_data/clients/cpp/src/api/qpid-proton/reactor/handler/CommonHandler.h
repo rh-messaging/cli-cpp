@@ -40,7 +40,6 @@ public:
 	void on_sendable(event &e);
 	void on_message(event &e);
 	void on_accepted(event &e);
-	void on_connection_closed(event &e);
 
 protected:
 	static Logger logger;
