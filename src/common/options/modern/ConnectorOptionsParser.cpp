@@ -19,13 +19,15 @@ ConnectorOptionsParser::ConnectorOptionsParser()
 	/*
 	 * TODO: implement option groups
 	 */
-#ifdef UNSUPPORTED_CONNECTOR_OPTS
-	// Control options
 	add_option("-c", "--count")
 		.dest("count")
 		.type("int")
 		.help("stop after count messages")
 		.metavar("COUNT");
+	
+#ifdef UNSUPPORTED_CONNECTOR_OPTS
+	// Control options
+	
 	
 	add_option("--timeout")
 		.dest("timeout")

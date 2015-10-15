@@ -29,10 +29,9 @@ ConnectingClient::~ConnectingClient()
 }
 
 void ConnectingClient::setMessageHandlerOptions(const OptionsSetter &setter,
-		CommonHandler &handler) const
+		ConnectorHandler &handler) const
 {
-	
-	
+	setter.setNumber("count", &handler, &ConnectorHandler::setCount, 1);
 }
 
 
@@ -58,10 +57,12 @@ int ConnectingClient::run(int argc, char** argv) const {
 	setLogLevel(options);
 
 	const string address = options["broker-url"];
-
+	
 	OptionsSetter setter = OptionsSetter(options);
 	
 	ConnectorHandler handler = ConnectorHandler(address);
+	setMessageHandlerOptions(setter, handler);
+		
 	container(handler).run();
 	
 	return 0;
