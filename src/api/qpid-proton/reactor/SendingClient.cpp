@@ -22,6 +22,7 @@ using dtests::proton::common::ModernClient;
 
 SendingClient::SendingClient()
 	: super()
+        
 {
 
 }
@@ -93,11 +94,11 @@ int SendingClient::run(int argc, char **argv) const {
 	OptionsSetter setter = OptionsSetter(options);
 	const string content = setter.getContent();
 
-	message msg = message();
+	//message msg = message();
 
-	msg.body(content);
+	//msg.body(content);
 
-	CommonHandler handler = CommonHandler(address);
+	SenderHandler handler = SenderHandler(address);
 	container(handler).run();
 	
 	return 0;
