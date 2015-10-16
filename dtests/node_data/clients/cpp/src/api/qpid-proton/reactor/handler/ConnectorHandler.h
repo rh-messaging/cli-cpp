@@ -15,6 +15,7 @@
 #include "CommonHandler.h"
 
 using proton::connection;
+using proton::event;
 
 namespace dtests {
 namespace proton {
@@ -29,7 +30,13 @@ class ConnectorHandler : public CommonHandler {
     virtual ~ConnectorHandler();
 
     void on_start(event &e);
-    void on_connection_opened(event& e);
+    void on_connection_opened(event &e);
+    void on_connection_error(event &e);
+    void on_connection_local_open(event& e);
+    void on_connection_remote_open(event& e);
+
+
+    
     void setCount(int count);
     int getCount() const;
 
