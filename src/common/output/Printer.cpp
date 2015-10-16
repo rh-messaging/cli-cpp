@@ -8,16 +8,22 @@
 #include "Printer.h"
 
 Printer::Printer()
-	: stream(stdout) {
+	: base(DECIMAL),
+        stream(stdout)
+          
+{
 }
 
 Printer::Printer(FILE *stream)
-	: stream(stream) 
+	: base(DECIMAL),
+        stream(stream)
 {
 }
 
 Printer::Printer(const Printer& orig)
-	: stream(orig.stream) {
+	: base(DECIMAL),
+        stream(orig.stream)
+{
 }
 
 Printer::~Printer() {
