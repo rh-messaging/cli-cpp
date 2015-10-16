@@ -18,10 +18,6 @@
 #include "logger/LoggerWrapper.h"
 
 using proton::messaging_handler;
-using proton::message;
-using proton::event;
-using proton::connection;
-using proton::sender;
 using proton::url;
 
 namespace dtests {
@@ -35,11 +31,6 @@ class CommonHandler: public messaging_handler {
 public:
 	CommonHandler(const string &url);
 	virtual ~CommonHandler();
-
-	void on_start(event &e);
-	void on_sendable(event &e);
-	void on_message(event &e);
-	void on_accepted(event &e);
 
 protected:
 	static Logger logger;
