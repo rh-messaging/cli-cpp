@@ -13,7 +13,7 @@
 #include <proton/container.hpp>
 
 #include "ModernClient.h"
-#include "handler/CommonHandler.h"
+#include "handler/SenderHandler.h"
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
 

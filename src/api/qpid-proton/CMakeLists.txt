@@ -80,6 +80,7 @@ add_library(
 	
 	reactor/handler/CommonHandler.cpp
 	reactor/handler/ConnectorHandler.cpp
+	reactor/handler/SenderHandler.cpp
 	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp
 )
