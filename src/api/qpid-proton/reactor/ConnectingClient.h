@@ -27,8 +27,6 @@ namespace reactor {
     
 using dtests::proton::common::ModernClient;
     
-typedef void (message::*string_setter)(const string &);
-
 class ConnectingClient: public ModernClient {
 public:
     ConnectingClient();
