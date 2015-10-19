@@ -81,8 +81,10 @@ add_library(
 	reactor/handler/CommonHandler.cpp
 	reactor/handler/ConnectorHandler.cpp
 	reactor/handler/SenderHandler.cpp
+	reactor/handler/ReceiverHandler.cpp
 	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp
+	reactor/ReceivingClient.cpp
 )
 
 target_link_libraries(
