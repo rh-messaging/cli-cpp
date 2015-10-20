@@ -33,6 +33,7 @@ SenderHandler::SenderHandler(const string &url)
 
 SenderHandler::~SenderHandler()
 {
+    logger(debug) << "Destroying the sender handler";
 }
 
 void SenderHandler::on_start(event &e)
@@ -40,7 +41,7 @@ void SenderHandler::on_start(event &e)
     logger(debug) << "Starting messaging handler";
 
     logger(debug) << "Creating a sender";
-    e.container().create_sender(broker_url);
+    e.container().open_sender(broker_url);
 }
 
 void SenderHandler::on_sendable(event &e)
