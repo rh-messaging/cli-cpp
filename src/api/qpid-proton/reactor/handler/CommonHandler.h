@@ -5,8 +5,8 @@
  *      Author: opiske
  */
 
-#ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
-#define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_
+#ifndef COMMON_HANDLER_H_
+#define COMMON_HANDLER_H_
 
 #include <proton/container.hpp>
 #include <proton/messaging_handler.hpp>
@@ -50,4 +50,4 @@ private:
 } /* namespace dtests */
 
 
-#endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SIMPLEMESSAGINGHANDLER_H_ */
+#endif /* COMMON_HANDLER_H_ */
