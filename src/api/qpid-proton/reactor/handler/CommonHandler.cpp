@@ -25,7 +25,7 @@ CommonHandler::CommonHandler(const string &url_str)
 
 CommonHandler::~CommonHandler()
 {
-
+    logger(debug) << "Destroying the common handler";
 }
 
 
