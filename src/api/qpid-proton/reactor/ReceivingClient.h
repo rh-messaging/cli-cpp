@@ -18,8 +18,8 @@
 #include <proton/container.hpp>
 
 #include "ModernClient.h"
-#include "handler/SenderHandler.h"
-#include "options/modern/SenderOptionsParser.h"
+#include "handler/ReceiverHandler.h"
+#include "options/modern/ReceiverOptionsParser.h"
 #include "options/OptionsHelper.h"
 
 using proton::message;

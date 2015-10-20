@@ -31,6 +31,12 @@ class ReceiverHandler: public CommonHandler {
     ReceiverHandler(const string &url);
     
     virtual ~ReceiverHandler();
+    
+    void on_start(event &e);
+    void on_message(event& e);
+    void on_accepted(event& e);
+    void on_disconnected(event& e);
+    
   private:
     typedef CommonHandler super;
 
