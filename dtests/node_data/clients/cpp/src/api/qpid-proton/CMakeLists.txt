@@ -82,8 +82,8 @@ add_library(
 	reactor/handler/ConnectorHandler.cpp
 	reactor/handler/SenderHandler.cpp
 	reactor/handler/ReceiverHandler.cpp
-	reactor/SendingClient.cpp
 	reactor/ConnectingClient.cpp
+	reactor/SendingClient.cpp
 	reactor/ReceivingClient.cpp
 )
 
