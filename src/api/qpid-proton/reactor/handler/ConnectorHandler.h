@@ -8,11 +8,11 @@
 #ifndef CONNECTORHANDLER_H
 #define CONNECTORHANDLER_H
 
-#include <list>
-#include <proton/messaging_handler.hpp>
-#include <proton/connection.hpp>
 
 #include "CommonHandler.h"
+
+#include <list>
+#include <proton/connection.hpp>
 
 using proton::connection;
 using proton::event;
