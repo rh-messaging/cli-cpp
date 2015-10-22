@@ -352,6 +352,9 @@ int main(int argc, char** argv)
               // assignment of message body from the --msg-content-from-file
               std::string text_buffer;
               std::ifstream content_file;
+              // enables throwing of exceptions for used ifstream
+              std::ios_base::iostate exceptionMask = content_file.exceptions() | std::ios::failbit;
+              content_file.exceptions(exceptionMask);
               try {
                 content_file.open(options.msg_content_from_file.c_str());
                 if (content_file.is_open()) {
@@ -364,9 +367,7 @@ int main(int argc, char** argv)
                 }
                 message.setContent(text_buffer);
               } catch(const std::ios_base::failure & exc) {
-                // TODO it does not throw Exception, resolve
-                std::cerr << exc.what();
-                message.setContent("");
+                throw std::runtime_error("Error opening file: " + options.msg_content_from_file);
               }
 
               // set content
