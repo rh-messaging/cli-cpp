@@ -31,6 +31,15 @@ map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
 
 /**
+ * An OptionNormalizer defines a flexible structure for converting basic and std
+ * types to the different data types used in the messaging APIs.
+ */
+template<typename K> struct OptionNormalizer {
+    typedef K (*normalizer)(const string &);
+    normalizer normalizerPtr;
+};
+
+/**
  * An utility class template to help set options values/command values to their 
  * respective class instances. For example, given an instance of this class, 
  * a command line option named msg-reply-to and a bean named 'message' of type 
@@ -38,7 +47,7 @@ map<string, string> parse_key_value(const string &, const string &);
  * 
  * setter.set("msg-reply-to", &message, &Message::setReplyTo);
  *
- * Thefore reducing all the clutter of reading the option value, testing for 
+ * Therefore reducing all the clutter of reading the option value, testing for 
  * empty/null/invalid/etc and setting it on the target object instance
  * 
  */
@@ -61,6 +70,26 @@ public:
 			const string value = options[name];
 
 			(obj->*setter)(value);
+		}
+	}
+        
+        /**
+         * Set an option to a class instance (bean)
+         * @param name the option to set
+         * @param obj the bean (object) to set the option to
+         * @param setter the (bean) setter to set the option
+         * @param normalizerStruc pointer to an OptionNormalizer that converts 
+         * basic types to string to whatever type is used in the setter.
+         */
+	template<typename T, typename Y, typename K>
+	void set(const string &name, T *obj, Y setter, 
+            const OptionNormalizer<K> *normalizerStruc) const 
+        {
+		if (options.is_set(name)) {
+			const string value = options[name];
+
+                        K normalizedValue = normalizerStruc->normalizerPtr(value);
+			(obj->*setter)(normalizedValue);
 		}
 	}
 
