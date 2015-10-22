@@ -61,12 +61,9 @@ void SenderHandler::on_sendable(event &e)
 
     while (credit > 0 && sent < count) {
         logger(trace) << "Creating the message object and setting default values";
-        message m;
-
-        m.body("Hello reactor world");
-
+        
         logger(trace) << "Sending messages through the link";
-        e.sender().send(m);
+        e.sender().send(this->m);
 
         logger(trace) << "Closing the sender";
         e.sender().close();
@@ -94,15 +91,6 @@ void SenderHandler::on_disconnected(event& e)
     logger(debug) << "Event name: " << e.name();
 }
 
-void SenderHandler::setCount(int count)
-{
-    this->count = count;
-}
-
-int SenderHandler::getCount() const
-{
-    return count;
-}
 
 void SenderHandler::on_connection_closed(event &e)
 {
@@ -115,6 +103,27 @@ void SenderHandler::on_connection_error(event &e)
     logger(error) << "Failed to connect to " << broker_url.host_port();
     logger(debug) << "Event name: " << e.name();
 }
+
+void SenderHandler::setCount(int count)
+{
+    this->count = count;
+}
+
+int SenderHandler::getCount() const
+{
+    return count;
+}
+
+void SenderHandler::setMessage(message m)
+{
+    this->m = m;
+}
+
+message SenderHandler::getMessage() const
+{
+    return m;
+}
+
 
 } /* namespace reactor */
 } /* namespace proton */

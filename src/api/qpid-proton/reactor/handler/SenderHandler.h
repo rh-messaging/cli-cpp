@@ -42,6 +42,8 @@ class SenderHandler : public CommonHandler {
 
     void setCount(int count);
     int getCount() const;
+    void setMessage(message m);
+    message getMessage() const;
 
 
   private:
@@ -49,6 +51,8 @@ class SenderHandler : public CommonHandler {
     int count;
     int sent;
     int confirmedSent;
+    
+    message m;
 
 };
 
