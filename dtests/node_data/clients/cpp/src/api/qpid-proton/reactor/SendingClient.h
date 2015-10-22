@@ -16,8 +16,7 @@
 #include "handler/SenderHandler.h"
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
-
-
+#include "Normalizer.h"
 
 using proton::message;
 
@@ -26,6 +25,7 @@ namespace proton {
 namespace reactor {
     
 typedef void (message::*string_setter)(const string &);
+typedef void (message::*data_setter)(const data &);
 
 using dtests::proton::common::ModernClient;
 
@@ -43,7 +43,7 @@ private:
 };
 
 } /* namespace reactor */
- } /* namespace proton */
+} /* namespace proton */
 } /* namespace dtests */
 
 

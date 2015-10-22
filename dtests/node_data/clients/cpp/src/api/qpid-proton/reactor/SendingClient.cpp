@@ -45,19 +45,23 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
 	setter.set("msg-reply-to", &msg, 
 		static_cast<string_setter>(&message::reply_to));
 	
-	// setter.set("msg-correlation-id", &msg, 
-	//	static_cast<reactor_setter>(&message::correlation_id));
+	setter.set("msg-correlation-id", &msg, 
+		static_cast<data_setter>(&message::correlation_id), 
+                &defaultNormalizer);
 	
-	// setter.set("msg-content-type", &message, 
-	//	static_cast<string_setter>(&message::content_type));
+	setter.set("msg-content-type", &msg,
+                static_cast<string_setter>(&message::content_type));
 	
-	/*
+	setter.set("msg-subject", &msg, 
+                static_cast<string_setter>(&message::subject));
+        
+        /*
 	
 	 */
 /*
 	setter.set("msg-id", &message, &Message::setMessageId);
 	setter.set("msg-user-id", &message, &Message::setUserId);
-	setter.set("msg-subject", &message, &Message::setSubject);
+	
 	
 	setter.setNumber("msg-ttl", &message, &Message::setTimeToLive);
 	setter.setNumber("msg-priority", &message, &Message::setPriority);
@@ -94,11 +98,14 @@ int SendingClient::run(int argc, char **argv) const {
 	OptionsSetter setter = OptionsSetter(options);
 	const string content = setter.getContent();
 
-	//message msg = message();
+	message msg = message();
 
-	//msg.body(content);
+        setMessageOptions(setter, msg);
+	msg.body(content);
 
 	SenderHandler handler = SenderHandler(address);
+        
+        handler.setMessage(msg);
 	container(handler).run();
 	
 	return 0;
