@@ -78,6 +78,7 @@ cmake_policy(SET CMP0003 OLD)
 add_library(
 	dtests-proton-reactor
 	
+	reactor/formatter/ReactorDecoder.cpp
 	reactor/handler/CommonHandler.cpp
 	reactor/handler/ConnectorHandler.cpp
 	reactor/handler/SenderHandler.cpp
