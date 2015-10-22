@@ -44,6 +44,11 @@ void ReceiverHandler::on_message(event& e) {
     std::ostream stream(&str);
      
     stream << e.message().body();
+    stream << " -> ";
+    stream << e.message().subject();
+    stream << " -> ";
+    stream << e.message().correlation_id();
+    stream << " -> ";
     
     logger(debug) << "Received a message: " << str.str();
 }
