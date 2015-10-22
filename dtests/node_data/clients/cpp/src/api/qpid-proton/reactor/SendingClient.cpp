@@ -55,19 +55,19 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
 	setter.set("msg-subject", &msg, 
                 static_cast<string_setter>(&message::subject));
         
-        /*
-	
-	 */
-/*
-	setter.set("msg-id", &message, &Message::setMessageId);
-	setter.set("msg-user-id", &message, &Message::setUserId);
-	
-	
-	setter.setNumber("msg-ttl", &message, &Message::setTimeToLive);
-	setter.setNumber("msg-priority", &message, &Message::setPriority);
-	setter.setBoolean("msg-durable", &message, &Message::setDurable);
-	setter.setMap("msg-properties", &message, &Message::setProperties);
-*/	
+        setter.set("msg-id", &msg, static_cast<data_setter>(&message::id), 
+                &defaultNormalizer);
+        
+        setter.setNumber("msg-ttl", &msg, 
+                static_cast<amqpts_setter>(&message::expiry_time));
+        
+        setter.set("msg-user-id", &msg,
+                static_cast<string_setter>(&message::user));
+        
+        // TODO: not implemented on reactor
+        // setter.setNumber("msg-priority", &msg, static_cast<long_setter>(&message::priority));
+        // setter.setBoolean("msg-durable", &msg, static_cast<boolean_setter>(&message::durable));
+        // setter.setMap("msg-properties", &msg, static_cast<map_setter>(&message::properties));
 }
  
 
