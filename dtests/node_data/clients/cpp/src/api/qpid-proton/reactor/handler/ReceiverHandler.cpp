@@ -39,18 +39,16 @@ void ReceiverHandler::on_start(event &e) {
 
 
 void ReceiverHandler::on_message(event& e) {
-    
-    std::stringbuf str;
-    std::ostream stream(&str);
-     
-    stream << e.message().body();
-    stream << " -> ";
-    stream << e.message().subject();
-    stream << " -> ";
-    stream << e.message().correlation_id();
-    stream << " -> ";
-    
-    logger(debug) << "Received a message: " << str.str();
+    ReactorDecoder decoder = ReactorDecoder(e.message()); 
+	
+    std::ostringstream stream;
+    DictWriter writer = DictWriter(&stream);
+	
+    DictFormatter formatter = DictFormatter();
+    formatter.printMessage(&decoder, &writer);
+	
+    writer.endLine();
+    std::cout << writer.toString();    
 }
 
 void ReceiverHandler::on_accepted(event& e) {

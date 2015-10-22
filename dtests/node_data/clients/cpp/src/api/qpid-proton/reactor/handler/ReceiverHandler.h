@@ -15,6 +15,12 @@
 #define RECEIVERHANDLER_H
 
 #include "CommonHandler.h"
+#include "reactor/formatter/ReactorDecoder.h"
+#include "formatter/DictFormatter.h"
+ #include "formatter/DictWriter.h"
+
+ #include "formatter/UpstreamFormatter.h"
+ #include "formatter/UpstreamWriter.h"
 
 using proton::message;
 using proton::event;
