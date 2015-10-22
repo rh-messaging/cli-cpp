@@ -11,6 +11,7 @@
 
 #include <proton/message.hpp>
 #include <proton/container.hpp>
+#include <proton/types.hpp>
 
 #include "ModernClient.h"
 #include "handler/SenderHandler.h"
@@ -19,12 +20,14 @@
 #include "Normalizer.h"
 
 using proton::message;
+using proton::amqp_timestamp;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
     
 typedef void (message::*string_setter)(const string &);
+typedef void (message::*amqpts_setter)(amqp_timestamp);
 typedef void (message::*data_setter)(const data &);
 
 using dtests::proton::common::ModernClient;
