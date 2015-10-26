@@ -18,6 +18,7 @@
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
 #include "Normalizer.h"
+#include "ContentType.h"
 
 using proton::message;
 using proton::amqp_timestamp;
@@ -43,6 +44,8 @@ class SendingClient : public ModernClient {
     typedef ModernClient super;
 
     void setMessageOptions(const OptionsSetter &setter, message &msg) const;
+    void setMessageContent(const OptionsSetter &setter, 
+        const optparse::Values &options, message *msg) const;
 };
 
 } /* namespace reactor */

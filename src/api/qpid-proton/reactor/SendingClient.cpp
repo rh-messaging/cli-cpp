@@ -70,6 +70,23 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     // setter.setMap("msg-properties", &msg, static_cast<map_setter>(&message::properties));
 }
 
+void SendingClient::setMessageContent(const OptionsSetter &setter,
+        const optparse::Values &options, message *msg) const
+{
+    string content_type = options["msg-content-type"];
+
+    const string content = setter.getContent();
+    if (content_type == ContentType::TEXT_PLAIN) {
+        msg->body(content);
+    } else {
+        if (content_type == ContentType::AMQP_LIST) {
+            setter.setList("msg-content", msg,
+                    static_cast<data_setter> (&message::body), &listNormalizer);
+
+        }
+    }
+}
+
 int SendingClient::run(int argc, char **argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
@@ -100,7 +117,7 @@ int SendingClient::run(int argc, char **argv) const
     message msg = message();
 
     setMessageOptions(setter, msg);
-    msg.body(content);
+    setMessageContent(setter, options, &msg);
 
     SenderHandler handler = SenderHandler(address);
 

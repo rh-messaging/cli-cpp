@@ -18,6 +18,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <list>
 
 #include "IOException.h"
 #include "logger/Logger.h"
@@ -31,11 +32,20 @@ map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
 
 /**
- * An OptionNormalizer defines a flexible structure for converting basic and std
+ * An StringOptionNormalizer defines a flexible structure for converting string 
  * types to the different data types used in the messaging APIs.
  */
-template<typename K> struct OptionNormalizer {
+template<typename K> struct StringOptionNormalizer {
     typedef K(*normalizer)(const string &);
+    normalizer normalizerPtr;
+};
+
+/**
+ * A ListOptionNormalizer defines a flexible structure for converting string 
+ * types to the different data types used in the messaging APIs.
+ */
+template<typename K> struct ListOptionNormalizer {
+    typedef K(*normalizer)(const list<string> &);
     normalizer normalizerPtr;
 };
 
@@ -56,7 +66,7 @@ class OptionsSetter {
     OptionsSetter(const optparse::Values &options);
     virtual ~OptionsSetter();
 
-    string getContent();
+    string getContent() const;
 
     /**
      * Set an option to a class instance (bean)
@@ -83,7 +93,7 @@ class OptionsSetter {
      */
     template<typename T, typename Y, typename K>
     void set(const string &name, T *obj, Y setter,
-            const OptionNormalizer<K> *normalizerStruc) const {
+            const StringOptionNormalizer<K> *normalizerStruc) const {
         if (options.is_set(name)) {
             const string value = options[name];
 
@@ -178,6 +188,35 @@ class OptionsSetter {
             }
 
             (obj->*setter)(properties);
+        }
+    }
+    
+    
+    /**
+     * Set a list option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y, typename K>
+    void setList(const string &name, T *obj, Y setter,
+            const ListOptionNormalizer<K> *normalizerStruct,
+            const string &keySeparator = ";") const {
+        if (options.is_set(name)) {
+            const string property = options[name];
+
+            vector<string> propertyVector = split(property, keySeparator);
+
+            
+            list<string> entries = list<string>();
+            for (size_t i = 0; i < propertyVector.size(); i++) {
+                entries.push_back(propertyVector[i]);
+            }
+
+             K normalizedValue = normalizerStruct->normalizerPtr(entries);
+            (obj->*setter)(normalizedValue);
         }
     }
 
