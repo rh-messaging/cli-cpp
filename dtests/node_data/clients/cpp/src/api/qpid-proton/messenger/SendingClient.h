@@ -30,18 +30,18 @@ namespace messenger {
 
 using dtests::proton::common::ModernClient;
 
-class SendingClient: public ModernClient {
-public:
-	SendingClient();
-	virtual ~SendingClient();
+class SendingClient : public ModernClient {
+  public:
+    SendingClient();
+    virtual ~SendingClient();
 
-	virtual int run(int argc, char **argv) const;
+    virtual int run(int argc, char **argv) const;
 
-private:
-	typedef ModernClient super;
+  private:
+    typedef ModernClient super;
 
-	void setMessageOptions(const OptionsSetter &setter, Message& message) const;
-	void setMessengerOptions(const OptionsSetter &setter, Messenger& messenger) const;
+    void setMessageOptions(const OptionsSetter &setter, Message& message) const;
+    void setMessengerOptions(const OptionsSetter &setter, Messenger& messenger) const;
 
 };
 

@@ -24,21 +24,21 @@
 namespace dtests {
 namespace proton {
 namespace reactor {
-    
+
 using dtests::proton::common::ModernClient;
-    
-class ConnectingClient: public ModernClient {
-public:
+
+class ConnectingClient : public ModernClient {
+  public:
     ConnectingClient();
     virtual ~ConnectingClient();
-    
+
     virtual int run(int argc, char **argv) const;
-    
-private:
+
+  private:
     typedef ModernClient super;
 
-    void setMessageHandlerOptions(const OptionsSetter &setter, 
-	ConnectorHandler &handler) const;
+    void setMessageHandlerOptions(const OptionsSetter &setter,
+            ConnectorHandler &handler) const;
 
 };
 

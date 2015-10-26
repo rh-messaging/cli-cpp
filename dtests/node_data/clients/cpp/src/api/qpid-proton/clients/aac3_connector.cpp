@@ -10,10 +10,11 @@
 
 using dtests::proton::reactor::ConnectingClient;
 
-int main(int argc, char** argv) {
-	ConnectingClient client = ConnectingClient();
+int main(int argc, char** argv)
+{
+    ConnectingClient client = ConnectingClient();
 
-	return client.run(argc, argv);
+    return client.run(argc, argv);
 
 }
 

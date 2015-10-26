@@ -58,7 +58,7 @@ int ReceivingClient::run(int argc, char **argv) const
     const string address = options["broker-url"];
 
     OptionsSetter setter = OptionsSetter(options);
-    
+
     ReceiverHandler handler = ReceiverHandler(address);
     container(handler).run();
 

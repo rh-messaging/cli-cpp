@@ -6,7 +6,7 @@
  */
 
 #ifndef DICTFORMATTER_H
-#define	DICTFORMATTER_H
+#define DICTFORMATTER_H
 
 #include "AbstractFormatter.h"
 
@@ -14,18 +14,18 @@
  * Implements a Python dictionary formatter (ie.: saves data in a dict-based 
  * format)
  */
-class DictFormatter: public AbstractFormatter {
-public:
+class DictFormatter : public AbstractFormatter {
+  public:
     DictFormatter();
     DictFormatter(const DictFormatter& orig);
     virtual ~DictFormatter();
-    
+
     void printMessage(const AbstractDecoder *decoder, Writer *writer) const;
 
-private:
+  private:
     typedef AbstractFormatter super;
 
 };
 
-#endif	/* DICTFORMATTER_H */
+#endif /* DICTFORMATTER_H */
 

@@ -8,26 +8,30 @@
 #include "UpstreamFormatter.h"
 
 UpstreamFormatter::UpstreamFormatter()
-	: super() 
+    : super()
 
-{ }
+{
+}
 
 UpstreamFormatter::UpstreamFormatter(const UpstreamFormatter& orig)
-	: super()
-{ }
+    : super()
+{
+}
 
-UpstreamFormatter::~UpstreamFormatter() { }
+UpstreamFormatter::~UpstreamFormatter()
+{
+}
 
+void UpstreamFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const
+{
+    writer->start();
+    decoder->decodeProperties(writer);
 
-void UpstreamFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const {
-	writer->start();
-	decoder->decodeProperties(writer);
-	
-	writer->startContent();
-	decoder->decodeContent(writer);
-	writer->endContent();
-	
-	writer->end();
+    writer->startContent();
+    decoder->decodeContent(writer);
+    writer->endContent();
+
+    writer->end();
 }
 
 

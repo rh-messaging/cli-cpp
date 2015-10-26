@@ -25,24 +25,24 @@ using proton::amqp_timestamp;
 namespace dtests {
 namespace proton {
 namespace reactor {
-    
+
 typedef void (message::*string_setter)(const string &);
 typedef void (message::*amqpts_setter)(amqp_timestamp);
 typedef void (message::*data_setter)(const data &);
 
 using dtests::proton::common::ModernClient;
 
-class SendingClient: public ModernClient {
-public:
-	SendingClient();
-	virtual ~SendingClient();
+class SendingClient : public ModernClient {
+  public:
+    SendingClient();
+    virtual ~SendingClient();
 
-	virtual int run(int argc, char **argv) const;
+    virtual int run(int argc, char **argv) const;
 
-private:
-	typedef ModernClient super;
+  private:
+    typedef ModernClient super;
 
-	void setMessageOptions(const OptionsSetter &setter, message &msg) const;
+    void setMessageOptions(const OptionsSetter &setter, message &msg) const;
 };
 
 } /* namespace reactor */

@@ -36,9 +36,9 @@ class ReceivingClient : public ModernClient {
   public:
     ReceivingClient();
     virtual ~ReceivingClient();
-    
+
     virtual int run(int argc, char **argv) const;
-    
+
   private:
     typedef ModernClient super;
 

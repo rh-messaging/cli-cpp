@@ -24,26 +24,26 @@ namespace common {
  * An implementation of a the CPP client that uses the newer format for command
  * line options, logger, etc.
  */
-class ModernClient: public Client {
-public:
-	ModernClient();
-	virtual ~ModernClient();
+class ModernClient : public Client {
+  public:
+    ModernClient();
+    virtual ~ModernClient();
 
-	virtual int run(int argc, char **argv) const = 0;
+    virtual int run(int argc, char **argv) const = 0;
 
-protected:
-        /**
-         * Given the command line options, it sets the log level accordingly
-         * @param options the command line options
-         */
-	void setLogLevel(const optparse::Values &options) const;
+  protected:
+    /**
+     * Given the command line options, it sets the log level accordingly
+     * @param options the command line options
+     */
+    void setLogLevel(const optparse::Values &options) const;
 
-private:
-	typedef Client super;
+  private:
+    typedef Client super;
 
-	void logInfo() const;
-	void logDebug() const;
-	void logTrace() const;
+    void logInfo() const;
+    void logDebug() const;
+    void logTrace() const;
 
 
 

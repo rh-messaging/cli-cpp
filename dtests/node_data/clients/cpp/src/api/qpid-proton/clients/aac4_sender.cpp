@@ -10,13 +10,14 @@
 
 using dtests::proton::messenger::SendingClient;
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 #ifdef QPID_PROTON_WITH_MESSAGING_API
-	SendingClient client = SendingClient();
+    SendingClient client = SendingClient();
 
-	return client.run(argc, argv);
+    return client.run(argc, argv);
 #else
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 #endif
 }
 

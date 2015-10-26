@@ -43,13 +43,13 @@ using namespace dtests::common::log;
 template<typename T>
 static data &normalizeFunc(const T &orig) {
     value dv;
-    
+
     Logger logger = LoggerWrapper::getLogger();
     logger(debug) << "Normalizing: " << orig;
-    
+
     dv.encoder() << orig;
-   
-    
+
+
     return dv.decoder().data();
 }
 

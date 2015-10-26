@@ -50,7 +50,7 @@ void set_stdx_unbuffered();
  * @param in_str input string
  * @param in_indx integer index
  */
-std::string str_fmt( const std::string& in_str, int in_indx );
+std::string str_fmt(const std::string& in_str, int in_indx);
 
 // ---------------------------------------------------------------------------
 // timestamping methods
@@ -74,7 +74,7 @@ double * ts_init(double *in_tsdata, std::string in_optmode);
  * @param in_optmode timesnapping mode
  */
 void ts_snap_store(double *in_tsdata, char in_step, std::string in_optmode,
-                   double in_msg_ts = -1.0);
+        double in_msg_ts = -1.0);
 
 /**
  * Returns current timestamp python dictionary as string
@@ -86,7 +86,7 @@ void ts_snap_store(double *in_tsdata, char in_step, std::string in_optmode,
  * @return the current timestamp python dictionary as string
  */
 std::string ts_report(double *in_tsdata, long in_msgcnt, long in_msgsize,
-                      int in_ecode);
+        int in_ecode);
 
 
 #endif

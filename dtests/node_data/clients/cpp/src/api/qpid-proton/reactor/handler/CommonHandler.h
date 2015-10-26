@@ -26,21 +26,20 @@ namespace reactor {
 
 using std::string;
 
+class CommonHandler : public messaging_handler {
+  public:
+    CommonHandler(const string &url);
+    virtual ~CommonHandler();
 
-class CommonHandler: public messaging_handler {
-public:
-	CommonHandler(const string &url);
-	virtual ~CommonHandler();
+  protected:
+    static Logger logger;
+    url broker_url;
 
-protected:
-	static Logger logger;
-	url broker_url;
-	
-private:
-	typedef messaging_handler super;
+  private:
+    typedef messaging_handler super;
 
-        
-	
+
+
 };
 
 

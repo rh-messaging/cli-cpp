@@ -8,7 +8,7 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 
 ConnectorHandler::ConnectorHandler(const string &url)
-: super(url)
+    : super(url)
 {
     logger(debug) << "Initializing the connector handler";
 
@@ -56,13 +56,13 @@ void ConnectorHandler::on_connection_error(event &e)
     logger(error) << "Failed to connect to " << broker_url.host_port();
 }
 
-
-void ConnectorHandler::on_connection_local_open(event& e) {
+void ConnectorHandler::on_connection_local_open(event& e)
+{
     logger(debug) << "Local connection opened to " << broker_url.host_port();
 }
 
-
-void ConnectorHandler::on_connection_remote_open(event& e) { 
+void ConnectorHandler::on_connection_remote_open(event& e)
+{
     logger(debug) << "Remote connection opened to " << broker_url.host_port();
 }
 
