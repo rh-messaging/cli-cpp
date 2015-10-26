@@ -7,14 +7,17 @@
 
 #include "ContentType.h"
 
-const char *ContentType::TEXT_PLAIN = "text/plain" ;
+const char *ContentType::TEXT_PLAIN = "text/plain";
 
-ContentType::ContentType() {
+ContentType::ContentType()
+{
 }
 
-ContentType::ContentType(const ContentType& orig) {
+ContentType::ContentType(const ContentType& orig)
+{
 }
 
-ContentType::~ContentType() {
+ContentType::~ContentType()
+{
 }
 

@@ -20,7 +20,7 @@ namespace proton {
 namespace reactor {
 
 ConnectingClient::ConnectingClient()
-	: super()
+    : super()
 {
 }
 
@@ -29,43 +29,43 @@ ConnectingClient::~ConnectingClient()
 }
 
 void ConnectingClient::setMessageHandlerOptions(const OptionsSetter &setter,
-		ConnectorHandler &handler) const
+        ConnectorHandler &handler) const
 {
-	setter.setNumber("count", &handler, &ConnectorHandler::setCount, 1);
+    setter.setNumber("count", &handler, &ConnectorHandler::setCount, 1);
 }
 
+int ConnectingClient::run(int argc, char** argv) const
+{
+    const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
+    const string version = "1.0";
+    const string desc = "C/C++ AMQ reactor client for Proton-C";
 
-int ConnectingClient::run(int argc, char** argv) const {
-	const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
-	const string version = "1.0";
-	const string desc = "C/C++ AMQ reactor client for Proton-C";
+    ConnectorOptionsParser parser = ConnectorOptionsParser();
 
-	ConnectorOptionsParser parser = ConnectorOptionsParser();
+    /**
+     * WARNING: do not reassign the result of chainned calls to usage/version/etc
+     *  because it causes the code to segfault. For example, this crashes:
+     *
+     *  ControlOptions parser = ControlOptions().usage(usage)
+     */
+    parser.usage(usage).version(version).description(desc);
 
-	/**
-	 * WARNING: do not reassign the result of chainned calls to usage/version/etc
-	 *  because it causes the code to segfault. For example, this crashes:
-	 *
-	 *  ControlOptions parser = ControlOptions().usage(usage)
-	 */
-	parser.usage(usage).version(version).description(desc);
+    optparse::Values options = parser.parse_args(argc, argv);
 
-	optparse::Values options = parser.parse_args(argc, argv);
+    parser.validate(options);
 
-	parser.validate(options);
+    setLogLevel(options);
 
-	setLogLevel(options);
+    const string address = options["broker-url"];
 
-	const string address = options["broker-url"];
-	
-	OptionsSetter setter = OptionsSetter(options);
-	
-	ConnectorHandler handler = ConnectorHandler(address);
-	setMessageHandlerOptions(setter, handler);
-		
-	container(handler).run();
-	
-	return 0;
+    OptionsSetter setter = OptionsSetter(options);
+
+    ConnectorHandler handler = ConnectorHandler(address);
+    setMessageHandlerOptions(setter, handler);
+
+    container(handler).run();
+
+    return 0;
 }
 
 

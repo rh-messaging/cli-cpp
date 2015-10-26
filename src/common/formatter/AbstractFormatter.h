@@ -6,7 +6,7 @@
  */
 
 #ifndef ABSTRACTFORMATTER_H
-#define	ABSTRACTFORMATTER_H
+#define ABSTRACTFORMATTER_H
 
 #include <string>
 
@@ -18,27 +18,25 @@
  * can be implemented
  */
 class AbstractFormatter {
-public:
+  public:
     AbstractFormatter();
     AbstractFormatter(const AbstractFormatter& orig);
     virtual ~AbstractFormatter();
-        
+
     /**
      * Print message "upstream style" => 'Message(...)'
      * additional data could be aquired by 'bool verbose' parameter
      */
     virtual void printMessage(const AbstractDecoder *dec, Writer *wr) const = 0;
 
-  
     /**
      * Print message processing statistics
      * @param decoder
      */
-    
+
     template <typename T, typename Y>
-    void printStatistics(const AbstractDecoder *decoder, Writer *writer, 
-        const map<T, Y> &valuesMap) const 
-    {
+    void printStatistics(const AbstractDecoder *decoder, Writer *writer,
+            const map<T, Y> &valuesMap) const {
         writer->startStatistics();
         decoder->decodeStatistics(writer, valuesMap);
         writer->endStatistics();
@@ -49,10 +47,10 @@ public:
 
     /* recursive python map formatter {'key': 'value' } */
     // std::string formatMap(const qpid::types::Variant::Map&);
-protected:
-    
-    
+  protected:
+
+
 };
 
-#endif	/* ABSTRACTFORMATTER_H */
+#endif /* ABSTRACTFORMATTER_H */
 

@@ -6,7 +6,7 @@
  */
 
 #ifndef TESTUTILS_H
-#define	TESTUTILS_H
+#define TESTUTILS_H
 
 #include <cstdio>
 #include <cstring>
@@ -43,5 +43,5 @@ bool assertEquals(const char *expected, const char *actuals);
  */
 bool assertEquals(const char *expected, const char *actuals, size_t size);
 
-#endif	/* TESTUTILS_H */
+#endif /* TESTUTILS_H */
 

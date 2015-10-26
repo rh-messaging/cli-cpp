@@ -11,41 +11,44 @@ namespace dtests {
 namespace common {
 
 BaseException::BaseException()
-	: message()
+    : message()
 {
 
 }
 
 BaseException::BaseException(const BaseException& other)
-	: message(other.message)
+    : message(other.message)
 {
 
 }
 
 BaseException::BaseException(const string& message)
-	: message(message)
+    : message(message)
 {
 
 }
 
-BaseException::~BaseException() {
+BaseException::~BaseException()
+{
 
 }
 
-void BaseException::setMessage(const string& message) {
-	this->message = message;
+void BaseException::setMessage(const string& message)
+{
+    this->message = message;
 }
 
-string BaseException::getMessage() const {
-	return message;
+string BaseException::getMessage() const
+{
+    return message;
 }
 
+BaseException& BaseException::operator=(const BaseException& rhs)
+{
+    setMessage(rhs.getMessage());
 
-
-BaseException& BaseException::operator=(const BaseException& rhs) {
-	setMessage(rhs.getMessage());
-
-	return *this;
+    return *this;
 }
 
-}}
+}
+}

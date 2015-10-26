@@ -11,14 +11,16 @@ namespace dtests {
 namespace common {
 
 IOException::IOException(const string &message)
-	: super(message)
+    : super(message)
 {
-	// TODO Auto-generated constructor stub
+    // TODO Auto-generated constructor stub
 
 }
 
-IOException::~IOException() {
-	// TODO Auto-generated destructor stub
+IOException::~IOException()
+{
+    // TODO Auto-generated destructor stub
 }
 
-}}
+}
+}

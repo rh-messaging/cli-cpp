@@ -14,13 +14,16 @@ namespace messenger {
 using dtests::common::BaseException;
 
 ProtonException::ProtonException(const string &message)
-	: super(message)
+    : super(message)
 {
 
 }
 
-ProtonException::~ProtonException() {
+ProtonException::~ProtonException()
+{
 
 }
 
-}}}
+}
+}
+}

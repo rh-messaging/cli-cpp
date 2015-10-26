@@ -27,11 +27,10 @@ using namespace dtests::common::log;
  * A template-based error container for proton-based error data
  */
 class ProtonError {
-public:
-	template <typename T>
-	static T handleError(pn_error_t *error, const string &message);
+  public:
+    template <typename T>
+    static T handleError(pn_error_t *error, const string &message);
 };
-
 
 /**
  * Process any proton error data and transforms it to the given parameterized 
@@ -43,21 +42,23 @@ public:
 template <typename T>
 T ProtonError::handleError(pn_error_t *error, const string &message) {
     Logger logger = LoggerWrapper::getLogger();
-    
+
     logger(trace) << "An error occurred within Proton and the code "
-                            << " will try to determine the root cause";
+            << " will try to determine the root cause";
 
     const char *protonErrorText = pn_error_text(error);
 
     if (protonErrorText == NULL) {
-            logger(warning) << "Unable to obtain Proton error text";
+        logger(warning) << "Unable to obtain Proton error text";
 
-            return T(message + ": unspecified Proton internal error");
+        return T(message + ": unspecified Proton internal error");
     }
 
     return T(message + ": " + protonErrorText);
 }
 
-}}}
+}
+}
+}
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_PROTONERROR_HPP_ */

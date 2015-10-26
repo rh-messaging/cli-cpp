@@ -6,7 +6,7 @@
  */
 
 #ifndef MESSAGEHEADER_H
-#define	MESSAGEHEADER_H
+#define MESSAGEHEADER_H
 
 typedef struct header_property_t_ {
     const char *name;
@@ -16,7 +16,7 @@ typedef struct header_property_t_ {
  * AMQP message headers
  */
 class MessageHeader {
-public:
+  public:
     static HeaderProperty REDELIVERED;
     static HeaderProperty REPLY_TO;
     static HeaderProperty SUBJECT;
@@ -28,26 +28,31 @@ public:
     static HeaderProperty TTL;
     static HeaderProperty USER_ID;
     static HeaderProperty CONTENT_SIZE;
-    
-    
+
+
     // Unused atm
-    static HeaderProperty DELIVERY_MODE;  
+    static HeaderProperty DELIVERY_MODE;
     static HeaderProperty EXPIRATION;
     static HeaderProperty BODY_LENGTH;
     static HeaderProperty GROUP_ID;
     static HeaderProperty GROUP_SEQ;
     static HeaderProperty BROKER_PATH;
     static HeaderProperty ORIGINAL_DESTINATIION;
-    
+
     static HeaderProperty printableProperties[];
-    
-private:
-    
-    MessageHeader() {} 
-    MessageHeader(const MessageHeader& orig) {}
-    virtual ~MessageHeader() {}
+
+  private:
+
+    MessageHeader() {
+    }
+
+    MessageHeader(const MessageHeader& orig) {
+    }
+
+    virtual ~MessageHeader() {
+    }
 
 };
 
-#endif	/* MESSAGEHEADER_H */
+#endif /* MESSAGEHEADER_H */
 

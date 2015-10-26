@@ -9,30 +9,32 @@
 #include "options/modern/ReceiverOptionsParser.h"
 
 ReceiverOptionsParser::ReceiverOptionsParser()
-	: super()
+    : super()
 {
-	add_option("-c", "--count")
-			.dest("count")
-			.type("int")
-			.help("stop after count messages")
-			.metavar("COUNT");
+    add_option("-c", "--count")
+            .dest("count")
+            .type("int")
+            .help("stop after count messages")
+            .metavar("COUNT");
 
 #ifdef ENABLE_BLOCKING
-	add_option("--tx-size")
-					.dest("tx-size")
-					.help("transactional mode: batch message count size " \
+    add_option("--tx-size")
+            .dest("tx-size")
+            .help("transactional mode: batch message count size " \
 							"(negative skips tx-action before exit)");
 #endif // ENABLE_BLOCKING
 
-	add_option("--timeout")
-					.dest("timeout")
-					.help("exit after the specified time")
-					.type("int");
+    add_option("--timeout")
+            .dest("timeout")
+            .help("exit after the specified time")
+            .type("int");
 }
 
-ReceiverOptionsParser::~ReceiverOptionsParser() {
+ReceiverOptionsParser::~ReceiverOptionsParser()
+{
 }
 
-void ReceiverOptionsParser::validate(const Values& options) const {
-	super::validate(options);
+void ReceiverOptionsParser::validate(const Values& options) const
+{
+    super::validate(options);
 }

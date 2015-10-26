@@ -36,7 +36,7 @@ class ConnectorHandler : public CommonHandler {
     void on_connection_remote_open(event& e);
 
 
-    
+
     void setCount(int count);
     int getCount() const;
 

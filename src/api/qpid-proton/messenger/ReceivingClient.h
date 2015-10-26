@@ -26,19 +26,19 @@ namespace messenger {
 
 using dtests::proton::common::ModernClient;
 
-class ReceivingClient: public ModernClient {
-public:
-	ReceivingClient();
-	virtual ~ReceivingClient();
+class ReceivingClient : public ModernClient {
+  public:
+    ReceivingClient();
+    virtual ~ReceivingClient();
 
-	virtual int run(int argc, char **argv) const;
+    virtual int run(int argc, char **argv) const;
 
-private:
-	typedef ModernClient super;
+  private:
+    typedef ModernClient super;
 
-	void setMessageOptions(const OptionsSetter &setter, Message& message) const;
-	void setMessengerOptions(const OptionsSetter &setter, Messenger& messenger) const;
-	Message get(const Messenger& messenger) const;
+    void setMessageOptions(const OptionsSetter &setter, Message& message) const;
+    void setMessengerOptions(const OptionsSetter &setter, Messenger& messenger) const;
+    Message get(const Messenger& messenger) const;
 };
 
 } /* namespace messenger */

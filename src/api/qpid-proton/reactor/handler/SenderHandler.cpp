@@ -61,7 +61,7 @@ void SenderHandler::on_sendable(event &e)
 
     while (credit > 0 && sent < count) {
         logger(trace) << "Creating the message object and setting default values";
-        
+
         logger(trace) << "Sending messages through the link";
         e.sender().send(this->m);
 
@@ -90,7 +90,6 @@ void SenderHandler::on_disconnected(event& e)
 {
     logger(debug) << "Event name: " << e.name();
 }
-
 
 void SenderHandler::on_connection_closed(event &e)
 {

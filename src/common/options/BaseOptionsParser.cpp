@@ -8,10 +8,11 @@
 #include "options/BaseOptionsParser.h"
 
 BaseOptionsParser::BaseOptionsParser()
-	: super()
+    : super()
 {
 
 }
 
-BaseOptionsParser::~BaseOptionsParser() {
+BaseOptionsParser::~BaseOptionsParser()
+{
 }

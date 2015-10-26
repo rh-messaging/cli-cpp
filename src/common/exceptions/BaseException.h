@@ -19,42 +19,43 @@ using namespace std;
  * Base exception class
  */
 class BaseException {
-public:
-	BaseException();
-        
-        /**
-         * Constructor
-         * @param message the exception message
-         */
-	BaseException(const string &message);
-        
-        /**
-         * Copy constructor
-         * @param other
-         */
-	BaseException(const BaseException &other);
+  public:
+    BaseException();
 
-	virtual ~BaseException();
+    /**
+     * Constructor
+     * @param message the exception message
+     */
+    BaseException(const string &message);
 
-        /**
-         * Sets the exception message
-         * @param message the exception message
-         */
-	void setMessage(const string &message);
-        
-        /**
-         * Gets the exception message
-         * @return the exception message
-         */
-	string getMessage() const;
+    /**
+     * Copy constructor
+     * @param other
+     */
+    BaseException(const BaseException &other);
 
-	BaseException &operator=(const BaseException &rhs);
+    virtual ~BaseException();
 
-private:
-	string message;
+    /**
+     * Sets the exception message
+     * @param message the exception message
+     */
+    void setMessage(const string &message);
+
+    /**
+     * Gets the exception message
+     * @return the exception message
+     */
+    string getMessage() const;
+
+    BaseException &operator=(const BaseException &rhs);
+
+  private:
+    string message;
 
 };
 
-}}
+}
+}
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_BASEEXCEPTION_H_ */

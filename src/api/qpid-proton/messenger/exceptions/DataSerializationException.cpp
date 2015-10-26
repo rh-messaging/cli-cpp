@@ -12,14 +12,17 @@ namespace proton {
 namespace messenger {
 
 DataSerializationException::DataSerializationException(const string &message)
-	: super(message)
+    : super(message)
 {
 
 
 }
 
-DataSerializationException::~DataSerializationException() {
+DataSerializationException::~DataSerializationException()
+{
 
 }
 
-}}}
+}
+}
+}

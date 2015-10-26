@@ -7,11 +7,17 @@
 
 #include "AbstractFormatter.h"
 
-AbstractFormatter::AbstractFormatter() { }
+AbstractFormatter::AbstractFormatter()
+{
+}
 
-AbstractFormatter::AbstractFormatter(const AbstractFormatter& orig) { }
+AbstractFormatter::AbstractFormatter(const AbstractFormatter& orig)
+{
+}
 
-AbstractFormatter::~AbstractFormatter() { }
+AbstractFormatter::~AbstractFormatter()
+{
+}
 
 
 

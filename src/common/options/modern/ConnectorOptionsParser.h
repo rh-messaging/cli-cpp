@@ -18,14 +18,14 @@
 
 #include "options/modern/ModernOptionsParser.h"
 
-class ConnectorOptionsParser: public ModernOptionsParser {
-public:
+class ConnectorOptionsParser : public ModernOptionsParser {
+  public:
     ConnectorOptionsParser();
     virtual ~ConnectorOptionsParser();
-    
+
     virtual void validate(const Values &options) const;
-private:
-    
+  private:
+
     typedef ModernOptionsParser super;
 
 };
