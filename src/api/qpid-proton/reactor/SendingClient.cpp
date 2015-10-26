@@ -62,7 +62,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
             static_cast<amqpts_setter> (&message::expiry_time));
 
     setter.set("msg-user-id", &msg,
-            static_cast<string_setter> (&message::user));
+            static_cast<string_setter> (&message::user_id));
 
     // TODO: not implemented on reactor
     // setter.setNumber("msg-priority", &msg, static_cast<long_setter>(&message::priority));
