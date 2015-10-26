@@ -58,7 +58,7 @@ OptionsSetter::~OptionsSetter()
 {
 }
 
-string OptionsSetter::getContent()
+string OptionsSetter::getContent() const
 {
     Logger logger = LoggerWrapper::getLogger();
 
