@@ -84,6 +84,14 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
                     static_cast<data_setter> (&message::body), &listNormalizer);
 
         }
+        else {
+            if (content_type == ContentType::AMQP_MAP) {
+                setter.setMap("msg-content", msg,
+                        static_cast<data_setter> (&message::body), &mapNormalizer);
+
+            }
+        
+        }
     }
 }
 

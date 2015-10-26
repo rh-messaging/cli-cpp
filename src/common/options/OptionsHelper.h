@@ -50,6 +50,15 @@ template<typename K> struct ListOptionNormalizer {
 };
 
 /**
+ * A MapOptionNormalizer defines a flexible structure for converting string 
+ * types to the different data types used in the messaging APIs.
+ */
+template<typename K> struct MapOptionNormalizer {
+    typedef K(*normalizer)(const map<string, string> &);
+    normalizer normalizerPtr;
+};
+
+/**
  * An utility class template to help set options values/command values to their 
  * respective class instances. For example, given an instance of this class, 
  * a command line option named msg-reply-to and a bean named 'message' of type 
@@ -188,6 +197,38 @@ class OptionsSetter {
             }
 
             (obj->*setter)(properties);
+        }
+    }
+    
+    /**
+     * Set a map option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y, typename K>
+    void setMap(const string &name, T *obj, Y setter, 
+            const MapOptionNormalizer<K> *normalizer,
+            const string &keySeparator = ";",
+            const string &propertySeparator = ":") const {
+        if (options.is_set(name)) {
+            const string property = options[name];
+
+            vector<string> propertyVector = split(property, keySeparator);
+
+            map<string, string> properties = map<string, string>();
+            for (size_t i = 0; i < propertyVector.size(); i++) {
+                map<string, string> tmp = parse_key_value(propertyVector[i],
+                        propertySeparator);
+
+                properties.insert(tmp.begin(), tmp.end());
+            }
+
+            
+            K normalizedValue = normalizer->normalizerPtr(properties);
+            (obj->*setter)(normalizedValue);
         }
     }
     
