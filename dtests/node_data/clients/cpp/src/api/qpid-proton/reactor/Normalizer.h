@@ -31,6 +31,7 @@ using proton::value;
 using proton::type_id;
 using proton::as;
 using proton::LIST;
+using proton::MAP;
 
 namespace dtests {
 namespace proton {
@@ -75,7 +76,7 @@ static string unroll(const list<string> &e) {
 }
 
 /**
- * Default option normalization function that converts basic and std types to 
+ * Default option normalization function that converts list types to 
  * a proton::data object reference.
  */
 static data &normalizeList(const list<string> &orig) {
@@ -86,6 +87,24 @@ static data &normalizeList(const list<string> &orig) {
     logger(debug) << "Using list normalizer: " << unroll(orig);
 
     dv.encoder() << as<LIST>(orig);
+
+
+    return dv.decoder().data();
+}
+
+
+/**
+ * Default option normalization function that converts map types to 
+ * a proton::data object reference.
+ */
+static data &normalizeMap(const map<string, string> &orig) {
+    value dv;
+
+    Logger logger = LoggerWrapper::getLogger();
+
+    logger(debug) << "Using map normalizer: "; //<< unroll(orig);
+
+    dv.encoder() << as<MAP>(orig);
 
 
     return dv.decoder().data();
@@ -104,6 +123,14 @@ static StringOptionNormalizer<data &> defaultNormalizer = {
  */
 static ListOptionNormalizer<data &> listNormalizer = {
     normalizeList,
+};
+
+
+/**
+ * Data normalizer struct instance for map-based data
+ */
+static MapOptionNormalizer<data &> mapNormalizer = {
+    normalizeMap,
 };
 
 } /* namespace reactor */
