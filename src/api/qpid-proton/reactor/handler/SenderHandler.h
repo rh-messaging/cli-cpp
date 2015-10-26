@@ -51,7 +51,7 @@ class SenderHandler : public CommonHandler {
     int count;
     int sent;
     int confirmedSent;
-    
+
     message m;
 
 };

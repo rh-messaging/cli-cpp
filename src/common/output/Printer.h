@@ -6,7 +6,7 @@
  */
 
 #ifndef PRINTER_H
-#define	PRINTER_H
+#define PRINTER_H
 
 #include <cstdio>
 
@@ -14,22 +14,23 @@
  * Prints (writes) data to a FILE stream
  */
 class Printer {
-public:
+  public:
+
     /**
      * Enumerates the numbering base for the output
      */
     enum Base {
-        HEXADECIMAL, 	/*!< Hexadecimal base */
-        DECIMAL,	/*!< Decimal base */
-        OCTAL		/*!< Octal base */
+        HEXADECIMAL, /*!< Hexadecimal base */
+        DECIMAL, /*!< Decimal base */
+        OCTAL /*!< Octal base */
     };
-                
-    
+
+
     Printer();
     Printer(FILE *stream);
     Printer(const Printer& orig);
     virtual ~Printer();
-    
+
     /**
      * Prints a signed integer
      * @param val Value
@@ -44,33 +45,33 @@ public:
 
 
     /**
-    * Prints a signed long integer
-    * @param val Value
-    */
+     * Prints a signed long integer
+     * @param val Value
+     */
     void print(long int val);
 
     /**
-    * Prints an unsigned long integer
-    * @param val Value
-    */
+     * Prints an unsigned long integer
+     * @param val Value
+     */
     void print(unsigned long int val);
 
     /**
-    * Prints a double
-    * @param d Value
-    */
+     * Prints a double
+     * @param d Value
+     */
     void print(double d);
 
     /**
-    * Prints a char
-    * @param c Char
-    */
+     * Prints a char
+     * @param c Char
+     */
     void print(char c);
 
     /**
-    * Prints the address of a pointer
-    * @param ptr The address of the pointer
-    */
+     * Prints the address of a pointer
+     * @param ptr The address of the pointer
+     */
     void print(const void *ptr);
 
 
@@ -82,16 +83,16 @@ public:
      * to be called
      */
     void print(const char *str);
-    
+
     /**
      * Flushes the output stream
      */
     void flush();
-private:
+  private:
     Base base;
     FILE *stream;
 
 };
 
-#endif	/* PRINTER_H */
+#endif /* PRINTER_H */
 

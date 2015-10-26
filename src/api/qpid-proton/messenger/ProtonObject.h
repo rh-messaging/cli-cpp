@@ -19,13 +19,15 @@ namespace messenger {
  * A base class for proton-specific objects
  */
 class ProtonObject {
-public:
+  public:
     ProtonObject();
     virtual ~ProtonObject();
-protected:
+  protected:
     static Logger logger;
 };
 
-}}}
+}
+}
+}
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_PROTONOBJECT_H_ */

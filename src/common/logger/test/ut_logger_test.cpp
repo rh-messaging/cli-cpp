@@ -17,35 +17,36 @@ using dtests::common::log::debug;
 /*
  * This test checks the ability to log a single message to a file
  */
-int main(int argc, char** argv) {
-	const char *logFileName = "ut_logger_test.log";
-	Logger::LogConfiguration logConfiguration; 
-	
-	logConfiguration.minimumLevel = info;
-	logConfiguration.stream = fopen(logFileName, "w+");
-	
-	if (logConfiguration.stream == NULL) {
-		fprintf(stderr, "Unable to open test log file\n");
-		return 1;
-	}
-	
-	// Logger::initLogger(logConfiguration);
-	LoggerWrapper::initLogger(logConfiguration);
-	
-	Logger logger = LoggerWrapper::getLogger();
-	
-	logger(info) << "This is a test"; 
-	
-	fclose(logConfiguration.stream);
-	
-	const char *message = "[info ]: This is a test\n";
-	size_t len = strlen(message);
-	
-	bool ret = assertFileContent(logFileName, message, len);
-	if (!ret) {
-		return 1;
-	}
+int main(int argc, char** argv)
+{
+    const char *logFileName = "ut_logger_test.log";
+    Logger::LogConfiguration logConfiguration;
 
-	return 0;
+    logConfiguration.minimumLevel = info;
+    logConfiguration.stream = fopen(logFileName, "w+");
+
+    if (logConfiguration.stream == NULL) {
+        fprintf(stderr, "Unable to open test log file\n");
+        return 1;
+    }
+
+    // Logger::initLogger(logConfiguration);
+    LoggerWrapper::initLogger(logConfiguration);
+
+    Logger logger = LoggerWrapper::getLogger();
+
+    logger(info) << "This is a test";
+
+    fclose(logConfiguration.stream);
+
+    const char *message = "[info ]: This is a test\n";
+    size_t len = strlen(message);
+
+    bool ret = assertFileContent(logFileName, message, len);
+    if (!ret) {
+        return 1;
+    }
+
+    return 0;
 }
 

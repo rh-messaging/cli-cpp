@@ -19,16 +19,18 @@ namespace messenger {
 
 using std::string;
 
-class DataSerializationException: public ProtonException {
-public:
-	DataSerializationException(const string &message);
-	virtual ~DataSerializationException();
+class DataSerializationException : public ProtonException {
+  public:
+    DataSerializationException(const string &message);
+    virtual ~DataSerializationException();
 
-private:
-	typedef ProtonException super;
+  private:
+    typedef ProtonException super;
 
 };
 
-}}}
+}
+}
+}
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_MESSENGER_EXCEPTIONS_DATASERIALIZATIONEXCEPTION_H_ */

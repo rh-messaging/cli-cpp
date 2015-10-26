@@ -30,32 +30,35 @@ ReceiverHandler::~ReceiverHandler()
 {
 }
 
-void ReceiverHandler::on_start(event &e) {
+void ReceiverHandler::on_start(event &e)
+{
     logger(debug) << "Starting messaging handler";
 
     logger(debug) << "Creating a receiver";
     e.container().open_receiver(broker_url);
 }
 
+void ReceiverHandler::on_message(event& e)
+{
+    ReactorDecoder decoder = ReactorDecoder(e.message());
 
-void ReceiverHandler::on_message(event& e) {
-    ReactorDecoder decoder = ReactorDecoder(e.message()); 
-	
     std::ostringstream stream;
     DictWriter writer = DictWriter(&stream);
-	
+
     DictFormatter formatter = DictFormatter();
     formatter.printMessage(&decoder, &writer);
-	
+
     writer.endLine();
-    std::cout << writer.toString();    
+    std::cout << writer.toString();
 }
 
-void ReceiverHandler::on_accepted(event& e) {
+void ReceiverHandler::on_accepted(event& e)
+{
     logger(debug) << "Accepted: " << e.name();
 }
 
-void ReceiverHandler::on_disconnected(event& e) {
+void ReceiverHandler::on_disconnected(event& e)
+{
     logger(debug) << "Accepted: " << e.name();
 }
 

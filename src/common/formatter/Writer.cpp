@@ -9,9 +9,11 @@
 
 const char *Writer::BOGUS_FORMAT_MESSAGE = "!!!FORMATTING ERROR, BUG!!!";
 
-Writer::Writer() {
+Writer::Writer()
+{
 }
 
-Writer::~Writer() {
+Writer::~Writer()
+{
 }
 

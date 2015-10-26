@@ -17,22 +17,23 @@ using namespace dtests::common::log;
  * This test asserts whether the code can output to the stdout (test pass if it
  * doesn't crash)
  */
-int main(int argc, char** argv) {
-	Logger::LogConfiguration logConfiguration; 
-	
-	logConfiguration.minimumLevel = debug;
-	logConfiguration.stream = stdout;
-	
-	LoggerWrapper::initLogger(logConfiguration);
-	
-	Logger logger = LoggerWrapper::getLogger();
-	
-	logger(debug) << "This is a test"; 
-	logger(trace) << "This shall not appear"; 
-	logger(info) << "This is another log message";
-	logger(error) << "And another log message";
-	logger(debug) << "And a debug after the error message";
+int main(int argc, char** argv)
+{
+    Logger::LogConfiguration logConfiguration;
 
-	return 0;
+    logConfiguration.minimumLevel = debug;
+    logConfiguration.stream = stdout;
+
+    LoggerWrapper::initLogger(logConfiguration);
+
+    Logger logger = LoggerWrapper::getLogger();
+
+    logger(debug) << "This is a test";
+    logger(trace) << "This shall not appear";
+    logger(info) << "This is another log message";
+    logger(error) << "And another log message";
+    logger(debug) << "And a debug after the error message";
+
+    return 0;
 }
 

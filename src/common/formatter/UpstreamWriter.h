@@ -20,74 +20,86 @@ using std::ostringstream;
 /**
  * Upstream-specific data writer
  */
-class UpstreamWriter: public Writer {
-public:
+class UpstreamWriter : public Writer {
+  public:
     UpstreamWriter(ostringstream *stream);
     virtual ~UpstreamWriter();
-    
+
     void start();
     void end();
-    
+
     // NO-OP
-    void startHeader() {}
-    
+
+    void startHeader() {
+    }
+
     // NO-OP
-    void endHeader() {}
-    
+
+    void endHeader() {
+    }
+
     void startProperties();
-    
+
     // NO-OP
-    void endProperties() {};
-    
+
+    void endProperties() {
+    };
+
     void startContent();
-    void endContent() {};
-    
+
+    void endContent() {
+    };
+
     void startMap();
     void endMap();
-    
+
     void startList();
     void endList();
-    
+
     // NO-OP
-    void startStatistics() {};
-    
+
+    void startStatistics() {
+    };
+
     // NO-OP
-    void endStatistics() {};
-    
+
+    void endStatistics() {
+    };
+
     void endField();
-    
+
     void write(const string &str);
     void write(const KeyValue &keyValue);
     void write(const KeyValue &keyValue, bool separator);
-        
+
     void writeBogus(const string &str);
-    
-    
+
+
     void endLine();
     string toString() const;
-    
 
-private:
+
+  private:
     typedef Writer super;
-    
+
     static const char *START;
     static const char END = ')';
-    
+
     static const char SECTION_START = '{';
     static const char SECTION_END = '}';
-    
+
     static const char CONTENT_START = '(';
     static const char CONTENT_END = ')';
-    
+
     static const char VALUE_START = '\'';
     static const char VALUE_END = '\'';
-    static const char VALUE_SEPARATOR = ':' ;
-    static const char FIELD_SEPARATOR = ',' ;
-    
+    static const char VALUE_SEPARATOR = ':';
+    static const char FIELD_SEPARATOR = ',';
+
     ostringstream *stream;
-    
+
     void writePlain(const string &str);
 };
 
-#endif	/* UPSTREAMWRITER_H */
+#endif /* UPSTREAMWRITER_H */
 

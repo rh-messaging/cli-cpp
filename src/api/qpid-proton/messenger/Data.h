@@ -29,36 +29,36 @@ namespace messenger {
 
 using namespace std;
 
-class Data: public ProtonObject {
-public:
-	Data(size_t capacity);
-	Data(pn_data_t *data);
-	Data(const string &string);
+class Data : public ProtonObject {
+  public:
+    Data(size_t capacity);
+    Data(pn_data_t *data);
+    Data(const string &string);
 
-	virtual ~Data();
+    virtual ~Data();
 
-	void writeString(const string &data);
-	string readString() const;
+    void writeString(const string &data);
+    string readString() const;
 
-	void writeMap(const map<string, string> &map);
-	map<string, string> readMap() const;
+    void writeMap(const map<string, string> &map);
+    map<string, string> readMap() const;
 
-	void writeList(const list<string> &list);
-	list<string> readList() const;
+    void writeList(const list<string> &list);
+    list<string> readList() const;
 
-	void writeData(const Data &src);
+    void writeData(const Data &src);
 
-	int size() const;
-	bool isEmpty() const;
+    int size() const;
+    bool isEmpty() const;
 
-private:
-	typedef ProtonObject super;
+  private:
+    typedef ProtonObject super;
 
-	pn_data_t *data;
-	bool release;
+    pn_data_t *data;
+    bool release;
 
-	void init(size_t capacity);
-	void handleError(const string &message);
+    void init(size_t capacity);
+    void handleError(const string &message);
 };
 
 }

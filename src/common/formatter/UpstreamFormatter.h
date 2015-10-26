@@ -6,25 +6,25 @@
  */
 
 #ifndef UPSTREAMFORMATTER_H
-#define	UPSTREAMFORMATTER_H
+#define UPSTREAMFORMATTER_H
 
 #include "AbstractFormatter.h"
 
 /**
  * Upstream-specific data formatter
  */
-class UpstreamFormatter: public AbstractFormatter {
-public:
+class UpstreamFormatter : public AbstractFormatter {
+  public:
     UpstreamFormatter();
     UpstreamFormatter(const UpstreamFormatter& orig);
     virtual ~UpstreamFormatter();
-    
+
     void printMessage(const AbstractDecoder *decoder, Writer *writer) const;
 
-private:
+  private:
     typedef AbstractFormatter super;
 
 };
 
-#endif	/* DICTFORMATTER_H */
+#endif /* DICTFORMATTER_H */
 

@@ -20,18 +20,18 @@ using namespace optparse;
  * BaseOptionsParse offers a common interface for implementing command-line 
  * options parsers for both new and old clients
  */
-class BaseOptionsParser: public OptionParser {
-public:
-	BaseOptionsParser();
-	virtual ~BaseOptionsParser();
+class BaseOptionsParser : public OptionParser {
+  public:
+    BaseOptionsParser();
+    virtual ~BaseOptionsParser();
 
-        /**
-         * Validates the given options 
-         * @param options the options to validate
-         */
-	virtual void validate(const Values &options) const = 0;
-private:
-	typedef OptionParser super;
+    /**
+     * Validates the given options 
+     * @param options the options to validate
+     */
+    virtual void validate(const Values &options) const = 0;
+  private:
+    typedef OptionParser super;
 
 
 };

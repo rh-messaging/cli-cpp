@@ -10,22 +10,29 @@
 bool LoggerWrapper::initialized = false;
 Logger LoggerWrapper::logger = Logger(dtests::common::log::none);
 
-LoggerWrapper::LoggerWrapper() { }
+LoggerWrapper::LoggerWrapper()
+{
+}
 
-LoggerWrapper::LoggerWrapper(const LoggerWrapper& orig) { }
+LoggerWrapper::LoggerWrapper(const LoggerWrapper& orig)
+{
+}
 
-LoggerWrapper::~LoggerWrapper() { }
+LoggerWrapper::~LoggerWrapper()
+{
+}
 
+void LoggerWrapper::initLogger(Logger::LogConfiguration configuration)
+{
 
-void LoggerWrapper::initLogger(Logger::LogConfiguration configuration) {
-	
-	if (!initialized) { 
-		Logger::initLogger(configuration);
-		initialized = true;
-	}
-	
+    if (!initialized) {
+        Logger::initLogger(configuration);
+        initialized = true;
+    }
+
 };
 
-const Logger &LoggerWrapper::getLogger() {
-	return LoggerWrapper::logger;
+const Logger &LoggerWrapper::getLogger()
+{
+    return LoggerWrapper::logger;
 }

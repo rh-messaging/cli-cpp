@@ -17,10 +17,10 @@
 #include "CommonHandler.h"
 #include "reactor/formatter/ReactorDecoder.h"
 #include "formatter/DictFormatter.h"
- #include "formatter/DictWriter.h"
+#include "formatter/DictWriter.h"
 
- #include "formatter/UpstreamFormatter.h"
- #include "formatter/UpstreamWriter.h"
+#include "formatter/UpstreamFormatter.h"
+#include "formatter/UpstreamWriter.h"
 
 using proton::message;
 using proton::event;
@@ -32,17 +32,17 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
-class ReceiverHandler: public CommonHandler {
+class ReceiverHandler : public CommonHandler {
   public:
     ReceiverHandler(const string &url);
-    
+
     virtual ~ReceiverHandler();
-    
+
     void on_start(event &e);
     void on_message(event& e);
     void on_accepted(event& e);
     void on_disconnected(event& e);
-    
+
   private:
     typedef CommonHandler super;
 

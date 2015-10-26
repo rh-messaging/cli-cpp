@@ -6,26 +6,25 @@
  */
 
 #ifndef LOGGERFACTORY_H
-#define	LOGGERFACTORY_H
+#define LOGGERFACTORY_H
 
 #include "Logger.h"
 
-
 class LoggerWrapper {
-public:
+  public:
     virtual ~LoggerWrapper();
-    
+
     static void initLogger(Logger::LogConfiguration configuration);
-    static const Logger &getLogger(); 
-    
-private:
+    static const Logger &getLogger();
+
+  private:
     static bool initialized;
     static Logger logger;
-    
+
     LoggerWrapper();
     LoggerWrapper(const LoggerWrapper& orig);
 
 };
 
-#endif	/* LOGGERFACTORY_H */
+#endif /* LOGGERFACTORY_H */
 

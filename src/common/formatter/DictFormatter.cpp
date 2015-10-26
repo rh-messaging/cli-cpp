@@ -8,25 +8,29 @@
 #include "DictFormatter.h"
 
 DictFormatter::DictFormatter()
-	: super() 
+    : super()
 
-{ }
+{
+}
 
 DictFormatter::DictFormatter(const DictFormatter& orig)
-	: super()
-{ }
+    : super()
+{
+}
 
-DictFormatter::~DictFormatter() { }
+DictFormatter::~DictFormatter()
+{
+}
 
+void DictFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const
+{
+    writer->startHeader();
+    decoder->decodeHeader(writer);
+    decoder->decodeProperties(writer);
 
-void DictFormatter::printMessage(const AbstractDecoder *decoder, Writer *writer) const {
-	writer->startHeader();
-	decoder->decodeHeader(writer);
-	decoder->decodeProperties(writer);
-	
-	writer->startContent();
-	decoder->decodeContent(writer);
-	writer->endContent();
+    writer->startContent();
+    decoder->decodeContent(writer);
+    writer->endContent();
 }
 
 

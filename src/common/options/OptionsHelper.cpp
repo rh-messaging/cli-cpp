@@ -15,75 +15,76 @@ using namespace dtests::common::log;
 
 using dtests::common::IOException;
 
-vector<string> split(const string &input, const string &sep) {
-	vector<string> splitted;
+vector<string> split(const string &input, const string &sep)
+{
+    vector<string> splitted;
 
-	algo::split(splitted, input, algo::is_any_of(sep),
-					algo::token_compress_on);
+    algo::split(splitted, input, algo::is_any_of(sep),
+            algo::token_compress_on);
 
-	return splitted;
+    return splitted;
 }
 
-map<string, string> asMap(const vector<string> &input) {
-	map<string, string> ret = map<string, string>();
+map<string, string> asMap(const vector<string> &input)
+{
+    map<string, string> ret = map<string, string>();
 
-	for (size_t i = 0; i < (input.size() - 1); i = i + 2) {
-		string key = input[i];
-		string value = input[i+1];
+    for (size_t i = 0; i < (input.size() - 1); i = i + 2) {
+        string key = input[i];
+        string value = input[i + 1];
 
-		ret[key] = value;
-	}
+        ret[key] = value;
+    }
 
-	return ret;
+    return ret;
 }
 
+map<string, string> parse_key_value(const string &input, const string &sep)
+{
+    vector<string> splitted;
 
-map<string, string> parse_key_value(const string &input, const string &sep) {
-	vector<string> splitted;
+    algo::split(splitted, input, algo::is_any_of(sep),
+            algo::token_compress_on);
 
-	algo::split(splitted, input, algo::is_any_of(sep),
-					algo::token_compress_on);
-
-	return asMap(splitted);
+    return asMap(splitted);
 }
-
 
 OptionsSetter::OptionsSetter(const optparse::Values &options)
-	: options(options)
+    : options(options)
 {
 }
 
-OptionsSetter::~OptionsSetter() {
+OptionsSetter::~OptionsSetter()
+{
 }
 
+string OptionsSetter::getContent()
+{
+    Logger logger = LoggerWrapper::getLogger();
 
-string OptionsSetter::getContent() {
-	Logger logger = LoggerWrapper::getLogger();
-	
-	if (options.is_set("msg-content")) {
-		return options["msg-content"];
-	}
-	else {
-		const string contentFile = options["msg-content-from-file"];
+    if (options.is_set("msg-content")) {
+        return options["msg-content"];
+    } else {
+        const string contentFile = options["msg-content-from-file"];
 
-		fs::path file(contentFile);
+        fs::path file(contentFile);
 
-		if (!exists(file)) {
-			logger(error) << "The file " << contentFile << " does"
-					<< " not exist";
-			throw IOException("The file " + contentFile + " does not exist");
-		}
+        if (!exists(file)) {
+            logger(error) << "The file " << contentFile << " does"
+                    << " not exist";
+            throw IOException("The file " + contentFile + " does not exist");
+        }
 
-		fs::ifstream inputStream(file);
+        fs::ifstream inputStream(file);
 
-		string content;
+        string content;
 
-		while (!inputStream.eof()) {
-			inputStream >> content;
-		}
+        while (!inputStream.eof()) {
+            inputStream >> content;
+        }
 
-		logger(debug) << "Read from file " << content;
+        logger(debug) << "Read from file " << content;
 
-		return content;
-	}
+        return content;
+    }
 }

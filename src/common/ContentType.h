@@ -6,7 +6,7 @@
  */
 
 #ifndef CONTENTTYPES_H
-#define	CONTENTTYPES_H
+#define CONTENTTYPES_H
 
 #include <string>
 
@@ -17,16 +17,16 @@ using std::string;
  * messaging systems
  */
 class ContentType {
-public:
+  public:
     static const char *TEXT_PLAIN;
-    
-private:
-    
+
+  private:
+
     ContentType();
     ContentType(const ContentType& orig);
     virtual ~ContentType();
 
 };
 
-#endif	/* CONTENTTYPES_H */
+#endif /* CONTENTTYPES_H */
 

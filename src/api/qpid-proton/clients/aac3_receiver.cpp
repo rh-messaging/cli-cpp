@@ -9,10 +9,11 @@
 
 using dtests::proton::reactor::ReceivingClient;
 
-int main(int argc, char** argv) {
-	ReceivingClient client = ReceivingClient();
+int main(int argc, char** argv)
+{
+    ReceivingClient client = ReceivingClient();
 
-	return client.run(argc, argv);
+    return client.run(argc, argv);
 }
 
 

@@ -35,7 +35,7 @@ map<string, string> parse_key_value(const string &, const string &);
  * types to the different data types used in the messaging APIs.
  */
 template<typename K> struct OptionNormalizer {
-    typedef K (*normalizer)(const string &);
+    typedef K(*normalizer)(const string &);
     normalizer normalizerPtr;
 };
 
@@ -52,146 +52,138 @@ template<typename K> struct OptionNormalizer {
  * 
  */
 class OptionsSetter {
-public:
-	OptionsSetter(const optparse::Values &options);
-	virtual ~OptionsSetter();
+  public:
+    OptionsSetter(const optparse::Values &options);
+    virtual ~OptionsSetter();
 
-	string getContent();
+    string getContent();
 
-        /**
-         * Set an option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-         */
-	template<typename T, typename Y>
-	void set(const string &name, T *obj, Y setter) const {
-		if (options.is_set(name)) {
-			const string value = options[name];
+    /**
+     * Set an option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     */
+    template<typename T, typename Y>
+    void set(const string &name, T *obj, Y setter) const {
+        if (options.is_set(name)) {
+            const string value = options[name];
 
-			(obj->*setter)(value);
-		}
-	}
-        
-        /**
-         * Set an option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-         * @param normalizerStruc pointer to an OptionNormalizer that converts 
-         * basic types to string to whatever type is used in the setter.
-         */
-	template<typename T, typename Y, typename K>
-	void set(const string &name, T *obj, Y setter, 
-            const OptionNormalizer<K> *normalizerStruc) const 
-        {
-		if (options.is_set(name)) {
-			const string value = options[name];
+            (obj->*setter)(value);
+        }
+    }
 
-                        K normalizedValue = normalizerStruc->normalizerPtr(value);
-			(obj->*setter)(normalizedValue);
-		}
-	}
+    /**
+     * Set an option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * @param normalizerStruc pointer to an OptionNormalizer that converts 
+     * basic types to string to whatever type is used in the setter.
+     */
+    template<typename T, typename Y, typename K>
+    void set(const string &name, T *obj, Y setter,
+            const OptionNormalizer<K> *normalizerStruc) const {
+        if (options.is_set(name)) {
+            const string value = options[name];
 
+            K normalizedValue = normalizerStruc->normalizerPtr(value);
+            (obj->*setter)(normalizedValue);
+        }
+    }
 
-	/**
-	 * Set a number option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-	 * @param defdefaultValue the default value to use if unset
-         * NOTE: probably there's a better way to do these methods, so this code
-	 * should be checked in the future
-	 */
-	template<typename T, typename Y, typename K>
-	void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
-		if (options.is_set(name)) {
-			int value = static_cast<K>(options.get(name));
+    /**
+     * Set a number option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * @param defdefaultValue the default value to use if unset
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y, typename K>
+    void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
+        if (options.is_set(name)) {
+            int value = static_cast<K> (options.get(name));
 
-			(obj->*setter)(value);
-		}
-		else {
-		    (obj->*setter)(defaultValue);
-		}
-	}
-	
-	
-	/**
-	 * Set a number option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-         * NOTE #1: probably there's a better way to do these methods, so this code
-	 * should be checked in the future
-	 * NOTE #2: the code uses an integer by default. For other types, 
-	 * use the setNumber with default values
-	 */
-	template<typename T, typename Y>
-	void setNumber(const string &name, T *obj, Y setter) const {
-		if (options.is_set(name)) {
-			int value = static_cast<int>(options.get(name));
+            (obj->*setter)(value);
+        } else {
+            (obj->*setter)(defaultValue);
+        }
+    }
 
-			(obj->*setter)(value);
-		}
-	}
+    /**
+     * Set a number option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE #1: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     * NOTE #2: the code uses an integer by default. For other types, 
+     * use the setNumber with default values
+     */
+    template<typename T, typename Y>
+    void setNumber(const string &name, T *obj, Y setter) const {
+        if (options.is_set(name)) {
+            int value = static_cast<int> (options.get(name));
 
-        
-        /**
-	 * Set a boolean option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-         * NOTE: probably there's a better way to do these methods, so this code
-	 * should be checked in the future
-	 */
-	template<typename T, typename Y>
-	void setBoolean(const string &name, T *obj, Y setter) const {
-		if (options.is_set(name)) {
-			const string value = options[name];
+            (obj->*setter)(value);
+        }
+    }
 
-			if (value == "yes") {
-				(obj->*setter)(true);
-			}
-			else {
-				(obj->*setter)(false);
-			}
-		}
-	}
+    /**
+     * Set a boolean option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y>
+    void setBoolean(const string &name, T *obj, Y setter) const {
+        if (options.is_set(name)) {
+            const string value = options[name];
 
-        
-        /**
-	 * Set a map option to a class instance (bean)
-         * @param name the option to set
-         * @param obj the bean (object) to set the option to
-         * @param setter the (bean) setter to set the option
-         * NOTE: probably there's a better way to do these methods, so this code
-	 * should be checked in the future
-	 */
-	template<typename T, typename Y>
-	void setMap(const string &name, T *obj, Y setter,
-			const string &keySeparator = ";",
-			const string &propertySeparator = ":") const
-	{
-		if (options.is_set(name)) {
-			const string property = options[name];
+            if (value == "yes") {
+                (obj->*setter)(true);
+            } else {
+                (obj->*setter)(false);
+            }
+        }
+    }
 
-			vector<string> propertyVector = split(property, keySeparator);
+    /**
+     * Set a map option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y>
+    void setMap(const string &name, T *obj, Y setter,
+            const string &keySeparator = ";",
+            const string &propertySeparator = ":") const {
+        if (options.is_set(name)) {
+            const string property = options[name];
 
-			map<string, string> properties = map<string, string>();
-			for (size_t i = 0; i < propertyVector.size(); i++) {
-				map<string, string> tmp = parse_key_value(propertyVector[i],
-						propertySeparator);
+            vector<string> propertyVector = split(property, keySeparator);
 
-				properties.insert(tmp.begin(), tmp.end());
-			}
+            map<string, string> properties = map<string, string>();
+            for (size_t i = 0; i < propertyVector.size(); i++) {
+                map<string, string> tmp = parse_key_value(propertyVector[i],
+                        propertySeparator);
 
-			(obj->*setter)(properties);
-		}
-	}
+                properties.insert(tmp.begin(), tmp.end());
+            }
+
+            (obj->*setter)(properties);
+        }
+    }
 
 
-private:
-	optparse::Values options;
+  private:
+    optparse::Values options;
 
 };
 

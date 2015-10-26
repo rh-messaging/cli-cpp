@@ -6,7 +6,7 @@
  */
 
 #ifndef KEYVALUE_H
-#define	KEYVALUE_H
+#define KEYVALUE_H
 
 #include <string>
 #include <map>
@@ -20,5 +20,5 @@ using std::string;
 typedef pair<string, string> KeyValue;
 
 
-#endif	/* KEYVALUE_H */
+#endif /* KEYVALUE_H */
 
