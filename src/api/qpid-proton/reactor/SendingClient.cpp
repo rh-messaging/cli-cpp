@@ -112,8 +112,7 @@ int SendingClient::run(int argc, char **argv) const
     const string address = options["broker-url"];
 
     OptionsSetter setter = OptionsSetter(options);
-    const string content = setter.getContent();
-
+    
     message msg = message();
 
     setMessageOptions(setter, msg);
