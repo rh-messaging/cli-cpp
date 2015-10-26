@@ -19,6 +19,8 @@ using std::string;
 class ContentType {
   public:
     static const char *TEXT_PLAIN;
+    static const char *AMQP_LIST;
+    static const char *AMQP_MAP;
 
   private:
 

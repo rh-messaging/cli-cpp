@@ -8,6 +8,8 @@
 #include "ContentType.h"
 
 const char *ContentType::TEXT_PLAIN = "text/plain";
+const char *ContentType::AMQP_LIST = "amqp/list";
+const char *ContentType::AMQP_MAP = "amqp/map";
 
 ContentType::ContentType()
 {
