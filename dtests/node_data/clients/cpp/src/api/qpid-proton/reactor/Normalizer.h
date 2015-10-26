@@ -55,10 +55,14 @@ static data &normalizeFunc(const T &orig) {
 
     dv.encoder() << orig;
 
-
     return dv.decoder().data();
 }
 
+/**
+ * Unrolls a string list for debugging purposes
+ * @param e entry list
+ * @return an unrolled string where each entry in the list is separated by ;
+ */
 static string unroll(const list<string> &e) {
     string ret;
 
@@ -88,7 +92,7 @@ static data &normalizeList(const list<string> &orig) {
 }
 
 /**
- * Default normalizer struct instance
+ * Data normalizer struct instance for string-based data
  */
 static StringOptionNormalizer<data &> defaultNormalizer = {
     normalizeFunc,
@@ -96,7 +100,7 @@ static StringOptionNormalizer<data &> defaultNormalizer = {
 
 
 /**
- * Default normalizer struct instance
+ * Data normalizer struct instance for list-based data
  */
 static ListOptionNormalizer<data &> listNormalizer = {
     normalizeList,
