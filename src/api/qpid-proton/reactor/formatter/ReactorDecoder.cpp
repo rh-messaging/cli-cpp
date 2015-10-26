@@ -103,7 +103,7 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     write(writer, MessageHeader::CONTENT_TYPE,
             static_cast<StringReader> (&message::content_type));
     write(writer, MessageHeader::USER_ID,
-            static_cast<StringReader> (&message::user));
+            static_cast<StringReader> (&message::user_id));
     write(writer, MessageHeader::ID,
             static_cast<DataReader> (&message::id));
     write(writer, MessageHeader::CORRELATION_ID,
