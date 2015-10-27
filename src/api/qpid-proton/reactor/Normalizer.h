@@ -67,10 +67,33 @@ static data &normalizeFunc(const T &orig) {
 static string unroll(const list<string> &e) {
     string ret;
 
+    
     for (std::list<string>::const_iterator it = e.begin(); it != e.end(); it++) {
         ret.append(*it);
         ret.append(";");
     }
+    
+
+    return ret;
+}
+
+
+/**
+ * Unrolls a string list for debugging purposes
+ * @param e entry list
+ * @return an unrolled string where each entry in the list is separated by ;
+ */
+static string unroll(const map<string, string> &e) {
+    string ret;
+
+    ret.append("{");
+    for (std::map<string, string>::const_iterator it = e.begin(); it != e.end(); it++) {
+        ret.append((*it).first);
+        ret.append("=");
+        ret.append((*it).second);
+        ret.append(";");
+    }
+    ret.append("}");
 
     return ret;
 }
@@ -102,7 +125,7 @@ static data &normalizeMap(const map<string, string> &orig) {
 
     Logger logger = LoggerWrapper::getLogger();
 
-    logger(debug) << "Using map normalizer: "; //<< unroll(orig);
+    logger(debug) << "Using map normalizer: " << unroll(orig);
 
     dv.encoder() << as<MAP>(orig);
 
