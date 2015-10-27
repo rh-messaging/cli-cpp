@@ -56,6 +56,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, DataReader r
 {
     const data &value = (m.*reader)();
 
+    std::cout << "Decoding " << property.name << ": " << std::endl;
     writer->write(KeyValue(property.name, this->decodeValue(value)));
 }
 
@@ -124,15 +125,34 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
 string ReactorDecoder::decodeValue(const data &d) const
 {
     std::ostringstream stream;
+    if (d.empty()) {
+        std::cout << "Empty data!" << std::endl;
+    }
+    
+    try { 
+        if (d.type() == MAP) {
+            std::cout << "Decoding a map" << std::endl;
+        }
+        
+        stream << d;
+    } catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
 
-    stream << d;
+    
 
     return stream.str();
 }
 
 void ReactorDecoder::decodeContent(Writer *writer) const
 {
+    if (m.body().type() == MAP) {
+        std::cout << "Decoding a map message" << std::endl;
+    }
+    
     string content = decodeValue(m.body());
+    
+    
     writer->write(content);
 }
 

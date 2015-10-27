@@ -15,6 +15,7 @@
 #define REACTORDECODER_H
 
 #include <proton/message.hpp>
+#include <proton/types.hpp>
 
 #include <formatter/AbstractDecoder.h>
 #include <ContentType.h>
@@ -22,6 +23,7 @@
 
 using proton::message;
 using proton::data;
+using proton::MAP;
 
 namespace dtests {
 namespace proton {
