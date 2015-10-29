@@ -27,6 +27,9 @@ namespace reactor {
 
 using dtests::proton::common::ModernClient;
 
+/**
+ * Implements a connecting client using the proton reactive API
+ */
 class ConnectingClient : public ModernClient {
   public:
     ConnectingClient();

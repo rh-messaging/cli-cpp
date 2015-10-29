@@ -37,7 +37,7 @@ int ReceivingClient::run(int argc, char **argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
     const string version = "1.0";
-    const string desc = "C/C++ AMQ reactor client for Proton-C";
+    const string desc = "C/C++ AMQ reactive API receiver client for Qpid Proton";
 
     ReceiverOptionsParser parser = ReceiverOptionsParser();
 
