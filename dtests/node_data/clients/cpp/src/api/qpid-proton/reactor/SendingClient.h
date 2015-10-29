@@ -33,6 +33,9 @@ typedef void (message::*data_setter)(const data &);
 
 using dtests::proton::common::ModernClient;
 
+/**
+ * Implements a connecting client using the proton reactive API
+ */
 class SendingClient : public ModernClient {
   public:
     SendingClient();

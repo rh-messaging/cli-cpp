@@ -32,8 +32,15 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
+/**
+ * A proton message handler that handles message receive events
+ */
 class ReceiverHandler : public CommonHandler {
   public:
+    /**
+     * Constructor
+     * @param url broker URL
+     */
     ReceiverHandler(const string &url);
 
     virtual ~ReceiverHandler();

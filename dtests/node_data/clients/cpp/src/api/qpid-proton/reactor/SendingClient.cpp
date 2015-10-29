@@ -99,7 +99,7 @@ int SendingClient::run(int argc, char **argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
     const string version = "1.0";
-    const string desc = "C/C++ AMQ reactor client for Proton-C";
+    const string desc = "C/C++ AMQ reactive API sender client for Qpid Proton";
 
     SenderOptionsParser parser = SenderOptionsParser();
 

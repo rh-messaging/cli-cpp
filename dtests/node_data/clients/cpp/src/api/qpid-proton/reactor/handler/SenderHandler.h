@@ -26,8 +26,15 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
+/**
+ * A proton message handler that handles message send events
+ */
 class SenderHandler : public CommonHandler {
   public:
+    /**
+     * Constructor
+     * @param url broker URL
+     */
     SenderHandler(const string &url);
 
     virtual ~SenderHandler();
@@ -39,10 +46,28 @@ class SenderHandler : public CommonHandler {
     void on_accepted(event& e);
     void on_disconnected(event& e);
 
-
+    /**
+     * Sets the message count
+     * @param count the message count
+     */
     void setCount(int count);
+    
+    /**
+     * Gets the message count
+     * @return the message count
+     */
     int getCount() const;
+    
+    /**
+     * Sets the message to send
+     * @param m the message to send
+     */
     void setMessage(message m);
+    
+    /**
+     * Gets the message to send
+     * @return the message to send
+     */
     message getMessage() const;
 
 
