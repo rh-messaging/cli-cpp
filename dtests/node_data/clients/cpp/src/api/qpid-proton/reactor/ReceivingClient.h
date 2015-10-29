@@ -21,14 +21,13 @@
 #include "handler/ReceiverHandler.h"
 #include "options/modern/ReceiverOptionsParser.h"
 #include "options/OptionsHelper.h"
+#include "TypeUtils.h"
 
 using proton::message;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
-
-typedef void (message::*string_setter)(const string &);
 
 using dtests::proton::common::ModernClient;
 
