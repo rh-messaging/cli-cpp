@@ -21,6 +21,7 @@
 #include <list>
 
 #include "IOException.h"
+#include "BeanUtils.h"
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
@@ -30,33 +31,6 @@ using namespace std;
 vector<string> split(const string &, const string &);
 map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
-
-/**
- * An StringOptionNormalizer defines a flexible structure for converting string 
- * types to the different data types used in the messaging APIs.
- */
-template<typename K> struct StringOptionNormalizer {
-    typedef K(*normalizer)(const string &);
-    normalizer normalizerPtr;
-};
-
-/**
- * A ListOptionNormalizer defines a flexible structure for converting string 
- * types to the different data types used in the messaging APIs.
- */
-template<typename K> struct ListOptionNormalizer {
-    typedef K(*normalizer)(const list<string> &);
-    normalizer normalizerPtr;
-};
-
-/**
- * A MapOptionNormalizer defines a flexible structure for converting string 
- * types to the different data types used in the messaging APIs.
- */
-template<typename K> struct MapOptionNormalizer {
-    typedef K(*normalizer)(const map<string, string> &);
-    normalizer normalizerPtr;
-};
 
 /**
  * An utility class template to help set options values/command values to their 
