@@ -123,7 +123,7 @@ class OptionsSetter {
     template<typename T, typename Y, typename K>
     void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
         if (options.is_set(name)) {
-            int value = static_cast<K> (options.get(name));
+            K value = static_cast<K> (options.get(name));
 
             (obj->*setter)(value);
         } else {
