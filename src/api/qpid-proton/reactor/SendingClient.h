@@ -19,6 +19,7 @@
 #include "options/OptionsHelper.h"
 #include "Normalizer.h"
 #include "ContentType.h"
+#include "TypeUtils.h"
 
 using proton::message;
 using proton::amqp_timestamp;
@@ -26,10 +27,6 @@ using proton::amqp_timestamp;
 namespace dtests {
 namespace proton {
 namespace reactor {
-
-typedef void (message::*string_setter)(const string &);
-typedef void (message::*amqpts_setter)(amqp_timestamp);
-typedef void (message::*data_setter)(const data &);
 
 using dtests::proton::common::ModernClient;
 
