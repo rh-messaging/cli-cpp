@@ -62,7 +62,7 @@ class OptionsSetter {
         if (options.is_set(name)) {
             const string value = options[name];
 
-            (obj->*setter)(value);
+            BeanUtils::set(value, obj, setter);
         }
     }
 
@@ -79,9 +79,8 @@ class OptionsSetter {
             const StringOptionNormalizer<K> *normalizerStruc) const {
         if (options.is_set(name)) {
             const string value = options[name];
-
-            K normalizedValue = normalizerStruc->normalizerPtr(value);
-            (obj->*setter)(normalizedValue);
+            
+            BeanUtils::set(value, obj, setter, normalizerStruc);
         }
     }
 
@@ -99,9 +98,9 @@ class OptionsSetter {
         if (options.is_set(name)) {
             K value = static_cast<K> (options.get(name));
 
-            (obj->*setter)(value);
+            BeanUtils::set(value, obj, setter);
         } else {
-            (obj->*setter)(defaultValue);
+            BeanUtils::set(defaultValue, obj, setter);
         }
     }
 
@@ -120,7 +119,7 @@ class OptionsSetter {
         if (options.is_set(name)) {
             int value = static_cast<int> (options.get(name));
 
-            (obj->*setter)(value);
+            BeanUtils::set(value, obj, setter);
         }
     }
 
@@ -136,12 +135,8 @@ class OptionsSetter {
     void setBoolean(const string &name, T *obj, Y setter) const {
         if (options.is_set(name)) {
             const string value = options[name];
-
-            if (value == "yes") {
-                (obj->*setter)(true);
-            } else {
-                (obj->*setter)(false);
-            }
+            
+            BeanUtils::setBoolean(value, obj, setter);
         }
     }
 

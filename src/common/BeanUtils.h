@@ -50,8 +50,54 @@ template<typename K> struct MapOptionNormalizer {
     normalizer normalizerPtr;
 };
 
+class BeanUtils {
+  public:
+    /**
+     * Set an option to a class instance (bean)
+     * @param value the value to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     */
+    template<typename V, typename T, typename Y>
+    static void set(const V &value, T *obj, Y setter) {
+        (obj->*setter)(value);
+    }
+    
+    
+    /**
+     * Set an option to a class instance (bean)
+     * @param value the value to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * @param normalizerStruc pointer to an OptionNormalizer that converts 
+     * basic types to string to whatever type is used in the setter.
+     */
+    template<typename T, typename Y, typename K>
+    static void set(const string &value, T *obj, Y setter,
+        const StringOptionNormalizer<K> *normalizerStruc) {
 
-
+        K normalizedValue = normalizerStruc->normalizerPtr(value);
+        (obj->*setter)(normalizedValue); 
+    }
+    
+   /**
+     * Set a boolean option to a class instance (bean)
+     * @param value the value to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
+     * NOTE: probably there's a better way to do these methods, so this code
+     * should be checked in the future
+     */
+    template<typename T, typename Y>
+    static void setBoolean(const string &value, T *obj, Y setter) {
+        if (value == "yes") {
+            (obj->*setter)(true);
+        } else {
+            (obj->*setter)(false);
+        }
+    }
+    
+};
 
 #endif /* BEANUTILS_H */
 
