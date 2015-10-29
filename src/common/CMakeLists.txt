@@ -42,6 +42,7 @@ if (ENABLE_MODERN)
             TestUtils.cpp
         )
 
+	add_subdirectory(test)
         add_subdirectory(output/test)
         add_subdirectory(logger/test)
      endif (BUILD_WITH_UNIT_TESTS)
