@@ -32,6 +32,9 @@ typedef void (message::*string_setter)(const string &);
 
 using dtests::proton::common::ModernClient;
 
+/**
+ * Implements a receiving client using the proton reactive API
+ */
 class ReceivingClient : public ModernClient {
   public:
     ReceivingClient();

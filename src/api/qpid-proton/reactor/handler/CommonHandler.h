@@ -26,13 +26,28 @@ namespace reactor {
 
 using std::string;
 
+/**
+ * An abstract proton message handler providing a common interface for other
+ * client handlers
+ */
 class CommonHandler : public messaging_handler {
   public:
+    /**
+     * Constructor
+     * @param url broker URL
+     */
     CommonHandler(const string &url);
     virtual ~CommonHandler();
 
   protected:
+    /**
+     * Logger
+     */
     static Logger logger;
+    
+    /**
+     * Broker URL
+     */
     url broker_url;
 
   private:
