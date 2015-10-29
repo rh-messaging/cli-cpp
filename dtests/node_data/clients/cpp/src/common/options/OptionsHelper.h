@@ -165,7 +165,7 @@ class OptionsSetter {
                 properties.insert(tmp.begin(), tmp.end());
             }
 
-            (obj->*setter)(properties);
+            BeanUtils::set(properties, obj, setter);
         }
     }
     
