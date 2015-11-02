@@ -5,8 +5,8 @@
  *      Author: opiske
  */
 
-#ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_OPTIONS_OPTIONSHELPER_H_
-#define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_OPTIONS_OPTIONSHELPER_H_
+#ifndef DTESTS_COMMON_OPTIONSHELPER_H_
+#define DTESTS_COMMON_OPTIONSHELPER_H_
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>

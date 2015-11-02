@@ -1,5 +1,5 @@
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef DTESTS_COMMON_UTILS_H_
+#define DTESTS_COMMON_UTILS_H_
 
 #include <string>
 
@@ -89,4 +89,4 @@ std::string ts_report(double *in_tsdata, long in_msgcnt, long in_msgsize,
         int in_ecode);
 
 
-#endif
+#endif /* DTESTS_COMMON_UTILS_H_ */

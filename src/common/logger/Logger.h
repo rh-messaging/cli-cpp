@@ -5,8 +5,8 @@
  * Created on May 6, 2015, 7:12 PM
  */
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef DTESTS_COMMON_LOGGER_H
+#define DTESTS_COMMON_LOGGER_H
 
 #include <string>
 
@@ -130,5 +130,5 @@ class Logger {
 
 };
 
-#endif /* LOGGER_H */
+#endif /* DTESTS_COMMON_LOGGER_H */
 

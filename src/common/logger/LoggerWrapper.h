@@ -5,8 +5,8 @@
  * Created on May 11, 2015, 11:13 AM
  */
 
-#ifndef LOGGERFACTORY_H
-#define LOGGERFACTORY_H
+#ifndef DTESTS_COMMON_LOGGERFACTORY_H
+#define DTESTS_COMMON_LOGGERFACTORY_H
 
 #include "Logger.h"
 
@@ -26,5 +26,5 @@ class LoggerWrapper {
 
 };
 
-#endif /* LOGGERFACTORY_H */
+#endif /* DTESTS_COMMON_LOGGERFACTORY_H */
 
