@@ -11,8 +11,8 @@
  * Created on October 29, 2015, 12:19 PM
  */
 
-#ifndef BEANUTILS_H
-#define BEANUTILS_H
+#ifndef DTESTS_COMMON_BEANUTILS_H
+#define DTESTS_COMMON_BEANUTILS_H
 
 #include <string>
 #include <list>
@@ -99,5 +99,5 @@ class BeanUtils {
     
 };
 
-#endif /* BEANUTILS_H */
+#endif /* DTESTS_COMMON_BEANUTILS_H */
 

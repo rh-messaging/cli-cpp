@@ -5,8 +5,8 @@
  * Created on May 6, 2015, 4:13 PM
  */
 
-#ifndef DICTWRITER_H
-#define DICTWRITER_H
+#ifndef DTESTS_COMMON_DICTWRITER_H
+#define DTESTS_COMMON_DICTWRITER_H
 
 #include <string>
 #include <sstream>
@@ -92,5 +92,5 @@ class DictWriter : public Writer {
     ostringstream *stream;
 };
 
-#endif /* STRINGWRITER_H */
+#endif /* DTESTS_COMMON_STRINGWRITER_H */
 

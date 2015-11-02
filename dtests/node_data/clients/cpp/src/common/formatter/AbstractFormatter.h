@@ -5,8 +5,8 @@
  * Created on May 5, 2015, 12:50 PM
  */
 
-#ifndef ABSTRACTFORMATTER_H
-#define ABSTRACTFORMATTER_H
+#ifndef DTESTS_COMMON_ABSTRACTFORMATTER_H
+#define DTESTS_COMMON_ABSTRACTFORMATTER_H
 
 #include <string>
 
@@ -52,5 +52,5 @@ class AbstractFormatter {
 
 };
 
-#endif /* ABSTRACTFORMATTER_H */
+#endif /* DTESTS_COMMON_ABSTRACTFORMATTER_H */
 

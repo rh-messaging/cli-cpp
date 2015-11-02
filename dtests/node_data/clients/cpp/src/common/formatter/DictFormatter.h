@@ -5,8 +5,8 @@
  * Created on May 11, 2015, 5:55 PM
  */
 
-#ifndef DICTFORMATTER_H
-#define DICTFORMATTER_H
+#ifndef DTESTS_COMMON_DICTFORMATTER_H
+#define DTESTS_COMMON_DICTFORMATTER_H
 
 #include "AbstractFormatter.h"
 
@@ -27,5 +27,5 @@ class DictFormatter : public AbstractFormatter {
 
 };
 
-#endif /* DICTFORMATTER_H */
+#endif /* DTESTS_COMMON_DICTFORMATTER_H */
 

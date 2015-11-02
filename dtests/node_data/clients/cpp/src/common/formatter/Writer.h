@@ -5,8 +5,8 @@
  * Created on May 5, 2015, 6:26 PM
  */
 
-#ifndef WRITER_H
-#define WRITER_H
+#ifndef DTESTS_COMMON_WRITER_H
+#define DTESTS_COMMON_WRITER_H
 
 #include <string>
 
