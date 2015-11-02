@@ -10,6 +10,9 @@
 
 #include <string>
 
+namespace dtests {
+namespace common {
+
 using std::string;
 
 /**
@@ -29,6 +32,9 @@ class ContentType {
     virtual ~ContentType();
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_CONTENTTYPES_H */
 
