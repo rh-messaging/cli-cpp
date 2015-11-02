@@ -7,6 +7,7 @@
 
 #include "Client.h"
 
+using namespace dtests::common;
 using namespace dtests::common::log;
 
 Logger Client::logger = LoggerWrapper::getLogger();

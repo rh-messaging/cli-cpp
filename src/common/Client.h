@@ -11,6 +11,9 @@
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
+namespace dtests {
+namespace common {
+
 /**
  * Base class for implementing the main logic for messaging clients.
  */
@@ -31,5 +34,8 @@ class Client {
   protected:
     static Logger logger;
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_CLIENT_H_ */
