@@ -8,6 +8,8 @@
 #include "UpstreamWriter.h"
 #include "Writer.h"
 
+using namespace dtests::common;
+
 const char *UpstreamWriter::START = "Message(";
 
 UpstreamWriter::UpstreamWriter(ostringstream *stream)

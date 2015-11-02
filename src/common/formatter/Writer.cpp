@@ -7,6 +7,8 @@
 
 #include "Writer.h"
 
+using namespace dtests::common;
+
 const char *Writer::BOGUS_FORMAT_MESSAGE = "!!!FORMATTING ERROR, BUG!!!";
 
 Writer::Writer()

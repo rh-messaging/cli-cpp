@@ -15,9 +15,11 @@
 #include <sstream>
 #include <iomanip>
 
-
 #include "KeyValue.h"
 #include "Writer.h"
+
+namespace dtests {
+namespace common {
 
 using std::map;
 using std::list;
@@ -115,7 +117,6 @@ class AbstractDecoder {
         return string(ret.str());
     }
 
-
     /**
      * Decodes a number
      * @param number the number to decode
@@ -185,8 +186,10 @@ class AbstractDecoder {
   private:
     string quoteStringEscape(const string& a) const;
 
-
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_ABSTRACTDECODER_H */
 

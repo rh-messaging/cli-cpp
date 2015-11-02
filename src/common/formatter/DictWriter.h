@@ -14,6 +14,9 @@
 #include "KeyValue.h"
 #include "Writer.h"
 
+namespace dtests {
+namespace common {
+
 using std::string;
 using std::ostringstream;
 
@@ -91,6 +94,9 @@ class DictWriter : public Writer {
 
     ostringstream *stream;
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_STRINGWRITER_H */
 

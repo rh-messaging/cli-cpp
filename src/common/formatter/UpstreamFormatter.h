@@ -10,6 +10,9 @@
 
 #include "AbstractFormatter.h"
 
+namespace dtests {
+namespace common {
+
 /**
  * Upstream-specific data formatter
  */
@@ -25,6 +28,9 @@ class UpstreamFormatter : public AbstractFormatter {
     typedef AbstractFormatter super;
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_DICTFORMATTER_H */
 

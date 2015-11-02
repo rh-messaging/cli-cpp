@@ -7,6 +7,8 @@
 
 #include "AbstractFormatter.h"
 
+using namespace dtests::common;
+
 AbstractFormatter::AbstractFormatter()
 {
 }
