@@ -8,6 +8,9 @@
 #ifndef DTESTS_COMMON_MESSAGEHEADER_H
 #define DTESTS_COMMON_MESSAGEHEADER_H
 
+namespace dtests {
+namespace common {
+
 typedef struct header_property_t_ {
     const char *name;
 } HeaderProperty;
@@ -53,6 +56,10 @@ class MessageHeader {
     }
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
+
 
 #endif /* DTESTS_COMMON_MESSAGEHEADER_H */
 

@@ -27,6 +27,8 @@ using namespace qpid::types;
 namespace dtests {
 namespace qpid {
 namespace messaging {
+
+using namespace dtests::common;
     
 class QpidDecoder: public AbstractDecoder {
 public:

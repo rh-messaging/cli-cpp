@@ -30,6 +30,7 @@ namespace proton {
 namespace reactor {
 
 using std::string;
+using namespace dtests::common;
 
 /**
  * This class implements a decoder for the reactor API. For additional details
