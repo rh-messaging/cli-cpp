@@ -11,9 +11,8 @@
 namespace algo = boost::algorithm;
 namespace fs = boost::filesystem;
 
+using namespace dtests::common;
 using namespace dtests::common::log;
-
-using dtests::common::IOException;
 
 vector<string> split(const string &input, const string &sep)
 {

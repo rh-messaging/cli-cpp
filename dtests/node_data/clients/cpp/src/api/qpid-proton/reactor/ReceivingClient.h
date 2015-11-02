@@ -31,6 +31,8 @@ namespace reactor {
 
 using dtests::proton::common::ModernClient;
 
+using namespace dtests::common;
+
 /**
  * Implements a receiving client using the proton reactive API
  */

@@ -13,6 +13,8 @@
 
 #include "ConnectorOptionsParser.h"
 
+using namespace dtests::common;
+
 ConnectorOptionsParser::ConnectorOptionsParser()
     : super()
 {

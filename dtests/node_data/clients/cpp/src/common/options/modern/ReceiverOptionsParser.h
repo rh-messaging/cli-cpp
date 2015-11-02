@@ -12,6 +12,9 @@
 
 #include "options/modern/ModernOptionsParser.h"
 
+namespace dtests {
+namespace common {
+
 /**
  * ReceiverOptionsParser offers a common interface for implementing command-line 
  * options parsers for both newer receiver C++ clients
@@ -28,5 +31,8 @@ class ReceiverOptionsParser : public ModernOptionsParser {
   private:
     typedef ModernOptionsParser super;
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_RECEIVEROPTIONSPARSER_H_ */

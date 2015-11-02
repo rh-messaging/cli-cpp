@@ -7,6 +7,8 @@
 
 #include "options/modern/ModernOptionsParser.h"
 
+using namespace dtests::common;
+
 ModernOptionsParser::ModernOptionsParser()
     : super()
 {
