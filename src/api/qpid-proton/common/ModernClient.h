@@ -20,6 +20,8 @@ namespace dtests {
 namespace proton {
 namespace common {
 
+using namespace dtests::common;
+
 /**
  * An implementation of a the CPP client that uses the newer format for command
  * line options, logger, etc.
