@@ -18,6 +18,9 @@
 
 #include "options/modern/ModernOptionsParser.h"
 
+namespace dtests {
+namespace common {
+
 class ConnectorOptionsParser : public ModernOptionsParser {
   public:
     ConnectorOptionsParser();
@@ -29,6 +32,9 @@ class ConnectorOptionsParser : public ModernOptionsParser {
     typedef ModernOptionsParser super;
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_CONNECTOROPTIONSPARSER_H */
 

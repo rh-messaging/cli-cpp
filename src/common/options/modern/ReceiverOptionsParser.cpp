@@ -8,6 +8,8 @@
 
 #include "options/modern/ReceiverOptionsParser.h"
 
+using namespace dtests::common;
+
 ReceiverOptionsParser::ReceiverOptionsParser()
     : super()
 {

@@ -27,7 +27,6 @@
 
 using namespace std;
 
-
 vector<string> split(const string &, const string &);
 map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
@@ -44,6 +43,10 @@ map<string, string> parse_key_value(const string &, const string &);
  * empty/null/invalid/etc and setting it on the target object instance
  * 
  */
+
+namespace dtests {
+namespace common {
+
 class OptionsSetter {
   public:
     OptionsSetter(const optparse::Values &options);
@@ -236,5 +239,7 @@ class OptionsSetter {
 
 };
 
+} /* namespace common */
+} /* namespace dtests */
 
-#endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_OPTIONS_OPTIONSHELPER_H_ */
+#endif /* DTESTS_COMMON_OPTIONSHELPER_H_ */

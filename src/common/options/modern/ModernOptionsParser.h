@@ -14,7 +14,8 @@
 
 #include "../BaseOptionsParser.h"
 
-using namespace std;
+namespace dtests {
+namespace common {
 
 using namespace optparse;
 
@@ -32,5 +33,8 @@ class ModernOptionsParser : public BaseOptionsParser {
     typedef BaseOptionsParser super;
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_MODERNOPTIONSPARSER_H_ */

@@ -7,6 +7,8 @@
 
 #include "options/BaseOptionsParser.h"
 
+using namespace dtests::common;
+
 BaseOptionsParser::BaseOptionsParser()
     : super()
 {

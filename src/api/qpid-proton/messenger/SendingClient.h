@@ -30,6 +30,8 @@ namespace messenger {
 
 using dtests::proton::common::ModernClient;
 
+using namespace dtests::common;
+
 class SendingClient : public ModernClient {
   public:
     SendingClient();
