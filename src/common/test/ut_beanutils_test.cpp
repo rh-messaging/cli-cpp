@@ -39,12 +39,6 @@ int main(int argc, char** argv)
         return 1;
     }
     
-    /*
-    
-    
-    void setBooleanProperty(bool booleanProperty);
-    bool isBooleanProperty() const;
-     */
     const int expectedInt = 6589;
     BeanUtils::set(expectedInt, &fakeBean, &FakeBean::setIntProperty);
    
