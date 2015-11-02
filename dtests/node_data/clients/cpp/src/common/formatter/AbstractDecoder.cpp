@@ -7,6 +7,8 @@
 
 #include "AbstractDecoder.h"
 
+using namespace dtests::common;
+
 AbstractDecoder::AbstractDecoder()
 {
 }

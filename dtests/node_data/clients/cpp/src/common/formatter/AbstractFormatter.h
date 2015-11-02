@@ -13,6 +13,9 @@
 #include "AbstractDecoder.h"
 #include "Writer.h"
 
+namespace dtests {
+namespace common {
+
 /**
  * An abstract formatter provides a base interface on which message formatters 
  * can be implemented
@@ -51,6 +54,9 @@ class AbstractFormatter {
 
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_ABSTRACTFORMATTER_H */
 

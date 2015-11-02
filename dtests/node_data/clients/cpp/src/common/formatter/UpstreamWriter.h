@@ -14,6 +14,9 @@
 #include "KeyValue.h"
 #include "Writer.h"
 
+namespace dtests {
+namespace common {
+
 using std::string;
 using std::ostringstream;
 
@@ -100,6 +103,9 @@ class UpstreamWriter : public Writer {
 
     void writePlain(const string &str);
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_UPSTREAMWRITER_H */
 

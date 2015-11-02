@@ -10,6 +10,9 @@
 
 #include "AbstractFormatter.h"
 
+namespace dtests {
+namespace common {
+
 /**
  * Implements a Python dictionary formatter (ie.: saves data in a dict-based 
  * format)
@@ -26,6 +29,9 @@ class DictFormatter : public AbstractFormatter {
     typedef AbstractFormatter super;
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_DICTFORMATTER_H */
 

@@ -7,6 +7,8 @@
 
 #include "UpstreamFormatter.h"
 
+using namespace dtests::common;
+
 UpstreamFormatter::UpstreamFormatter()
     : super()
 
