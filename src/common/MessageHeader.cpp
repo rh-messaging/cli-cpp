@@ -7,6 +7,8 @@
 
 #include "MessageHeader.h"
 
+using namespace dtests::common;
+
 HeaderProperty MessageHeader::REDELIVERED = {"redelivered"};
 HeaderProperty MessageHeader::REPLY_TO = {"reply_to"};
 
