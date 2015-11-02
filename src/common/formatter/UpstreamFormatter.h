@@ -5,8 +5,8 @@
  * Created on May 11, 2015, 5:55 PM
  */
 
-#ifndef UPSTREAMFORMATTER_H
-#define UPSTREAMFORMATTER_H
+#ifndef DTESTS_COMMON_UPSTREAMFORMATTER_H
+#define DTESTS_COMMON_UPSTREAMFORMATTER_H
 
 #include "AbstractFormatter.h"
 
@@ -26,5 +26,5 @@ class UpstreamFormatter : public AbstractFormatter {
 
 };
 
-#endif /* DICTFORMATTER_H */
+#endif /* DTESTS_COMMON_DICTFORMATTER_H */
 

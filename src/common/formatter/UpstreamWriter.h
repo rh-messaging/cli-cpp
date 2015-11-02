@@ -5,8 +5,8 @@
  * Created on May 6, 2015, 4:13 PM
  */
 
-#ifndef UPSTREAMWRITER_H
-#define UPSTREAMWRITER_H
+#ifndef DTESTS_COMMON_UPSTREAMWRITER_H
+#define DTESTS_COMMON_UPSTREAMWRITER_H
 
 #include <string>
 #include <sstream>
@@ -101,5 +101,5 @@ class UpstreamWriter : public Writer {
     void writePlain(const string &str);
 };
 
-#endif /* UPSTREAMWRITER_H */
+#endif /* DTESTS_COMMON_UPSTREAMWRITER_H */
 

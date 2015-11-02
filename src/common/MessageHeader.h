@@ -5,8 +5,8 @@
  * Created on May 5, 2015, 4:16 PM
  */
 
-#ifndef MESSAGEHEADER_H
-#define MESSAGEHEADER_H
+#ifndef DTESTS_COMMON_MESSAGEHEADER_H
+#define DTESTS_COMMON_MESSAGEHEADER_H
 
 typedef struct header_property_t_ {
     const char *name;
@@ -54,5 +54,5 @@ class MessageHeader {
 
 };
 
-#endif /* MESSAGEHEADER_H */
+#endif /* DTESTS_COMMON_MESSAGEHEADER_H */
 

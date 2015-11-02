@@ -5,8 +5,8 @@
  * Created on May 5, 2015, 1:22 PM
  */
 
-#ifndef ABSTRACTDECODER_H
-#define ABSTRACTDECODER_H
+#ifndef DTESTS_COMMON_ABSTRACTDECODER_H
+#define DTESTS_COMMON_ABSTRACTDECODER_H
 
 #include <map>
 #include <list>
@@ -188,5 +188,5 @@ class AbstractDecoder {
 
 };
 
-#endif /* ABSTRACTDECODER_H */
+#endif /* DTESTS_COMMON_ABSTRACTDECODER_H */
 

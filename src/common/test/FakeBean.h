@@ -11,8 +11,8 @@
  * Created on October 29, 2015, 12:08 PM
  */
 
-#ifndef FAKEBEAN_H
-#define FAKEBEAN_H
+#ifndef DTESTS_COMMON_FAKEBEAN_H
+#define DTESTS_COMMON_FAKEBEAN_H
 
 #include <string>
 #include <map>
@@ -52,5 +52,5 @@ class FakeBean {
 
 };
 
-#endif /* FAKEBEAN_H */
+#endif /* DTESTS_COMMON_FAKEBEAN_H */
 

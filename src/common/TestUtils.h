@@ -5,8 +5,8 @@
  * Created on May 7, 2015, 1:17 PM
  */
 
-#ifndef TESTUTILS_H
-#define TESTUTILS_H
+#ifndef DTESTS_COMMON_TESTUTILS_H_
+#define DTESTS_COMMON_TESTUTILS_H_
 
 #include <cstdio>
 #include <cstring>

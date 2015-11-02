@@ -11,8 +11,8 @@
  * Created on October 14, 2015, 1:35 PM
  */
 
-#ifndef CONNECTOROPTIONSPARSER_H
-#define CONNECTOROPTIONSPARSER_H
+#ifndef DTESTS_COMMON_CONNECTOROPTIONSPARSER_H
+#define DTESTS_COMMON_CONNECTOROPTIONSPARSER_H
 
 #include <optparse/OptionParser.h>
 
@@ -30,5 +30,5 @@ class ConnectorOptionsParser : public ModernOptionsParser {
 
 };
 
-#endif /* CONNECTOROPTIONSPARSER_H */
+#endif /* DTESTS_COMMON_CONNECTOROPTIONSPARSER_H */
 

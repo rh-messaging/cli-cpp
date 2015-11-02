@@ -5,8 +5,8 @@
  * Created on May 5, 2015, 3:32 PM
  */
 
-#ifndef CONTENTTYPES_H
-#define CONTENTTYPES_H
+#ifndef DTESTS_COMMON_CONTENTTYPES_H
+#define DTESTS_COMMON_CONTENTTYPES_H
 
 #include <string>
 
@@ -30,5 +30,5 @@ class ContentType {
 
 };
 
-#endif /* CONTENTTYPES_H */
+#endif /* DTESTS_COMMON_CONTENTTYPES_H */
 

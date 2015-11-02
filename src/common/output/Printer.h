@@ -5,8 +5,8 @@
  * Created on May 7, 2015, 9:48 AM
  */
 
-#ifndef PRINTER_H
-#define PRINTER_H
+#ifndef DTESTS_COMMON_PRINTER_H
+#define DTESTS_COMMON_PRINTER_H
 
 #include <cstdio>
 

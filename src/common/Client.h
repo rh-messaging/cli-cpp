@@ -5,8 +5,8 @@
  *      Author: opiske
  */
 
-#ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_CLIENT_H_
-#define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_CLIENT_H_
+#ifndef DTESTS_COMMON_CLIENT_H_
+#define DTESTS_COMMON_CLIENT_H_
 
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
@@ -32,4 +32,4 @@ class Client {
     static Logger logger;
 };
 
-#endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_CLIENT_H_ */
+#endif /* DTESTS_COMMON_CLIENT_H_ */
