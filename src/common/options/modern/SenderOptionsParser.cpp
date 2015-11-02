@@ -8,6 +8,8 @@
 
 #include "options/modern/SenderOptionsParser.h"
 
+using namespace dtests::common;
+
 SenderOptionsParser::SenderOptionsParser()
     : super()
 {

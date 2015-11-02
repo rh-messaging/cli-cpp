@@ -12,7 +12,9 @@
 
 #include <string>
 
-using namespace std;
+
+namespace dtests {
+namespace common {
 
 using namespace optparse;
 
@@ -35,5 +37,8 @@ class BaseOptionsParser : public OptionParser {
 
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_COMMON_OPTIONS_BASEOPTIONSPARSER_H_ */
