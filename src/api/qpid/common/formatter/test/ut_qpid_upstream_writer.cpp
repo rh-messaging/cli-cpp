@@ -25,6 +25,7 @@ using dtests::qpid::messaging::QpidDecoder;
 using namespace std;
 using namespace qpid::messaging;
 using namespace qpid::types;
+using namespace dtests::common;
 
 static const char *expected = "Message(properties={'key1': 'value1'}, "
 	"content='Test content')";
