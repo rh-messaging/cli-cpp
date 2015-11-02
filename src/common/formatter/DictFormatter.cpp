@@ -7,6 +7,8 @@
 
 #include "DictFormatter.h"
 
+using namespace dtests::common;
+
 DictFormatter::DictFormatter()
     : super()
 

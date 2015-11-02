@@ -11,6 +11,9 @@
 #include <string>
 #include <map>
 
+namespace dtests {
+namespace common {
+
 using std::pair;
 using std::string;
 
@@ -19,6 +22,8 @@ using std::string;
  */
 typedef pair<string, string> KeyValue;
 
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_KEYVALUE_H */
 

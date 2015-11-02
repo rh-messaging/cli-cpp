@@ -22,6 +22,7 @@ using dtests::qpid::messaging::QpidDecoder;
 using namespace std;
 using namespace qpid::messaging;
 using namespace qpid::types;
+using namespace dtests::common;
 
 static const char *expected = "STATS {'available': '3', 'capacity': '5', "
 	"'sender': 'None', 'timestamp': '0', 'unsettled': '1'}";

@@ -8,6 +8,8 @@
 #include "DictWriter.h"
 #include "Writer.h"
 
+using namespace dtests::common;
+
 const char *DictWriter::STATISTICS_START = "STATS ";
 
 DictWriter::DictWriter(ostringstream *stream)

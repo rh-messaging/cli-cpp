@@ -12,6 +12,9 @@
 
 #include "KeyValue.h"
 
+namespace dtests {
+namespace common {
+
 using std::string;
 
 /**
@@ -131,6 +134,9 @@ class Writer {
   private:
 
 };
+
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* WRITER_H */
 
