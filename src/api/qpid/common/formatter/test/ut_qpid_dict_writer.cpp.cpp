@@ -22,6 +22,7 @@ using dtests::qpid::messaging::QpidDecoder;
 using namespace std;
 using namespace qpid::messaging;
 using namespace qpid::types;
+using namespace dtests::common;
 
 static const char *expected = "{'redelivered': 'False', 'reply_to': "
 	"'reply.to.queue', 'subject': 'None', 'content_type': 'text/plain', "
