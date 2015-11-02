@@ -29,7 +29,7 @@ class IOException : public BaseException {
     typedef BaseException super;
 };
 
-}
-}
+} /* namespace common */
+} /* namespace dtests */
 
 #endif /* DTESTS_COMMON_IOEXCEPTION_H_ */
