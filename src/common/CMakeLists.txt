@@ -45,6 +45,7 @@ if (ENABLE_MODERN)
 	add_subdirectory(test)
         add_subdirectory(output/test)
         add_subdirectory(logger/test)
+        add_subdirectory(options/test)
      endif (BUILD_WITH_UNIT_TESTS)
         
 endif (ENABLE_MODERN)
