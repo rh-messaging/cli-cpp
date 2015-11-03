@@ -32,6 +32,7 @@ using proton::type_id;
 using proton::as;
 using proton::LIST;
 using proton::MAP;
+using proton::message_id;
 
 namespace dtests {
 namespace proton {
@@ -57,6 +58,23 @@ static data &normalizeFunc(const T &orig) {
     dv.encoder() << orig;
 
     return dv.decoder().data();
+}
+
+
+/**
+ * Default option normalization function that converts basic and std types to 
+ * a proton::data object reference.
+ */
+template<typename T>
+static message_id normalizeIdFunc(const T &orig) {
+    message_id id;
+
+    Logger logger = LoggerWrapper::getLogger();
+    logger(debug) << "Using ID normalizer: " << orig;
+
+    id = orig;
+
+    return id;
 }
 
 /**
@@ -138,6 +156,14 @@ static data &normalizeMap(const map<string, string> &orig) {
  */
 static StringOptionNormalizer<data &> defaultNormalizer = {
     normalizeFunc,
+};
+
+
+/**
+ * Data normalizer struct instance for string-based ids
+ */
+static StringOptionNormalizer<message_id> idNormalizer = {
+    normalizeIdFunc,
 };
 
 

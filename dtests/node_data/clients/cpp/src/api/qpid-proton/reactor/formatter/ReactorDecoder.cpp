@@ -61,6 +61,25 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, DataReader r
 }
 
 /**
+ * Writes a header property.
+ * @param writer the writer to use
+ * @param property the header property to write
+ * @param reader The reader to use. The reader is a pointer to a member function 
+ * that can access the header property data (ie.: the class getter).
+ */
+void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdReader reader) const
+{
+    const message_id value = (m.*reader)();
+
+    std::cout << "Decoding " << property.name << ": " << std::endl;
+    
+    amqp_string str;
+    
+    value.get(str);
+    writer->write(KeyValue(property.name, this->decodeValue(str)));
+}
+
+/**
  * Writes the TTL.
  * @param writer the writer to use
  */
@@ -106,9 +125,9 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     write(writer, MessageHeader::USER_ID,
             static_cast<StringReader> (&message::user_id));
     write(writer, MessageHeader::ID,
-            static_cast<DataReader> (&message::id));
+            static_cast<MessageIdReader> (&message::id));
     write(writer, MessageHeader::CORRELATION_ID,
-            static_cast<DataReader> (&message::correlation_id));
+            static_cast<MessageIdReader> (&message::correlation_id));
 
     // Not implemented
     // write(writer, MessageHeader::PRIORITY, &message::priority);
@@ -139,10 +158,19 @@ string ReactorDecoder::decodeValue(const data &d) const
         std::cout << e.what() << std::endl;
     }
 
-    
-
     return stream.str();
 }
+
+
+string ReactorDecoder::decodeValue(const amqp_string &str) const
+{
+    std::ostringstream stream;
+           
+    stream << str.c_str();
+    
+    return stream.str();
+}
+
 
 void ReactorDecoder::decodeContent(Writer *writer) const
 {

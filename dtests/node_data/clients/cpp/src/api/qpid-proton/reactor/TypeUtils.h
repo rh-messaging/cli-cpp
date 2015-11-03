@@ -5,6 +5,7 @@
 #include <proton/types.hpp>
 
 using proton::message;
+using proton::message_id;
 using proton::amqp_timestamp;
 
 namespace dtests {
@@ -25,6 +26,12 @@ typedef void (message::*amqpts_setter)(amqp_timestamp);
  * A proton::data setter type
  */
 typedef void (message::*data_setter)(const data &);
+
+
+/**
+ * A proton::data setter type
+ */
+typedef void (message::*id_setter)(const message_id &);
 
 
 } /* namespace reactor */
