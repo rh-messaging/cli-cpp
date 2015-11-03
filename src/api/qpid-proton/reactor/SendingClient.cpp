@@ -46,8 +46,8 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
             static_cast<string_setter> (&message::reply_to));
 
     setter.set("msg-correlation-id", &msg,
-            static_cast<data_setter> (&message::correlation_id),
-            &defaultNormalizer);
+            static_cast<id_setter> (&message::correlation_id),
+            &idNormalizer);
 
     setter.set("msg-content-type", &msg,
             static_cast<string_setter> (&message::content_type));
@@ -55,8 +55,8 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-subject", &msg,
             static_cast<string_setter> (&message::subject));
 
-    setter.set("msg-id", &msg, static_cast<data_setter> (&message::id),
-            &defaultNormalizer);
+    setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
+            &idNormalizer);
 
     setter.setNumber("msg-ttl", &msg,
             static_cast<amqpts_setter> (&message::expiry_time));
