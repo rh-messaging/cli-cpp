@@ -20,6 +20,7 @@ if (ENABLE_MODERN)
         output/Printer.cpp            
         exceptions/BaseException.cpp
 	exceptions/IOException.cpp
+	exceptions/TimerExpiredException.cpp
 	options/BaseOptionsParser.cpp
 	options/OptionsHelper.cpp
         formatter/Writer.cpp
@@ -32,6 +33,7 @@ if (ENABLE_MODERN)
         logger/Logger.cpp
         logger/LoggerWrapper.cpp
 
+	Timer.cpp
 	Client.cpp
 	ContentType.cpp
         MessageHeader.cpp
