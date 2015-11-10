@@ -21,6 +21,9 @@
 #include <ContentType.h>
 #include <MessageHeader.h>
 
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
+
 using proton::message;
 using proton::message_id;
 using proton::amqp_string;
@@ -53,6 +56,9 @@ class ReactorDecoder : public AbstractDecoder {
     typedef string(message::*StringReader)(void) const;
     typedef const data &(message::*DataReader)(void) const;
     typedef message_id (message::*MessageIdReader)(void) const;
+    
+    message m;
+    static Logger logger;   
 
     void write(Writer *writer, HeaderProperty property, StringReader reader) const;
     void write(Writer *writer, HeaderProperty property, DataReader reader) const;
@@ -61,7 +67,7 @@ class ReactorDecoder : public AbstractDecoder {
     void writeTTL(Writer *writer) const;
     void writeContentSize(Writer *writer) const;
 
-    message m;
+    
 
     string decodeValue(const data &data) const;
     string decodeValue(const amqp_string &str) const;

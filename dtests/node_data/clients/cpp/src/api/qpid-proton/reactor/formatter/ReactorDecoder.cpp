@@ -13,9 +13,11 @@
 
 #include "ReactorDecoder.h"
 
-namespace dtests {
-namespace proton {
-namespace reactor {
+using namespace dtests::proton::reactor;
+using namespace dtests::common;
+using namespace dtests::common::log;
+
+Logger ReactorDecoder::logger = LoggerWrapper::getLogger();
 
 ReactorDecoder::ReactorDecoder(message &msg)
     : super(),
@@ -56,7 +58,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, DataReader r
 {
     const data &value = (m.*reader)();
 
-    std::cout << "Decoding " << property.name << ": " << std::endl;
+    logger(debug) << "Decoding " << property.name << ": ";
     writer->write(KeyValue(property.name, this->decodeValue(value)));
 }
 
@@ -71,11 +73,17 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 {
     const message_id value = (m.*reader)();
 
-    std::cout << "Decoding " << property.name << ": " << std::endl;
+    logger(debug) << "Decoding " << property.name << ": ";
     
     amqp_string str;
     
-    value.get(str);
+    if (!value.empty()) { 
+        value.get(str);
+    }
+    else {
+        logger(debug) << "Value for property " << property.name << " is empty";
+    }
+    
     writer->write(KeyValue(property.name, this->decodeValue(str)));
 }
 
@@ -145,17 +153,17 @@ string ReactorDecoder::decodeValue(const data &d) const
 {
     std::ostringstream stream;
     if (d.empty()) {
-        std::cout << "Empty data!" << std::endl;
+        logger(debug) << "Empty data!";
     }
     
     try { 
         if (d.type() == MAP) {
-            std::cout << "Decoding a map" << std::endl;
+            logger(debug) << "Decoding a map";
         }
         
         stream << d;
     } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
+        logger(warning) << e.what();
     }
 
     return stream.str();
@@ -175,7 +183,7 @@ string ReactorDecoder::decodeValue(const amqp_string &str) const
 void ReactorDecoder::decodeContent(Writer *writer) const
 {
     if (m.body().type() == MAP) {
-        std::cout << "Decoding a map message" << std::endl;
+        logger(debug) << "Decoding a map message";
     }
     
     string content = decodeValue(m.body());
@@ -183,7 +191,3 @@ void ReactorDecoder::decodeContent(Writer *writer) const
     
     writer->write(content);
 }
-
-} /* namespace reactor */
-} /* namespace proton */
-} /* namespace dtests */
