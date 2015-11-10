@@ -58,8 +58,13 @@ int ReceivingClient::run(int argc, char **argv) const
     const string address = options["broker-url"];
 
     OptionsSetter setter = OptionsSetter(options);
+    
+    int timeout = 0;
+    if (options.is_set("timeout")) {
+        timeout = static_cast<int> (options.get("timeout"));
+    }
 
-    ReceiverHandler handler = ReceiverHandler(address);
+    ReceiverHandler handler = ReceiverHandler(address, timeout);
     container(handler).run();
 
     return 0;

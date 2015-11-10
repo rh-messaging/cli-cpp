@@ -14,7 +14,10 @@
 #ifndef RECEIVERHANDLER_H
 #define RECEIVERHANDLER_H
 
+#include <proton/task.hpp>
+
 #include "CommonHandler.h"
+#include "Timer.h"
 #include "reactor/formatter/ReactorDecoder.h"
 #include "formatter/DictFormatter.h"
 #include "formatter/DictWriter.h"
@@ -26,6 +29,8 @@ using proton::message;
 using proton::event;
 using proton::connection;
 using proton::sender;
+using proton::counted_ptr;
+using proton::task;
 using proton::counted_ptr;
 
 namespace dtests {
@@ -41,18 +46,25 @@ class ReceiverHandler : public CommonHandler {
      * Constructor
      * @param url broker URL
      */
-    ReceiverHandler(const string &url);
+    ReceiverHandler(const string &url, int timeout = 10);
 
     virtual ~ReceiverHandler();
 
     void on_start(event &e);
-    void on_message(event& e);
-    void on_accepted(event& e);
-    void on_disconnected(event& e);
+    void on_message(event &e);
+    void on_accepted(event &e);
+    void on_disconnected(event &e);
+    void on_timer_task(event &e);
 
   private:
     typedef CommonHandler super;
-
+    
+    task *timeoutTask;
+    Timer timer;
+    
+    counted_ptr<connection> conn;
+    
+    void do_disconnect();
 };
 
 } /* namespace reactor */
