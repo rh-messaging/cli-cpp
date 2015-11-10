@@ -23,6 +23,8 @@ using std::string;
 
 class Timer {
   public:
+    static const int FOREVER = -1;
+    
     Timer(int, const string &name = "");
     virtual ~Timer();
       
