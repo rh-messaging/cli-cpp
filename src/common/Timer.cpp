@@ -29,11 +29,19 @@ void Timer::reset() {
 }
 
 bool Timer::isExpired() const {
+    if (timeout == FOREVER) {
+        return false;
+    }
+    
     return (remaining == 0);
 }
 
 Timer &Timer::operator--()
 {
+    if (timeout == FOREVER) {
+        return *this;
+    }
+    
     remaining--;
     if (remaining < 0) {
         throw TimerExpiredException("The timer " + name + " has expired");
@@ -42,6 +50,10 @@ Timer &Timer::operator--()
 }
 
 Timer Timer::operator--(int) {
+    if (timeout == FOREVER) {
+        return *this;
+    }
+    
     Timer tmp(*this);
     operator--();
     return tmp;
