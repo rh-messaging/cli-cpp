@@ -7,8 +7,7 @@
 
 #include "BaseException.h"
 
-namespace dtests {
-namespace common {
+using namespace dtests::common;
 
 BaseException::BaseException()
     : message()
@@ -48,7 +47,4 @@ BaseException& BaseException::operator=(const BaseException& rhs)
     setMessage(rhs.getMessage());
 
     return *this;
-}
-
-}
 }
