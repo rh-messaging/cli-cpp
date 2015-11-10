@@ -14,15 +14,13 @@
 #include "ReceiverHandler.h"
 #include <sstream>
 
-namespace dtests {
-namespace proton {
-namespace reactor {
-
 using namespace dtests::common;
 using namespace dtests::common::log;
+using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url)
-    : super(url)
+ReceiverHandler::ReceiverHandler(const string &url, int timeout)
+    : super(url),
+    timeoutTask(NULL), timer(timeout, "timeout")
 {
 }
 
@@ -34,11 +32,19 @@ void ReceiverHandler::on_start(event &e)
 {
     logger(debug) << "Starting messaging handler";
 
-    logger(debug) << "Creating a receiver";
-    e.container().open_receiver(broker_url);
+
+    logger(debug) << "Connecting to the server";
+    conn = e.container().connect(broker_url).ptr();
+
+    logger(trace) << "Creating a receiver";
+    conn->open_receiver(broker_url.path());
+
+    logger(debug) << "Setting up timeout";
+    task &t = e.container().schedule(1000);
+    timeoutTask = &t;
 }
 
-void ReceiverHandler::on_message(event& e)
+void ReceiverHandler::on_message(event &e)
 {
     ReactorDecoder decoder = ReactorDecoder(e.message());
 
@@ -50,18 +56,54 @@ void ReceiverHandler::on_message(event& e)
 
     writer.endLine();
     std::cout << writer.toString();
+    timer.reset();
 }
 
-void ReceiverHandler::on_accepted(event& e)
+void ReceiverHandler::on_accepted(event &e)
 {
     logger(debug) << "Accepted: " << e.name();
 }
 
-void ReceiverHandler::on_disconnected(event& e)
+void ReceiverHandler::on_disconnected(event &e)
 {
-    logger(debug) << "Accepted: " << e.name();
+    logger(debug) << "Disconnected: " << e.name();
+
+    if (!timeoutTask) {
+        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
+
+        return;
+    }
+
+    logger(debug) << "Canceling scheduled tasks ";
+    timeoutTask->cancel();
+    timeoutTask = NULL;
 }
 
-} /* namespace reactor */
-} /* namespace proton */
-} /* namespace dtests */
+void ReceiverHandler::on_timer_task(event &e)
+{
+
+    if (!timeoutTask) {
+        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
+
+        return;
+    }
+
+    if (timer.isExpired()) {
+        logger(info) << "Timed out";
+
+        timeoutTask->cancel();
+        timeoutTask = NULL;
+
+        conn->close();
+    } else {
+        timer--;
+        logger(debug) << "Waiting ...";
+        e.container().schedule(1000);
+    }
+}
+
+void ReceiverHandler::do_disconnect()
+{
+
+}
+
