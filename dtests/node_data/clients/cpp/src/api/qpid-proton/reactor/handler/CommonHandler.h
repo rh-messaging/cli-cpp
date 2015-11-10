@@ -39,7 +39,7 @@ class CommonHandler : public messaging_handler {
     CommonHandler(const string &url);
     virtual ~CommonHandler();
 
-  protected:
+  protected:    
     /**
      * Logger
      */

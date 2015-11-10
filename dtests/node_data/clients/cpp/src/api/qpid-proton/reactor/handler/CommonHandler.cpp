@@ -16,6 +16,7 @@ using namespace dtests::common::log;
 
 Logger CommonHandler::logger = LoggerWrapper::getLogger();
 
+
 CommonHandler::CommonHandler(const string &url_str)
     : super(),
     broker_url(url_str)
