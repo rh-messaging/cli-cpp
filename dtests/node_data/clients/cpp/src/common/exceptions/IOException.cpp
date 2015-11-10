@@ -7,20 +7,15 @@
 
 #include "IOException.h"
 
-namespace dtests {
-namespace common {
+using namespace dtests::common;
 
 IOException::IOException(const string &message)
     : super(message)
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 IOException::~IOException()
 {
-    // TODO Auto-generated destructor stub
-}
 
-}
 }
