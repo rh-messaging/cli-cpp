@@ -44,7 +44,7 @@ void ConnectorHandler::on_connection_opened(event& e)
 {
     logger(debug) << "Connected to " << broker_url.host_port();
 
-    connection &conn = e.connection();
+    connection conn = e.connection();
 
     logger(debug) << "Closing connection";
     conn.close();

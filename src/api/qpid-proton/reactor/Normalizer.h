@@ -49,7 +49,7 @@ using namespace dtests::common::log;
  * a proton::data object reference.
  */
 template<typename T>
-static data &normalizeFunc(const T &orig) {
+static data normalizeFunc(const T &orig) {
     value dv;
 
     Logger logger = LoggerWrapper::getLogger();
@@ -120,7 +120,7 @@ static string unroll(const map<string, string> &e) {
  * Default option normalization function that converts list types to 
  * a proton::data object reference.
  */
-static data &normalizeList(const list<string> &orig) {
+static data normalizeList(const list<string> &orig) {
     value dv;
 
     Logger logger = LoggerWrapper::getLogger();
@@ -138,7 +138,7 @@ static data &normalizeList(const list<string> &orig) {
  * Default option normalization function that converts map types to 
  * a proton::data object reference.
  */
-static data &normalizeMap(const map<string, string> &orig) {
+static data normalizeMap(const map<string, string> &orig) {
     value dv;
 
     Logger logger = LoggerWrapper::getLogger();
@@ -154,7 +154,7 @@ static data &normalizeMap(const map<string, string> &orig) {
 /**
  * Data normalizer struct instance for string-based data
  */
-static StringOptionNormalizer<data &> defaultNormalizer = {
+static StringOptionNormalizer<data> defaultNormalizer = {
     normalizeFunc,
 };
 
@@ -170,7 +170,7 @@ static StringOptionNormalizer<message_id> idNormalizer = {
 /**
  * Data normalizer struct instance for list-based data
  */
-static ListOptionNormalizer<data &> listNormalizer = {
+static ListOptionNormalizer<data> listNormalizer = {
     normalizeList,
 };
 
@@ -178,7 +178,7 @@ static ListOptionNormalizer<data &> listNormalizer = {
 /**
  * Data normalizer struct instance for map-based data
  */
-static MapOptionNormalizer<data &> mapNormalizer = {
+static MapOptionNormalizer<data> mapNormalizer = {
     normalizeMap,
 };
 
