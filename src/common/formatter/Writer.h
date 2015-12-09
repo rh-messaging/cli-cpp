@@ -38,6 +38,11 @@ class Writer {
      * Ends writing the data
      */
     virtual void end() = 0;
+    
+    /**
+     * Separate data fields
+     */
+    virtual void separate() = 0;
 
     /**
      * Starts writing the header section to the medium

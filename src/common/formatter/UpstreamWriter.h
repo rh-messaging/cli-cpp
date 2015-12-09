@@ -40,6 +40,11 @@ class UpstreamWriter : public Writer {
 
     void endHeader() {
     }
+    
+    // NO-OP
+
+    void separate() {
+    }
 
     void startProperties();
 

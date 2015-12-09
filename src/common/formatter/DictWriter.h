@@ -37,6 +37,8 @@ class DictWriter : public Writer {
 
     void end() {
     };
+    
+    void separate();
 
     void startHeader();
     void endHeader();
