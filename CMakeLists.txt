@@ -67,7 +67,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 		"Flags used by the compiler during all build types." FORCE
 	)
 
-	set(CMAKE_CXX_FLAGS "-Wall -O2 -g -pipe -fdiagnostics-color=auto" CACHE STRING
+	set(CMAKE_CXX_FLAGS "-Wall -O2 -g -pipe -std=c++03 -fdiagnostics-color=auto" CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
