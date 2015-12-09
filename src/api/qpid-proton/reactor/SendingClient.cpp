@@ -67,7 +67,8 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     // TODO: not implemented on reactor
     // setter.setNumber("msg-priority", &msg, static_cast<long_setter>(&message::priority));
     // setter.setBoolean("msg-durable", &msg, static_cast<boolean_setter>(&message::durable));
-    // setter.setMap("msg-properties", &msg, static_cast<map_setter>(&message::properties));
+    setter.setMap("msg-properties", &msg, 
+            static_cast<value_setter>(&message::properties), &mapNormalizer);
 }
 
 void SendingClient::setMessageContent(const OptionsSetter &setter,
