@@ -74,16 +74,15 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
     const message_id value = (m.*reader)();
 
     logger(debug) << "Decoding " << property.name << ": ";
-    
+
     amqp_string str;
-    
-    if (!value.empty()) { 
+
+    if (!value.empty()) {
         value.get(str);
-    }
-    else {
+    } else {
         logger(debug) << "Value for property " << property.name << " is empty";
     }
-    
+
     writer->write(KeyValue(property.name, this->decodeValue(str)));
 }
 
@@ -146,7 +145,79 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
 
 void ReactorDecoder::decodeProperties(Writer *writer) const
 {
-    // TODO: 
+    logger(debug) << "Decoding message properties";
+    writer->startProperties();
+    decodeValue(writer, m.properties());
+    writer->endProperties();
+}
+
+void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
+{
+    type_id type = dec.type();
+    start s;
+    
+    switch (type) {
+        case ARRAY:
+        case DESCRIBED: 
+            logger(debug) << "(o) Type id: " << type;
+            break;
+
+        case LIST: {
+            logger(debug) << "(m) Type id: " << type;
+        
+            writer->startList();
+            logger(debug) << "(m) Type id: " << type;
+            dec >> s;
+            
+            logger(debug) << "(m) Size: " << s.size;
+            for (size_t i = 0; i < s.size; i++) {
+                decodeValue(writer, dec);
+                writer->write(": ");
+                
+                if (i < s.size) {
+                    writer->endField();
+                }
+            }
+            
+            dec >> finish();
+            writer->endMap();        
+        }
+        case MAP:
+        {
+            writer->startMap();
+            logger(debug) << "(m) Type id: " << type;
+            dec >> s;
+            
+            logger(debug) << "(m) Size: " << s.size;
+            for (size_t i = 0; i < s.size/2; i++) {
+                decodeValue(writer, dec);
+                writer->separate();
+                decodeValue(writer, dec);
+                
+                if (i < ((s.size/2) - 1)) {
+                    writer->endField();
+                }
+            }
+            
+            dec >> finish();
+            writer->endMap();
+        }
+        default:
+        {
+            if (!dec.more()) {
+                logger(debug) << "No more data to read";
+
+                break;
+            }
+            std::ostringstream stream;
+            
+            value v;
+            dec >> v;
+            stream << v;
+
+            writer->write(stream.str());            
+        }
+    }
 }
 
 string ReactorDecoder::decodeValue(const data &d) const
@@ -155,12 +226,8 @@ string ReactorDecoder::decodeValue(const data &d) const
     if (d.empty()) {
         logger(debug) << "Empty data!";
     }
-    
-    try { 
-        if (d.type() == MAP) {
-            logger(debug) << "Decoding a map";
-        }
-        
+
+    try {
         stream << d;
     } catch (const std::exception& e) {
         logger(warning) << e.what();
@@ -170,24 +237,34 @@ string ReactorDecoder::decodeValue(const data &d) const
 }
 
 
+void ReactorDecoder::decodeValue(Writer *writer, const data &d) const
+{
+    try {
+        logger(debug) << "Decoding a map";
+        decoder dec = const_cast<data &> (d).decoder();
+        decodeValue(writer, dec);
+    } catch (const std::exception& e) {
+        logger(warning) << e.what();
+    }
+}
+
 string ReactorDecoder::decodeValue(const amqp_string &str) const
 {
     std::ostringstream stream;
-           
+
     stream << str.c_str();
-    
+
     return stream.str();
 }
-
 
 void ReactorDecoder::decodeContent(Writer *writer) const
 {
     if (m.body().type() == MAP) {
         logger(debug) << "Decoding a map message";
     }
-    
+
     string content = decodeValue(m.body());
-    
-    
+
+
     writer->write(content);
 }
