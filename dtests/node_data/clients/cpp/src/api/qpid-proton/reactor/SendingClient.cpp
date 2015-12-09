@@ -81,13 +81,13 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
     } else {
         if (content_type == ContentType::AMQP_LIST) {
             setter.setList("msg-content", msg,
-                    static_cast<data_setter> (&message::body), &listNormalizer);
+                    static_cast<value_setter> (&message::body), &listNormalizer);
 
         }
         else {
             if (content_type == ContentType::AMQP_MAP) {
                 setter.setMap("msg-content", msg,
-                        static_cast<data_setter> (&message::body), &mapNormalizer);
+                        static_cast<value_setter> (&message::body), &mapNormalizer);
 
             }
         

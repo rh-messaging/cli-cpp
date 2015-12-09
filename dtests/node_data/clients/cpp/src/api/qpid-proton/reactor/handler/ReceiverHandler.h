@@ -29,9 +29,7 @@ using proton::message;
 using proton::event;
 using proton::connection;
 using proton::sender;
-using proton::counted_ptr;
 using proton::task;
-using proton::counted_ptr;
 
 namespace dtests {
 namespace proton {
@@ -61,8 +59,6 @@ class ReceiverHandler : public CommonHandler {
     
     task *timeoutTask;
     Timer timer;
-    
-    counted_ptr<connection> conn;
     
     void do_disconnect();
 };

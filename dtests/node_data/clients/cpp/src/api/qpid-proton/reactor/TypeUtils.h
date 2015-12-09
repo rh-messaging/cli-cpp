@@ -7,6 +7,7 @@
 using proton::message;
 using proton::message_id;
 using proton::amqp_timestamp;
+using proton::value;
 
 namespace dtests {
 namespace proton {
@@ -26,6 +27,11 @@ typedef void (message::*amqpts_setter)(amqp_timestamp);
  * A proton::data setter type
  */
 typedef void (message::*data_setter)(const data &);
+
+/**
+ * A proton::data setter type
+ */
+typedef void (message::*value_setter)(const value &);
 
 
 /**
