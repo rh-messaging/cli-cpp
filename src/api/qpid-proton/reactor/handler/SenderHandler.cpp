@@ -78,7 +78,7 @@ void SenderHandler::on_accepted(event& e)
 
     do {
         confirmedSent++;
-        connection &conn = e.connection();
+        connection conn = e.connection();
 
         logger(debug) << "Closing connection";
         conn.close();

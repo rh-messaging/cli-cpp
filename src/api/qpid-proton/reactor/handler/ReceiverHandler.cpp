@@ -32,15 +32,11 @@ void ReceiverHandler::on_start(event &e)
 {
     logger(debug) << "Starting messaging handler";
 
-
-    logger(debug) << "Connecting to the server";
-    conn = e.container().connect(broker_url).ptr();
-
-    logger(trace) << "Creating a receiver";
-    conn->open_receiver(broker_url.path());
+    logger(debug) << "Creating a receiver and connecting to the server";
+    e.container().open_receiver(broker_url);
 
     logger(debug) << "Setting up timeout";
-    task &t = e.container().schedule(1000);
+    task t = e.container().schedule(1000);
     timeoutTask = &t;
 }
 
@@ -75,6 +71,8 @@ void ReceiverHandler::on_disconnected(event &e)
     }
 
     logger(debug) << "Canceling scheduled tasks ";
+    
+    
     timeoutTask->cancel();
     timeoutTask = NULL;
 }
@@ -94,7 +92,7 @@ void ReceiverHandler::on_timer_task(event &e)
         timeoutTask->cancel();
         timeoutTask = NULL;
 
-        conn->close();
+        e.connection().close();
     } else {
         timer--;
         logger(debug) << "Waiting ...";

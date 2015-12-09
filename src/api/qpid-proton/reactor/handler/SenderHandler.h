@@ -20,7 +20,6 @@ using proton::message;
 using proton::event;
 using proton::connection;
 using proton::sender;
-using proton::counted_ptr;
 
 namespace dtests {
 namespace proton {
