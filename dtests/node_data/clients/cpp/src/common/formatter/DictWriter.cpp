@@ -23,6 +23,11 @@ DictWriter::~DictWriter()
     stream->flush();
 }
 
+void DictWriter::separate()
+{
+    (*stream) << VALUE_SEPARATOR << ' ';
+}
+
 void DictWriter::startHeader()
 {
     (*stream) << HEADER_START;

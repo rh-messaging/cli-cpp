@@ -28,7 +28,16 @@ using proton::message;
 using proton::message_id;
 using proton::amqp_string;
 using proton::data;
+using proton::ARRAY;
 using proton::MAP;
+using proton::LIST;
+using proton::DESCRIBED;
+using proton::as;
+using proton::start;
+using proton::finish;
+using proton::decoder;
+using proton::value;
+using proton::type_id;
 
 namespace dtests {
 namespace proton {
@@ -68,8 +77,9 @@ class ReactorDecoder : public AbstractDecoder {
     void writeContentSize(Writer *writer) const;
 
     
-
+    void decodeValue(Writer *writer, decoder &dec) const;
     string decodeValue(const data &data) const;
+    void decodeValue(Writer *writer, const data &data) const;
     string decodeValue(const amqp_string &str) const;
 
 };
