@@ -48,6 +48,7 @@ using namespace dtests::common::log;
  * Default option normalization function that converts basic and std types to 
  * a proton::data object reference.
  */
+/*
 template<typename T>
 static data normalizeFunc(const T &orig) {
     value dv;
@@ -55,10 +56,11 @@ static data normalizeFunc(const T &orig) {
     Logger logger = LoggerWrapper::getLogger();
     logger(debug) << "Using default normalizer: " << orig;
 
-    dv.encoder() << orig;
+    dv = orig;
 
     return dv.decoder().data();
 }
+ * */
 
 
 /**
@@ -120,43 +122,48 @@ static string unroll(const map<string, string> &e) {
  * Default option normalization function that converts list types to 
  * a proton::data object reference.
  */
-static data normalizeList(const list<string> &orig) {
+
+
+static value normalizeList(const list<string> &orig) {
     value dv;
 
     Logger logger = LoggerWrapper::getLogger();
 
     logger(debug) << "Using list normalizer: " << unroll(orig);
 
-    dv.encoder() << as<LIST>(orig);
+    dv = as<LIST>(orig);
 
 
-    return dv.decoder().data();
+    return dv;
 }
+
 
 
 /**
  * Default option normalization function that converts map types to 
  * a proton::data object reference.
  */
-static data normalizeMap(const map<string, string> &orig) {
+static value normalizeMap(const map<string, string> &orig) {
     value dv;
 
     Logger logger = LoggerWrapper::getLogger();
 
     logger(debug) << "Using map normalizer: " << unroll(orig);
 
-    dv.encoder() << as<MAP>(orig);
+    dv = as<MAP>(orig);
 
 
-    return dv.decoder().data();
+    return dv;
 }
 
 /**
  * Data normalizer struct instance for string-based data
  */
+/*
 static StringOptionNormalizer<data> defaultNormalizer = {
     normalizeFunc,
 };
+ */
 
 
 /**
@@ -170,17 +177,20 @@ static StringOptionNormalizer<message_id> idNormalizer = {
 /**
  * Data normalizer struct instance for list-based data
  */
-static ListOptionNormalizer<data> listNormalizer = {
+
+static ListOptionNormalizer<value> listNormalizer = {
     normalizeList,
 };
+
 
 
 /**
  * Data normalizer struct instance for map-based data
  */
-static MapOptionNormalizer<data> mapNormalizer = {
+static MapOptionNormalizer<value> mapNormalizer = {
     normalizeMap,
 };
+
 
 } /* namespace reactor */
 } /* namespace proton */
