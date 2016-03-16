@@ -28,7 +28,6 @@
 using namespace std;
 
 vector<string> split(const string &, const string &);
-map<string, string> asMap(const vector<string> &input);
 map<string, string> parse_key_value(const string &, const string &);
 
 /**
@@ -43,6 +42,17 @@ map<string, string> parse_key_value(const string &, const string &);
  * empty/null/invalid/etc and setting it on the target object instance
  * 
  */
+
+template<typename T>
+void asMap(const vector<string> &input, map<string, T> &output)
+{
+    for (size_t i = 0; i < (input.size() - 1); i = i + 2) {
+        string key = input[i];
+        T value = input[i + 1];
+
+        output[key] = value;
+    }
+}
 
 namespace dtests {
 namespace common {
@@ -162,10 +172,10 @@ class OptionsSetter {
 
             map<string, string> properties = map<string, string>();
             for (size_t i = 0; i < propertyVector.size(); i++) {
-                map<string, string> tmp = parse_key_value(propertyVector[i],
+                vector<string> tmpVector = split(propertyVector[i], 
                         propertySeparator);
-
-                properties.insert(tmp.begin(), tmp.end());
+                
+                asMap(tmpVector, properties);
             }
 
             BeanUtils::set(properties, obj, setter);
@@ -192,10 +202,10 @@ class OptionsSetter {
 
             map<string, string> properties = map<string, string>();
             for (size_t i = 0; i < propertyVector.size(); i++) {
-                map<string, string> tmp = parse_key_value(propertyVector[i],
+                vector<string> tmpVector = split(propertyVector[i], 
                         propertySeparator);
-
-                properties.insert(tmp.begin(), tmp.end());
+                
+                asMap(tmpVector, properties);
             }
 
             

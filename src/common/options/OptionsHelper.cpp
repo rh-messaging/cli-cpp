@@ -24,30 +24,6 @@ vector<string> split(const string &input, const string &sep)
     return splitted;
 }
 
-map<string, string> asMap(const vector<string> &input)
-{
-    map<string, string> ret = map<string, string>();
-
-    for (size_t i = 0; i < (input.size() - 1); i = i + 2) {
-        string key = input[i];
-        string value = input[i + 1];
-
-        ret[key] = value;
-    }
-
-    return ret;
-}
-
-map<string, string> parse_key_value(const string &input, const string &sep)
-{
-    vector<string> splitted;
-
-    algo::split(splitted, input, algo::is_any_of(sep),
-            algo::token_compress_on);
-
-    return asMap(splitted);
-}
-
 OptionsSetter::OptionsSetter(const optparse::Values &options)
     : options(options)
 {
