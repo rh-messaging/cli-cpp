@@ -9,15 +9,16 @@
 #define COMMON_HANDLER_H_
 
 #include <proton/container.hpp>
-#include <proton/messaging_handler.hpp>
+#include <proton/handler.hpp>
 #include <proton/connection.hpp>
+#include <proton/event.hpp>
 
 #include <proton/url.hpp>
 
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
-using proton::messaging_handler;
+using proton::handler;
 using proton::url;
 
 namespace dtests {
@@ -30,7 +31,7 @@ using std::string;
  * An abstract proton message handler providing a common interface for other
  * client handlers
  */
-class CommonHandler : public messaging_handler {
+class CommonHandler : public handler {
   public:
     /**
      * Constructor
@@ -51,7 +52,7 @@ class CommonHandler : public messaging_handler {
     url broker_url;
 
   private:
-    typedef messaging_handler super;
+    typedef handler super;
 
 
 
