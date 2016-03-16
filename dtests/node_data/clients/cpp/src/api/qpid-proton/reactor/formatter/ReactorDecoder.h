@@ -39,6 +39,12 @@ using proton::decoder;
 using proton::value;
 using proton::type_id;
 
+#if PN_VERSION_MAJOR > 0 && PN_VERSION_MINOR == 12
+# define DO_GET(value, str) value.empty() ? value.get(str) : logger(debug) << "Value for property " << property.name << " is empty";
+#else
+# define DO_GET(value, str) value.get(str)
+#endif
+
 namespace dtests {
 namespace proton {
 namespace reactor {
@@ -77,9 +83,10 @@ class ReactorDecoder : public AbstractDecoder {
     void writeContentSize(Writer *writer) const;
 
     
-    void decodeValue(Writer *writer, decoder &dec) const;
-    string decodeValue(const data &data) const;
-    void decodeValue(Writer *writer, const data &data) const;
+    void decodeValue(Writer *writer, value &dec) const;
+    // void decodeValue(Writer *writer, const data &data) const;
+    
+    string decodeValue(const value &dec) const;
     string decodeValue(const amqp_string &str) const;
 
 };

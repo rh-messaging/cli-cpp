@@ -29,7 +29,7 @@ typedef void (message::*amqpts_setter)(amqp_timestamp);
 typedef void (message::*data_setter)(const data &);
 
 /**
- * A proton::data setter type
+ * A proton::value setter type
  */
 typedef void (message::*value_setter)(const value &);
 
@@ -38,6 +38,8 @@ typedef void (message::*value_setter)(const value &);
  * A proton::data setter type
  */
 typedef void (message::*id_setter)(const message_id &);
+
+
 
 
 } /* namespace reactor */

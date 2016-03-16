@@ -59,7 +59,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, DataReader r
     const data &value = (m.*reader)();
 
     logger(debug) << "Decoding " << property.name << ": ";
-    writer->write(KeyValue(property.name, this->decodeValue(value)));
+    // writer->write(KeyValue(property.name, this->decodeValue(value)));
 }
 
 /**
@@ -76,12 +76,8 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
     logger(debug) << "Decoding " << property.name << ": ";
 
     amqp_string str;
-
-    if (!value.empty()) {
-        value.get(str);
-    } else {
-        logger(debug) << "Value for property " << property.name << " is empty";
-    }
+ 
+    DO_GET(value, str);
 
     writer->write(KeyValue(property.name, this->decodeValue(str)));
 }
@@ -110,8 +106,9 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
 
         return;
     } else {
-        string body = decodeValue(m.body());
-        string len = super::decodeValue(body.length());
+        // string body = decodeValue(writer, m.body());
+        string body = "";
+        string len = super::decodeValue(body.size());
 
         writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name,
                 len));
@@ -147,13 +144,14 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
 {
     logger(debug) << "Decoding message properties";
     writer->startProperties();
-    decodeValue(writer, m.properties());
+    // The call below should be replaced with one that can handle regular maps
+    // decodeValue(writer, m.application_properties().);
     writer->endProperties();
 }
 
-void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
+void ReactorDecoder::decodeValue(Writer *writer, value &value) const
 {
-    type_id type = dec.type();
+    type_id type = value.type();
     start s;
     
     switch (type) {
@@ -167,9 +165,12 @@ void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
         
             writer->startList();
             logger(debug) << "(m) Type id: " << type;
-            dec >> s;
+            // dec >> s;
             
+            /*
             logger(debug) << "(m) Size: " << s.size;
+            
+            value.get();
             for (size_t i = 0; i < s.size; i++) {
                 decodeValue(writer, dec);
                 writer->write(": ");
@@ -178,14 +179,17 @@ void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
                     writer->endField();
                 }
             }
+            */
             
-            dec >> finish();
+            // dec >> finish();
             writer->endMap();        
         }
         case MAP:
         {
+            
             writer->startMap();
             logger(debug) << "(m) Type id: " << type;
+            /*
             dec >> s;
             
             logger(debug) << "(m) Size: " << s.size;
@@ -200,15 +204,12 @@ void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
             }
             
             dec >> finish();
+            */
             writer->endMap();
         }
         default:
         {
-            if (!dec.more()) {
-                logger(debug) << "No more data to read";
-
-                break;
-            }
+            /*
             std::ostringstream stream;
             
             value v;
@@ -216,10 +217,17 @@ void ReactorDecoder::decodeValue(Writer *writer, decoder &dec) const
             stream << v;
 
             writer->write(stream.str());            
+             */
         }
     }
 }
 
+string ReactorDecoder::decodeValue(const value &value) const {
+    // return decodeValue(value.data());
+    return "";
+}
+
+/*
 string ReactorDecoder::decodeValue(const data &d) const
 {
     std::ostringstream stream;
@@ -235,8 +243,10 @@ string ReactorDecoder::decodeValue(const data &d) const
 
     return stream.str();
 }
+ */
 
 
+/*
 void ReactorDecoder::decodeValue(Writer *writer, const data &d) const
 {
     try {
@@ -247,6 +257,7 @@ void ReactorDecoder::decodeValue(Writer *writer, const data &d) const
         logger(warning) << e.what();
     }
 }
+*/
 
 string ReactorDecoder::decodeValue(const amqp_string &str) const
 {
