@@ -63,7 +63,7 @@ void convertToMap(const vector<string> &input, map<string, T> &output)
 {
     for (size_t i = 0; i < (input.size() - 1); i = i + 2) {
         string key = input[i];
-        T value = input[i + 1];
+        T value = T(input[i + 1]);
 
         output[key] = value;
     }
