@@ -8,21 +8,13 @@
 #include "OptionsHelper.h"
 #include "logger/LoggerWrapper.h"
 
-namespace algo = boost::algorithm;
+
 namespace fs = boost::filesystem;
 
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-vector<string> split(const string &input, const string &sep)
-{
-    vector<string> splitted;
 
-    algo::split(splitted, input, algo::is_any_of(sep),
-            algo::token_compress_on);
-
-    return splitted;
-}
 
 OptionsSetter::OptionsSetter(const optparse::Values &options)
     : options(options)
