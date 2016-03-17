@@ -147,8 +147,12 @@ class OptionsSetter {
      * @param name the option to set
      * @param obj the bean (object) to set the option to
      * @param setter the (bean) setter to set the option
-     * NOTE: probably there's a better way to do these methods, so this code
-     * should be checked in the future
+     * @param keySeparator the separator string between elements in the key 
+     * @param propertySeparator the separator string between elements in the 
+     * properties 
+     * NOTE2: this method takes an input string in the format 
+     * "key1:123;key2:764;key3:=999;key4:longervalue" and splits twice to 
+     * decompose a key value pair stored in a map
      */
     template<typename T, typename Y>
     void setMap(const string &name, T *obj, Y setter,
@@ -171,8 +175,14 @@ class OptionsSetter {
      * @param name the option to set
      * @param obj the bean (object) to set the option to
      * @param setter the (bean) setter to set the option
-     * NOTE: probably there's a better way to do these methods, so this code
-     * should be checked in the future
+     * @param normalizer a normalization structure to convert the data from 
+     * string/string to the appropriate types used by the underlying API
+     * @param keySeparator the separator string between elements in the key 
+     * @param propertySeparator the separator string between elements in the 
+     * properties 
+     * NOTE: this method takes an input string in the format 
+     * "key1:123;key2:764;key3:=999;key4:longervalue" and splits twice to 
+     * decompose a key value pair stored in a map
      */
     template<typename T, typename Y, typename K>
     void setMap(const string &name, T *obj, Y setter, 
@@ -199,8 +209,9 @@ class OptionsSetter {
      * @param name the option to set
      * @param obj the bean (object) to set the option to
      * @param setter the (bean) setter to set the option
-     * NOTE: probably there's a better way to do these methods, so this code
-     * should be checked in the future
+     * @param normalizerStruct a normalization structure to convert the data from 
+     * string/string to the appropriate types used by the underlying API
+     * @param keySeparator the separator string between elements in the key 
      */
     template<typename T, typename Y, typename K>
     void setList(const string &name, T *obj, Y setter,
