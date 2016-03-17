@@ -175,6 +175,32 @@ class OptionsSetter {
      * @param name the option to set
      * @param obj the bean (object) to set the option to
      * @param setter the (bean) setter to set the option
+     * @param output the output map
+     * @param keySeparator the separator string between elements in the key 
+     * @param propertySeparator the separator string between elements in the 
+     * properties 
+     * NOTE2: this method takes an input string in the format 
+     * "key1:123;key2:764;key3:=999;key4:longervalue" and splits twice to 
+     * decompose a key value pair stored in a map
+     */
+    template<typename K>
+    void setMap(const string &name, map<string, K> &output,
+            const string &keySeparator = ";",
+            const string &propertySeparator = ":") const {
+        if (options.is_set(name)) {
+            const string property = options[name];
+
+            vector<string> propertyVector = split(property, keySeparator);
+            convertPropertiesToMap(propertyVector, output, propertySeparator);
+        }
+    }
+    
+    
+    /**
+     * Set a map option to a class instance (bean)
+     * @param name the option to set
+     * @param obj the bean (object) to set the option to
+     * @param setter the (bean) setter to set the option
      * @param normalizer a normalization structure to convert the data from 
      * string/string to the appropriate types used by the underlying API
      * @param keySeparator the separator string between elements in the key 
@@ -203,6 +229,7 @@ class OptionsSetter {
         }
     }
     
+        
     
     /**
      * Set a list option to a class instance (bean)

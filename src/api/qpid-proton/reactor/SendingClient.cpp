@@ -64,11 +64,15 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-user-id", &msg,
             static_cast<string_setter> (&message::user_id));
 
-    // TODO: not implemented on reactor
-    // setter.setNumber("msg-priority", &msg, static_cast<long_setter>(&message::priority));
-    // setter.setBoolean("msg-durable", &msg, static_cast<boolean_setter>(&message::durable));
-    // setter.setMap("msg-properties", &msg, 
-    //        static_cast<value_setter>(&message::application_properties));
+    setter.setNumber("msg-priority", &msg, 
+            static_cast<uint_setter>(&message::priority));
+    
+    setter.setBoolean("msg-durable", &msg, 
+            static_cast<boolean_setter>(&message::durable));
+    
+    message::property_map &properties = msg.application_properties();
+        
+    setter.setMap("msg-properties", properties);
 }
 
 void SendingClient::setMessageContent(const OptionsSetter &setter,
