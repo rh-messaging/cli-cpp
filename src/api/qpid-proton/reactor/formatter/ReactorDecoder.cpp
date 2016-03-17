@@ -119,7 +119,8 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
 
 void ReactorDecoder::decodeHeader(Writer *writer) const
 {
-    // write(writer, MessageHeader::REDELIVERED, &message::redelivered);
+    write<Uint32Reader, uint32_t>(writer, MessageHeader::REDELIVERED, 
+            static_cast<Uint32Reader> (&message::delivery_count));
     write(writer, MessageHeader::REPLY_TO,
             static_cast<StringReader> (&message::reply_to));
     write(writer, MessageHeader::SUBJECT,
@@ -133,9 +134,10 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     write(writer, MessageHeader::CORRELATION_ID,
             static_cast<MessageIdReader> (&message::correlation_id));
 
-    // Not implemented
-    // write(writer, MessageHeader::PRIORITY, &message::priority);
-    // write(writer, MessageHeader::DURABLE, &message::durable);
+    write<Uint8Reader, uint8_t>(writer, MessageHeader::PRIORITY, 
+            static_cast<Uint8Reader> (&message::priority));
+    write<BoolReader, bool>(writer, MessageHeader::DURABLE, 
+            static_cast<BoolReader> (&message::durable));
     writeTTL(writer);
     writeContentSize(writer);
 }
