@@ -32,6 +32,10 @@ using proton::ARRAY;
 using proton::MAP;
 using proton::LIST;
 using proton::DESCRIBED;
+using proton::STRING;
+using proton::UINT;
+using proton::INT;
+using proton::DOUBLE;
 using proton::as;
 using proton::start;
 using proton::finish;
@@ -39,11 +43,13 @@ using proton::decoder;
 using proton::value;
 using proton::type_id;
 
+/*
 #if PN_VERSION_MAJOR > 0 && PN_VERSION_MINOR == 12
 # define DO_GET(value, str) value.empty() ? value.get(str) : logger(debug) << "Value for property " << property.name << " is empty";
 #else
-# define DO_GET(value, str) value.get(str)
+# define DO_GET(value, str) str:string  = value.as_string();
 #endif
+*/
 
 namespace dtests {
 namespace proton {
