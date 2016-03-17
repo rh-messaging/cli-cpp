@@ -75,11 +75,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 
     logger(debug) << "Decoding " << property.name << ": ";
 
-    amqp_string str;
- 
-    DO_GET(value, str);
-
-    writer->write(KeyValue(property.name, this->decodeValue(str)));
+    writer->write(KeyValue(property.name, super::decodeValue(value.as_uint())));
 }
 
 /**
@@ -225,8 +221,86 @@ void ReactorDecoder::decodeValue(Writer *writer, value &value) const
 }
 
 string ReactorDecoder::decodeValue(const value &value) const {
-    // return decodeValue(value.data());
-    return "";
+    type_id type = value.type();
+    ostringstream s;
+
+    switch (type) {
+        case ARRAY:
+        case DESCRIBED:
+            logger(debug) << "(o) Type id: " << type;
+            break;
+
+        case LIST: {
+            logger(debug) << "(m) Type id: " << type;
+
+            std::list<string> l = std::list<string>();
+
+            value.get_sequence(l);
+            logger(debug) << "(m) Type id: " << type;
+
+            logger(debug) << "(m) Size: " << l.size();
+
+            for (size_t i = 0; i < l.size(); i++) {
+                // decodeValue(writer, dec);
+                // writer->write(": ");
+
+                // if (i < s.size) {
+                //    writer->endField();
+                // }
+            }
+
+            // dec >> finish();
+            // writer->endMap();
+        }
+        case MAP:
+        {
+            // writer->startMap();
+            logger(debug) << "(m) Type id: " << type;
+            /*
+            dec >> s;
+
+            logger(debug) << "(m) Size: " << s.size;
+            for (size_t i = 0; i < s.size/2; i++) {
+                decodeValue(writer, dec);
+                writer->separate();
+                decodeValue(writer, dec);
+
+                if (i < ((s.size/2) - 1)) {
+                    writer->endField();
+                }
+            }
+
+            dec >> finish();
+            */
+            // writer->endMap();
+        }
+        case STRING: {
+            s << value.as_string();
+            logger(debug) << "(m) String: ";
+            break;
+        }
+        case UINT: {
+            s << value.as_uint();
+            logger(debug) << "(m) UInt: ";
+            break;
+        }
+        case INT: {
+            s << value.as_int();
+            logger(debug) << "(m) UInt: ";
+            break;
+        }
+        case DOUBLE: {
+            s << value.as_double();
+            logger(debug) << "(m) UInt: ";
+            break;
+        }
+        default: {
+            s << value.as_string();
+            logger(debug) << "(m) Other: ";
+        }
+    }
+
+    return s.str();
 }
 
 /*
@@ -277,7 +351,6 @@ void ReactorDecoder::decodeContent(Writer *writer) const
     }
 
     string content = decodeValue(m.body());
-
 
     writer->write(content);
 }
