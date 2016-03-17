@@ -71,6 +71,9 @@ class ReactorDecoder : public AbstractDecoder {
     typedef string(message::*StringReader)(void) const;
     typedef const data &(message::*DataReader)(void) const;
     typedef message_id (message::*MessageIdReader)(void) const;
+    typedef uint8_t (message::*Uint8Reader)(void) const;
+    typedef uint32_t (message::*Uint32Reader)(void) const;
+    typedef bool (message::*BoolReader)(void) const;
     
     message m;
     static Logger logger;   
@@ -79,12 +82,21 @@ class ReactorDecoder : public AbstractDecoder {
     void write(Writer *writer, HeaderProperty property, DataReader reader) const;
     void write(Writer *writer, HeaderProperty property, MessageIdReader reader) const;
     
+    template<typename T, typename V>
+    void write(Writer *writer, HeaderProperty property, T reader) const {
+        V value = (m.*reader)();
+
+        logger(dtests::common::log::debug) << "Decoding " << property.name << ": ";
+
+        writer->write(KeyValue(property.name, super::decodeValue(value)));
+    }
+    
     void writeTTL(Writer *writer) const;
     void writeContentSize(Writer *writer) const;
 
     
     void decodeValue(Writer *writer, value &dec) const;
-    // void decodeValue(Writer *writer, const data &data) const;
+    // void decodeValue(Writer *writer, const data &data) const;   
     
     string decodeValue(const value &dec) const;
     string decodeValue(const amqp_string &str) const;
