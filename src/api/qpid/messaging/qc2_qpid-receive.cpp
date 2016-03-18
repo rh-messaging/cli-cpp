@@ -159,7 +159,7 @@ class SequenceTracker
   public:
     SequenceTracker(const Options& o) : opts(o), lastSn(0) {}
 
-    /** Return true if the message should be procesed, false if it should be ignored. */
+    /** Return true if the message should be processed, false if it should be ignored. */
     bool track(Message& message) {
         if (!(opts.verifySequence || opts.ignoreDuplicates))
             return true;        // Not checking sequence numbers.
