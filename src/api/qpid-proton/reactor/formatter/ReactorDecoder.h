@@ -26,7 +26,6 @@
 
 using proton::message;
 using proton::message_id;
-using proton::data;
 using proton::ARRAY;
 using proton::MAP;
 using proton::LIST;
@@ -35,7 +34,6 @@ using proton::STRING;
 using proton::UINT;
 using proton::INT;
 using proton::DOUBLE;
-using proton::as;
 using proton::start;
 using proton::finish;
 using proton::decoder;
@@ -74,7 +72,6 @@ class ReactorDecoder : public AbstractDecoder {
     typedef AbstractDecoder super;
 
     typedef string(message::*StringReader)(void) const;
-    typedef const data &(message::*DataReader)(void) const;
     typedef message_id (message::*MessageIdReader)(void) const;
     typedef uint8_t (message::*Uint8Reader)(void) const;
     typedef uint32_t (message::*Uint32Reader)(void) const;
@@ -84,7 +81,6 @@ class ReactorDecoder : public AbstractDecoder {
     static Logger logger;   
 
     void write(Writer *writer, HeaderProperty property, StringReader reader) const;
-    void write(Writer *writer, HeaderProperty property, DataReader reader) const;
     void write(Writer *writer, HeaderProperty property, MessageIdReader reader) const;
     
     template<typename T, typename V>
@@ -101,7 +97,6 @@ class ReactorDecoder : public AbstractDecoder {
 
     
     void decodeValue(Writer *writer, value &dec) const;
-    // void decodeValue(Writer *writer, const data &data) const;   
     
     string decodeValue(const value &dec) const;
     string decodeValue(const string &str) const;
