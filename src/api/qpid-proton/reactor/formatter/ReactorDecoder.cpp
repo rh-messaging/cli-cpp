@@ -335,13 +335,10 @@ void ReactorDecoder::decodeValue(Writer *writer, const data &d) const
 }
 */
 
-string ReactorDecoder::decodeValue(const amqp_string &str) const
+// TODO: this is likely to be deprecated and should be removed
+string ReactorDecoder::decodeValue(const string &str) const
 {
-    std::ostringstream stream;
-
-    stream << str.c_str();
-
-    return stream.str();
+    return str;
 }
 
 void ReactorDecoder::decodeContent(Writer *writer) const
