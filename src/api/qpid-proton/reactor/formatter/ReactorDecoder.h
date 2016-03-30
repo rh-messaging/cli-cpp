@@ -26,7 +26,6 @@
 
 using proton::message;
 using proton::message_id;
-using proton::amqp_string;
 using proton::data;
 using proton::ARRAY;
 using proton::MAP;
@@ -105,7 +104,7 @@ class ReactorDecoder : public AbstractDecoder {
     // void decodeValue(Writer *writer, const data &data) const;   
     
     string decodeValue(const value &dec) const;
-    string decodeValue(const amqp_string &str) const;
+    string decodeValue(const string &str) const;
 
 };
 
