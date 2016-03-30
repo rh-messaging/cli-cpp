@@ -47,20 +47,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, StringReader
     writer->write(KeyValue(property.name, super::decodeValue(value)));
 }
 
-/**
- * Writes a header property.
- * @param writer the writer to use
- * @param property the header property to write
- * @param reader The reader to use. The reader is a pointer to a member function 
- * that can access the header property data (ie.: the class getter).
- */
-void ReactorDecoder::write(Writer *writer, HeaderProperty property, DataReader reader) const
-{
-    const data &value = (m.*reader)();
 
-    logger(debug) << "Decoding " << property.name << ": ";
-    // writer->write(KeyValue(property.name, this->decodeValue(value)));
-}
 
 /**
  * Writes a header property.
@@ -303,37 +290,6 @@ string ReactorDecoder::decodeValue(const value &value) const {
     return s.str();
 }
 
-/*
-string ReactorDecoder::decodeValue(const data &d) const
-{
-    std::ostringstream stream;
-    if (d.empty()) {
-        logger(debug) << "Empty data!";
-    }
-
-    try {
-        stream << d;
-    } catch (const std::exception& e) {
-        logger(warning) << e.what();
-    }
-
-    return stream.str();
-}
- */
-
-
-/*
-void ReactorDecoder::decodeValue(Writer *writer, const data &d) const
-{
-    try {
-        logger(debug) << "Decoding a map";
-        decoder dec = const_cast<data &> (d).decoder();
-        decodeValue(writer, dec);
-    } catch (const std::exception& e) {
-        logger(warning) << e.what();
-    }
-}
-*/
 
 // TODO: this is likely to be deprecated and should be removed
 string ReactorDecoder::decodeValue(const string &str) const
