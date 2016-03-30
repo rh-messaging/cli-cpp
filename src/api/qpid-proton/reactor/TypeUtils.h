@@ -6,7 +6,7 @@
 
 using proton::message;
 using proton::message_id;
-using proton::amqp_timestamp;
+using proton::timestamp;
 using proton::value;
 using proton::duration;
 
@@ -22,12 +22,8 @@ typedef void (message::*string_setter)(const string &);
 /**
  * A proton::amqpsts setter type
  */
-typedef void (message::*amqpts_setter)(amqp_timestamp);
+typedef void (message::*timestamp_setter)(timestamp);
 
-/**
- * A proton::data setter type
- */
-typedef void (message::*data_setter)(const data &);
 
 /**
  * A proton::value setter type

@@ -58,8 +58,9 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
             &idNormalizer);
 
+    timestamp def = timestamp(30);
     setter.setNumber("msg-ttl", &msg,
-            static_cast<amqpts_setter> (&message::expiry_time));
+            static_cast<timestamp_setter> (&message::expiry_time), def);
 
     setter.set("msg-user-id", &msg,
             static_cast<string_setter> (&message::user_id));

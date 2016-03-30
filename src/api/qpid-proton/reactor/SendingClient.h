@@ -22,7 +22,6 @@
 #include "TypeUtils.h"
 
 using proton::message;
-using proton::amqp_timestamp;
 
 namespace dtests {
 namespace proton {

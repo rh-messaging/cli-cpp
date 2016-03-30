@@ -26,10 +26,8 @@
 
 #include "options/OptionsHelper.h"
 
-using proton::data;
 using proton::value;
 using proton::type_id;
-using proton::as;
 using proton::LIST;
 using proton::MAP;
 using proton::message_id;
@@ -43,25 +41,6 @@ using std::list;
 
 using namespace dtests::common;
 using namespace dtests::common::log;
-
-/**
- * Default option normalization function that converts basic and std types to 
- * a proton::data object reference.
- */
-/*
-template<typename T>
-static data normalizeFunc(const T &orig) {
-    value dv;
-
-    Logger logger = LoggerWrapper::getLogger();
-    logger(debug) << "Using default normalizer: " << orig;
-
-    dv = orig;
-
-    return dv.decoder().data();
-}
- * */
-
 
 /**
  * Default option normalization function that converts basic and std types to 
@@ -131,8 +110,7 @@ static value normalizeList(const list<string> &orig) {
 
     logger(debug) << "Using list normalizer: " << unroll(orig);
 
-    dv = as<LIST>(orig);
-
+    dv = orig;
 
     return dv;
 }
@@ -150,7 +128,7 @@ static value normalizeMap(const map<string, string> &orig) {
 
     logger(debug) << "Using map normalizer: " << unroll(orig);
 
-    dv = as<MAP>(orig);
+    dv = orig;
 
 
     return dv;
