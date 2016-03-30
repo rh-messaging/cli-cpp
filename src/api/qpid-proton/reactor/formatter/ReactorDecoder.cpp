@@ -72,7 +72,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 void ReactorDecoder::writeTTL(Writer *writer) const
 {
     pn_timestamp_t ttl = m.expiry_time().milliseconds;
-
+    
     writer->write(KeyValue(MessageHeader::TTL.name,
             super::decodeValue(ttl)));
 }
@@ -137,8 +137,7 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
 void ReactorDecoder::decodeValue(Writer *writer, value &value) const
 {
     type_id type = value.type();
-    start s;
-    
+        
     switch (type) {
         case ARRAY:
         case DESCRIBED: 
