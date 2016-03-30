@@ -34,9 +34,6 @@ using proton::STRING;
 using proton::UINT;
 using proton::INT;
 using proton::DOUBLE;
-using proton::start;
-using proton::finish;
-using proton::decoder;
 using proton::value;
 using proton::type_id;
 
