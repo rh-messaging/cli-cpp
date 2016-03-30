@@ -221,7 +221,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
 
             std::list<string> l = std::list<string>();
 
-            value.get_sequence(l);
+            value.get(l);
             logger(debug) << "(m) Type id: " << type;
 
             logger(debug) << "(m) Size: " << l.size();
