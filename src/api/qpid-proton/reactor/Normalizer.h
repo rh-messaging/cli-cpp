@@ -28,6 +28,7 @@
 
 using proton::value;
 using proton::type_id;
+using proton::as;
 using proton::LIST;
 using proton::MAP;
 using proton::message_id;
@@ -110,7 +111,7 @@ static value normalizeList(const list<string> &orig) {
 
     logger(debug) << "Using list normalizer: " << unroll(orig);
 
-    dv = orig;
+    dv = as<LIST>(orig);
 
     return dv;
 }
@@ -128,7 +129,7 @@ static value normalizeMap(const map<string, string> &orig) {
 
     logger(debug) << "Using map normalizer: " << unroll(orig);
 
-    dv = orig;
+    dv = as<MAP>(orig);
 
 
     return dv;
