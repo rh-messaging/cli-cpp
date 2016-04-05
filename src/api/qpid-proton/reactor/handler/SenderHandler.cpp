@@ -93,7 +93,7 @@ void SenderHandler::on_disconnected(event& e)
     logger(debug) << "Event name: " << e.name();
 }
 
-void SenderHandler::on_connection_closed(event &e)
+void SenderHandler::on_connection_close(event &e)
 {
     logger(debug) << "Stopping reactor";
     logger(debug) << "Event name: " << e.name();
