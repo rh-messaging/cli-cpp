@@ -55,7 +55,7 @@ void ReceiverHandler::on_message(event &e)
     timer.reset();
 }
 
-void ReceiverHandler::on_accepted(event &e)
+void ReceiverHandler::on_delivery_accept(event &e)
 {
     logger(debug) << "Accepted: " << e.name();
 }

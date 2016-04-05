@@ -50,7 +50,7 @@ class ReceiverHandler : public CommonHandler {
 
     void on_start(event &e);
     void on_message(event &e);
-    void on_accepted(event &e);
+    void on_delivery_accept(event &e);
     void on_disconnected(event &e);
     void on_timer_task(event &e);
 
