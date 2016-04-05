@@ -65,13 +65,15 @@ void SenderHandler::on_sendable(event &e)
         logger(trace) << "Sending messages through the link";
         e.sender().send(this->m);
 
-        logger(trace) << "Closing the sender";
-        e.sender().close();
+        
         sent++;
     }
+    
+    logger(trace) << "Closing the sender";
+    e.sender().close();
 }
 
-void SenderHandler::on_accepted(event& e)
+void SenderHandler::on_delivery_accept(event& e)
 {
     logger(debug) << "Event name: " << e.name();
     logger(trace) << "Message accepted. Now obtaining the connection reference object";
