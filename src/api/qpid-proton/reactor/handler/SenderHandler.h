@@ -42,7 +42,7 @@ class SenderHandler : public CommonHandler {
     void on_sendable(event &e);
     void on_connection_error(event &e);
     void on_connection_closed(event &e);
-    void on_accepted(event& e);
+    void on_delivery_accept(event& e);
     void on_disconnected(event& e);
 
     /**
