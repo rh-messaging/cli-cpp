@@ -52,7 +52,7 @@ class ReceiverHandler : public CommonHandler {
     void on_message(event &e);
     void on_delivery_accept(event &e);
     void on_connection_close(event &e);
-    void on_timer_task(event &e);
+    void on_timer(event &e);
 
   private:
     typedef CommonHandler super;

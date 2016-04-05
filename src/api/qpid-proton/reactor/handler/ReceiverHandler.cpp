@@ -42,6 +42,7 @@ void ReceiverHandler::on_start(event &e)
 
 void ReceiverHandler::on_message(event &e)
 {
+    logger(debug) << "Message received: " << e.name();
     ReactorDecoder decoder = ReactorDecoder(e.message());
 
     std::ostringstream stream;
@@ -77,7 +78,7 @@ void ReceiverHandler::on_connection_close(event &e)
     timeoutTask = NULL;
 }
 
-void ReceiverHandler::on_timer_task(event &e)
+void ReceiverHandler::on_timer(event &e)
 {
 
     if (!timeoutTask) {
