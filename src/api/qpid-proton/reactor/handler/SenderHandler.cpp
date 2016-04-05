@@ -88,11 +88,6 @@ void SenderHandler::on_delivery_accept(event& e)
     } while (confirmedSent < count);
 }
 
-void SenderHandler::on_disconnected(event& e)
-{
-    logger(debug) << "Event name: " << e.name();
-}
-
 void SenderHandler::on_connection_close(event &e)
 {
     logger(debug) << "Stopping reactor";
