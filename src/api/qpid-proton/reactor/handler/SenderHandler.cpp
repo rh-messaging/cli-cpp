@@ -46,8 +46,9 @@ void SenderHandler::on_start(event &e)
 
 void SenderHandler::on_sendable(event &e)
 {
+    sender s = e.sender();
     logger(debug) << "Event name: " << e.name();
-    int credit = e.sender().credit();
+    int credit = s.credit();
 
     if (credit == 0) {
         logger(warning) << "There not enough credit to send messages";
@@ -63,14 +64,14 @@ void SenderHandler::on_sendable(event &e)
         logger(trace) << "Creating the message object and setting default values";
 
         logger(trace) << "Sending messages through the link";
-        e.sender().send(this->m);
+        s.send(this->m);
 
         
         sent++;
     }
     
     logger(trace) << "Closing the sender";
-    e.sender().close();
+    s.close();
 }
 
 void SenderHandler::on_delivery_accept(event& e)
