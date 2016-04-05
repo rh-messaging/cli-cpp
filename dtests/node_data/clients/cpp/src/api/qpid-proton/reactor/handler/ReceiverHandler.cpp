@@ -60,7 +60,7 @@ void ReceiverHandler::on_delivery_accept(event &e)
     logger(debug) << "Accepted: " << e.name();
 }
 
-void ReceiverHandler::on_disconnected(event &e)
+void ReceiverHandler::on_connection_close(event &e)
 {
     logger(debug) << "Disconnected: " << e.name();
 
