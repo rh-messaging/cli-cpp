@@ -82,21 +82,21 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
     string content_type = options["msg-content-type"];
 
     const string content = setter.getContent();
-    if (content_type == ContentType::TEXT_PLAIN) {
-        msg->body(content);
-    } else {
-        if (content_type == ContentType::AMQP_LIST) {
-            setter.setList("msg-content", msg,
-                    static_cast<value_setter> (&message::body), &listNormalizer);
+    
+    if (content_type == ContentType::AMQP_LIST) {
+        setter.setList("msg-content", msg,
+                static_cast<value_setter> (&message::body), &listNormalizer);
+
+    }
+    else {
+        if (content_type == ContentType::AMQP_MAP) {
+            setter.setMap("msg-content", msg,
+                    static_cast<value_setter> (&message::body), &mapNormalizer);
 
         }
         else {
-            if (content_type == ContentType::AMQP_MAP) {
-                setter.setMap("msg-content", msg,
-                        static_cast<value_setter> (&message::body), &mapNormalizer);
-
-            }
-        
+            std::cout << "Sending: " << content << std::endl;
+            msg->body(content);
         }
     }
 }
@@ -134,7 +134,7 @@ int SendingClient::run(int argc, char **argv) const
 
     SenderHandler handler = SenderHandler(address);
 
-    handler.setMessage(msg);
+    handler.setMessage(&msg);
     container(handler).run();
 
     return 0;
