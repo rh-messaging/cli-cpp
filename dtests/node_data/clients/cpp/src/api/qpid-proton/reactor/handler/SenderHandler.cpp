@@ -24,8 +24,8 @@ SenderHandler::SenderHandler(const string &url)
     : super(url),
     count(1),
     sent(0),
-    confirmedSent(0)
-
+    confirmedSent(0),
+    m()
 {
 
 
@@ -56,37 +56,40 @@ void SenderHandler::on_sendable(event &e)
     }
 
     logger(debug) << "The handler has enough credit to send " << credit
-            << " messages";
-    logger(debug) << "The handler has sent " << sent << " messages";
-
+            << " message" << (credit > 1 ? "s" : "" );
+    logger(debug) << "The handler has sent " << sent << " messages"  
+            << (sent > 1 ? "s" : "" );
 
     while (credit > 0 && sent < count) {
-        logger(trace) << "Creating the message object and setting default values";
-
-        logger(trace) << "Sending messages through the link";
-        s.send(this->m);
-
-        
+        logger(trace) << "Sending messages through the link";      
+        s.send(m);
+        logger(trace) << "Sent message: " << m.body().as_string();
+         
         sent++;
-    }
-    
-    logger(trace) << "Closing the sender";
-    s.close();
+    }    
 }
 
 void SenderHandler::on_delivery_accept(event& e)
 {
     logger(debug) << "Event name: " << e.name();
     logger(trace) << "Message accepted. Now obtaining the connection reference object";
+    connection conn = e.connection();
 
     do {
         confirmedSent++;
-        connection conn = e.connection();
-
         logger(debug) << "Closing connection";
-        conn.close();
+        
         logger(debug) << "Connection closed";
     } while (confirmedSent < count);
+    
+    logger(trace) << "Closing the sender after sending " << confirmedSent 
+            << " message" << (confirmedSent > 1 ? "s" : "" );
+    conn.close();
+}
+
+
+void SenderHandler::on_transport_close(event &e) {
+    logger(debug) << "Event name: " << e.name();
 }
 
 void SenderHandler::on_connection_close(event &e)
@@ -111,9 +114,9 @@ int SenderHandler::getCount() const
     return count;
 }
 
-void SenderHandler::setMessage(message m)
+void SenderHandler::setMessage(message &msg)
 {
-    this->m = m;
+    this->m = msg;
 }
 
 message SenderHandler::getMessage() const
