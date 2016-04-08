@@ -66,6 +66,25 @@ void ConnectorHandler::on_connection_remote_open(event& e)
     logger(debug) << "Remote connection opened to " << broker_url.host_port();
 }
 
+
+void ConnectorHandler::on_transport_error(event &e) {
+    logger(error) << "The connection with " << broker_url.host_port() << 
+            " was interrupted";
+}
+
+
+void ConnectorHandler::on_session_error(event &e) {
+    logger(error) << "The remote peer at " << broker_url.host_port() << 
+            " closed the session with an error condition";
+} 
+
+
+void ConnectorHandler::on_link_error(event &e) {
+    logger(error) << "The remote peer at " << broker_url.host_port() << 
+            " closed the link with an error condition";
+}
+
+
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
