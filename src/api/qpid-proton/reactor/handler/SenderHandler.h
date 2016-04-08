@@ -43,6 +43,7 @@ class SenderHandler : public CommonHandler {
     void on_connection_error(event &e);
     void on_connection_close(event &e);
     void on_delivery_accept(event& e);
+    void on_transport_close(event &e);
 
     /**
      * Sets the message count
@@ -60,7 +61,7 @@ class SenderHandler : public CommonHandler {
      * Sets the message to send
      * @param m the message to send
      */
-    void setMessage(message m);
+    void setMessage(message &m);
     
     /**
      * Gets the message to send
