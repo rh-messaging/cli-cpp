@@ -21,7 +21,7 @@ using namespace std;
 using dtests::proton::common::ModernClient;
 
 SendingClient::SendingClient()
-    : super()
+: super()
 
 {
 
@@ -65,14 +65,14 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-user-id", &msg,
             static_cast<string_setter> (&message::user_id));
 
-    setter.setNumber("msg-priority", &msg, 
-            static_cast<uint_setter>(&message::priority));
-    
-    setter.setBoolean("msg-durable", &msg, 
-            static_cast<boolean_setter>(&message::durable));
-    
+    setter.setNumber("msg-priority", &msg,
+            static_cast<uint_setter> (&message::priority));
+
+    setter.setBoolean("msg-durable", &msg,
+            static_cast<boolean_setter> (&message::durable));
+
     message::property_map &properties = msg.application_properties();
-        
+
     setter.setMap("msg-properties", properties);
 }
 
@@ -82,19 +82,17 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
     string content_type = options["msg-content-type"];
 
     const string content = setter.getContent();
-    
+
     if (content_type == ContentType::AMQP_LIST) {
         setter.setList("msg-content", msg,
                 static_cast<value_setter> (&message::body), &listNormalizer);
 
-    }
-    else {
+    } else {
         if (content_type == ContentType::AMQP_MAP) {
             setter.setMap("msg-content", msg,
                     static_cast<value_setter> (&message::body), &mapNormalizer);
 
-        }
-        else {
+        } else {
             std::cout << "Sending: " << content << std::endl;
             msg->body(content);
         }
@@ -126,7 +124,7 @@ int SendingClient::run(int argc, char **argv) const
     const string address = options["broker-url"];
 
     OptionsSetter setter = OptionsSetter(options);
-    
+
     message msg;
 
     setMessageOptions(setter, msg);
@@ -135,6 +133,13 @@ int SendingClient::run(int argc, char **argv) const
     SenderHandler handler = SenderHandler(address);
 
     handler.setMessage(msg);
+    
+    int count = 1;
+    if (options.is_set("count")) {
+        count = static_cast<int> (options.get("count"));
+    }
+    handler.setCount(count);
+    
     container(handler).run();
 
     return 0;
