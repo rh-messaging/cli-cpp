@@ -31,7 +31,7 @@ ReceiverHandler::~ReceiverHandler()
 void ReceiverHandler::on_start(event &e)
 {
     logger(debug) << "Starting messaging handler";
-
+    
     logger(debug) << "Creating a receiver and connecting to the server";
     e.container().open_receiver(broker_url);
 
@@ -42,7 +42,9 @@ void ReceiverHandler::on_start(event &e)
 
 void ReceiverHandler::on_message(event &e)
 {
-    logger(debug) << "Message received: " << e.name();
+    logger(debug) << "Event name: " << e.name();
+    
+    logger(trace) << "Decoding message";
     ReactorDecoder decoder = ReactorDecoder(e.message());
 
     std::ostringstream stream;
@@ -61,6 +63,13 @@ void ReceiverHandler::on_delivery_accept(event &e)
     logger(debug) << "Accepted: " << e.name();
 }
 
+
+void ReceiverHandler::on_delivery_reject(event &e)
+{
+    logger(debug) << "Event name: " << e.name();
+}
+
+
 void ReceiverHandler::on_connection_close(event &e)
 {
     logger(debug) << "Disconnected: " << e.name();
@@ -73,14 +82,12 @@ void ReceiverHandler::on_connection_close(event &e)
 
     logger(debug) << "Canceling scheduled tasks ";
     
-    
-    timeoutTask->cancel();
     timeoutTask = NULL;
 }
 
 void ReceiverHandler::on_timer(event &e)
 {
-
+    
     if (!timeoutTask) {
         logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
 
@@ -90,10 +97,13 @@ void ReceiverHandler::on_timer(event &e)
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
-        timeoutTask->cancel();
-        timeoutTask = NULL;
-
-        e.connection().close();
+        
+        /**
+         * TODO: this is, certainly, a bad way to exit. However, upstream does 
+         * not yet have a stable interface for timers. This should be fixed in 
+         * the future.
+         */
+        exit(1);
     } else {
         timer--;
         logger(debug) << "Waiting ...";
