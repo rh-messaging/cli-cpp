@@ -58,7 +58,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
             &idNormalizer);
 
-    amqp_timestamp def = amqp_timestamp(30);
+    amqp_timestamp def = amqp_timestamp(-1);
     setter.setNumber("msg-ttl", &msg,
             static_cast<timestamp_setter> (&message::expiry_time), def);
 
@@ -127,14 +127,14 @@ int SendingClient::run(int argc, char **argv) const
 
     OptionsSetter setter = OptionsSetter(options);
     
-    message msg = message();
+    message msg;
 
     setMessageOptions(setter, msg);
     setMessageContent(setter, options, &msg);
 
     SenderHandler handler = SenderHandler(address);
 
-    handler.setMessage(&msg);
+    handler.setMessage(msg);
     container(handler).run();
 
     return 0;
