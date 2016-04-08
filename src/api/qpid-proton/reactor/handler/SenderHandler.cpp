@@ -87,8 +87,14 @@ void SenderHandler::on_delivery_accept(event& e)
     conn.close();
 }
 
-
 void SenderHandler::on_transport_close(event &e) {
+    logger(debug) << "Event name: " << e.name();
+}
+
+
+void SenderHandler::on_transport_error(event &e) {
+    logger(error) << "The connection with " << broker_url.host_port() << 
+            " was interrupted";
     logger(debug) << "Event name: " << e.name();
 }
 
