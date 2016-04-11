@@ -14,16 +14,22 @@
 #ifndef SENDERHANDLER_H
 #define SENDERHANDLER_H
 
+#include <proton/task.hpp>
+
 #include "CommonHandler.h"
+#include "Timer.h"
 
 using proton::message;
 using proton::event;
 using proton::connection;
 using proton::sender;
+using proton::task;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
+
+using dtests::common::Timer;
 
 /**
  * A proton message handler that handles message send events
@@ -34,7 +40,7 @@ class SenderHandler : public CommonHandler {
      * Constructor
      * @param url broker URL
      */
-    SenderHandler(const string &url);
+    SenderHandler(const string &url, int timeout = -1);
 
     virtual ~SenderHandler();
 
@@ -46,6 +52,8 @@ class SenderHandler : public CommonHandler {
     
     void on_transport_error(event &e);
     void on_transport_close(event &e);
+    
+    void on_timer(event &e);
 
     /**
      * Sets the message count
@@ -71,12 +79,14 @@ class SenderHandler : public CommonHandler {
      */
     message getMessage() const;
 
-
   private:
     typedef CommonHandler super;
     int count;
     int sent;
     int confirmedSent;
+    
+    task *timeoutTask;
+    Timer timer;
 
     message m;
 
