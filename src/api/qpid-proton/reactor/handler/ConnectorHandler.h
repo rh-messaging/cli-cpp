@@ -41,12 +41,13 @@ class ConnectorHandler : public CommonHandler {
     virtual ~ConnectorHandler();
 
     void on_start(event &e);
-    void on_connection_opened(event &e);
+    void on_connection_open(event &e);
     void on_connection_error(event &e);
     void on_connection_local_open(event& e);
     void on_connection_remote_open(event& e);
     
     void on_transport_error(event &e);
+    
     void on_session_error(event &e);
     void on_link_error(event &e);
 

@@ -54,7 +54,7 @@ void ConnectorHandler::on_start(event &e)
     }
 }
 
-void ConnectorHandler::on_connection_opened(event& e)
+void ConnectorHandler::on_connection_open(event& e)
 {
     logger(debug) << "Connected to " << broker_url.host_port();
 
