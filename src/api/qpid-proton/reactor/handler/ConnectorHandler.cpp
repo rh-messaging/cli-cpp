@@ -7,8 +7,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-ConnectorHandler::ConnectorHandler(const string &url)
-    : super(url),
+ConnectorHandler::ConnectorHandler(const string &url, int timeout)
+    : super(url, timeout),
       objectControl(CONNECTION)
 {
     logger(debug) << "Initializing the connector handler";
@@ -52,11 +52,28 @@ void ConnectorHandler::on_start(event &e)
         logger(trace) << "Opening the receiver as requested";
         receiverObj = conn.open_receiver(broker_url.host_port());
     }
+    
+    logger(debug) << "Setting up timeout";
+    task t = e.container().schedule(1000);
+    timeoutTask = &t;
 }
 
 void ConnectorHandler::on_connection_open(event& e)
 {
     logger(debug) << "Connected to " << broker_url.host_port();
+    
+    if ((objectControl & SESSION)) {
+        logger(trace) << "Opening the session as requested";
+        sessionObj.open();
+    }
+}
+
+
+void ConnectorHandler::on_connection_close(event& e)
+{
+    logger(debug) << "Closing the connection to " << broker_url.host_port();
+    
+    super::disableTimer();
 }
 
 void ConnectorHandler::on_connection_error(event &e)
@@ -120,6 +137,12 @@ void ConnectorHandler::closeObjects() {
     }
     
     conn.close();
+}
+
+void ConnectorHandler::on_timer(event &e)
+{
+   super::timerEvent(e);
+   
 }
 
 

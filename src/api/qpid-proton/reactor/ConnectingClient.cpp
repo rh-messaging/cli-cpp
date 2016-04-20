@@ -87,8 +87,13 @@ int ConnectingClient::run(int argc, char** argv) const
     const string address = options["broker-url"];
 
     OptionsSetter setter = OptionsSetter(options);
+    
+    int timeout = 0;
+    if (options.is_set("timeout")) {
+        timeout = static_cast<int> (options.get("timeout"));
+    }
 
-    ConnectorHandler handler = ConnectorHandler(address);
+    ConnectorHandler handler = ConnectorHandler(address, timeout);
     setMessageHandlerOptions(setter, handler);
     
     int connControl = setConnectionOptions(options);
