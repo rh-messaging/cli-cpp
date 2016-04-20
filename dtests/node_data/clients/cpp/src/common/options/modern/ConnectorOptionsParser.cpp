@@ -26,6 +26,11 @@ ConnectorOptionsParser::ConnectorOptionsParser()
             .type("int")
             .help("stop after count messages")
             .metavar("COUNT");
+    
+    add_option("--obj-ctrl")
+            .dest("obj-ctrl")
+            .help("optional creation object control based on <object-ids> syntax C/E/S/R stands for Connection, sEssion, Sender, Receiver")
+            .metavar("OBJCTRL");
 
 #ifdef UNSUPPORTED_CONNECTOR_OPTS
     // Control options
@@ -122,10 +127,7 @@ ConnectorOptionsParser::ConnectorOptionsParser()
             .metavar("CONN_HANDLER");
 
     // Connector options
-    add_option("--obj-ctrl")
-            .dest("obj-ctrl")
-            .help("optional creation object control based on <object-ids> syntax C/E/S/R stands for Connection, sEssion, Sender, Receiver")
-            .metavar("OBJCTRL");
+    
 #endif // UNSUPPORTED_CONNECTOR_OPTS
 
 }

@@ -10,11 +10,15 @@
 
 
 #include "CommonHandler.h"
+#include "ObjectControl.h"
 
 #include <list>
 #include <proton/connection.hpp>
 
 using proton::connection;
+using proton::session;
+using proton::sender;
+using proton::receiver;
 using proton::event;
 
 namespace dtests {
@@ -57,12 +61,24 @@ class ConnectorHandler : public CommonHandler {
      * @return the message count
      */
     int getCount() const;
+    
+    /**
+     * Sets the object control (CESR)
+     */
+    void setObjectControl(int control);
 
   private:
 
     typedef CommonHandler super;
     int count;
-
+    
+    int objectControl;
+    connection conn;
+    session sessionObj; 
+    sender senderObj;
+    receiver receiverObj;
+    
+    void closeObjects();
 };
 
 } /* namespace reactor */
