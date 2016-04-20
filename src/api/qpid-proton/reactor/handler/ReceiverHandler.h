@@ -14,10 +14,8 @@
 #ifndef RECEIVERHANDLER_H
 #define RECEIVERHANDLER_H
 
-#include <proton/task.hpp>
-
 #include "CommonHandler.h"
-#include "Timer.h"
+
 #include "reactor/formatter/ReactorDecoder.h"
 #include "formatter/DictFormatter.h"
 #include "formatter/DictWriter.h"
@@ -29,7 +27,7 @@ using proton::message;
 using proton::event;
 using proton::connection;
 using proton::receiver;
-using proton::task;
+
 using proton::endpoint;
 
 namespace dtests {
@@ -58,10 +56,7 @@ class ReceiverHandler : public CommonHandler {
 
   private:
     typedef CommonHandler super;
-    
-    task *timeoutTask;
-    Timer timer;
-    
+     
     void do_disconnect();
 };
 
