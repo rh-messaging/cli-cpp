@@ -14,18 +14,25 @@
 #include <proton/event.hpp>
 
 #include <proton/url.hpp>
+#include <proton/task.hpp>
+
+#include "Timer.h"
 
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
 using proton::handler;
 using proton::url;
+using proton::task;
+using proton::event;
 
 namespace dtests {
 namespace proton {
 namespace reactor {
 
 using std::string;
+using dtests::common::Timer;
+
 
 /**
  * An abstract proton message handler providing a common interface for other
@@ -37,9 +44,9 @@ class CommonHandler : public handler {
      * Constructor
      * @param url broker URL
      */
-    CommonHandler(const string &url);
+    CommonHandler(const string &url, int timeout = 10);
     virtual ~CommonHandler();
-
+    
   protected:    
     /**
      * Logger
@@ -50,10 +57,18 @@ class CommonHandler : public handler {
      * Broker URL
      */
     url broker_url;
+    
+    task *timeoutTask;
+    Timer timer;
+    
+    void setupTimer(event &e);
+    void timerEvent(event &e);
+    void disableTimer();
 
   private:
     typedef handler super;
 
+    
 
 
 };

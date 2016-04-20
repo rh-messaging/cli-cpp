@@ -19,8 +19,7 @@ using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
 ReceiverHandler::ReceiverHandler(const string &url, int timeout)
-    : super(url),
-    timeoutTask(NULL), timer(timeout, "timeout")
+    : super(url, timeout)
 {
 }
 
@@ -34,10 +33,8 @@ void ReceiverHandler::on_start(event &e)
     
     logger(debug) << "Creating a receiver and connecting to the server";
     e.container().open_receiver(broker_url);
-
-    logger(debug) << "Setting up timeout";
-    task t = e.container().schedule(1000);
-    timeoutTask = &t;
+    
+    super::setupTimer(e);
 }
 
 void ReceiverHandler::on_message(event &e)
@@ -55,7 +52,7 @@ void ReceiverHandler::on_message(event &e)
 
     writer.endLine();
     std::cout << writer.toString();
-    timer.reset();
+    super::timer.reset();
 }
 
 void ReceiverHandler::on_delivery_accept(event &e)
@@ -74,7 +71,7 @@ void ReceiverHandler::on_connection_close(event &e)
 {
     logger(debug) << "Disconnected: " << e.name();
 
-    if (!timeoutTask) {
+    if (!super::timeoutTask) {
         logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
 
         return;
@@ -82,33 +79,13 @@ void ReceiverHandler::on_connection_close(event &e)
 
     logger(debug) << "Canceling scheduled tasks ";
     
-    timeoutTask = NULL;
+    super::disableTimer();
 }
 
 void ReceiverHandler::on_timer(event &e)
 {
-    
-    if (!timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
-
-        return;
-    }
-
-    if (timer.isExpired()) {
-        logger(info) << "Timed out";
-
-        
-        /**
-         * TODO: this is, certainly, a bad way to exit. However, upstream does 
-         * not yet have a stable interface for timers. This should be fixed in 
-         * the future.
-         */
-        exit(1);
-    } else {
-        timer--;
-        logger(debug) << "Waiting ...";
-        e.container().schedule(1000);
-    }
+   super::timerEvent(e);
+   
 }
 
 void ReceiverHandler::do_disconnect()
