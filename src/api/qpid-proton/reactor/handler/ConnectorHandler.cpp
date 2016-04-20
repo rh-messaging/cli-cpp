@@ -39,7 +39,7 @@ void ConnectorHandler::on_start(event &e)
     conn = e.container().connect(broker_url);
     
     if ((objectControl & SESSION)) {
-        logger(trace) << "Opening the session as requested";
+        logger(trace) << "Creating the session as requested";
         sessionObj = conn.default_session();
     }
     
