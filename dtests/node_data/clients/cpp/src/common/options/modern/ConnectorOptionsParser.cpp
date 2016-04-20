@@ -31,15 +31,15 @@ ConnectorOptionsParser::ConnectorOptionsParser()
             .dest("obj-ctrl")
             .help("optional creation object control based on <object-ids> syntax C/E/S/R stands for Connection, sEssion, Sender, Receiver")
             .metavar("OBJCTRL");
-
-#ifdef UNSUPPORTED_CONNECTOR_OPTS
-    // Control options
-
-
+    
     add_option("--timeout")
             .dest("timeout")
             .help("exit after the specified time")
             .type("int");
+
+#ifdef UNSUPPORTED_CONNECTOR_OPTS
+    // Control options
+
 
     add_option("--sync-mode")
             .dest("msg-correlation-id")
