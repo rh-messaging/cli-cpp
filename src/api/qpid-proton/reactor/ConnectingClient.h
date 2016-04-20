@@ -43,6 +43,8 @@ class ConnectingClient : public ModernClient {
 
     void setMessageHandlerOptions(const OptionsSetter &setter,
             ConnectorHandler &handler) const;
+    
+    int setConnectionOptions(const optparse::Values &options) const;
 
 };
 
