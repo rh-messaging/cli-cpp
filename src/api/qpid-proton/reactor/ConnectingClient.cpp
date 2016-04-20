@@ -34,6 +34,34 @@ void ConnectingClient::setMessageHandlerOptions(const OptionsSetter &setter,
     setter.setNumber("count", &handler, &ConnectorHandler::setCount, 1);
 }
 
+int ConnectingClient::setConnectionOptions(const optparse::Values &options) const
+{
+    string value = options["obj-ctrl"];
+    int connControl = 0;
+    
+    size_t pos = value.find("C");
+    if (pos != string::npos) {
+        connControl |= CONNECTION; 
+    }
+    
+    pos = value.find("E");
+    if (pos != string::npos) {
+        connControl |= SESSION;
+    }
+    
+    pos = value.find("S");
+    if (pos != string::npos) {
+        connControl |= SENDER;
+    }
+    
+    pos = value.find("R");
+    if (pos != string::npos) {
+        connControl |= RECEIVER;
+    }
+    
+    return connControl;
+}
+
 int ConnectingClient::run(int argc, char** argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
@@ -62,7 +90,10 @@ int ConnectingClient::run(int argc, char** argv) const
 
     ConnectorHandler handler = ConnectorHandler(address);
     setMessageHandlerOptions(setter, handler);
-
+    
+    int connControl = setConnectionOptions(options);
+    handler.setObjectControl(connControl);
+    
     container(handler).run();
 
     return 0;
