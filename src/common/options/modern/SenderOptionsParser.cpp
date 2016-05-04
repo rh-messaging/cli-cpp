@@ -83,6 +83,10 @@ SenderOptionsParser::SenderOptionsParser()
             .dest("timeout")
             .help("exit after the specified time")
             .type("int");
+    
+    add_option("--log-msgs")
+            .dest("log-msgs")
+            .help("log message options (currently ignored)");
 }
 
 SenderOptionsParser::~SenderOptionsParser()
