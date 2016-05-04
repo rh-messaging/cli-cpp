@@ -58,7 +58,7 @@ void ModernClient::logTrace() const
 
 void ModernClient::setLogLevel(const optparse::Values &options) const
 {
-    logTrace();
+    
     if (options.is_set("client-log-level")) {
         const string logLevel = options["client-log-level"];
 
@@ -67,6 +67,11 @@ void ModernClient::setLogLevel(const optparse::Values &options) const
         } else {
             if (logLevel == "debug") {
                 logDebug();
+            }
+            else {
+                if (logLevel == "trace") {
+                    logTrace();
+                }
             }
         }
     }
