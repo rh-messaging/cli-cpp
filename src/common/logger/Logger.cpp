@@ -10,7 +10,7 @@
 using namespace dtests::common::log;
 
 Logger::LogConfiguration Logger::logConfiguration = {
-    debug, stdout
+    warning, stdout
 };
 
 Logger::Logger(LogLevel level)
