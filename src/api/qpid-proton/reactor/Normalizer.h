@@ -28,7 +28,6 @@
 
 using proton::value;
 using proton::type_id;
-using proton::as;
 using proton::LIST;
 using proton::MAP;
 using proton::message_id;
@@ -105,13 +104,11 @@ static string unroll(const map<string, string> &e) {
 
 
 static value normalizeList(const list<string> &orig) {
-    value dv;
-
     Logger logger = LoggerWrapper::getLogger();
 
     logger(debug) << "Using list normalizer: " << unroll(orig);
 
-    dv = as<LIST>(orig);
+    value dv = value(orig);
 
     return dv;
 }
@@ -123,13 +120,14 @@ static value normalizeList(const list<string> &orig) {
  * a proton::data object reference.
  */
 static value normalizeMap(const map<string, string> &orig) {
-    value dv;
+    
 
     Logger logger = LoggerWrapper::getLogger();
 
     logger(debug) << "Using map normalizer: " << unroll(orig);
 
-    dv = as<MAP>(orig);
+    
+    value dv = value(orig);
 
 
     return dv;

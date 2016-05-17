@@ -25,6 +25,7 @@ using proton::handler;
 using proton::url;
 using proton::task;
 using proton::event;
+using proton::container;
 
 namespace dtests {
 namespace proton {
@@ -60,10 +61,12 @@ class CommonHandler : public handler {
     
     task *timeoutTask;
     Timer timer;
-    
-    void setupTimer(event &e);
-    void timerEvent(event &e);
+
+#ifdef REACTIVE_HAS_TIMER_
+    void setupTimer(event &e, container &c);
+    void timerEvent(event &e, container &c);
     void disableTimer();
+#endif // REACTIVE_HAS_TIMER_
 
   private:
     typedef handler super;

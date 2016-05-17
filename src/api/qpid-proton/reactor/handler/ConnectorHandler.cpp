@@ -30,13 +30,13 @@ int ConnectorHandler::getCount() const
     return count;
 }
 
-void ConnectorHandler::on_start(event &e)
+void ConnectorHandler::on_container_start(event &e, container &c)
 {
     logger(debug) << "Starting messaging handler";
 
     logger(trace) << "Creating connection";
 
-    conn = e.container().connect(broker_url);
+    conn = c.connect(broker_url);
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
@@ -53,12 +53,14 @@ void ConnectorHandler::on_start(event &e)
         receiverObj = conn.open_receiver(broker_url.host_port());
     }
     
+#ifdef REACTIVE_HAS_TIMER_
     logger(debug) << "Setting up timeout";
     task t = e.container().schedule(1000);
     timeoutTask = &t;
+#endif // REACTIVE_HAS_TIMER_
 }
 
-void ConnectorHandler::on_connection_open(event& e)
+void ConnectorHandler::on_connection_open(event &e, connection &conn)
 {
     logger(debug) << "Connected to " << broker_url.host_port();
     
@@ -72,8 +74,10 @@ void ConnectorHandler::on_connection_open(event& e)
 void ConnectorHandler::on_connection_close(event& e)
 {
     logger(debug) << "Closing the connection to " << broker_url.host_port();
-    
+
+#ifdef REACTIVE_HAS_TIMER_
     super::disableTimer();
+#endif // REACTIVE_HAS_TIMER_
 }
 
 void ConnectorHandler::on_connection_error(event &e)
@@ -139,11 +143,12 @@ void ConnectorHandler::closeObjects() {
     conn.close();
 }
 
+#ifdef REACTIVE_HAS_TIMER_
 void ConnectorHandler::on_timer(event &e)
 {
-   super::timerEvent(e);
-   
+   super::timerEvent(e);  
 }
+#endif // REACTIVE_HAS_TIMER_
 
 
 } /* namespace reactor */
