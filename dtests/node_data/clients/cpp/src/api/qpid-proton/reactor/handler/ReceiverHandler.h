@@ -25,6 +25,7 @@
 
 using proton::message;
 using proton::event;
+using proton::container;
 using proton::connection;
 using proton::receiver;
 
@@ -47,12 +48,12 @@ class ReceiverHandler : public CommonHandler {
 
     virtual ~ReceiverHandler();
 
-    void on_start(event &e);
-    void on_message(event &e);
+    void on_container_start(event &e, container &c);
+    void on_message(event &e, message &m);
     void on_delivery_accept(event &e);
     void on_delivery_reject(event &e);
     void on_connection_close(event &e);
-    void on_timer(event &e);
+    void on_timer(event &e, container &c);
 
   private:
     typedef CommonHandler super;

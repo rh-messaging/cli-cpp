@@ -10,7 +10,7 @@
 
 
 using proton::message;
-using proton::container;
+using proton::default_container;
 
 
 namespace dtests {
@@ -58,12 +58,12 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
             &idNormalizer);
 
-    amqp_timestamp def = amqp_timestamp(-1);
+    timestamp def = timestamp(-1);
     setter.setNumber("msg-ttl", &msg,
             static_cast<timestamp_setter> (&message::expiry_time), def);
 
     setter.set("msg-user-id", &msg,
-            static_cast<string_setter> (&message::user_id));
+            static_cast<string_setter> (&message::user));
 
     setter.setNumber("msg-priority", &msg,
             static_cast<uint_setter> (&message::priority));
@@ -71,7 +71,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.setBoolean("msg-durable", &msg,
             static_cast<boolean_setter> (&message::durable));
 
-    message::property_map &properties = msg.application_properties();
+    message::property_map &properties = msg.properties();
 
     setter.setMap("msg-properties", properties);
 }
@@ -140,7 +140,7 @@ int SendingClient::run(int argc, char **argv) const
     }
     handler.setCount(count);
     
-    container(handler).run();
+    default_container(handler).run();
 
     return 0;
 
