@@ -44,7 +44,7 @@ class SenderHandler : public CommonHandler {
 
     virtual ~SenderHandler();
 
-    void on_start(event &e);
+    void on_container_start(event &e, container &c);
     void on_sendable(event &e);
     void on_connection_error(event &e);
     void on_connection_close(event &e);
@@ -84,10 +84,11 @@ class SenderHandler : public CommonHandler {
     int count;
     int sent;
     int confirmedSent;
-    
+
+#ifdef REACTIVE_HAS_TIMER_    
     task *timeoutTask;
     Timer timer;
-
+#endif // REACTIVE_HAS_TIMER_
     message m;
 
 };

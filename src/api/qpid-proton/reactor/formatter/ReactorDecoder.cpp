@@ -62,7 +62,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 
     logger(debug) << "Decoding " << property.name << ": ";
 
-    writer->write(KeyValue(property.name, super::decodeValue(value.as_uint())));
+    writer->write(KeyValue(property.name, super::decodeValue(value.get<uint64_t>())));
 }
 
 /**
@@ -111,7 +111,7 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     write(writer, MessageHeader::CONTENT_TYPE,
             static_cast<StringReader> (&message::content_type));
     write(writer, MessageHeader::USER_ID,
-            static_cast<StringReader> (&message::user_id));
+            static_cast<StringReader> (&message::user));
     write(writer, MessageHeader::ID,
             static_cast<MessageIdReader> (&message::id));
     write(writer, MessageHeader::CORRELATION_ID,

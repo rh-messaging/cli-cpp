@@ -13,7 +13,7 @@
 
 #include "ReceivingClient.h"
 
-using proton::container;
+using proton::default_container;
 
 namespace dtests {
 namespace proton {
@@ -65,7 +65,7 @@ int ReceivingClient::run(int argc, char **argv) const
     }
 
     ReceiverHandler handler = ReceiverHandler(address, timeout);
-    container(handler).run();
+    default_container(handler).run();
 
     return 0;
 

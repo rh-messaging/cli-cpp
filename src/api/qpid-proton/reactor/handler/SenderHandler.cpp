@@ -25,8 +25,10 @@ SenderHandler::SenderHandler(const string &url, int timeout)
     count(1),
     sent(0),
     confirmedSent(0),
+#ifdef REACTIVE_HAS_TIMER_
     timeoutTask(NULL), 
     timer(timeout, "timeout"),
+#endif // REACTIVE_HAS_TIMER_
     m()
 {
 
@@ -38,16 +40,18 @@ SenderHandler::~SenderHandler()
     logger(debug) << "Destroying the sender handler";
 }
 
-void SenderHandler::on_start(event &e)
+void SenderHandler::on_container_start(event &e, container &c)
 {
     logger(debug) << "Starting messaging handler";
-    
+
+#ifdef REACTIVE_HAS_TIMER_
     logger(trace) << "Setting up timer";
     task t = e.container().schedule(500);
     timeoutTask = &t;
+#endif // REACTIVE_HAS_TIMER_
 
     logger(debug) << "Creating a sender";
-    e.container().open_sender(broker_url);
+    c.open_sender(broker_url);
 }
 
 void SenderHandler::on_sendable(event &e)
@@ -125,7 +129,7 @@ void SenderHandler::on_connection_error(event &e)
     timeoutTask = NULL;
 }
 
-
+#ifdef REACTIVE_HAS_TIMER_
 void SenderHandler::on_timer(event &e)
 {
     if (!timeoutTask) {
@@ -149,6 +153,7 @@ void SenderHandler::on_timer(event &e)
         e.container().schedule(1000);
     }
 }
+#endif // REACTIVE_HAS_TIMER_
 
 void SenderHandler::setCount(int count)
 {

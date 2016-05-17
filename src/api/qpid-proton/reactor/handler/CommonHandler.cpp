@@ -30,15 +30,15 @@ CommonHandler::~CommonHandler()
     logger(debug) << "Destroying the common handler";
 }
 
-
-void CommonHandler::setupTimer(event &e) {
+#ifdef REACTIVE_HAS_TIMER_
+void CommonHandler::setupTimer(event &e, container &c) {
     logger(debug) << "Setting up timeout";
     
-    task t = e.container().schedule(1000);
+    task t = c.schedule(1000);
     timeoutTask = &t;
 }
 
-void CommonHandler::timerEvent(event& e) {
+void CommonHandler::timerEvent(event& e, container &c) {
     if (!timeoutTask) {
         logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
 
@@ -65,7 +65,7 @@ void CommonHandler::timerEvent(event& e) {
 void CommonHandler::disableTimer() {
     timeoutTask = NULL;
 }
-
+#endif // REACTIVE_HAS_TIMER_
 
 } /* namespace reactor */
 } /* namespace proton */
