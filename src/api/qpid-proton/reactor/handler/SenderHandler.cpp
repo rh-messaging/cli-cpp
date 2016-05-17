@@ -54,9 +54,8 @@ void SenderHandler::on_container_start(event &e, container &c)
     c.open_sender(broker_url);
 }
 
-void SenderHandler::on_sendable(event &e)
+void SenderHandler::on_sendable(event &e, sender &s)
 {
-    sender s = e.sender();
     logger(debug) << "Event name: " << e.name();
     int credit = s.credit();
 
@@ -81,7 +80,7 @@ void SenderHandler::on_sendable(event &e)
     }    
 }
 
-void SenderHandler::on_delivery_accept(event& e)
+void SenderHandler::on_delivery_accept(event &e, delivery &)
 {
     logger(debug) << "Event name: " << e.name();
     logger(trace) << "Message accepted. Now obtaining the connection reference object";
@@ -97,25 +96,27 @@ void SenderHandler::on_delivery_accept(event& e)
     }
 }
 
-void SenderHandler::on_transport_close(event &e) {
+void SenderHandler::on_transport_close(event &e, transport &t) {
     logger(debug) << "Event name: " << e.name();
 }
 
 
-void SenderHandler::on_transport_error(event &e) {
+void SenderHandler::on_transport_error(event &e, transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
     logger(debug) << "Event name: " << e.name();
 }
 
-void SenderHandler::on_connection_close(event &e)
+void SenderHandler::on_connection_close(event &e, connection &c)
 {
     logger(debug) << "Stopping reactor";
     logger(debug) << "Event name: " << e.name();
+#ifdef REACTIVE_HAS_TIMER_    
     timeoutTask = NULL;
+#endif // REACTIVE_HAS_TIMER_
 }
 
-void SenderHandler::on_connection_error(event &e)
+void SenderHandler::on_connection_error(event &e, connection &c)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
     logger(debug) << "Event name: " << e.name();
@@ -125,8 +126,11 @@ void SenderHandler::on_connection_error(event &e)
 
         return;
     }
-    
+
+#ifdef REACTIVE_HAS_TIMER_
     timeoutTask = NULL;
+#endif // REACTIVE_HAS_TIMER_
+    
 }
 
 #ifdef REACTIVE_HAS_TIMER_

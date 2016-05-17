@@ -24,6 +24,8 @@ using proton::event;
 using proton::connection;
 using proton::sender;
 using proton::task;
+using proton::delivery;
+using proton::transport;
 
 namespace dtests {
 namespace proton {
@@ -45,15 +47,17 @@ class SenderHandler : public CommonHandler {
     virtual ~SenderHandler();
 
     void on_container_start(event &e, container &c);
-    void on_sendable(event &e);
-    void on_connection_error(event &e);
-    void on_connection_close(event &e);
-    void on_delivery_accept(event& e);
+    void on_sendable(event &e, sender &s);
+    void on_connection_error(event &e, connection &c);
+    void on_connection_close(event &e, connection &c);
+    void on_delivery_accept(event &e, delivery &d);
     
-    void on_transport_error(event &e);
-    void on_transport_close(event &e);
+    void on_transport_error(event &e, transport &t);
+    void on_transport_close(event &e, transport &t);
     
+#ifdef REACTIVE_HAS_TIMER_
     void on_timer(event &e);
+#endif // REACTIVE_HAS_TIMER_
 
     /**
      * Sets the message count

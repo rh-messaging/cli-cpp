@@ -21,6 +21,7 @@ using proton::sender;
 using proton::receiver;
 using proton::event;
 using proton::container;
+using proton::transport;
 
 namespace dtests {
 namespace proton {
@@ -43,15 +44,12 @@ class ConnectorHandler : public CommonHandler {
 
     void on_container_start(event &e, container &c);
     void on_connection_open(event &e, connection &conn);
-    void on_connection_close(event &e);
-    void on_connection_error(event &e);
-    void on_connection_local_open(event& e);
-    void on_connection_remote_open(event& e);
+    void on_connection_close(event &e, connection &conn);
+    void on_connection_error(event &e, connection &conn);
+   
+    void on_transport_error(event &e, transport &trans);
     
-    void on_transport_error(event &e);
-    
-    void on_session_error(event &e);
-    void on_link_error(event &e);
+    void on_session_error(event &e, session &s);
     
 #ifdef REACTIVE_HAS_TIMER_
     void on_timer(event &e);
