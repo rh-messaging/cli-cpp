@@ -221,21 +221,17 @@ struct Options : OptionParser
     {
         for (string_vector::const_iterator i = list_entries.begin();
              i != list_entries.end(); ++i) {
-            std::string name;
-            std::string value;
-            std::string separator;
-            if (nameval(*i, name, value, separator)) {
-                if (separator == "~") {
-                  content.push_back(Variant().parse(value));
-                } else {
-                  content.push_back(value);
-                }
+            std::string value = *i;
+            if (value[0] == '~') {
+                content.push_back(Variant().parse(value.erase(0, 1)));
             } else {
-                content.push_back(value);
+                 Variant content_string = Variant(value);
+                 content_string.setEncoding("utf8");
+                 content.push_back(content_string);
             }
         }
     }
-    
+
     void setMapEntries(Variant::Map& content) const
     {
         for (string_vector::const_iterator i = map_entries.begin();
