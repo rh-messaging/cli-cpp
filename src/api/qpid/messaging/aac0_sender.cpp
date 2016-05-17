@@ -243,7 +243,8 @@ struct Options : OptionParser
                 if (separator == "~") {
                   content[name] = Variant().parse(value);
                 } else {
-                  content[name] = value;
+                  content[name] = Variant(value);
+                  content[name].setEncoding("utf8");
                 }
             } else {
                 content[name] = Variant();
