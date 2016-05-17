@@ -38,7 +38,7 @@ void ReceiverHandler::on_container_start(event &e, container &c)
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void ReceiverHandler::on_message(event &e, message &m)
+void ReceiverHandler::on_message(event &e, delivery &d, message &m)
 {
     logger(debug) << "Event name: " << e.name();
     
@@ -58,19 +58,19 @@ void ReceiverHandler::on_message(event &e, message &m)
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void ReceiverHandler::on_delivery_accept(event &e)
+void ReceiverHandler::on_delivery_accept(event &e, delivery &d)
 {
     logger(debug) << "Accepted: " << e.name();
 }
 
 
-void ReceiverHandler::on_delivery_reject(event &e)
+void ReceiverHandler::on_delivery_reject(event &e, delivery &d)
 {
     logger(debug) << "Event name: " << e.name();
 }
 
 
-void ReceiverHandler::on_connection_close(event &e)
+void ReceiverHandler::on_connection_close(event &e, connection &conn)
 {
     logger(debug) << "Disconnected: " << e.name();
 

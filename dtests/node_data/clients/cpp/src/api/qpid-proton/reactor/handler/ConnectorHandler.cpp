@@ -71,7 +71,7 @@ void ConnectorHandler::on_connection_open(event &e, connection &conn)
 }
 
 
-void ConnectorHandler::on_connection_close(event& e)
+void ConnectorHandler::on_connection_close(event& e, connection &conn)
 {
     logger(debug) << "Closing the connection to " << broker_url.host_port();
 
@@ -80,41 +80,24 @@ void ConnectorHandler::on_connection_close(event& e)
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void ConnectorHandler::on_connection_error(event &e)
+void ConnectorHandler::on_connection_error(event &e, connection &conn)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
 }
 
-void ConnectorHandler::on_connection_local_open(event& e)
-{
-    logger(debug) << "Local connection opened to " << broker_url.host_port();
-}
-
-void ConnectorHandler::on_connection_remote_open(event& e)
-{
-    logger(debug) << "Remote connection opened to " << broker_url.host_port();
-}
-
-
-void ConnectorHandler::on_transport_error(event &e) {
+void ConnectorHandler::on_transport_error(event &e, transport &trans) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
     closeObjects();
 }
 
 
-void ConnectorHandler::on_session_error(event &e) {
+void ConnectorHandler::on_session_error(event &e, session &s) {
     logger(error) << "The remote peer at " << broker_url.host_port() << 
             " closed the session with an error condition";
     closeObjects();
 } 
 
-
-void ConnectorHandler::on_link_error(event &e) {
-    logger(error) << "The remote peer at " << broker_url.host_port() << 
-            " closed the link with an error condition";
-    closeObjects();
-}
 
 void ConnectorHandler::setObjectControl(int control) {
     objectControl = control;
