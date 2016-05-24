@@ -32,7 +32,7 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "Starting messaging handler";
     
     logger(debug) << "Creating a receiver and connecting to the server";
-    c.open_receiver(broker_url);
+    recv = c.open_receiver(broker_url);
     logger(debug) << "Connected to the broker and waiting for messages";
 #ifdef REACTIVE_HAS_TIMER_
     super::setupTimer(e);

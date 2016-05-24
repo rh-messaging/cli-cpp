@@ -51,7 +51,7 @@ void SenderHandler::on_container_start(container &c)
 #endif // REACTIVE_HAS_TIMER_
 
     logger(debug) << "Creating a sender";
-    c.open_sender(broker_url);
+    sndr = c.open_sender(broker_url);
 }
 
 void SenderHandler::on_sendable(sender &s)
