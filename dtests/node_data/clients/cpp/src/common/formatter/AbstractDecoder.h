@@ -18,6 +18,11 @@
 #include "KeyValue.h"
 #include "Writer.h"
 
+#include "logger/Logger.h"
+#include "logger/LoggerWrapper.h"
+
+using namespace dtests::common::log;
+
 namespace dtests {
 namespace common {
 
@@ -112,7 +117,11 @@ class AbstractDecoder {
     string decodeValue(T number) const {
         ostringstream ret;
 
+        logger(info) << "Decoding number " << number << ".";
+        
         ret << number;
+        
+        logger(info) << "Decoded number " << ret.str() << ".";
 
         return string(ret.str());
     }
@@ -184,6 +193,8 @@ class AbstractDecoder {
     }
 
   private:
+    static Logger logger;
+    
     string quoteStringEscape(const string& a) const;
 
 };

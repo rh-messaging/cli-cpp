@@ -8,6 +8,9 @@
 #include "AbstractDecoder.h"
 
 using namespace dtests::common;
+using namespace dtests::common::log;
+
+Logger AbstractDecoder::logger = LoggerWrapper::getLogger();
 
 AbstractDecoder::AbstractDecoder()
 {

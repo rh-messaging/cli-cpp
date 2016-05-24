@@ -47,7 +47,13 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, StringReader
     writer->write(KeyValue(property.name, super::decodeValue(value)));
 }
 
+void ReactorDecoder::write(Writer *writer, HeaderProperty property, Uint8Reader reader) const {
+    const uint8_t value = (m.*reader)();
 
+    logger(info) << "Reading short property " << property.name << ": " << value;
+               
+    writer->write(KeyValue(property.name, super::decodeValue((uint16_t) value)));
+}
 
 /**
  * Writes a header property.
@@ -127,7 +133,7 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     write(writer, MessageHeader::CORRELATION_ID,
             static_cast<MessageIdReader> (&message::correlation_id));
 
-    write<Uint8Reader, uint8_t>(writer, MessageHeader::PRIORITY, 
+    write(writer, MessageHeader::PRIORITY, 
             static_cast<Uint8Reader> (&message::priority));
     write<BoolReader, bool>(writer, MessageHeader::DURABLE, 
             static_cast<BoolReader> (&message::durable));
