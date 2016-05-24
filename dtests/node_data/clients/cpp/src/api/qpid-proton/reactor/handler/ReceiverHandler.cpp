@@ -27,20 +27,21 @@ ReceiverHandler::~ReceiverHandler()
 {
 }
 
-void ReceiverHandler::on_container_start(event &e, container &c)
+void ReceiverHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
     
     logger(debug) << "Creating a receiver and connecting to the server";
     c.open_receiver(broker_url);
+    logger(debug) << "Connected to the broker and waiting for messages";
 #ifdef REACTIVE_HAS_TIMER_
     super::setupTimer(e);
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void ReceiverHandler::on_message(event &e, delivery &d, message &m)
+void ReceiverHandler::on_message(delivery &d, message &m)
 {
-    logger(debug) << "Event name: " << e.name();
+    logger(debug) << "Processing received message";
     
     logger(trace) << "Decoding message";
     ReactorDecoder decoder = ReactorDecoder(m);
@@ -58,30 +59,32 @@ void ReceiverHandler::on_message(event &e, delivery &d, message &m)
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void ReceiverHandler::on_delivery_accept(event &e, delivery &d)
+
+void ReceiverHandler::on_tracker_accept(tracker &t)
 {
-    logger(debug) << "Accepted: " << e.name();
+    logger(debug) << "Delivery accepted";
 }
 
 
-void ReceiverHandler::on_delivery_reject(event &e, delivery &d)
+void ReceiverHandler::on_tracker_reject(tracker &t)
 {
-    logger(debug) << "Event name: " << e.name();
+    logger(debug) << "Delivery rejected";
 }
 
 
-void ReceiverHandler::on_connection_close(event &e, connection &conn)
+void ReceiverHandler::on_connection_close(connection &conn)
 {
-    logger(debug) << "Disconnected: " << e.name();
+    logger(debug) << "Disconnecting ...";
 
+#ifdef REACTIVE_HAS_TIMER_
     if (!super::timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
+        logger(debug) << "Quiescing, therefore ignoring closing event";
 
         return;
     }
 
     logger(debug) << "Canceling scheduled tasks ";
-#ifdef REACTIVE_HAS_TIMER_    
+    
     super::disableTimer();
 #endif // REACTIVE_HAS_TIMER_
 }

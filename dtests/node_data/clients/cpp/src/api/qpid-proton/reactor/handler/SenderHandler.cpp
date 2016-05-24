@@ -40,7 +40,7 @@ SenderHandler::~SenderHandler()
     logger(debug) << "Destroying the sender handler";
 }
 
-void SenderHandler::on_container_start(event &e, container &c)
+void SenderHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
@@ -54,9 +54,9 @@ void SenderHandler::on_container_start(event &e, container &c)
     c.open_sender(broker_url);
 }
 
-void SenderHandler::on_sendable(event &e, sender &s)
+void SenderHandler::on_sendable(sender &s)
 {
-    logger(debug) << "Event name: " << e.name();
+    logger(debug) << "Preparing to send message";
     int credit = s.credit();
 
     if (credit == 0) {
@@ -80,11 +80,12 @@ void SenderHandler::on_sendable(event &e, sender &s)
     }    
 }
 
-void SenderHandler::on_delivery_accept(event &e, delivery &)
+
+void SenderHandler::on_tracker_accept(tracker &t)
 {
-    logger(debug) << "Event name: " << e.name();
+    
     logger(trace) << "Message accepted. Now obtaining the connection reference object";
-    connection conn = e.connection();
+    connection conn = t.connection();
 
     logger(trace) << "Confirmed message delivery";
     confirmedSent++;
@@ -96,38 +97,37 @@ void SenderHandler::on_delivery_accept(event &e, delivery &)
     }
 }
 
-void SenderHandler::on_transport_close(event &e, transport &t) {
-    logger(debug) << "Event name: " << e.name();
+
+void SenderHandler::on_transport_close(transport &t) {
+    logger(debug) << "Closing the transport";
 }
 
 
-void SenderHandler::on_transport_error(event &e, transport &t) {
+void SenderHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
-    logger(debug) << "Event name: " << e.name();
 }
 
-void SenderHandler::on_connection_close(event &e, connection &c)
+void SenderHandler::on_connection_close(connection &c)
 {
-    logger(debug) << "Stopping reactor";
-    logger(debug) << "Event name: " << e.name();
+    logger(debug) << "Closing connection";
+    
 #ifdef REACTIVE_HAS_TIMER_    
     timeoutTask = NULL;
 #endif // REACTIVE_HAS_TIMER_
 }
 
-void SenderHandler::on_connection_error(event &e, connection &c)
+void SenderHandler::on_connection_error(connection &c)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
-    logger(debug) << "Event name: " << e.name();
-    
+     
+ #ifdef REACTIVE_HAS_TIMER_
      if (!timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
+        logger(debug) << "Quiescing, therefore ignoring event: ";
 
         return;
     }
 
-#ifdef REACTIVE_HAS_TIMER_
     timeoutTask = NULL;
 #endif // REACTIVE_HAS_TIMER_
     
