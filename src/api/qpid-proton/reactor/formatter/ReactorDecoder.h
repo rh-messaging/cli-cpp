@@ -77,8 +77,9 @@ class ReactorDecoder : public AbstractDecoder {
     typedef bool (message::*BoolReader)(void) const;
     
     message m;
-    static Logger logger;   
+    static Logger logger;
 
+    void write(Writer *writer, HeaderProperty property, Uint8Reader reader) const;
     void write(Writer *writer, HeaderProperty property, StringReader reader) const;
     void write(Writer *writer, HeaderProperty property, MessageIdReader reader) const;
     
