@@ -9,9 +9,8 @@
 #define COMMON_HANDLER_H_
 
 #include <proton/container.hpp>
-#include <proton/handler.hpp>
+#include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
-#include <proton/event.hpp>
 
 #include <proton/url.hpp>
 #include <proton/task.hpp>
@@ -21,10 +20,9 @@
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
-using proton::handler;
+using proton::messaging_handler;
 using proton::url;
 using proton::task;
-using proton::event;
 using proton::container;
 
 namespace dtests {
@@ -39,7 +37,7 @@ using dtests::common::Timer;
  * An abstract proton message handler providing a common interface for other
  * client handlers
  */
-class CommonHandler : public handler {
+class CommonHandler : public messaging_handler {
   public:
     /**
      * Constructor
@@ -69,7 +67,7 @@ class CommonHandler : public handler {
 #endif // REACTIVE_HAS_TIMER_
 
   private:
-    typedef handler super;
+    typedef messaging_handler super;
 
     
 

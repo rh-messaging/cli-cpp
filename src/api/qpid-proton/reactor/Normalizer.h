@@ -18,7 +18,6 @@
 #include <list>
 
 #include <proton/types.hpp>
-#include <proton/data.hpp>
 #include <proton/value.hpp>
 
 #include "logger/Logger.h"

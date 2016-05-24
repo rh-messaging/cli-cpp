@@ -16,6 +16,7 @@
 
 #include <proton/message.hpp>
 #include <proton/types.hpp>
+#include <proton/error.hpp>
 
 #include <formatter/AbstractDecoder.h>
 #include <ContentType.h>
@@ -36,6 +37,7 @@ using proton::INT;
 using proton::DOUBLE;
 using proton::value;
 using proton::type_id;
+using proton::conversion_error;
 
 /*
 #if PN_VERSION_MAJOR > 0 && PN_VERSION_MINOR == 12

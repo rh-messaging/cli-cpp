@@ -62,7 +62,17 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 
     logger(debug) << "Decoding " << property.name << ": ";
 
-    writer->write(KeyValue(property.name, super::decodeValue(value.get<uint64_t>())));
+    uint64_t id = 0;
+    
+    try { 
+        value.get<uint64_t>();
+    }
+    catch (conversion_error &e) {
+        logger(error) << "Unable to convert the property " << property.name 
+                << " because its value cannot be converted";
+    }
+    
+    writer->write(KeyValue(property.name, super::decodeValue(id)));
 }
 
 /**
