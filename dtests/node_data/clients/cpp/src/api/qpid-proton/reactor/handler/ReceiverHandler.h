@@ -63,6 +63,7 @@ class ReceiverHandler : public CommonHandler {
 
   private:
     typedef CommonHandler super;
+    receiver recv;
      
     void do_disconnect();
 };
