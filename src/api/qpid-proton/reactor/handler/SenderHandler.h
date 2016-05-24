@@ -89,6 +89,7 @@ class SenderHandler : public CommonHandler {
     int count;
     int sent;
     int confirmedSent;
+    sender sndr;
 
 #ifdef REACTIVE_HAS_TIMER_    
     task *timeoutTask;
