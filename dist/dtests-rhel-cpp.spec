@@ -15,7 +15,6 @@ BuildRequires:      gcc-c++
 BuildRequires:      qpid-proton-c-devel
 BuildRequires:      qpid-cpp-client-devel
 BuildRequires:      qpid-cpp-server-devel
-BuildRequires:      qpid-qmf-devel
 
 %description
 C++ clients, tools and runtime libraries
