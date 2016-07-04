@@ -13,7 +13,6 @@ BuildRequires:      cmake
 BuildRequires:      make
 BuildRequires:      gcc-c++
 BuildRequires:      qpid-proton-c-devel
-BuildRequires:      qpid-qmf-devel
 
 %description
 C++ clients, tools and runtime libraries
