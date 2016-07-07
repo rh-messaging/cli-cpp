@@ -16,9 +16,10 @@ COMMONSRC=
 # default: install
 
 rpm-clean:
-	rm -f ${HOME}/rpmbuild/SOURCES/*
+	@rm -f ${HOME}/rpmbuild/SOURCES/*
+	@rm -f ${HOME}/rpmbuild/BUILDROOT/*
 
-rpm-prep:
+rpm-prep: rpm-clean
 	mkdir -p ${HOME}/rpmbuild/SOURCES/
 	tar -cf ${HOME}/rpmbuild/SOURCES/${PROJECT_NAME}-${VERSION}.tar.gz ../../../../../../dtests --gzip
 
@@ -26,7 +27,7 @@ rpm: rpm-prep
 	rpmbuild -ba $(PROJECT_NAME)-$(DISTRO_NAME)-cpp.spec
 
 upload: rpm
-	scp ${HOME}/rpmbuild/RPMS/noarch/${PROJECT_NAME}-${VERSION}-1.noarch.rpm ${USERNAME}@${SERVER}:${REPO_PATH}
+	scp -r ${HOME}/rpmbuild/RPMS/$(DISTRO_ARCH)/${PROJECT_NAME}-${VERSION}-*.rpm ${USERNAME}@${SERVER}:${REPO_PATH}
 
 uninstall:
 	rm -rf $(BASEDIR)
