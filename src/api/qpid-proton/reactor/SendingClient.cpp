@@ -71,9 +71,11 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.setBoolean("msg-durable", &msg,
             static_cast<boolean_setter> (&message::durable));
 
+#ifdef REACTOR_PROPERTY_MAP_USES_STL
     message::property_map &properties = msg.properties();
 
     setter.setMap("msg-properties", properties);
+#endif // REACTOR_PROPERTY_MAP_USES_STL
 }
 
 void SendingClient::setMessageContent(const OptionsSetter &setter,
