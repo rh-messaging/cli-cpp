@@ -62,12 +62,23 @@ SET(CPP_INCLUDE_DIR "include")
 
 INCLUDE(${CMAKE_BINARY_DIR}/dist/CMakeInstall.cmake)
 
+if(NOT CMAKE_BUILD_TYPE)
+	SET(CMAKE_BUILD_TYPE Debug CACHE STRING
+      	"Choose the type of build, options are: None Debug Release."
+      	FORCE
+	)
+endif(NOT CMAKE_BUILD_TYPE)
+
 if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
-	set(CMAKE_CXX_FLAGS "-Wall -O2 -g -pipe -std=c++03 -fdiagnostics-color=auto" CACHE STRING
+	set(CMAKE_CXX_FLAGS "-Wall -O2 -pipe" CACHE STRING
+		"Flags used by the compiler during all build types." FORCE
+	)
+
+        set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O2 -g -pipe -std=c++03 -fdiagnostics-color=auto" CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
