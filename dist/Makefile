@@ -27,7 +27,7 @@ rpm: rpm-prep
 	rpmbuild -ba $(PROJECT_NAME)-$(DISTRO_NAME)-cpp.spec
 
 upload: rpm
-	scp -r ${HOME}/rpmbuild/RPMS/$(DISTRO_ARCH)/*.rpm ${USERNAME}@${SERVER}:${REPO_PATH}
+	scp -o "HostbasedAuthentication no" -o "StrictHostKeyChecking no" -r ${HOME}/rpmbuild/RPMS/$(DISTRO_ARCH)/*.rpm ${USERNAME}@${SERVER}:${REPO_PATH}
 
 uninstall:
 	rm -rf $(BASEDIR)
