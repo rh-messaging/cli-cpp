@@ -17,6 +17,13 @@ BuildRequires:      qpid-cpp-client-devel
 BuildRequires:      qpid-cpp-server-devel
 BuildRequires:      boost-devel
 BuildRequires:      qpid-proton-cpp-devel
+Requires:      qpid-proton-c
+Requires:      qpid-cpp-client
+Requires:      qpid-cpp-server
+Requires:      boost-filesystem
+Requires:      boost-regex
+Requires:      boost-system
+Requires:      qpid-proton-cpp
 
 
 %description
