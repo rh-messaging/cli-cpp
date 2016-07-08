@@ -58,9 +58,11 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
             &idNormalizer);
 
+#ifdef ENABLE_IMPLICIT_CONVERSIONS
     timestamp def = timestamp(-1);
     setter.setNumber("msg-ttl", &msg,
             static_cast<timestamp_setter> (&message::expiry_time), def);
+#endif
 
     setter.set("msg-user-id", &msg,
             static_cast<string_setter> (&message::user));
@@ -131,6 +133,19 @@ int SendingClient::run(int argc, char **argv) const
 
     setMessageOptions(setter, msg);
     setMessageContent(setter, options, &msg);
+   
+/*
+ * Note 1: this is a left-over from setMessageOptions. Since I don't want to 
+ * change the method signature there, I check again here and set the remaining
+ * option that cannot be done implicitly above.
+ * 
+ * Note 2: this is a hack for GCC ~4.4.7 on i686. 
+ */    
+#ifndef ENABLE_IMPLICIT_CONVERSIONS
+    long value =  options.get("msg-ttl");
+    
+    msg.expiry_time(timestamp(value));
+#endif
 
     SenderHandler handler = SenderHandler(address);
 

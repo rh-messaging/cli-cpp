@@ -68,6 +68,12 @@ if(NOT CMAKE_BUILD_TYPE)
       	FORCE
 	)
 endif(NOT CMAKE_BUILD_TYPE)
+ 
+if(NOT DISABLE_IMPLICIT_CONVERSIONS)
+    add_definitions(-DENABLE_IMPLICIT_CONVERSIONS)
+else(NOT DISABLE_IMPLICIT_CONVERSIONS)
+    message(STATUS "Implicit conversions are disabled")
+endif(NOT DISABLE_IMPLICIT_CONVERSIONS)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING

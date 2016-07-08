@@ -117,12 +117,14 @@ class AbstractDecoder {
     string decodeValue(T number) const {
         ostringstream ret;
 
+#ifdef ENABLE_IMPLICIT_CONVERSIONS
         logger(info) << "Decoding number " << number << ".";
-        
+#endif
         ret << number;
-        
-        logger(info) << "Decoded number " << ret.str() << ".";
 
+#ifdef ENABLE_IMPLICIT_CONVERSIONS        
+        logger(info) << "Decoded number " << ret.str() << ".";
+#endif
         return string(ret.str());
     }
 
