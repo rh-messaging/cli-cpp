@@ -456,12 +456,14 @@ int main(int argc, char** argv)
                     // transactions enabled
                     if (((count+1) % options.tx_size) == 0) {
                         // end of transactional batch
-                        if (options.tx_action == "commit") {
-                            session.commit();
+                        if (options.tx_action == "rollback") {
+                            session.rollback();
                             tx_open_batch_flag = false;
                         }
-                        else if (options.tx_action == "rollback") {
-                            session.rollback();
+                        else {
+                            // As described in the ambiguity document, defaults 
+                            // to commit action
+                            session.commit();
                             tx_open_batch_flag = false;
                         }
                     } else {
