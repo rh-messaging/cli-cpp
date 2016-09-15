@@ -47,7 +47,7 @@ struct Options : OptionParser
 
     int tx_size;
     std::string tx_action;
-    std::string tx_le_action;
+    std::string tx_el_action;
     
     std::string sync_mode;
     int capacity;
@@ -77,7 +77,7 @@ struct Options : OptionParser
 
           tx_size(0),
           tx_action("commit"),
-          tx_le_action("None"),
+          tx_el_action("None"),
           
           sync_mode("none"),
           capacity(-1),
@@ -105,7 +105,7 @@ struct Options : OptionParser
 
         add("tx-size", tx_size, "transactional mode: batch message count size");
         add("tx-action", tx_action, "transactional action at the end of tx batch");
-        add("tx-loopend-action", tx_le_action, "transactional action at the end of processing loop");
+        add("tx-endloop-action", tx_el_action, "transactional action at the end of processing loop");
 
         add("sync-mode", sync_mode, "synchronization mode: none/session/action");
         add("capacity", capacity, "set receiver's capacity");
@@ -123,7 +123,7 @@ struct Options : OptionParser
 
     void transformValues()
     {
-         std::transform(tx_le_action.begin(), tx_le_action.end(), tx_le_action.begin(), ::tolower);
+         std::transform(tx_el_action.begin(), tx_el_action.end(), tx_el_action.begin(), ::tolower);
          std::transform(tx_action.begin(), tx_action.end(), tx_action.begin(), ::tolower);
          if (tx_size < 0)
              tx_size = -tx_size;
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
             connection.open();
             ts_snap_store(ptsdata, 'C', options.log_stats);
             Session session;
-            if( (options.tx_size != 0) || (options.tx_le_action != "none") )
+            if( (options.tx_size != 0) || (options.tx_el_action != "none") )
                 session = connection.createTransactionalSession();
             else
                 session = connection.createSession();
@@ -261,11 +261,11 @@ int main(int argc, char** argv)
                     session.acknowledge();
             }
 
-            // end of message stream, tx-loopend-action if enabled
+            // end of message stream, tx-endloop-action if enabled
             if (tx_open_batch_flag == true) {
-                if (options.tx_le_action == "commit")
+                if (options.tx_el_action == "commit")
                     session.commit();
-                else if (options.tx_le_action == "rollback")
+                else if (options.tx_el_action == "rollback")
                     session.rollback();
             }
 
