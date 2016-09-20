@@ -262,7 +262,7 @@ int main(int argc, char** argv)
             }
 
             // end of message stream, tx-endloop-action if enabled
-            if (tx_open_batch_flag == true) {
+            if ( (tx_open_batch_flag == true) || (options.tx_el_action != "none") ) {
                 if (options.tx_el_action == "commit")
                     session.commit();
                 else if (options.tx_el_action == "rollback")
