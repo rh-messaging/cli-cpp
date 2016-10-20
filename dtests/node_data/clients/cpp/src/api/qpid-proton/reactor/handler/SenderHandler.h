@@ -44,6 +44,8 @@ class SenderHandler : public CommonHandler {
      * @param url broker URL
      */
     SenderHandler(const string &url, int timeout = -1);
+    
+    void timerEvent();
 
     virtual ~SenderHandler();
 
@@ -55,10 +57,6 @@ class SenderHandler : public CommonHandler {
     
     void on_transport_error(transport &t);
     void on_transport_close(transport &t);
-    
-#ifdef REACTIVE_HAS_TIMER_
-    void on_timer(event &e);
-#endif // REACTIVE_HAS_TIMER_
 
     /**
      * Sets the message count
@@ -91,11 +89,17 @@ class SenderHandler : public CommonHandler {
     int confirmedSent;
     sender sndr;
 
-#ifdef REACTIVE_HAS_TIMER_    
-    task *timeoutTask;
-    Timer timer;
-#endif // REACTIVE_HAS_TIMER_
     message m;
+    
+    struct timer_event_t : public void_function0 {
+        SenderHandler &parent;
+        timer_event_t(SenderHandler &handler) : parent(handler) {}
+        void operator()() { 
+            parent.timerEvent();
+        }
+    };
+    
+    timer_event_t timer_event;
 
 };
 

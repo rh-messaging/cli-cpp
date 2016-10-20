@@ -9,11 +9,14 @@
 #define COMMON_HANDLER_H_
 
 #include <proton/container.hpp>
+#include <proton/default_container.hpp>
 #include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
 
 #include <proton/url.hpp>
-#include <proton/task.hpp>
+#include <proton/function.hpp>
+
+
 
 #include "Timer.h"
 
@@ -24,6 +27,8 @@ using proton::messaging_handler;
 using proton::url;
 using proton::task;
 using proton::container;
+using proton::void_function0;
+using proton::duration;
 
 namespace dtests {
 namespace proton {
@@ -46,7 +51,11 @@ class CommonHandler : public messaging_handler {
     CommonHandler(const string &url, int timeout = 10);
     virtual ~CommonHandler();
     
+    virtual void timerEvent() = 0;
+        
   protected:    
+    
+      
     /**
      * Logger
      */
@@ -57,16 +66,12 @@ class CommonHandler : public messaging_handler {
      */
     url broker_url;
     
-    task *timeoutTask;
+    container *cont;
+    
     Timer timer;
 
-#ifdef REACTIVE_HAS_TIMER_
-    void setupTimer(event &e, container &c);
-    void timerEvent(event &e, container &c);
-    void disableTimer();
-#endif // REACTIVE_HAS_TIMER_
-
   private:
+    
     typedef messaging_handler super;
 
     

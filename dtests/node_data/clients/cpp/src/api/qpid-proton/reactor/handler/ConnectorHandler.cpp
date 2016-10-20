@@ -9,7 +9,8 @@ using namespace dtests::common::log;
 
 ConnectorHandler::ConnectorHandler(const string &url, int timeout)
     : super(url, timeout),
-      objectControl(CONNECTION)
+      objectControl(CONNECTION),
+        timer_event(*this)
 {
     logger(debug) << "Initializing the connector handler";
 
@@ -18,6 +19,18 @@ ConnectorHandler::ConnectorHandler(const string &url, int timeout)
 ConnectorHandler::~ConnectorHandler()
 {
     closeObjects();
+}
+
+void ConnectorHandler::timerEvent() {
+    if (timer.isExpired()) {
+        logger(info) << "Timed out";
+
+        senderObj.container().stop();
+    } else {
+        timer--;
+        logger(debug) << "Waiting ...";
+
+    }
 }
 
 void ConnectorHandler::setCount(int count)
@@ -53,11 +66,8 @@ void ConnectorHandler::on_container_start(event &e, container &c)
         receiverObj = conn.open_receiver(broker_url.host_port());
     }
     
-#ifdef REACTIVE_HAS_TIMER_
-    logger(debug) << "Setting up timeout";
-    task t = e.container().schedule(1000);
-    timeoutTask = &t;
-#endif // REACTIVE_HAS_TIMER_
+    duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+    c.schedule(d, timer_event);
 }
 
 void ConnectorHandler::on_connection_open(event &e, connection &conn)
@@ -74,10 +84,6 @@ void ConnectorHandler::on_connection_open(event &e, connection &conn)
 void ConnectorHandler::on_connection_close(event& e, connection &conn)
 {
     logger(debug) << "Closing the connection to " << broker_url.host_port();
-
-#ifdef REACTIVE_HAS_TIMER_
-    super::disableTimer();
-#endif // REACTIVE_HAS_TIMER_
 }
 
 void ConnectorHandler::on_connection_error(event &e, connection &conn)
@@ -125,13 +131,6 @@ void ConnectorHandler::closeObjects() {
     
     conn.close();
 }
-
-#ifdef REACTIVE_HAS_TIMER_
-void ConnectorHandler::on_timer(event &e)
-{
-   super::timerEvent(e);  
-}
-#endif // REACTIVE_HAS_TIMER_
 
 
 } /* namespace reactor */
