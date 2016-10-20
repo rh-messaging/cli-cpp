@@ -31,8 +31,12 @@ using proton::connection;
 using proton::receiver;
 using proton::delivery;
 using proton::tracker;
-
+using proton::void_function0;
 using proton::endpoint;
+
+#ifdef PN_CPP_HAS_STD_FUNCTION
+#undef PN_CPP_HAS_STD_FUNCTION
+#endif 
 
 namespace dtests {
 namespace proton {
@@ -48,6 +52,8 @@ class ReceiverHandler : public CommonHandler {
      * @param url broker URL
      */
     ReceiverHandler(const string &url, int timeout = 10);
+    
+    void timerEvent();
 
     virtual ~ReceiverHandler();
 
@@ -56,14 +62,22 @@ class ReceiverHandler : public CommonHandler {
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     void on_connection_close(connection &conn);
-    
-#ifdef REACTIVE_HAS_TIMER_
-    void on_timer(event &e, container &c);
-#endif // REACTIVE_HAS_TIMER_
 
   private:
     typedef CommonHandler super;
     receiver recv;
+    
+    struct timer_event_t : public void_function0 {
+        ReceiverHandler &parent;
+        timer_event_t(ReceiverHandler &handler): parent(handler) { }
+        void operator()() { 
+            parent.timerEvent();
+        }
+    };
+    
+    
+    duration interval;
+    timer_event_t timer_event;
      
     void do_disconnect();
 };
