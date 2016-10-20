@@ -41,6 +41,8 @@ class ConnectorHandler : public CommonHandler {
     ConnectorHandler(const string &url, int timeout = 10);
 
     virtual ~ConnectorHandler();
+    
+    void timerEvent();
 
     void on_container_start(event &e, container &c);
     void on_connection_open(event &e, connection &conn);
@@ -51,9 +53,6 @@ class ConnectorHandler : public CommonHandler {
     
     void on_session_error(event &e, session &s);
     
-#ifdef REACTIVE_HAS_TIMER_
-    void on_timer(event &e);
-#endif // REACTIVE_HAS_TIMER_
 
     /**
      * Sets the message count
@@ -82,6 +81,16 @@ class ConnectorHandler : public CommonHandler {
     session sessionObj; 
     sender senderObj;
     receiver receiverObj;
+    
+    struct timer_event_t : public void_function0 {
+        ConnectorHandler &parent;
+        timer_event_t(ConnectorHandler &handler) : parent(handler) {}
+        void operator()() { 
+            parent.timerEvent();
+        }
+    };
+    
+    timer_event_t timer_event;
        
     void closeObjects();
 };

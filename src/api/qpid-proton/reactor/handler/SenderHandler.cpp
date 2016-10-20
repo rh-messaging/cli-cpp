@@ -25,13 +25,9 @@ SenderHandler::SenderHandler(const string &url, int timeout)
     count(1),
     sent(0),
     confirmedSent(0),
-#ifdef REACTIVE_HAS_TIMER_
-    timeoutTask(NULL), 
-    timer(timeout, "timeout"),
-#endif // REACTIVE_HAS_TIMER_
-    m()
+    m(),
+    timer_event(*this)
 {
-
 
 }
 
@@ -40,18 +36,30 @@ SenderHandler::~SenderHandler()
     logger(debug) << "Destroying the sender handler";
 }
 
+void SenderHandler::timerEvent() {
+    if (timer.isExpired()) {
+        logger(info) << "Timed out";
+
+        sndr.container().stop();
+    } else {
+        timer--;
+        logger(debug) << "Waiting ...";
+        
+        duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+        sndr.container().schedule(d, timer_event);
+    }
+}
+
 void SenderHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
-
-#ifdef REACTIVE_HAS_TIMER_
-    logger(trace) << "Setting up timer";
-    task t = e.container().schedule(500);
-    timeoutTask = &t;
-#endif // REACTIVE_HAS_TIMER_
-
+        
     logger(debug) << "Creating a sender";
     sndr = c.open_sender(broker_url);
+    
+    logger(trace) << "Setting up timer";
+    duration d = duration(1000 * duration::SECOND.milliseconds());
+    c.schedule(d, timer_event);
 }
 
 void SenderHandler::on_sendable(sender &s)
@@ -111,53 +119,13 @@ void SenderHandler::on_transport_error(transport &t) {
 void SenderHandler::on_connection_close(connection &c)
 {
     logger(debug) << "Closing connection";
-    
-#ifdef REACTIVE_HAS_TIMER_    
-    timeoutTask = NULL;
-#endif // REACTIVE_HAS_TIMER_
 }
 
 void SenderHandler::on_connection_error(connection &c)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
-     
- #ifdef REACTIVE_HAS_TIMER_
-     if (!timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring event: ";
-
-        return;
-    }
-
-    timeoutTask = NULL;
-#endif // REACTIVE_HAS_TIMER_
-    
 }
 
-#ifdef REACTIVE_HAS_TIMER_
-void SenderHandler::on_timer(event &e)
-{
-    if (!timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring event: " << e.name();
-
-        return;
-    }
-
-    if (timer.isExpired()) {
-        logger(info) << "Timed out";
-
-        /**
-         * TODO: this is, certainly, a bad way to exit. However, upstream does 
-         * not yet have a stable interface for timers. This should be fixed in 
-         * the future.
-         */
-        exit(1);
-    } else {
-        timer--;
-        logger(debug) << "Waiting ...";
-        e.container().schedule(1000);
-    }
-}
-#endif // REACTIVE_HAS_TIMER_
 
 void SenderHandler::setCount(int count)
 {

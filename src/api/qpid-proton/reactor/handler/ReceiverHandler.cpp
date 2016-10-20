@@ -19,12 +19,28 @@ using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
 ReceiverHandler::ReceiverHandler(const string &url, int timeout)
-    : super(url, timeout)
+    : super(url, timeout),
+    interval(timeout * duration::SECOND.milliseconds()),
+    timer_event(*this)
 {
 }
 
 ReceiverHandler::~ReceiverHandler()
 {
+}
+
+void ReceiverHandler::timerEvent() {
+    if (timer.isExpired()) {
+        logger(info) << "Timed out";
+
+        recv.container().stop();
+    } else {
+        timer--;
+        logger(debug) << "Waiting ...";
+        
+        duration d = duration(1 * duration::SECOND.milliseconds());
+        recv.container().schedule(d, timer_event);
+    }
 }
 
 void ReceiverHandler::on_container_start(container &c)
@@ -34,9 +50,10 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "Creating a receiver and connecting to the server";
     recv = c.open_receiver(broker_url);
     logger(debug) << "Connected to the broker and waiting for messages";
-#ifdef REACTIVE_HAS_TIMER_
-    super::setupTimer(e);
-#endif // REACTIVE_HAS_TIMER_
+
+    duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+    c.schedule(d, timer_event);
+
 }
 
 void ReceiverHandler::on_message(delivery &d, message &m)
@@ -54,9 +71,8 @@ void ReceiverHandler::on_message(delivery &d, message &m)
 
     writer.endLine();
     std::cout << writer.toString();
-#ifdef REACTIVE_HAS_TIMER_
+
     super::timer.reset();
-#endif // REACTIVE_HAS_TIMER_
 }
 
 
@@ -75,27 +91,7 @@ void ReceiverHandler::on_tracker_reject(tracker &t)
 void ReceiverHandler::on_connection_close(connection &conn)
 {
     logger(debug) << "Disconnecting ...";
-
-#ifdef REACTIVE_HAS_TIMER_
-    if (!super::timeoutTask) {
-        logger(debug) << "Quiescing, therefore ignoring closing event";
-
-        return;
-    }
-
-    logger(debug) << "Canceling scheduled tasks ";
-    
-    super::disableTimer();
-#endif // REACTIVE_HAS_TIMER_
 }
-
-#ifdef REACTIVE_HAS_TIMER_
-void ReceiverHandler::on_timer(event &e, container &c)
-{
-   super::timerEvent(e, c);
-   
-}
-#endif // REACTIVE_HAS_TIMER_
 
 void ReceiverHandler::do_disconnect()
 {
