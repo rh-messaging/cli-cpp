@@ -81,6 +81,10 @@ void ReceiverHandler::do_message_action(delivery &d)
         d.accept();
 
         logger(debug) << "Message acknowledged";
+    } else if(msg_action == "reject") {
+        d.reject();
+
+        logger(debug) << "Message rejected";
     }
 }
 
