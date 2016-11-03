@@ -36,6 +36,11 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("log-msgs")
             .help("log message OPTIONS (currently ignored)")
             .metavar("OPTIONS");
+
+    add_option("--action")
+            .dest("msg-action")
+            .help("ACTION on acquired message (default: no-action)")
+            .metavar("ACTION");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()

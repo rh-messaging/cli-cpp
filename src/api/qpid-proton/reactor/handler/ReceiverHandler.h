@@ -14,6 +14,7 @@
 #ifndef RECEIVERHANDLER_H
 #define RECEIVERHANDLER_H
 
+#include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
 
 #include "CommonHandler.h"
@@ -50,17 +51,19 @@ class ReceiverHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param msg_action message action
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      */
-    ReceiverHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10);
+    ReceiverHandler(const string &url, string msg_action, string user, string password, string sasl_mechanisms, int timeout = 10);
     
     void timerEvent();
 
     virtual ~ReceiverHandler();
 
     void on_container_start(container &c);
+    void do_message_action(delivery &d);
     void on_message(delivery &d, message &m);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
@@ -81,6 +84,8 @@ class ReceiverHandler : public CommonHandler {
     
     duration interval;
     timer_event_t timer_event;
+
+    string msg_action;
      
     void do_disconnect();
 };
