@@ -126,6 +126,12 @@ int SendingClient::run(int argc, char **argv) const
     setLogLevel(options);
 
     const string address = options["broker-url"];
+    
+    string user = options["user"];
+    
+    string password = options["password"];
+    
+    string sasl_mechanisms = options["sasl_mechanisms"];
 
     OptionsSetter setter = OptionsSetter(options);
 
@@ -147,7 +153,7 @@ int SendingClient::run(int argc, char **argv) const
     msg.expiry_time(timestamp(value));
 #endif
 
-    SenderHandler handler = SenderHandler(address);
+    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms);
 
     handler.setMessage(msg);
     

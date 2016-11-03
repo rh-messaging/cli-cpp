@@ -16,6 +16,21 @@ ModernOptionsParser::ModernOptionsParser()
             .dest("broker-url")
             .help("url of broker to connect to");
 
+    add_option("-u", "--user")
+            .dest("user")
+            .help("authenticate as USER")
+            .metavar("USER");
+
+    add_option("-p", "--password")
+            .dest("password")
+            .help("authenticate with PASSWORD")
+            .metavar("PASSWORD");
+
+    add_option("--sasl-mechanisms")
+            .dest("sasl_mechanisms")
+            .help("specify the allowed MECHANISMS for use on the connection")
+            .metavar("MECHANISMS");
+
     add_option("--client-log-level")
             .dest("client-log-level")
             .help("log level for the client");

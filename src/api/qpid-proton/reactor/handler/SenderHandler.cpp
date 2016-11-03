@@ -20,8 +20,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-SenderHandler::SenderHandler(const string &url, int timeout)
-    : super(url),
+SenderHandler::SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout)
+    : super(url, user, password, sasl_mechanisms),
     count(1),
     sent(0),
     confirmedSent(0),
@@ -37,6 +37,7 @@ SenderHandler::~SenderHandler()
 }
 
 void SenderHandler::timerEvent() {
+#if defined(__REACTOR_HAS_TIMER)
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
@@ -48,18 +49,33 @@ void SenderHandler::timerEvent() {
         duration d = duration(int(1000 * duration::SECOND.milliseconds()));
         sndr.container().schedule(d, timer_event);
     }
+#endif
 }
 
 void SenderHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
+
+    logger(debug) << "User: " << user;
+    logger(debug) << "Password: " << password;
+    logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
         
     logger(debug) << "Creating a sender";
-    sndr = c.open_sender(broker_url);
+    sndr = c.open_sender(
+            broker_url,
+            c.client_connection_options()
+                .user(user)
+                .password(password)
+                .sasl_enabled(true) // TODO: CLI parameter???
+                .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
+                .sasl_allowed_mechs(sasl_mechanisms)
+    );
     
     logger(trace) << "Setting up timer";
     duration d = duration(1000 * duration::SECOND.milliseconds());
+#if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_event);
+#endif
 }
 
 void SenderHandler::on_sendable(sender &s)
@@ -84,7 +100,9 @@ void SenderHandler::on_sendable(sender &s)
         logger(trace) << "Sent message: " << m.body().as_string();
          
         sent++;
+#if defined(__REACTOR_HAS_TIMER)
         timer.reset();
+#endif
     }    
 }
 

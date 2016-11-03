@@ -42,8 +42,11 @@ class SenderHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param user username
+     * @param password password
+     * @param sasl_mechanisms SASL mechanisms
      */
-    SenderHandler(const string &url, int timeout = -1);
+    SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = -1);
     
     void timerEvent();
 
