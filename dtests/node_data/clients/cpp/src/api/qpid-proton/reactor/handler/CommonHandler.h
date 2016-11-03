@@ -1,5 +1,5 @@
 /*
- * SimpleMessagingHandler.h
+ * CommonHandler.h
  *
  *  Created on: Apr 29, 2015
  *      Author: opiske
@@ -47,8 +47,11 @@ class CommonHandler : public messaging_handler {
     /**
      * Constructor
      * @param url broker URL
+     * @param user username
+     * @param password password
+     * @param sasl_mechanisms SASL mechanisms
      */
-    CommonHandler(const string &url, int timeout = 10);
+    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10);
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
@@ -65,6 +68,21 @@ class CommonHandler : public messaging_handler {
      * Broker URL
      */
     url broker_url;
+
+    /**
+     * Username
+     */
+    string user;
+
+    /**
+     * Password
+     */
+    string password;
+
+    /**
+     * SASL mechanisms
+     */
+    string sasl_mechanisms;
     
     container *cont;
     

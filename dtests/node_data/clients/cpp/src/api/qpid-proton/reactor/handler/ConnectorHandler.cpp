@@ -7,8 +7,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-ConnectorHandler::ConnectorHandler(const string &url, int timeout)
-    : super(url, timeout),
+ConnectorHandler::ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout)
+    : super(url, user, password, sasl_mechanisms, timeout),
       objectControl(CONNECTION),
         timer_event(*this)
 {
@@ -22,6 +22,7 @@ ConnectorHandler::~ConnectorHandler()
 }
 
 void ConnectorHandler::timerEvent() {
+#if defined(__REACTOR_HAS_TIMER)
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
@@ -31,6 +32,7 @@ void ConnectorHandler::timerEvent() {
         logger(debug) << "Waiting ...";
 
     }
+#endif
 }
 
 void ConnectorHandler::setCount(int count)
@@ -67,7 +69,9 @@ void ConnectorHandler::on_container_start(event &e, container &c)
     }
     
     duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+#if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_event);
+#endif
 }
 
 void ConnectorHandler::on_connection_open(event &e, connection &conn)

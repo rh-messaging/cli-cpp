@@ -37,8 +37,11 @@ class ConnectorHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param user username
+     * @param password password
+     * @param sasl_mechanisms SASL mechanisms
      */
-    ConnectorHandler(const string &url, int timeout = 10);
+    ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10);
 
     virtual ~ConnectorHandler();
     

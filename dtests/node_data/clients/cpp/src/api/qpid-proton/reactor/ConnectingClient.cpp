@@ -86,6 +86,12 @@ int ConnectingClient::run(int argc, char** argv) const
 
     const string address = options["broker-url"];
 
+    string user = options["user"];
+
+    string password = options["password"];
+    
+    string sasl_mechanisms = options["sasl-mechanisms"];
+
     OptionsSetter setter = OptionsSetter(options);
     
     int timeout = 0;
@@ -93,7 +99,7 @@ int ConnectingClient::run(int argc, char** argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    ConnectorHandler handler = ConnectorHandler(address, timeout);
+    ConnectorHandler handler = ConnectorHandler(address, user, password, sasl_mechanisms, timeout);
     setMessageHandlerOptions(setter, handler);
     
     int connControl = setConnectionOptions(options);
