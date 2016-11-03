@@ -76,6 +76,12 @@ void ReceiverHandler::on_container_start(container &c)
 void ReceiverHandler::do_message_action(delivery &d)
 {
     logger(debug) << "Message action: " << msg_action;
+
+    if(msg_action == "ack") {
+        d.accept();
+
+        logger(debug) << "Message acknowledged";
+    }
 }
 
 void ReceiverHandler::on_message(delivery &d, message &m)
