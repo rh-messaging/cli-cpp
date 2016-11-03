@@ -16,7 +16,7 @@ ReceiverOptionsParser::ReceiverOptionsParser()
     add_option("-c", "--count")
             .dest("count")
             .type("int")
-            .help("stop after count messages")
+            .help("stop after COUNT messages")
             .metavar("COUNT");
 
 #ifdef ENABLE_BLOCKING
@@ -28,12 +28,14 @@ ReceiverOptionsParser::ReceiverOptionsParser()
 
     add_option("--timeout")
             .dest("timeout")
-            .help("exit after the specified time")
-            .type("int");
+            .help("exit after the specified TIME (seconds)")
+            .type("int")
+            .metavar("TIME");
     
     add_option("--log-msgs")
             .dest("log-msgs")
-            .help("log message options (currently ignored)");
+            .help("log message OPTIONS (currently ignored)")
+            .metavar("OPTIONS");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
