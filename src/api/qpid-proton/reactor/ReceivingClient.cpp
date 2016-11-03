@@ -57,6 +57,11 @@ int ReceivingClient::run(int argc, char **argv) const
 
     const string address = options["broker-url"];
     
+    string msg_action = "no-action";
+    if(options.is_set("msg-action")) {
+        msg_action = options["msg-action"];
+    }
+
     string user = options["user"];
   
     string password = options["password"];
@@ -70,7 +75,7 @@ int ReceivingClient::run(int argc, char **argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, user, password, sasl_mechanisms, timeout);
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, user, password, sasl_mechanisms, timeout);
     default_container(handler).run();
 
     return 0;
