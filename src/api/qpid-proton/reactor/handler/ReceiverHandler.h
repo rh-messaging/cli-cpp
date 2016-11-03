@@ -50,8 +50,11 @@ class ReceiverHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param user username
+     * @param password password
+     * @param sasl_mechanisms SASL mechanisms
      */
-    ReceiverHandler(const string &url, int timeout = 10);
+    ReceiverHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10);
     
     void timerEvent();
 
