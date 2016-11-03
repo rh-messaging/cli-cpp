@@ -85,6 +85,10 @@ void ReceiverHandler::do_message_action(delivery &d)
         d.reject();
 
         logger(debug) << "Message rejected";
+    } else if(msg_action == "release") {
+        d.release();
+
+        logger(debug) << "Message released";
     }
 }
 
