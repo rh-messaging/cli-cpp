@@ -14,7 +14,8 @@ ModernOptionsParser::ModernOptionsParser()
 {
     add_option("-b", "--broker-url")
             .dest("broker-url")
-            .help("url of broker to connect to");
+            .help("URL of broker to connect to")
+            .metavar("URL");
 
     add_option("-u", "--user")
             .dest("user")
@@ -33,12 +34,14 @@ ModernOptionsParser::ModernOptionsParser()
 
     add_option("--client-log-level")
             .dest("client-log-level")
-            .help("log level for the client");
+            .help("log LEVEL for the client")
+            .metavar("LEVEL");
 
     add_option("--close-sleep")
             .dest("close-sleep")
-            .help("sleep before closing the connection")
-            .type("int");
+            .help("sleep before closing the connection for the specified TIME (seconds)")
+            .type("int")
+            .metavar("TIME");
 
 #ifdef ENABLE_BLOCKING
     set_defaults("blocking", false);
