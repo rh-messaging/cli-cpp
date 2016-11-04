@@ -18,10 +18,12 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, string user, string password, string sasl_mechanisms, int timeout)
+ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout)
     : super(url, user, password, sasl_mechanisms, timeout),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
+    msg_action_size(msg_action_size),
+    msg_received_cnt(0),
     timer_event(*this)
 {
 }
@@ -76,6 +78,7 @@ void ReceiverHandler::on_container_start(container &c)
 void ReceiverHandler::do_message_action(delivery &d)
 {
     logger(debug) << "Message action: " << msg_action;
+    logger(debug) << "Message action size: " << msg_action_size;
 
     if(msg_action == "ack") {
         d.accept();
@@ -94,6 +97,8 @@ void ReceiverHandler::do_message_action(delivery &d)
 
 void ReceiverHandler::on_message(delivery &d, message &m)
 {
+    msg_received_cnt += 1;
+
     logger(debug) << "Processing received message";
 
     logger(trace) << "Decoding message";
@@ -108,7 +113,9 @@ void ReceiverHandler::on_message(delivery &d, message &m)
     writer.endLine();
     std::cout << writer.toString();
 
-    do_message_action(d);
+    if((msg_received_cnt % msg_action_size) == 0) {
+        do_message_action(d);
+    }
 
 #if defined(__REACTOR_HAS_TIMER)
     super::timer.reset();

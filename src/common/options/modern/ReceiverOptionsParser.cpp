@@ -1,10 +1,11 @@
 /*
- * ControlOptions.cpp
+ * ReceiverOptionsParser.cpp
  *
  *  Created on: Apr 16, 2015
  *      Author: opiske
  */
 
+#include <cstdlib>
 
 #include "options/modern/ReceiverOptionsParser.h"
 
@@ -41,6 +42,12 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("msg-action")
             .help("ACTION on acquired message (default: no-action)")
             .metavar("ACTION");
+
+    add_option("--action-size")
+            .dest("msg-action-size")
+            .help("related action is applied in the batch of given SIZE (default: 1)")
+            .type("int")
+            .metavar("SIZE");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
@@ -50,4 +57,9 @@ ReceiverOptionsParser::~ReceiverOptionsParser()
 void ReceiverOptionsParser::validate(const Values& options) const
 {
     super::validate(options);
+
+    if(options.is_set("msg-action-size") && (atoi(options["msg-action-size"].c_str()) < 1)) {
+        print_help();
+        error("action-size must not be less than 1");
+    }
 }
