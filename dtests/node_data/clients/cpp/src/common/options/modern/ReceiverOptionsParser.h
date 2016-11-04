@@ -1,5 +1,5 @@
 /*
- * ControlOptions.h
+ * ReceiverOptionsParser.h
  *
  *  Created on: Apr 16, 2015
  *      Author: opiske

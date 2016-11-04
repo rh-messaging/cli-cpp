@@ -11,6 +11,8 @@
  * Created on October 19, 2015, 4:25 PM
  */
 
+#include <cstdlib>
+
 #include "ReceivingClient.h"
 
 using proton::default_container;
@@ -62,6 +64,11 @@ int ReceivingClient::run(int argc, char **argv) const
         msg_action = options["msg-action"];
     }
 
+    int msg_action_size = 1;
+    if(options.is_set("msg-action-size")) {
+        msg_action_size = atoi(options["msg-action-size"].c_str());
+    }
+
     string user = options["user"];
   
     string password = options["password"];
@@ -75,7 +82,7 @@ int ReceivingClient::run(int argc, char **argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, msg_action, user, password, sasl_mechanisms, timeout);
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout);
     default_container(handler).run();
 
     return 0;
