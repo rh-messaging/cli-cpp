@@ -52,11 +52,12 @@ class ReceiverHandler : public CommonHandler {
      * Constructor
      * @param url broker URL
      * @param msg_action message action
+     * @param msg_action_size apply action in the batch of given size
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      */
-    ReceiverHandler(const string &url, string msg_action, string user, string password, string sasl_mechanisms, int timeout = 10);
+    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10);
     
     void timerEvent();
 
@@ -86,6 +87,8 @@ class ReceiverHandler : public CommonHandler {
     timer_event_t timer_event;
 
     string msg_action;
+    int msg_action_size;
+    int msg_received_cnt;
      
     void do_disconnect();
 };
