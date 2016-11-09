@@ -82,7 +82,12 @@ int ReceivingClient::run(int argc, char **argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout);
+    bool process_reply_to = false;
+    if (options.is_set("process-reply-to")) {
+        process_reply_to = options.get("process-reply-to");
+    }
+
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, process_reply_to);
     default_container(handler).run();
 
     return 0;
