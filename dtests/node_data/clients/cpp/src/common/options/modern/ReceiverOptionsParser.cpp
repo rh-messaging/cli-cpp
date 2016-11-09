@@ -48,6 +48,12 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .help("related action is applied in the batch of given SIZE (default: 1)")
             .type("int")
             .metavar("SIZE");
+
+    add_option("--process-reply-to")
+            .dest("process-reply-to")
+            .help("send message to reply-to address if enabled and message got reply-to address")
+            .type("bool")
+            .action("store_true");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()

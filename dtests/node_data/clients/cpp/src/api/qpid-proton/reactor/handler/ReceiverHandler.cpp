@@ -18,12 +18,13 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout)
+ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, bool process_reply_to)
     : super(url, user, password, sasl_mechanisms, timeout),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
     msg_received_cnt(0),
+    process_reply_to(process_reply_to),
     timer_event(*this)
 {
 }
@@ -95,6 +96,31 @@ void ReceiverHandler::do_message_action(delivery &d)
     }
 }
 
+void ReceiverHandler::do_process_reply_to(message &m)
+{
+    logger(debug) << "Processing reply-to";
+
+    map<string, sender>::iterator it = senders.find(m.reply_to());
+
+    if (it != senders.end()) {
+        logger(debug) << "Sender for " << m.reply_to() << " found";
+    } else {
+        logger(debug) << "Sender for " << m.reply_to() << " not found";
+        logger(debug) << "Creating sender for " << m.reply_to();
+
+        senders[m.reply_to()] = recv.connection().open_sender(m.reply_to());
+
+        logger(debug) << "Sender for " << m.reply_to() << " created";
+    }
+
+    message replyToMessage = message(m);
+    replyToMessage.to(m.reply_to());
+
+    logger(debug) << "Sending reply to " << replyToMessage.to();
+
+    senders[m.reply_to()].send(replyToMessage);
+}
+
 void ReceiverHandler::on_message(delivery &d, message &m)
 {
     msg_received_cnt += 1;
@@ -115,6 +141,18 @@ void ReceiverHandler::on_message(delivery &d, message &m)
 
     if((msg_received_cnt % msg_action_size) == 0) {
         do_message_action(d);
+    }
+
+    logger(debug) << "Process-reply-to: " << process_reply_to;
+
+    if (process_reply_to) {
+        if (m.reply_to() != "") {
+            logger(debug) << "Reply-to address: " << m.reply_to();
+
+            do_process_reply_to(m);
+        } else {
+            logger(debug) << "Reply-to address is not set";
+        }
     }
 
 #if defined(__REACTOR_HAS_TIMER)
