@@ -29,6 +29,7 @@
 using proton::message;
 using proton::container;
 using proton::connection;
+using proton::sender;
 using proton::receiver;
 using proton::delivery;
 using proton::tracker;
@@ -56,8 +57,9 @@ class ReceiverHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      */
-    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10);
+    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, bool process_reply_to = false);
     
     void timerEvent();
 
@@ -65,6 +67,7 @@ class ReceiverHandler : public CommonHandler {
 
     void on_container_start(container &c);
     void do_message_action(delivery &d);
+    void do_process_reply_to(message &m);
     void on_message(delivery &d, message &m);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
@@ -89,7 +92,9 @@ class ReceiverHandler : public CommonHandler {
     string msg_action;
     int msg_action_size;
     int msg_received_cnt;
-     
+    bool process_reply_to;
+    std::map<string, sender> senders;
+
     void do_disconnect();
 };
 
