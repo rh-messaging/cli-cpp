@@ -28,7 +28,7 @@ ModernOptionsParser::ModernOptionsParser()
             .metavar("PASSWORD");
 
     add_option("--sasl-mechanisms")
-            .dest("sasl_mechanisms")
+            .dest("sasl-mechanisms")
             .help("specify the allowed MECHANISMS for use on the connection")
             .metavar("MECHANISMS");
 
