@@ -131,7 +131,7 @@ int SendingClient::run(int argc, char **argv) const
     
     string password = options["password"];
     
-    string sasl_mechanisms = options["sasl_mechanisms"];
+    string sasl_mechanisms = options["sasl-mechanisms"];
 
     OptionsSetter setter = OptionsSetter(options);
 
