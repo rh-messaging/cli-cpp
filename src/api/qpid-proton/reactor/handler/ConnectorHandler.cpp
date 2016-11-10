@@ -51,7 +51,19 @@ void ConnectorHandler::on_container_start(container &c)
 
     logger(trace) << "Creating connection";
 
-    conn = c.connect(broker_url);
+    logger(debug) << "User: " << user;
+    logger(debug) << "Password: " << password;
+    logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
+
+    conn = c.connect(
+            broker_url,
+            c.client_connection_options()
+                .user(user)
+                .password(password)
+                .sasl_enabled(true) // TODO: CLI parameter???
+                .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
+                .sasl_allowed_mechs(sasl_mechanisms)
+    );
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
