@@ -47,14 +47,14 @@ class ConnectorHandler : public CommonHandler {
     
     void timerEvent();
 
-    void on_container_start(event &e, container &c);
-    void on_connection_open(event &e, connection &conn);
-    void on_connection_close(event &e, connection &conn);
-    void on_connection_error(event &e, connection &conn);
+    void on_container_start(container &c);
+    void on_connection_open(connection &conn);
+    void on_connection_close(connection &conn);
+    void on_connection_error(connection &conn);
    
-    void on_transport_error(event &e, transport &trans);
+    void on_transport_error(transport &trans);
     
-    void on_session_error(event &e, session &s);
+    void on_session_error(session &s);
     
 
     /**

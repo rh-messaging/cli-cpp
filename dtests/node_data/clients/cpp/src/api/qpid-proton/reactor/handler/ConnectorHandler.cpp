@@ -45,7 +45,7 @@ int ConnectorHandler::getCount() const
     return count;
 }
 
-void ConnectorHandler::on_container_start(event &e, container &c)
+void ConnectorHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
@@ -74,7 +74,7 @@ void ConnectorHandler::on_container_start(event &e, container &c)
 #endif
 }
 
-void ConnectorHandler::on_connection_open(event &e, connection &conn)
+void ConnectorHandler::on_connection_open(connection &conn)
 {
     logger(debug) << "Connected to " << broker_url.host_port();
     
@@ -85,24 +85,24 @@ void ConnectorHandler::on_connection_open(event &e, connection &conn)
 }
 
 
-void ConnectorHandler::on_connection_close(event& e, connection &conn)
+void ConnectorHandler::on_connection_close(connection &conn)
 {
     logger(debug) << "Closing the connection to " << broker_url.host_port();
 }
 
-void ConnectorHandler::on_connection_error(event &e, connection &conn)
+void ConnectorHandler::on_connection_error(connection &conn)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
 }
 
-void ConnectorHandler::on_transport_error(event &e, transport &trans) {
+void ConnectorHandler::on_transport_error(transport &trans) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
     closeObjects();
 }
 
 
-void ConnectorHandler::on_session_error(event &e, session &s) {
+void ConnectorHandler::on_session_error(session &s) {
     logger(error) << "The remote peer at " << broker_url.host_port() << 
             " closed the session with an error condition";
     closeObjects();
