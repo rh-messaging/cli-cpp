@@ -16,6 +16,7 @@
 
 #include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
+#include <proton/source_options.hpp>
 
 #include "CommonHandler.h"
 
@@ -35,6 +36,8 @@ using proton::delivery;
 using proton::tracker;
 using proton::void_function0;
 using proton::endpoint;
+using proton::source;
+using proton::source_options;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
@@ -58,8 +61,9 @@ class ReceiverHandler : public CommonHandler {
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
+     * @param browse enable browsing receiver
      */
-    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, bool process_reply_to = false);
+    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, bool process_reply_to = false, bool browse = false);
     
     void timerEvent();
 
@@ -93,6 +97,7 @@ class ReceiverHandler : public CommonHandler {
     int msg_action_size;
     int msg_received_cnt;
     bool process_reply_to;
+    bool browse;
     std::map<string, sender> senders;
 
     void do_disconnect();

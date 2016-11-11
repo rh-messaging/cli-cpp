@@ -87,7 +87,12 @@ int ReceivingClient::run(int argc, char **argv) const
         process_reply_to = options.get("process-reply-to");
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, process_reply_to);
+    bool browse = false;
+    if (options.is_set("recv-browse")) {
+        browse = options.get("recv-browse");
+    }
+
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, process_reply_to, browse);
     default_container(handler).run();
 
     return 0;

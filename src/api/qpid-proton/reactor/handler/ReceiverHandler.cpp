@@ -18,13 +18,14 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, bool process_reply_to)
+ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, bool process_reply_to, bool browse)
     : super(url, user, password, sasl_mechanisms, timeout),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
     msg_received_cnt(0),
     process_reply_to(process_reply_to),
+    browse(browse),
     timer_event(*this)
 {
 }
@@ -58,15 +59,34 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
 
     logger(debug) << "Creating a receiver and connecting to the server";
-    recv = c.open_receiver(
-            broker_url,
-            c.client_connection_options()
-                .user(user)
-                .password(password)
-                .sasl_enabled(true) // TODO: CLI parameter???
-                .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
-                .sasl_allowed_mechs(sasl_mechanisms)
-    );
+
+    logger(debug) << "Browsing: " << browse;
+
+    if (browse) {
+        recv = c.open_receiver(
+                broker_url,
+                c.receiver_options()
+                    .source(
+                        source_options().distribution_mode(source::COPY)
+                    ),
+                c.client_connection_options()
+                    .user(user)
+                    .password(password)
+                    .sasl_enabled(true) // TODO: CLI parameter???
+                    .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
+                    .sasl_allowed_mechs(sasl_mechanisms)
+        );
+    } else {
+        recv = c.open_receiver(
+                broker_url,
+                c.client_connection_options()
+                    .user(user)
+                    .password(password)
+                    .sasl_enabled(true) // TODO: CLI parameter???
+                    .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
+                    .sasl_allowed_mechs(sasl_mechanisms)
+        );
+    }
     logger(debug) << "Connected to the broker and waiting for messages";
 
     duration d = duration(int(1000 * duration::SECOND.milliseconds()));
