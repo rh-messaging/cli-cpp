@@ -54,6 +54,12 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .help("send message to reply-to address if enabled and message got reply-to address")
             .type("bool")
             .action("store_true");
+
+    add_option("--recv-browse")
+            .dest("recv-browse")
+            .help("browsing receiver if enabled")
+            .type("bool")
+            .action("store_true");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
