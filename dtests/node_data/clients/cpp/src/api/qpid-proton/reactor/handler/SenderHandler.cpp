@@ -66,8 +66,8 @@ void SenderHandler::on_container_start(container &c)
             c.client_connection_options()
                 .user(user)
                 .password(password)
-                .sasl_enabled(true) // TODO: CLI parameter???
-                .sasl_allow_insecure_mechs(true) // TODO: CLI parameter???
+                .sasl_enabled(true)
+                .sasl_allow_insecure_mechs(true)
                 .sasl_allowed_mechs(sasl_mechanisms)
     );
     
