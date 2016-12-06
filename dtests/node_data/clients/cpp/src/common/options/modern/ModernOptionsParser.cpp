@@ -43,6 +43,11 @@ ModernOptionsParser::ModernOptionsParser()
             .type("int")
             .metavar("TIME");
 
+    add_option("--conn-reconnect")
+            .dest("conn-reconnect")
+            .help("client RECONNECT settings (default: default)")
+            .metavar("RECONNECT");
+
 #ifdef ENABLE_BLOCKING
     set_defaults("blocking", false);
     add_option("--blocking")
