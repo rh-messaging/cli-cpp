@@ -27,6 +27,8 @@ using proton::task;
 using proton::delivery;
 using proton::transport;
 using proton::tracker;
+using proton::reconnect_timer;
+using proton::connection_options;
 
 namespace dtests {
 namespace proton {
@@ -45,8 +47,10 @@ class SenderHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param timeout timeout
+     * @param conn_reconnect type or reconnection
      */
-    SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = -1);
+    SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = -1, string conn_reconnect = "default");
     
     void timerEvent();
 
