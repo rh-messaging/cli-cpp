@@ -20,8 +20,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-SenderHandler::SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout)
-    : super(url, user, password, sasl_mechanisms),
+SenderHandler::SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect)
+    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect),
     count(1),
     sent(0),
     confirmedSent(0),
@@ -59,16 +59,24 @@ void SenderHandler::on_container_start(container &c)
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
-        
+
+    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+
+    connection_options conn_opts = c.client_connection_options()
+                                    .user(user)
+                                    .password(password)
+                                    .sasl_enabled(true)
+                                    .sasl_allow_insecure_mechs(true)
+                                    .sasl_allowed_mechs(sasl_mechanisms);
+
+    if (conn_reconnect == "default") {
+        conn_opts = conn_opts.reconnect(reconnect_timer());
+    }
+
     logger(debug) << "Creating a sender";
     sndr = c.open_sender(
             broker_url,
-            c.client_connection_options()
-                .user(user)
-                .password(password)
-                .sasl_enabled(true)
-                .sasl_allow_insecure_mechs(true)
-                .sasl_allowed_mechs(sasl_mechanisms)
+            conn_opts
     );
     
     logger(trace) << "Setting up timer";
