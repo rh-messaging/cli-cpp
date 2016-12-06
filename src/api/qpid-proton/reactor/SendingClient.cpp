@@ -133,6 +133,11 @@ int SendingClient::run(int argc, char **argv) const
     
     string sasl_mechanisms = options["sasl-mechanisms"];
 
+    string conn_reconnect = "default";
+    if (options.is_set("conn-reconnect")) {
+        conn_reconnect = options["conn-reconnect"];
+    }
+
     OptionsSetter setter = OptionsSetter(options);
 
     int timeout = 0;
@@ -158,7 +163,7 @@ int SendingClient::run(int argc, char **argv) const
     msg.expiry_time(timestamp(value));
 #endif
 
-    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms, timeout);
+    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms, timeout, conn_reconnect);
 
     handler.setMessage(msg);
     
