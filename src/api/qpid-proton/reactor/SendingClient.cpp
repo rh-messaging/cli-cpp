@@ -135,6 +135,11 @@ int SendingClient::run(int argc, char **argv) const
 
     OptionsSetter setter = OptionsSetter(options);
 
+    int timeout = 0;
+    if (options.is_set("timeout")) {
+        timeout = static_cast<int> (options.get("timeout"));
+    }
+
     message msg;
 
     setMessageOptions(setter, msg);
@@ -153,7 +158,7 @@ int SendingClient::run(int argc, char **argv) const
     msg.expiry_time(timestamp(value));
 #endif
 
-    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms);
+    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms, timeout);
 
     handler.setMessage(msg);
     
