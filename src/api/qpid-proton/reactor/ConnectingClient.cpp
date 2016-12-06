@@ -92,6 +92,11 @@ int ConnectingClient::run(int argc, char** argv) const
     
     string sasl_mechanisms = options["sasl-mechanisms"];
 
+    string conn_reconnect = "default";
+    if (options.is_set("conn-reconnect")) {
+        conn_reconnect = options["conn-reconnect"];
+    }
+
     OptionsSetter setter = OptionsSetter(options);
     
     int timeout = 0;
@@ -99,7 +104,7 @@ int ConnectingClient::run(int argc, char** argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    ConnectorHandler handler = ConnectorHandler(address, user, password, sasl_mechanisms, timeout);
+    ConnectorHandler handler = ConnectorHandler(address, user, password, sasl_mechanisms, timeout, conn_reconnect);
     setMessageHandlerOptions(setter, handler);
     
     int connControl = setConnectionOptions(options);
