@@ -19,12 +19,13 @@ using namespace dtests::common::log;
 Logger CommonHandler::logger = LoggerWrapper::getLogger();
 
 
-CommonHandler::CommonHandler(const string &url_str, string user, string password, string sasl_mechanisms, int timeout)
+CommonHandler::CommonHandler(const string &url_str, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect)
     : super(),
     broker_url(url_str),
     user(user),
     password(password),
     sasl_mechanisms(sasl_mechanisms),
+    conn_reconnect(conn_reconnect),
     cont(NULL),
     timer(timeout, "timeout")
 {

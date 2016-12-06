@@ -50,8 +50,10 @@ class CommonHandler : public messaging_handler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param timeout timeout
+     * @param conn_reconnect type of reconnection
      */
-    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10);
+    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default");
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
@@ -84,6 +86,11 @@ class CommonHandler : public messaging_handler {
      */
     string sasl_mechanisms;
     
+    /**
+     * Type of reconnection
+     */
+    string conn_reconnect;
+
     container *cont;
     
     Timer timer;
