@@ -75,6 +75,11 @@ int ReceivingClient::run(int argc, char **argv) const
   
     string sasl_mechanisms = options["sasl-mechanisms"];
 
+    string conn_reconnect = "default";
+    if (options.is_set("conn-reconnect")) {
+        conn_reconnect = options["conn-reconnect"];
+    }
+
     OptionsSetter setter = OptionsSetter(options);
     
     int timeout = 0;
@@ -92,7 +97,7 @@ int ReceivingClient::run(int argc, char **argv) const
         browse = options.get("recv-browse");
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, process_reply_to, browse);
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, conn_reconnect, process_reply_to, browse);
     default_container(handler).run();
 
     return 0;

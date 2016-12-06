@@ -18,8 +18,8 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, bool process_reply_to, bool browse)
-    : super(url, user, password, sasl_mechanisms, timeout),
+ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, bool process_reply_to, bool browse)
+    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
@@ -57,6 +57,19 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
+    
+    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+
+    connection_options conn_opts = c.client_connection_options()
+                                    .user(user)
+                                    .password(password)
+                                    .sasl_enabled(true)
+                                    .sasl_allow_insecure_mechs(true)
+                                    .sasl_allowed_mechs(sasl_mechanisms);
+
+    if (conn_reconnect == "default") {
+        conn_opts = conn_opts.reconnect(reconnect_timer());
+    }
 
     logger(debug) << "Creating a receiver and connecting to the server";
 
@@ -69,22 +82,12 @@ void ReceiverHandler::on_container_start(container &c)
                     .source(
                         source_options().distribution_mode(source::COPY)
                     ),
-                c.client_connection_options()
-                    .user(user)
-                    .password(password)
-                    .sasl_enabled(true)
-                    .sasl_allow_insecure_mechs(true)
-                    .sasl_allowed_mechs(sasl_mechanisms)
+                conn_opts
         );
     } else {
         recv = c.open_receiver(
                 broker_url,
-                c.client_connection_options()
-                    .user(user)
-                    .password(password)
-                    .sasl_enabled(true)
-                    .sasl_allow_insecure_mechs(true)
-                    .sasl_allowed_mechs(sasl_mechanisms)
+                conn_opts
         );
     }
     logger(debug) << "Connected to the broker and waiting for messages";
@@ -192,10 +195,24 @@ void ReceiverHandler::on_tracker_reject(tracker &t)
     logger(debug) << "Delivery rejected";
 }
 
+void ReceiverHandler::on_transport_close(transport &t) {
+    logger(debug) << "Closing the transport";
+}
+
+
+void ReceiverHandler::on_transport_error(transport &t) {
+    logger(error) << "The connection with " << broker_url.host_port() << 
+            " was interrupted";
+}
 
 void ReceiverHandler::on_connection_close(connection &conn)
 {
     logger(debug) << "Disconnecting ...";
+}
+
+void ReceiverHandler::on_connection_error(connection &c)
+{
+    logger(error) << "Failed to connect to " << broker_url.host_port();
 }
 
 void ReceiverHandler::do_disconnect()

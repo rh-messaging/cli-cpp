@@ -38,6 +38,9 @@ using proton::void_function0;
 using proton::endpoint;
 using proton::source;
 using proton::source_options;
+using proton::reconnect_timer;
+using proton::transport;
+using proton::connection_options;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
@@ -60,10 +63,12 @@ class ReceiverHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param timeout timeout
+     * @param conn_reconnect type of reconnection
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      * @param browse enable browsing receiver
      */
-    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, bool process_reply_to = false, bool browse = false);
+    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", bool process_reply_to = false, bool browse = false);
     
     void timerEvent();
 
@@ -76,6 +81,10 @@ class ReceiverHandler : public CommonHandler {
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     void on_connection_close(connection &conn);
+    void on_connection_error(connection &conn);
+
+    void on_transport_error(transport &t);
+    void on_transport_close(transport &t);
 
   private:
     typedef CommonHandler super;
