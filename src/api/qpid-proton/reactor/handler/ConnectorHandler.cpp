@@ -7,8 +7,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-ConnectorHandler::ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout)
-    : super(url, user, password, sasl_mechanisms, timeout),
+ConnectorHandler::ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect)
+    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect),
       objectControl(CONNECTION),
         timer_event(*this)
 {
@@ -54,16 +54,21 @@ void ConnectorHandler::on_container_start(container &c)
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
+    
+    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
 
-    conn = c.connect(
-            broker_url,
-            c.client_connection_options()
-                .user(user)
-                .password(password)
-                .sasl_enabled(true)
-                .sasl_allow_insecure_mechs(true)
-                .sasl_allowed_mechs(sasl_mechanisms)
-    );
+    connection_options conn_opts = c.client_connection_options()
+                                    .user(user)
+                                    .password(password)
+                                    .sasl_enabled(true)
+                                    .sasl_allow_insecure_mechs(true)
+                                    .sasl_allowed_mechs(sasl_mechanisms);
+
+    if (conn_reconnect == "default") {
+        conn_opts = conn_opts.reconnect(reconnect_timer());
+    }
+
+    conn = c.connect(broker_url, conn_opts);
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
@@ -110,7 +115,10 @@ void ConnectorHandler::on_connection_error(connection &conn)
 void ConnectorHandler::on_transport_error(transport &trans) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
-    closeObjects();
+}
+
+void ConnectorHandler::on_transport_close(transport &t) {
+    logger(debug) << "Closing the transport";
 }
 
 
@@ -138,11 +146,7 @@ void ConnectorHandler::closeObjects() {
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Closing the session (currently ignored)";
-        
-        // This is causing problems in the compilation, and, therefore is 
-        // temporarily disabled. 
-        // TODO: check if this is some problem due to the API not being stable
-        // sessionObj.close();
+        sessionObj.close();
     }
     
     conn.close();
