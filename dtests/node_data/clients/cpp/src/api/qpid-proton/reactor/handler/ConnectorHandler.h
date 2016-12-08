@@ -44,8 +44,9 @@ class ConnectorHandler : public CommonHandler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
+     * @param max_frame_size maximum frame size
      */
-    ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default");
+    ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", uint32_t max_frame_size = -1);
 
     virtual ~ConnectorHandler();
     
