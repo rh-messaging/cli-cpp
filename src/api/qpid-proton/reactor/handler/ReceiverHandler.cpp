@@ -18,8 +18,8 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, bool process_reply_to, bool browse)
-    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect),
+ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, uint32_t max_frame_size, bool process_reply_to, bool browse)
+    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect, max_frame_size),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
@@ -58,15 +58,18 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
     
-    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+    logger(debug) << "Maximum frame size: " << max_frame_size;
 
     connection_options conn_opts = c.client_connection_options()
                                     .user(user)
                                     .password(password)
                                     .sasl_enabled(true)
                                     .sasl_allow_insecure_mechs(true)
-                                    .sasl_allowed_mechs(sasl_mechanisms);
+                                    .sasl_allowed_mechs(sasl_mechanisms)
+                                    .max_frame_size(max_frame_size);
 
+    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+    
     if (conn_reconnect == "default") {
         conn_opts = conn_opts.reconnect(reconnect_timer());
     }

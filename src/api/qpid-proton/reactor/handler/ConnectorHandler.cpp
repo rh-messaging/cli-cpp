@@ -7,8 +7,8 @@ namespace reactor {
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-ConnectorHandler::ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect)
-    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect),
+ConnectorHandler::ConnectorHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, uint32_t max_frame_size)
+    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect, max_frame_size),
       objectControl(CONNECTION),
         timer_event(*this)
 {
@@ -55,15 +55,18 @@ void ConnectorHandler::on_container_start(container &c)
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
     
-    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+    logger(debug) << "Maximum frame size: " << max_frame_size;
 
     connection_options conn_opts = c.client_connection_options()
                                     .user(user)
                                     .password(password)
                                     .sasl_enabled(true)
                                     .sasl_allow_insecure_mechs(true)
-                                    .sasl_allowed_mechs(sasl_mechanisms);
+                                    .sasl_allowed_mechs(sasl_mechanisms)
+                                    .max_frame_size(max_frame_size);
 
+    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+    
     if (conn_reconnect == "default") {
         conn_opts = conn_opts.reconnect(reconnect_timer());
     }
@@ -77,12 +80,12 @@ void ConnectorHandler::on_container_start(container &c)
     
     if ((objectControl & SENDER)) {
         logger(trace) << "Opening the sender as requested";
-        senderObj = conn.open_sender(broker_url.host_port());
+        senderObj = conn.open_sender(broker_url.path());
     }
     
     if ((objectControl & RECEIVER)) {
         logger(trace) << "Opening the receiver as requested";
-        receiverObj = conn.open_receiver(broker_url.host_port());
+        receiverObj = conn.open_receiver(broker_url.path());
     }
     
     duration d = duration(int(1000 * duration::SECOND.milliseconds()));

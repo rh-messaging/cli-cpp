@@ -80,6 +80,11 @@ int ReceivingClient::run(int argc, char **argv) const
         conn_reconnect = options["conn-reconnect"];
     }
 
+    uint32_t max_frame_size = -1;
+    if (options.is_set("conn-max-frame-size")) {
+        max_frame_size = std::strtoul(options["conn-max-frame-size"].c_str(), NULL, 10);
+    }
+
     OptionsSetter setter = OptionsSetter(options);
     
     int timeout = 0;
@@ -97,7 +102,7 @@ int ReceivingClient::run(int argc, char **argv) const
         browse = options.get("recv-browse");
     }
 
-    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, conn_reconnect, process_reply_to, browse);
+    ReceiverHandler handler = ReceiverHandler(address, msg_action, msg_action_size, user, password, sasl_mechanisms, timeout, conn_reconnect, max_frame_size, process_reply_to, browse);
     default_container(handler).run();
 
     return 0;
