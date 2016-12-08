@@ -49,8 +49,9 @@ class SenderHandler : public CommonHandler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param conn_reconnect type or reconnection
+     * @param max_frame_size maximum frame size
      */
-    SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = -1, string conn_reconnect = "default");
+    SenderHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = -1, string conn_reconnect = "default", uint32_t max_frame_size = -1);
     
     void timerEvent();
 

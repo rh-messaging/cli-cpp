@@ -65,10 +65,11 @@ class ReceiverHandler : public CommonHandler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
+     * @param max_frame_size maximum frame size
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      * @param browse enable browsing receiver
      */
-    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", bool process_reply_to = false, bool browse = false);
+    ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", uint32_t max_frame_size = -1, bool process_reply_to = false, bool browse = false);
     
     void timerEvent();
 

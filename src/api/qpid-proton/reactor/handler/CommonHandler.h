@@ -52,8 +52,9 @@ class CommonHandler : public messaging_handler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
+     * @param max_frame_size maximum frame size
      */
-    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default");
+    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", uint32_t max_frame_size = -1);
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
@@ -90,6 +91,11 @@ class CommonHandler : public messaging_handler {
      * Type of reconnection
      */
     string conn_reconnect;
+
+    /**
+     * Maximum frame size
+     */
+    uint32_t max_frame_size;
 
     container *cont;
     
