@@ -20,13 +20,16 @@
 #include "ObjectCloser.h"
 #include "Utils.h"
 
+#define MIN_MAX_FRAME_SIZE 4096
+
 using namespace std;
 
 void printUsage() {
   cout <<
-"aac0_connector [(-b|--broker) <broker-url>] [(-c|--count) <connection_amount>] \n\
-           [(--connection-options) <conn_options>] [(-a|--address) <address>] \n\
-           [--obj-ctrl <object-ids>] [--sync-mode <smode>] [--close-sleep <dur>] \n\
+"aac0_connector [(-b|--broker) <broker-url>] [(-c|--count) <connection_amount>]\n\
+           [(--connection-options) <conn_options>]\n\
+           [(--conn-max-frame-size) <max_frame_size>] [(-a|--address) <address>]\n\
+           [--obj-ctrl <object-ids>] [--sync-mode <smode>] [--close-sleep <dur>]\n\
 \n\
 (-b|--broker) <broker>\n\
   Specify broker to connect in format <IP/name>:<port>\n\
@@ -40,15 +43,22 @@ void printUsage() {
   Optional connection options (authentication, reconnect, etc.)\n\
   e.g. --connection-options \"{ username:X, password: Y, sasl_mechanisms: PLAIN}\"\n\
   > default: none\n\
+\n\
+(--conn-max-frame-size) <max_frame_size>\n\
+  Optional maximum frame size (" << MIN_MAX_FRAME_SIZE << " - " << UINT16_MAX << ")\n\
+  > default: " << UINT16_MAX << "\n\
+\n\
 (-a|--address) <address>\n\
-  Optional AMQP address used for address creation / deletion / check of existance\n\
+  Optional AMQP address used for address creation/deletion/check of existance\n\
   e.g. -a \"MYQUEUE; {create: always, delete: receiver}\"\n\
   > default: none\n\
+\n\
 (--obj-ctrl) <object-ids>\n\
   Optional creation object control based on <object-ids>\n\
   syntax C/E/S/R stands for Connection, sEssion, Sender, Receiver\n\
   e.g. --obj-ctrl \"CES\" for creation of Connection+sEssion+Sender\n\
   > default: \"C\" (address not given) \"CESR\" (address specified)\n\
+\n\
 (--sync-mode) <smode>\n\
   Optional action synchronization mode: none/session/action\n\
   syntax none  / session                / action    corresponds to \n\
@@ -82,6 +92,7 @@ int main (int argc, char ** argv) {
   string obj_ctrl = "_";
   string sync_mode = "action";
   string conn_options = "";
+  string max_frame_size = "";
   int count = 1;
   int duration = 0;
 
@@ -112,6 +123,20 @@ int main (int argc, char ** argv) {
     } else if (arg.compare("--connection-options") == 0) {
       if (++i<argc) {
         conn_options.assign(argv[i]);
+      } else {
+        cerr << "no value specified for \"" << argv[i]<< "\"";
+        return(2);
+      }
+    } else if (arg.compare("--conn-max-frame-size") == 0) {
+      if (++i<argc) {
+        unsigned long max_frame_size_opt = strtoul(argv[i], NULL, 10);
+            
+        if ((max_frame_size_opt > UINT16_MAX || max_frame_size_opt < MIN_MAX_FRAME_SIZE)) {
+          cerr << "Error: Maximum frame size " << argv[i] << " is out of range (" << MIN_MAX_FRAME_SIZE << " - " << UINT16_MAX << ")" << endl;
+          return(2);
+        }
+
+        max_frame_size.assign(argv[i]);
       } else {
         cerr << "no value specified for \"" << argv[i]<< "\"";
         return(2);
@@ -181,6 +206,7 @@ int main (int argc, char ** argv) {
         if (conn_options.length() > 0)
         {
           qpid::messaging::Connection tmp_connection(broker, conn_options);
+          tmp_connection.setOption("max_frame_size", max_frame_size);
           con_list.push_back(tmp_connection);
         }
         else

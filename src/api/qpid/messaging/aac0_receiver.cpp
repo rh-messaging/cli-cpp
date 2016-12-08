@@ -20,6 +20,8 @@
 #include "Utils.h"
 #include "formatter/FormatUtil.h"
 
+#define MIN_MAX_FRAME_SIZE 4096
+
 using namespace qpid::messaging;
 using namespace qpid::types;
 
@@ -30,6 +32,7 @@ struct Options : OptionParser
 {
     std::string broker;
     std::string conn_opts;
+    std::string max_frame_size;
     std::string address;
     
     int timeout;
@@ -60,6 +63,7 @@ struct Options : OptionParser
         : OptionParser("Usage: aac0_receiver [OPTIONS]", "Receive messages from the specified address"),
           broker("127.0.0.1"),
           conn_opts(""),
+          max_frame_size(""),
           address(""),
           
           timeout(0),
@@ -88,6 +92,11 @@ struct Options : OptionParser
     {
         add("broker,b", broker, "url of broker to connect to");
         add("connection-options", conn_opts, "connection options string in the form {name1:value1, name2:value2}");
+
+        std::stringstream sstm;
+        sstm << "maximum frame size (" << MIN_MAX_FRAME_SIZE << " - " << UINT16_MAX << ", default: " << UINT16_MAX << ")";
+        add("conn-max-frame-size", max_frame_size, sstm.str());
+
         add("address,a", address, "AMQP address");
         
         add("timeout,t", timeout, "timeout in seconds to wait before exiting");
@@ -128,6 +137,22 @@ struct Options : OptionParser
          if (tx_size < 0)
              tx_size = -tx_size;
     }
+
+    void validate()
+    {
+        if (max_frame_size != "") {
+            unsigned long max_frame_size_opt = strtoul(max_frame_size.c_str(), NULL, 10);
+            
+            if ((max_frame_size_opt > UINT16_MAX || max_frame_size_opt < MIN_MAX_FRAME_SIZE)) {
+                std::stringstream sstm;
+                sstm << "Maximum frame size " << max_frame_size << " is out of range (" << MIN_MAX_FRAME_SIZE << " - " << UINT16_MAX << ")";
+
+                error(sstm.str());
+            
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
 };
 
 
@@ -144,12 +169,18 @@ int main(int argc, char** argv)
     Options options;
     
     if (options.parse(argc, argv)) {
+        options.validate();
 
         // init timestamping
         ptsdata = ts_init((double *) &tsdata, options.log_stats);
         options.transformValues();
         ts_snap_store(ptsdata, 'B', options.log_stats);
         Connection connection(options.broker, options.conn_opts);
+
+        if (options.max_frame_size != "") {
+            connection.setOption("max_frame_size", options.max_frame_size);
+        }
+
         try {
             connection.open();
             ts_snap_store(ptsdata, 'C', options.log_stats);
