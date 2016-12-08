@@ -84,7 +84,7 @@ void ModernOptionsParser::validate(const Values &options) const
     }
 
     unsigned long max_frame_size_opt = strtoul(options["conn-max-frame-size"].c_str(), NULL, 10);
-    if (options.is_set("conn-max-frame-size") && (max_frame_size_opt > UINT32_MAX || max_frame_size_opt < 512)) {
+    if (options.is_set("conn-max-frame-size") && (max_frame_size_opt > UINT32_MAX || max_frame_size_opt < MIN_MAX_FRAME_SIZE)) {
         print_help();
         std::stringstream sstm;
         sstm << "Maximum frame size " << options["conn-max-frame-size"] << " is out of range (" << MIN_MAX_FRAME_SIZE << " - " << UINT32_MAX << ")";
