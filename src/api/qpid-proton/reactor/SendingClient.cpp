@@ -138,6 +138,36 @@ int SendingClient::run(int argc, char **argv) const
         conn_reconnect = options["conn-reconnect"];
     }
 
+    int32_t conn_reconnect_interval = -1;
+    if (options.is_set("conn-reconnect-interval")) {
+        conn_reconnect_interval = std::strtol(options["conn-reconnect-interval"].c_str(), NULL, 10);
+    }
+
+    int32_t conn_reconnect_limit = -1;
+    if (options.is_set("conn-reconnect-limit")) {
+        conn_reconnect_limit = std::strtol(options["conn-reconnect-limit"].c_str(), NULL, 10);
+    }
+
+    int32_t conn_reconnect_timeout = -1;
+    if (options.is_set("conn-reconnect-timeout")) {
+        conn_reconnect_timeout = std::strtol(options["conn-reconnect-timeout"].c_str(), NULL, 10);
+    }
+
+    uint32_t conn_reconnect_first = 0;
+    if (options.is_set("conn-reconnect-first")) {
+        conn_reconnect_first = std::strtoul(options["conn-reconnect-first"].c_str(), NULL, 10);
+    }
+
+    uint32_t conn_reconnect_increment = 100;
+    if (options.is_set("conn-reconnect-increment")) {
+        conn_reconnect_increment = std::strtoul(options["conn-reconnect-increment"].c_str(), NULL, 10);
+    }
+
+    bool conn_reconnect_doubling = true;
+    if (options.is_set("conn-reconnect-doubling") && options["conn-reconnect-doubling"] == "false") {
+        conn_reconnect_doubling = false;
+    }
+
     uint32_t max_frame_size = -1;
     if (options.is_set("conn-max-frame-size")) {
         max_frame_size = std::strtoul(options["conn-max-frame-size"].c_str(), NULL, 10);
@@ -168,7 +198,21 @@ int SendingClient::run(int argc, char **argv) const
     msg.expiry_time(timestamp(value));
 #endif
 
-    SenderHandler handler = SenderHandler(address, user, password, sasl_mechanisms, timeout, conn_reconnect, max_frame_size);
+    SenderHandler handler = SenderHandler(
+        address,
+        user,
+        password,
+        sasl_mechanisms,
+        timeout,
+        conn_reconnect,
+        conn_reconnect_interval,
+        conn_reconnect_limit,
+        conn_reconnect_timeout,
+        conn_reconnect_first,
+        conn_reconnect_increment,
+        conn_reconnect_doubling,
+        max_frame_size
+    );
 
     handler.setMessage(msg);
     

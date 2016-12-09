@@ -18,8 +18,40 @@ using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;
 
-ReceiverHandler::ReceiverHandler(const string &url, string msg_action, int msg_action_size, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, uint32_t max_frame_size, bool process_reply_to, bool browse)
-    : super(url, user, password, sasl_mechanisms, timeout, conn_reconnect, max_frame_size),
+ReceiverHandler::ReceiverHandler(
+    const string &url,
+    string msg_action,
+    int msg_action_size,
+    string user,
+    string password,
+    string sasl_mechanisms,
+    int timeout,
+    string conn_reconnect,
+    int32_t conn_reconnect_interval,
+    int32_t conn_reconnect_limit,
+    int32_t conn_reconnect_timeout,
+    uint32_t conn_reconnect_first,
+    uint32_t conn_reconnect_increment,
+    bool conn_reconnect_doubling,
+    uint32_t max_frame_size,
+    bool process_reply_to,
+    bool browse
+)
+    : super(
+        url,
+        user,
+        password,
+        sasl_mechanisms,
+        timeout,
+        conn_reconnect,
+        conn_reconnect_interval,
+        conn_reconnect_limit,
+        conn_reconnect_timeout,
+        conn_reconnect_first,
+        conn_reconnect_increment,
+        conn_reconnect_doubling,
+        max_frame_size
+    ),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
@@ -72,6 +104,24 @@ void ReceiverHandler::on_container_start(container &c)
     
     if (conn_reconnect == "default") {
         conn_opts = conn_opts.reconnect(reconnect_timer());
+    } else if (conn_reconnect == "custom") {
+        logger(debug) << "Reconnect first: " << conn_reconnect_first;
+        logger(debug) << "Reconnect interval (max): " << conn_reconnect_interval;
+        logger(debug) << "Reconnect increment: " << conn_reconnect_increment;
+        logger(debug) << "Reconnect doubling: " << conn_reconnect_doubling;
+        logger(debug) << "Reconnect limit (max_retries): " << conn_reconnect_limit;
+        logger(debug) << "Reconnect timeout: " << conn_reconnect_timeout;
+
+        conn_opts = conn_opts.reconnect(
+            reconnect_timer(
+                conn_reconnect_first,
+                conn_reconnect_interval,
+                conn_reconnect_increment,
+                conn_reconnect_doubling,
+                conn_reconnect_limit,
+                conn_reconnect_timeout
+            )
+        );
     }
 
     logger(debug) << "Creating a receiver and connecting to the server";

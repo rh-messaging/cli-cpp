@@ -53,6 +53,42 @@ ModernOptionsParser::ModernOptionsParser()
             .help("client RECONNECT settings (default: default)")
             .metavar("RECONNECT");
 
+    // max, max_delay
+    add_option("--conn-reconnect-interval")
+            .dest("conn-reconnect-interval")
+            .help("client reconnect INTERVAL (only supported with \"custom\" reconnect, default: -1)")
+            .metavar("INTERVAL");
+
+    // max_retries
+    add_option("--conn-reconnect-limit")
+            .dest("conn-reconnect-limit")
+            .help("client reconnect LIMIT (only supported with \"custom\" reconnect, default: -1)")
+            .metavar("LIMIT");
+
+    // timeout
+    add_option("--conn-reconnect-timeout")
+            .dest("conn-reconnect-timeout")
+            .help("client reconnect TIMEOUT (only supported with \"custom\" reconnect, default: -1)")
+            .metavar("TIMEOUT");
+
+/*********************** Reactive C++ API client extras ***********************/
+   add_option("--conn-reconnect-first")
+            .dest("conn-reconnect-first")
+            .help("client reconnect FIRST (only supported with \"custom\" reconnect, default: 0)")
+            .metavar("FIRST");
+
+   add_option("--conn-reconnect-increment")
+            .dest("conn-reconnect-increment")
+            .help("client reconnect INCREMENT (only supported with \"custom\" reconnect, default: 100)")
+            .metavar("INCREMENT");
+
+    add_option("--conn-reconnect-doubling")
+            .dest("conn-reconnect-doubling")
+            .help("client reconnect DOUBLING (only supported with \"custom\" reconnect, default: true)")
+            .metavar("DOUBLING");
+/******************************************************************************/
+    
+
     std::stringstream sstm;
     sstm << "maximum frame SIZE (" << MIN_MAX_FRAME_SIZE << " - " << UINT32_MAX << ", default: " << UINT32_MAX << ")";
     add_option("--conn-max-frame-size")
