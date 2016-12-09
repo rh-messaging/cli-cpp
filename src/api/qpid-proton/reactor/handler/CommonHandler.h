@@ -52,9 +52,29 @@ class CommonHandler : public messaging_handler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
+     * @param conn_reconnect_interval reconnect interval
+     * @param conn_reconnect_limit reconnect limit
+     * @param conn_reconnect_timeout reconnect timeout
+     * @param conn_reconnect_first reconnect first
+     * @param conn_reconnect_increment reconnect increment
+     * @param conn_reconnect_doubling reconnect doubling
      * @param max_frame_size maximum frame size
      */
-    CommonHandler(const string &url, string user, string password, string sasl_mechanisms, int timeout = 10, string conn_reconnect = "default", uint32_t max_frame_size = -1);
+    CommonHandler(
+        const string &url,
+        string user,
+        string password,
+        string sasl_mechanisms,
+        int timeout = 10,
+        string conn_reconnect = "default",
+        int32_t conn_reconnect_interval = -1,
+        int32_t conn_reconnect_limit = -1,
+        int32_t conn_reconnect_timeout = -1,
+        uint32_t conn_reconnect_first = 0,
+        uint32_t conn_reconnect_increment = 100,
+        bool conn_reconnect_doubling = true,
+        uint32_t max_frame_size = -1
+    );
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
@@ -91,6 +111,36 @@ class CommonHandler : public messaging_handler {
      * Type of reconnection
      */
     string conn_reconnect;
+
+    /**
+     * Reconnect interval
+     */
+    int32_t conn_reconnect_interval;
+
+    /**
+     * Reconnect limit
+     */
+    int32_t conn_reconnect_limit;
+
+    /**
+     * Reconnect timeout
+     */
+    int32_t conn_reconnect_timeout;
+
+    /**
+     * Reconnect first
+     */
+    uint32_t conn_reconnect_first;
+
+    /**
+     * Reconnect increment
+     */
+    uint32_t conn_reconnect_increment;
+
+    /**
+     * Reconnect doubling
+     */
+    bool conn_reconnect_doubling;
 
     /**
      * Maximum frame size
