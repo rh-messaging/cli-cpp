@@ -19,13 +19,33 @@ using namespace dtests::common::log;
 Logger CommonHandler::logger = LoggerWrapper::getLogger();
 
 
-CommonHandler::CommonHandler(const string &url_str, string user, string password, string sasl_mechanisms, int timeout, string conn_reconnect, uint32_t max_frame_size)
+CommonHandler::CommonHandler(
+    const string &url_str,
+    string user,
+    string password,
+    string sasl_mechanisms,
+    int timeout,
+    string conn_reconnect,
+    int32_t conn_reconnect_interval,
+    int32_t conn_reconnect_limit,
+    int32_t conn_reconnect_timeout,
+    uint32_t conn_reconnect_first,
+    uint32_t conn_reconnect_increment,
+    bool conn_reconnect_doubling,
+    uint32_t max_frame_size
+)
     : super(),
     broker_url(url_str),
     user(user),
     password(password),
     sasl_mechanisms(sasl_mechanisms),
     conn_reconnect(conn_reconnect),
+    conn_reconnect_interval(conn_reconnect_interval),
+    conn_reconnect_limit(conn_reconnect_limit),
+    conn_reconnect_timeout(conn_reconnect_timeout),
+    conn_reconnect_first(conn_reconnect_first),
+    conn_reconnect_increment(conn_reconnect_increment),
+    conn_reconnect_doubling(conn_reconnect_doubling),
     max_frame_size(max_frame_size),
     cont(NULL),
     timer(timeout, "timeout")
