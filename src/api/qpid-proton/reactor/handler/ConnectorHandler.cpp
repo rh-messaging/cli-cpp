@@ -20,6 +20,7 @@ ConnectorHandler::ConnectorHandler(
     uint32_t conn_reconnect_first,
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
+    bool conn_reconnect_custom,
     uint32_t max_frame_size
 )
     : super(
@@ -35,6 +36,7 @@ ConnectorHandler::ConnectorHandler(
         conn_reconnect_first,
         conn_reconnect_increment,
         conn_reconnect_doubling,
+        conn_reconnect_custom,
         max_frame_size
     ),
     objectControl(CONNECTION),
@@ -94,10 +96,11 @@ void ConnectorHandler::on_container_start(container &c)
                                     .max_frame_size(max_frame_size);
 
     logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+    logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
     
-    if (conn_reconnect == "default") {
+    if (conn_reconnect == "true" && conn_reconnect_custom == false) {
         conn_opts = conn_opts.reconnect(reconnect_timer());
-    } else if (conn_reconnect == "custom") {
+    } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
         logger(debug) << "Reconnect first: " << conn_reconnect_first;
         logger(debug) << "Reconnect interval (max): " << conn_reconnect_interval;
         logger(debug) << "Reconnect increment: " << conn_reconnect_increment;

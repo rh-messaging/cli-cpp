@@ -74,40 +74,56 @@ int ReceivingClient::run(int argc, char **argv) const
     string password = options["password"];
   
     string sasl_mechanisms = options["sasl-mechanisms"];
+    
+    bool conn_reconnect_custom = false;
 
-    string conn_reconnect = "default";
+    string conn_reconnect = "true";
     if (options.is_set("conn-reconnect")) {
-        conn_reconnect = options["conn-reconnect"];
+        std::transform(options["conn-reconnect"].begin(), options["conn-reconnect"].end(), conn_reconnect.begin(), ::tolower);
     }
 
     int32_t conn_reconnect_interval = -1;
     if (options.is_set("conn-reconnect-interval")) {
         conn_reconnect_interval = std::strtol(options["conn-reconnect-interval"].c_str(), NULL, 10);
+
+        conn_reconnect_custom = true;
     }
 
     int32_t conn_reconnect_limit = -1;
     if (options.is_set("conn-reconnect-limit")) {
         conn_reconnect_limit = std::strtol(options["conn-reconnect-limit"].c_str(), NULL, 10);
+
+        conn_reconnect_custom = true;
     }
 
     int32_t conn_reconnect_timeout = -1;
     if (options.is_set("conn-reconnect-timeout")) {
         conn_reconnect_timeout = std::strtol(options["conn-reconnect-timeout"].c_str(), NULL, 10);
+
+        conn_reconnect_custom = true;
     }
 
     uint32_t conn_reconnect_first = 0;
     if (options.is_set("conn-reconnect-first")) {
         conn_reconnect_first = std::strtoul(options["conn-reconnect-first"].c_str(), NULL, 10);
+
+        conn_reconnect_custom = true;
     }
 
     uint32_t conn_reconnect_increment = 100;
     if (options.is_set("conn-reconnect-increment")) {
         conn_reconnect_increment = std::strtoul(options["conn-reconnect-increment"].c_str(), NULL, 10);
+
+        conn_reconnect_custom = true;
     }
 
     bool conn_reconnect_doubling = true;
-    if (options.is_set("conn-reconnect-doubling") && options["conn-reconnect-doubling"] == "false") {
-        conn_reconnect_doubling = false;
+    if (options.is_set("conn-reconnect-doubling")) {
+        if (options["conn-reconnect-doubling"] == "false") {
+            conn_reconnect_doubling = false;
+        }
+
+        conn_reconnect_custom = true;
     }
 
     uint32_t max_frame_size = -1;
@@ -147,6 +163,7 @@ int ReceivingClient::run(int argc, char **argv) const
         conn_reconnect_first,
         conn_reconnect_increment,
         conn_reconnect_doubling,
+        conn_reconnect_custom,
         max_frame_size,
         process_reply_to,
         browse

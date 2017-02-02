@@ -58,6 +58,7 @@ class CommonHandler : public messaging_handler {
      * @param conn_reconnect_first reconnect first
      * @param conn_reconnect_increment reconnect increment
      * @param conn_reconnect_doubling reconnect doubling
+     * @param conn_reconnect_custom custom reconnect values
      * @param max_frame_size maximum frame size
      */
     CommonHandler(
@@ -66,13 +67,14 @@ class CommonHandler : public messaging_handler {
         string password,
         string sasl_mechanisms,
         int timeout = 10,
-        string conn_reconnect = "default",
+        string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
         int32_t conn_reconnect_limit = -1,
         int32_t conn_reconnect_timeout = -1,
         uint32_t conn_reconnect_first = 0,
         uint32_t conn_reconnect_increment = 100,
         bool conn_reconnect_doubling = true,
+        bool conn_reconnect_custom = false,
         uint32_t max_frame_size = -1
     );
     virtual ~CommonHandler();
@@ -141,6 +143,11 @@ class CommonHandler : public messaging_handler {
      * Reconnect doubling
      */
     bool conn_reconnect_doubling;
+
+    /**
+     * Custom reconnect values
+     */
+    bool conn_reconnect_custom;
 
     /**
      * Maximum frame size
