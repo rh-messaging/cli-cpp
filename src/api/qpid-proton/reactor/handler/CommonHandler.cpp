@@ -32,6 +32,7 @@ CommonHandler::CommonHandler(
     uint32_t conn_reconnect_first,
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
+    bool conn_reconnect_custom,
     uint32_t max_frame_size
 )
     : super(),
@@ -46,6 +47,7 @@ CommonHandler::CommonHandler(
     conn_reconnect_first(conn_reconnect_first),
     conn_reconnect_increment(conn_reconnect_increment),
     conn_reconnect_doubling(conn_reconnect_doubling),
+    conn_reconnect_custom(conn_reconnect_custom),
     max_frame_size(max_frame_size),
     cont(NULL),
     timer(timeout, "timeout")

@@ -5,6 +5,9 @@
  *      Author: opiske
  */
 
+#include <algorithm>
+#include <string>
+
 #include <stdint.h>
 #include <cstdlib>
 
@@ -13,6 +16,8 @@
 #define MIN_MAX_FRAME_SIZE 512
 
 using namespace dtests::common;
+
+using std::string;
 
 ModernOptionsParser::ModernOptionsParser()
     : super()
@@ -50,41 +55,41 @@ ModernOptionsParser::ModernOptionsParser()
 
     add_option("--conn-reconnect")
             .dest("conn-reconnect")
-            .help("client RECONNECT settings (default: default)")
+            .help("client RECONNECT setting (true/false, default: true)")
             .metavar("RECONNECT");
 
     // max, max_delay
     add_option("--conn-reconnect-interval")
             .dest("conn-reconnect-interval")
-            .help("client reconnect INTERVAL (only supported with \"custom\" reconnect, default: -1)")
+            .help("client reconnect INTERVAL (default: -1)")
             .metavar("INTERVAL");
 
     // max_retries
     add_option("--conn-reconnect-limit")
             .dest("conn-reconnect-limit")
-            .help("client reconnect LIMIT (only supported with \"custom\" reconnect, default: -1)")
+            .help("client reconnect LIMIT (default: -1)")
             .metavar("LIMIT");
 
     // timeout
     add_option("--conn-reconnect-timeout")
             .dest("conn-reconnect-timeout")
-            .help("client reconnect TIMEOUT (only supported with \"custom\" reconnect, default: -1)")
+            .help("client reconnect TIMEOUT (default: -1)")
             .metavar("TIMEOUT");
 
 /*********************** Reactive C++ API client extras ***********************/
    add_option("--conn-reconnect-first")
             .dest("conn-reconnect-first")
-            .help("client reconnect FIRST (only supported with \"custom\" reconnect, default: 0)")
+            .help("client reconnect FIRST (default: 0)")
             .metavar("FIRST");
 
    add_option("--conn-reconnect-increment")
             .dest("conn-reconnect-increment")
-            .help("client reconnect INCREMENT (only supported with \"custom\" reconnect, default: 100)")
+            .help("client reconnect INCREMENT (default: 100)")
             .metavar("INCREMENT");
 
     add_option("--conn-reconnect-doubling")
             .dest("conn-reconnect-doubling")
-            .help("client reconnect DOUBLING (only supported with \"custom\" reconnect, default: true)")
+            .help("client reconnect DOUBLING (true/false, default: true)")
             .metavar("DOUBLING");
 /******************************************************************************/
     
@@ -125,5 +130,27 @@ void ModernOptionsParser::validate(const Values &options) const
         std::stringstream sstm;
         sstm << "Maximum frame size " << options["conn-max-frame-size"] << " is out of range (" << MIN_MAX_FRAME_SIZE << " - " << UINT32_MAX << ")";
         error(sstm.str());
+    }
+
+    if (options.is_set("conn-reconnect")) {
+        string conn_reconnect_lower = options["conn-reconnect"];
+        std::transform(conn_reconnect_lower.begin(), conn_reconnect_lower.end(), conn_reconnect_lower.begin(), ::tolower);
+
+        if (conn_reconnect_lower != "true" && conn_reconnect_lower != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["conn-reconnect"] << "\" is not valid for --conn-reconnect option, must be one of true/false";
+            error(sstm.str());
+        }
+    }
+
+    if (options.is_set("conn-reconnect-doubling")) {
+        if (options["conn-reconnect-doubling"] != "true" && options["conn-reconnect-doubling"] != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["conn-reconnect-doubling"] << "\" is not valid for --conn-reconnect-doubling option, must be one of true/false";
+            error(sstm.str());
+        }
+
     }
 }

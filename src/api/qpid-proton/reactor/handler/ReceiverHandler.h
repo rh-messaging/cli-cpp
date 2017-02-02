@@ -71,6 +71,7 @@ class ReceiverHandler : public CommonHandler {
      * @param conn_reconnect_first reconnect first
      * @param conn_reconnect_increment reconnect increment
      * @param conn_reconnect_doubling reconnect doubling
+     * @param conn_reconnect_custom custom reconnect values
      * @param max_frame_size maximum frame size
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      * @param browse enable browsing receiver
@@ -83,13 +84,14 @@ class ReceiverHandler : public CommonHandler {
         string password,
         string sasl_mechanisms,
         int timeout = 10,
-        string conn_reconnect = "default",
+        string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
         int32_t conn_reconnect_limit = -1,
         int32_t conn_reconnect_timeout = -1,
         uint32_t conn_reconnect_first = 0,
         uint32_t conn_reconnect_increment = 100,
         bool conn_reconnect_doubling = true,
+        bool conn_reconnect_custom = false,
         uint32_t max_frame_size = -1,
         bool process_reply_to = false,
         bool browse = false
