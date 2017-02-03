@@ -137,7 +137,8 @@ int SendingClient::run(int argc, char **argv) const
 
     string conn_reconnect = "true";
     if (options.is_set("conn-reconnect")) {
-        std::transform(options["conn-reconnect"].begin(), options["conn-reconnect"].end(), conn_reconnect.begin(), ::tolower);
+        conn_reconnect = options["conn-reconnect"];
+        std::transform(conn_reconnect.begin(), conn_reconnect.end(), conn_reconnect.begin(), ::tolower);
     }
 
     int32_t conn_reconnect_interval = -1;
