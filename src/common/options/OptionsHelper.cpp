@@ -31,7 +31,7 @@ string OptionsSetter::getContent() const
 
     if (options.is_set("msg-content")) {
         return options["msg-content"];
-    } else {
+    } else if(options.is_set("msg-content-from-file")) {
         const string contentFile = options["msg-content-from-file"];
 
         fs::path file(contentFile);
@@ -53,5 +53,7 @@ string OptionsSetter::getContent() const
         logger(debug) << "Read from file " << content;
 
         return content;
+    } else {
+        return "";
     }
 }
