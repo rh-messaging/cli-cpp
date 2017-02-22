@@ -17,6 +17,10 @@
 #include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
 #include <proton/source_options.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/receiver_options.hpp>
+#include <proton/reconnect_timer.hpp>
+#include <proton/thread_safe.hpp>
 
 #include "CommonHandler.h"
 

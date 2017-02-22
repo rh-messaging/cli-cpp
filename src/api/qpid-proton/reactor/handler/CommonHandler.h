@@ -16,6 +16,7 @@
 #include <proton/url.hpp>
 #include <proton/function.hpp>
 
+#include <proton/message.hpp>
 
 
 #include "Timer.h"
@@ -25,7 +26,6 @@
 
 using proton::messaging_handler;
 using proton::url;
-using proton::task;
 using proton::container;
 using proton::void_function0;
 using proton::duration;

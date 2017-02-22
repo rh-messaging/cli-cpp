@@ -14,16 +14,19 @@
 #ifndef SENDERHANDLER_H
 #define SENDERHANDLER_H
 
-#include <proton/task.hpp>
 #include <proton/tracker.hpp>
+#include <proton/message_id.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/reconnect_timer.hpp>
+#include <proton/thread_safe.hpp>
 
 #include "CommonHandler.h"
 #include "Timer.h"
 
 using proton::message;
+using proton::message_id;
 using proton::connection;
 using proton::sender;
-using proton::task;
 using proton::delivery;
 using proton::transport;
 using proton::tracker;
