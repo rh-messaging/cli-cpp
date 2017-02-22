@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <string>
 
+#include <limits>
+#define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #include <cstdlib>
 

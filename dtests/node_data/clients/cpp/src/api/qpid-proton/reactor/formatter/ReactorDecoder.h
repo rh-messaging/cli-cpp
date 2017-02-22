@@ -15,6 +15,7 @@
 #define REACTORDECODER_H
 
 #include <proton/message.hpp>
+#include <proton/message_id.hpp>
 #include <proton/types.hpp>
 #include <proton/error.hpp>
 
@@ -27,6 +28,7 @@
 
 using proton::message;
 using proton::message_id;
+using proton::get;
 using proton::ARRAY;
 using proton::MAP;
 using proton::LIST;
