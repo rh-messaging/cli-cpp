@@ -83,7 +83,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 		"Flags used by the compiler during all build types." FORCE
 	)
 
-        set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O2 -g -pipe -std=c++03 -fdiagnostics-color=auto" CACHE STRING
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O2 -g -pipe ${CMAKE_USER_C_FLAGS}" CACHE STRING
 		"Flags used by the compiler during all build types." FORCE
 	)
 
@@ -102,9 +102,9 @@ add_custom_target(documentation
    COMMAND ${CMAKE_COMMAND} -P documentation.cmake
 )
 
-set(ENABLE_QPID_PROTON OFF CACHE BOOL "Enable qpid proton clients")
+set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
 set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
-set(ENABLE_MODERN OFF CACHE BOOL "Enable usage of refactored code")
+set(ENABLE_MODERN ON CACHE BOOL "Enable usage of refactored code")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
 
 if (BUILD_WITH_UNIT_TESTS)
