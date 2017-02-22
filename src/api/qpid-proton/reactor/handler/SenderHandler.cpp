@@ -155,7 +155,7 @@ void SenderHandler::on_sendable(sender &s)
     while (credit > 0 && sent < count) {
         logger(trace) << "Sending messages through the link";
         
-        m.id(sent);
+        m.id(message_id(sent));
         s.send(m);
         logger(trace) << "Sent message: " << m.body().as_string();
          

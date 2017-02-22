@@ -14,6 +14,9 @@
 
 #include <list>
 #include <proton/connection.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/reconnect_timer.hpp>
+#include <proton/thread_safe.hpp>
 
 using proton::connection;
 using proton::session;

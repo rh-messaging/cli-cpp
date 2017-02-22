@@ -1,4 +1,4 @@
-
+#define __STDC_LIMIT_MACROS
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
