@@ -21,6 +21,8 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
+using dtests::common::UriParser;
+
 ReceivingClient::ReceivingClient()
     : super()
 {
@@ -42,6 +44,7 @@ int ReceivingClient::run(int argc, char **argv) const
     const string desc = "C/C++ AMQ reactive API receiver client for Qpid Proton";
 
     ReceiverOptionsParser parser = ReceiverOptionsParser();
+    UriParser uri_parser = UriParser();
 
     /**
      * WARNING: do not reassign the result of chainned calls to usage/version/etc
@@ -59,6 +62,8 @@ int ReceivingClient::run(int argc, char **argv) const
 
     const string address = options["broker-url"];
     
+    uri_parser.parse(options["broker-url"]);
+    
     string msg_action = "no-action";
     if(options.is_set("msg-action")) {
         msg_action = options["msg-action"];
@@ -69,11 +74,28 @@ int ReceivingClient::run(int argc, char **argv) const
         msg_action_size = atoi(options["msg-action-size"].c_str());
     }
 
-    string user = options["user"];
-  
-    string password = options["password"];
-  
-    string sasl_mechanisms = options["sasl-mechanisms"];
+    string user = "";
+    if (options.is_set("user")) {
+        user = options["user"];
+    } else {
+        user = uri_parser.getUser();
+    }
+    
+    string password = "";
+    if (options.is_set("password")) {
+        password = options["password"];
+    } else {
+        password = uri_parser.getPassword();
+    }
+    
+    string sasl_mechanisms = "";
+    if (options.is_set("sasl-mechanisms")) {
+        sasl_mechanisms = options["sasl-mechanisms"];
+    } else if (user != "" || password != "") {
+        sasl_mechanisms = "PLAIN";
+    } else {
+        sasl_mechanisms = "ANONYMOUS";
+    }
     
     bool conn_reconnect_custom = false;
 
