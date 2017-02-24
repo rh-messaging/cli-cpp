@@ -22,6 +22,7 @@
 #include "options/modern/ReceiverOptionsParser.h"
 #include "options/OptionsHelper.h"
 #include "TypeUtils.h"
+#include "UriParser.h"
 
 using proton::message;
 

@@ -8,7 +8,6 @@
 #include <proton/message.hpp>
 #include "SendingClient.h"
 
-
 using proton::message;
 using proton::default_container;
 
@@ -18,6 +17,7 @@ namespace proton {
 namespace reactor {
 
 using namespace std;
+using dtests::common::UriParser;
 using dtests::proton::common::ModernClient;
 
 SendingClient::SendingClient()
@@ -110,6 +110,7 @@ int SendingClient::run(int argc, char **argv) const
     const string desc = "C/C++ AMQ reactive API sender client for Qpid Proton";
 
     SenderOptionsParser parser = SenderOptionsParser();
+    UriParser uri_parser = UriParser();
 
     /**
      * WARNING: do not reassign the result of chainned calls to usage/version/etc
@@ -127,11 +128,30 @@ int SendingClient::run(int argc, char **argv) const
 
     const string address = options["broker-url"];
     
-    string user = options["user"];
+    uri_parser.parse(options["broker-url"]);
+
+    string user = "";
+    if (options.is_set("user")) {
+        user = options["user"];
+    } else {
+        user = uri_parser.getUser();
+    }
     
-    string password = options["password"];
+    string password = "";
+    if (options.is_set("password")) {
+        password = options["password"];
+    } else {
+        password = uri_parser.getPassword();
+    }
     
-    string sasl_mechanisms = options["sasl-mechanisms"];
+    string sasl_mechanisms = "";
+    if (options.is_set("sasl-mechanisms")) {
+        sasl_mechanisms = options["sasl-mechanisms"];
+    } else if (user != "" || password != "") {
+        sasl_mechanisms = "PLAIN";
+    } else {
+        sasl_mechanisms = "ANONYMOUS";
+    }
     
     bool conn_reconnect_custom = false;
 
