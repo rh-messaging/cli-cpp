@@ -34,6 +34,7 @@ if (ENABLE_MODERN)
         logger/LoggerWrapper.cpp
 
 	Timer.cpp
+	UriParser.cpp
 	Client.cpp
 	ContentType.cpp
         MessageHeader.cpp
