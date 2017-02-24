@@ -82,7 +82,7 @@ class ConnectorHandler : public CommonHandler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
    
-    void on_transport_error(transport &trans);
+    //void on_transport_error(transport &trans);
     void on_transport_close(transport &t);
     
     void on_session_error(session &s);

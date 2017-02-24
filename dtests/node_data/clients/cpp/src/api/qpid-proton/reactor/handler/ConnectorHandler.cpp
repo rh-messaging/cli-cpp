@@ -164,10 +164,12 @@ void ConnectorHandler::on_connection_error(connection &conn)
     logger(error) << "Failed to connect to " << broker_url.host_port();
 }
 
+/*
 void ConnectorHandler::on_transport_error(transport &trans) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
 }
+*/
 
 void ConnectorHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
