@@ -255,11 +255,12 @@ void ReceiverHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
 }
 
-
+/*
 void ReceiverHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
 }
+*/
 
 void ReceiverHandler::on_connection_close(connection &conn)
 {
