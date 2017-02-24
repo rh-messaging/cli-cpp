@@ -147,7 +147,7 @@ int SendingClient::run(int argc, char **argv) const
     string sasl_mechanisms = "";
     if (options.is_set("sasl-mechanisms")) {
         sasl_mechanisms = options["sasl-mechanisms"];
-    } else if (user != "" || password != "") {
+    } else if (user != "" && password != "") {
         sasl_mechanisms = "PLAIN";
     } else {
         sasl_mechanisms = "ANONYMOUS";
