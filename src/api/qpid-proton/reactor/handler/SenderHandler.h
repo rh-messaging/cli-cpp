@@ -88,7 +88,7 @@ class SenderHandler : public CommonHandler {
     void on_connection_close(connection &c);
     void on_tracker_accept(tracker &t);
     
-    void on_transport_error(transport &t);
+    // void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
     /**

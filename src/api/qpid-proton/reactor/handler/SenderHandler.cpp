@@ -188,11 +188,12 @@ void SenderHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
 }
 
-
+/*
 void SenderHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << 
             " was interrupted";
 }
+*/
 
 void SenderHandler::on_connection_close(connection &c)
 {

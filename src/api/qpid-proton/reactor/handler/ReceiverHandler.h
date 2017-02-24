@@ -114,7 +114,7 @@ class ReceiverHandler : public CommonHandler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
 
-    void on_transport_error(transport &t);
+    //void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
   private:
