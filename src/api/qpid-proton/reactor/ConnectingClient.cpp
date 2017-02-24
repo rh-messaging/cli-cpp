@@ -19,6 +19,8 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
+using dtests::common::UriParser;
+
 ConnectingClient::ConnectingClient()
     : super()
 {
@@ -69,6 +71,7 @@ int ConnectingClient::run(int argc, char** argv) const
     const string desc = "C/C++ AMQ reactive API connecting client for Qpid Proton";
 
     ConnectorOptionsParser parser = ConnectorOptionsParser();
+    UriParser uri_parser = UriParser();
 
     /**
      * WARNING: do not reassign the result of chainned calls to usage/version/etc
@@ -86,11 +89,30 @@ int ConnectingClient::run(int argc, char** argv) const
 
     const string address = options["broker-url"];
 
-    string user = options["user"];
-
-    string password = options["password"];
+    uri_parser.parse(options["broker-url"]);
     
-    string sasl_mechanisms = options["sasl-mechanisms"];
+    string user = "";
+    if (options.is_set("user")) {
+        user = options["user"];
+    } else {
+        user = uri_parser.getUser();
+    }
+    
+    string password = "";
+    if (options.is_set("password")) {
+        password = options["password"];
+    } else {
+        password = uri_parser.getPassword();
+    }
+    
+    string sasl_mechanisms = "";
+    if (options.is_set("sasl-mechanisms")) {
+        sasl_mechanisms = options["sasl-mechanisms"];
+    } else if (user != "" || password != "") {
+        sasl_mechanisms = "PLAIN";
+    } else {
+        sasl_mechanisms = "ANONYMOUS";
+    }
     
     bool conn_reconnect_custom = false;
 

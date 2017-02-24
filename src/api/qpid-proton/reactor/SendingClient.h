@@ -20,6 +20,7 @@
 #include "Normalizer.h"
 #include "ContentType.h"
 #include "TypeUtils.h"
+#include "UriParser.h"
 
 using proton::message;
 

@@ -20,6 +20,7 @@
 #include "handler/ConnectorHandler.h"
 #include "options/modern/ConnectorOptionsParser.h"
 #include "options/OptionsHelper.h"
+#include "UriParser.h"
 
 namespace dtests {
 namespace proton {
