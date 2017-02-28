@@ -21,6 +21,9 @@
 #include "ContentType.h"
 #include "TypeUtils.h"
 #include "UriParser.h"
+#include "reactor/formatter/ReactorDecoder.h"
+#include "formatter/DictFormatter.h"
+#include "formatter/DictWriter.h"
 
 using proton::message;
 

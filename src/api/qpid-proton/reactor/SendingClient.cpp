@@ -5,7 +5,6 @@
  *      Author: opiske
  */
 
-#include <proton/message.hpp>
 #include "SendingClient.h"
 
 using proton::message;
@@ -97,8 +96,20 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
                     static_cast<value_setter> (&message::body), &mapNormalizer);
 
         } else {
-            std::cout << "Sending: " << content << std::endl;
             msg->body(content);
+           
+            if (options["log-msgs"] == "dict") {
+                ReactorDecoder decoder = ReactorDecoder(*msg);
+
+                std::ostringstream stream;
+                DictWriter writer = DictWriter(&stream);
+
+                DictFormatter formatter = DictFormatter();
+                formatter.printMessage(&decoder, &writer);
+
+                writer.endLine();
+                std::cout << writer.toString();
+            }
         }
     }
 }
@@ -217,6 +228,11 @@ int SendingClient::run(int argc, char **argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
+    string log_msgs = "";
+    if (options.is_set("log-msgs")) {
+        log_msgs = options["log-msgs"];
+    }
+
     message msg;
 
     setMessageOptions(setter, msg);
@@ -249,7 +265,8 @@ int SendingClient::run(int argc, char **argv) const
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
-        max_frame_size
+        max_frame_size,
+        log_msgs
     );
 
     handler.setMessage(msg);

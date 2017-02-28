@@ -35,7 +35,7 @@ ReceiverOptionsParser::ReceiverOptionsParser()
     
     add_option("--log-msgs")
             .dest("log-msgs")
-            .help("log message OPTIONS (currently ignored)")
+            .help("log message OPTIONS")
             .metavar("OPTIONS");
 
     add_option("--action")
