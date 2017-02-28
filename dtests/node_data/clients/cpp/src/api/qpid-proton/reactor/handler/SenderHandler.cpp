@@ -34,7 +34,8 @@ SenderHandler::SenderHandler(
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
-    uint32_t max_frame_size
+    uint32_t max_frame_size,
+    string log_msgs
 )
     : super(
         url,
@@ -50,7 +51,8 @@ SenderHandler::SenderHandler(
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
-        max_frame_size
+        max_frame_size,
+        log_msgs
     ),
     count(1),
     sent(0),

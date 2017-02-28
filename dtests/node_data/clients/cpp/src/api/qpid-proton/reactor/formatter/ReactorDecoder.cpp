@@ -68,10 +68,10 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
 
     logger(debug) << "Decoding " << property.name << ": ";
 
-    uint64_t id = 0;
+    string id = "None";
 
     try { 
-        id = get<uint64_t>(value);
+        id = get<string>(value);
     }
     catch (conversion_error &e) {
         logger(error) << "Unable to convert the property " << property.name 
@@ -144,10 +144,10 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
 void ReactorDecoder::decodeProperties(Writer *writer) const
 {
     logger(debug) << "Decoding message properties";
-    writer->startProperties();
+    // writer->startProperties();
     // The call below should be replaced with one that can handle regular maps
     // decodeValue(writer, m.application_properties().);
-    writer->endProperties();
+    // writer->endProperties();
 }
 
 void ReactorDecoder::decodeValue(Writer *writer, value &value) const
