@@ -154,6 +154,11 @@ int ReceivingClient::run(int argc, char **argv) const
         max_frame_size = std::strtoul(options["conn-max-frame-size"].c_str(), NULL, 10);
     }
 
+    string log_msgs = "";
+    if (options.is_set("log-msgs")) {
+        log_msgs = options["log-msgs"];
+    }
+
     OptionsSetter setter = OptionsSetter(options);
     
     int timeout = 0;
@@ -188,6 +193,7 @@ int ReceivingClient::run(int argc, char **argv) const
         conn_reconnect_doubling,
         conn_reconnect_custom,
         max_frame_size,
+        log_msgs,
         process_reply_to,
         browse
     );

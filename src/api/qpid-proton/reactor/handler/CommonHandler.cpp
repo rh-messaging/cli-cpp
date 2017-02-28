@@ -33,7 +33,8 @@ CommonHandler::CommonHandler(
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
-    uint32_t max_frame_size
+    uint32_t max_frame_size,
+    string log_msgs
 )
     : super(),
     broker_url(url_str),
@@ -49,6 +50,7 @@ CommonHandler::CommonHandler(
     conn_reconnect_doubling(conn_reconnect_doubling),
     conn_reconnect_custom(conn_reconnect_custom),
     max_frame_size(max_frame_size),
+    log_msgs(""),
     cont(NULL),
     timer(timeout, "timeout")
 {

@@ -35,6 +35,7 @@ ReceiverHandler::ReceiverHandler(
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
     uint32_t max_frame_size,
+    string log_msgs,
     bool process_reply_to,
     bool browse
 )
@@ -52,7 +53,8 @@ ReceiverHandler::ReceiverHandler(
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
-        max_frame_size
+        max_frame_size,
+        log_msgs
     ),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
@@ -206,17 +208,19 @@ void ReceiverHandler::on_message(delivery &d, message &m)
 
     logger(debug) << "Processing received message";
 
-    logger(trace) << "Decoding message";
-    ReactorDecoder decoder = ReactorDecoder(m);
+    if (log_msgs == "dict") {
+        logger(trace) << "Decoding message";
+        ReactorDecoder decoder = ReactorDecoder(m);
 
-    std::ostringstream stream;
-    DictWriter writer = DictWriter(&stream);
+        std::ostringstream stream;
+        DictWriter writer = DictWriter(&stream);
 
-    DictFormatter formatter = DictFormatter();
-    formatter.printMessage(&decoder, &writer);
+        DictFormatter formatter = DictFormatter();
+        formatter.printMessage(&decoder, &writer);
 
-    writer.endLine();
-    std::cout << writer.toString();
+        writer.endLine();
+        std::cout << writer.toString();
+    }
 
     if((msg_received_cnt % msg_action_size) == 0) {
         do_message_action(d);
