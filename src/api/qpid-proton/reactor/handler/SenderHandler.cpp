@@ -13,6 +13,10 @@
 
 #include "SenderHandler.h"
 
+#include "reactor/formatter/ReactorDecoder.h"
+#include "formatter/DictFormatter.h"
+#include "formatter/DictWriter.h"
+
 namespace dtests {
 namespace proton {
 namespace reactor {
@@ -167,6 +171,19 @@ void SenderHandler::on_sendable(sender &s)
         s.send(m_to_send);
 
         logger(trace) << "Sent message: " << m_to_send.body().as_string();
+
+        if (log_msgs == "dict") {
+            ReactorDecoder decoder = ReactorDecoder(m_to_send);
+
+            std::ostringstream stream;
+            DictWriter writer = DictWriter(&stream);
+
+            DictFormatter formatter = DictFormatter();
+            formatter.printMessage(&decoder, &writer);
+
+            writer.endLine();
+            std::cout << writer.toString();
+        }
          
         sent++;
 #if defined(__REACTOR_HAS_TIMER)
