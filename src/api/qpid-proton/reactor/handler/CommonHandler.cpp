@@ -50,7 +50,7 @@ CommonHandler::CommonHandler(
     conn_reconnect_doubling(conn_reconnect_doubling),
     conn_reconnect_custom(conn_reconnect_custom),
     max_frame_size(max_frame_size),
-    log_msgs(""),
+    log_msgs(log_msgs),
     cont(NULL),
     timer(timeout, "timeout")
 {
