@@ -96,19 +96,21 @@ void ReceiverHandler::on_container_start(container &c)
     
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
-    connection_options conn_opts = c.client_connection_options()
-                                    .user(user)
-                                    .password(password)
-                                    .sasl_enabled(true)
-                                    .sasl_allow_insecure_mechs(true)
-                                    .sasl_allowed_mechs(sasl_mechanisms)
-                                    .max_frame_size(max_frame_size);
+    connection_options conn_opts;
+    
+    if (!user.empty()) conn_opts.user(user);
+    if (!password.empty()) conn_opts.password(password);
+
+    conn_opts.sasl_enabled(true);
+    conn_opts.sasl_allow_insecure_mechs(true);
+    conn_opts.sasl_allowed_mechs(sasl_mechanisms);
+    conn_opts.max_frame_size(max_frame_size);
 
     logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
     logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
     
     if (conn_reconnect == "true" && conn_reconnect_custom == false) {
-        conn_opts = conn_opts.reconnect(reconnect_timer());
+        conn_opts.reconnect(reconnect_timer());
     } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
         logger(debug) << "Reconnect first: " << conn_reconnect_first;
         logger(debug) << "Reconnect interval (max): " << conn_reconnect_interval;
@@ -117,7 +119,7 @@ void ReceiverHandler::on_container_start(container &c)
         logger(debug) << "Reconnect limit (max_retries): " << conn_reconnect_limit;
         logger(debug) << "Reconnect timeout: " << conn_reconnect_timeout;
 
-        conn_opts = conn_opts.reconnect(
+        conn_opts.reconnect(
             reconnect_timer(
                 conn_reconnect_first,
                 conn_reconnect_interval,
