@@ -28,6 +28,7 @@
 
 using proton::message;
 using proton::message_id;
+using proton::coerce;
 using proton::get;
 using proton::ARRAY;
 using proton::MAP;
