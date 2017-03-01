@@ -106,7 +106,7 @@ void SenderHandler::on_container_start(container &c)
     conn_opts.sasl_enabled(true);
     conn_opts.sasl_allow_insecure_mechs(true);
     conn_opts.sasl_allowed_mechs(sasl_mechanisms);
-    conn_opts.max_frame_size(max_frame_size);
+    // conn_opts.max_frame_size(max_frame_size);
 
     logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
     logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
