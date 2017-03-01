@@ -97,19 +97,6 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
 
         } else {
             msg->body(content);
-           
-            if (options["log-msgs"] == "dict") {
-                ReactorDecoder decoder = ReactorDecoder(*msg);
-
-                std::ostringstream stream;
-                DictWriter writer = DictWriter(&stream);
-
-                DictFormatter formatter = DictFormatter();
-                formatter.printMessage(&decoder, &writer);
-
-                writer.endLine();
-                std::cout << writer.toString();
-            }
         }
     }
 }
