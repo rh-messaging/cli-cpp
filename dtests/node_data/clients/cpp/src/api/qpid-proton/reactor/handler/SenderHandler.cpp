@@ -159,9 +159,14 @@ void SenderHandler::on_sendable(sender &s)
     while (credit > 0 && sent < count) {
         logger(trace) << "Sending messages through the link";
         
-        m.id(message_id(sent));
-        s.send(m);
-        logger(trace) << "Sent message: " << m.body().as_string();
+        message m_to_send;
+
+        m_to_send.body(m.body());
+        m_to_send.id(message_id(sent));
+        
+        s.send(m_to_send);
+
+        logger(trace) << "Sent message: " << m_to_send.body().as_string();
          
         sent++;
 #if defined(__REACTOR_HAS_TIMER)
