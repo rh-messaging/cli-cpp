@@ -69,7 +69,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
     logger(debug) << "Decoding " << property.name << ": ";
 
     if (!value.empty()) {
-        try { 
+        try {
             uint64_t id = coerce<uint64_t>(value);
 
             writer->write(KeyValue(property.name, super::decodeValue(id)));
@@ -80,10 +80,16 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
                 writer->write(KeyValue(property.name, super::decodeValue(id)));
 
             } catch (conversion_error &e) {
-                logger(error) << "Unable to convert the property " << property.name
-                    << " because its value cannot be converted";
+                try {
+                    string id = coerce<uuid>(value).str();
 
-                writer->write(KeyValue(property.name, super::decodeValue("None")));
+                    writer->write(KeyValue(property.name, super::decodeValue(id)));
+                } catch (conversion_error &e) {
+                    logger(error) << "Unable to convert the property " << property.name
+                        << " because its value cannot be converted";
+
+                    writer->write(KeyValue(property.name, super::decodeValue("None")));
+                }
             }
         }
     } else {
