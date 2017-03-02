@@ -68,6 +68,7 @@ class ReceiverHandler : public CommonHandler {
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
+     * @param count count of messages to receive
      * @param conn_reconnect type of reconnection
      * @param conn_reconnect_interval reconnect interval
      * @param conn_reconnect_limit reconnect limit
@@ -89,6 +90,7 @@ class ReceiverHandler : public CommonHandler {
         string password,
         string sasl_mechanisms,
         int timeout = 10,
+        int count = 0,
         string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
         int32_t conn_reconnect_limit = -1,
@@ -140,6 +142,7 @@ class ReceiverHandler : public CommonHandler {
     int msg_received_cnt;
     bool process_reply_to;
     bool browse;
+    int count;
     std::map<string, sender> senders;
 
     void do_disconnect();

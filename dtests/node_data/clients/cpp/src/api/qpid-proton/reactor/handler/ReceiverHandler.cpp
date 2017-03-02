@@ -26,6 +26,7 @@ ReceiverHandler::ReceiverHandler(
     string password,
     string sasl_mechanisms,
     int timeout,
+    int count,
     string conn_reconnect,
     int32_t conn_reconnect_interval,
     int32_t conn_reconnect_limit,
@@ -56,6 +57,7 @@ ReceiverHandler::ReceiverHandler(
         max_frame_size,
         log_msgs
     ),
+    count(count),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
@@ -238,6 +240,11 @@ void ReceiverHandler::on_message(delivery &d, message &m)
         } else {
             logger(debug) << "Reply-to address is not set";
         }
+    }
+
+    if (msg_received_cnt == count) {
+        d.receiver().close();
+        d.connection().close();
     }
 
 #if defined(__REACTOR_HAS_TIMER)
