@@ -176,6 +176,11 @@ int ReceivingClient::run(int argc, char **argv) const
         browse = options.get("recv-browse");
     }
 
+    int count = 0;
+    if (options.is_set("count")) {
+        count = static_cast<int> (options.get("count"));
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         msg_action,
@@ -184,6 +189,7 @@ int ReceivingClient::run(int argc, char **argv) const
         password,
         sasl_mechanisms,
         timeout,
+        count,
         conn_reconnect,
         conn_reconnect_interval,
         conn_reconnect_limit,
