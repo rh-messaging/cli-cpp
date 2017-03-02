@@ -18,6 +18,7 @@
 #include <proton/message_id.hpp>
 #include <proton/types.hpp>
 #include <proton/error.hpp>
+#include <proton/uuid.hpp>
 
 #include <formatter/AbstractDecoder.h>
 #include <ContentType.h>
@@ -41,6 +42,7 @@ using proton::DOUBLE;
 using proton::value;
 using proton::type_id;
 using proton::conversion_error;
+using proton::uuid;
 
 /*
 #if PN_VERSION_MAJOR > 0 && PN_VERSION_MINOR == 12
