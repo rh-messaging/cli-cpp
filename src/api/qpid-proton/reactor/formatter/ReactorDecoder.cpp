@@ -105,7 +105,7 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
  */
 void ReactorDecoder::writeTTL(Writer *writer) const
 {
-    pn_timestamp_t ttl = m.expiry_time().milliseconds();
+    int64_t ttl = m.ttl().milliseconds();
     
     writer->write(KeyValue(MessageHeader::TTL.name,
             super::decodeValue(ttl)));
