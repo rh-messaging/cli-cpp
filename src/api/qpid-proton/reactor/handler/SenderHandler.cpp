@@ -163,17 +163,12 @@ void SenderHandler::on_sendable(sender &s)
     while (credit > 0 && sent < count) {
         logger(trace) << "Sending messages through the link";
         
-        message m_to_send;
+        s.send(m);
 
-        m_to_send.body(m.body());
-        m_to_send.id(message_id(sent));
-        
-        s.send(m_to_send);
-
-        logger(trace) << "Sent message: " << m_to_send.body().as_string();
+        logger(trace) << "Sent message: " << m.body().as_string();
 
         if (log_msgs == "dict") {
-            ReactorDecoder decoder = ReactorDecoder(m_to_send);
+            ReactorDecoder decoder = ReactorDecoder(m);
 
             std::ostringstream stream;
             DictWriter writer = DictWriter(&stream);
