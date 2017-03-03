@@ -58,9 +58,9 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
             &idNormalizer);
 
 #ifdef ENABLE_IMPLICIT_CONVERSIONS
-    timestamp def = timestamp(-1);
+    duration def = duration(0);
     setter.setNumber("msg-ttl", &msg,
-            static_cast<timestamp_setter> (&message::expiry_time), def);
+            static_cast<duration_setter> (&message::ttl), def);
 #endif
 
     setter.set("msg-user-id", &msg,
@@ -235,7 +235,7 @@ int SendingClient::run(int argc, char **argv) const
 #ifndef ENABLE_IMPLICIT_CONVERSIONS
     long value =  options.get("msg-ttl");
     
-    msg.expiry_time(timestamp(value));
+    msg.ttl(duration(value));
 #endif
 
     SenderHandler handler = SenderHandler(
