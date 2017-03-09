@@ -420,6 +420,7 @@ int main(int argc, char** argv)
                  message.setContent( boost::str(boost::format(options.msg_content) % count) );
 #else
                  message.getContentObject() = boost::str(boost::format(options.msg_content) % count);
+                 message.getContentObject().setEncoding("utf8");
 #endif
                 }
                 if (ptsdata != NULL) {
