@@ -11,6 +11,7 @@
 #include <optparse/OptionParser.h>
 
 #include "options/modern/ModernOptionsParser.h"
+#include "options/modern/StringAppendCallback.h"
 
 namespace dtests {
 namespace common {
@@ -22,11 +23,11 @@ namespace common {
 class SenderOptionsParser : public ModernOptionsParser {
   public:
     SenderOptionsParser();
-
-
     virtual ~SenderOptionsParser();
 
     virtual void validate(const Values &options) const;
+
+    StringAppendCallback callback;
 
   private:
     typedef ModernOptionsParser super;
