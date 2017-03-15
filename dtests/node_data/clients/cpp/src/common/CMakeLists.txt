@@ -69,6 +69,7 @@ target_link_libraries(dtests-cpp-common
 cmake_policy(SET CMP0003 OLD)
 add_library(dtests-cpp-common-options
 
+	options/modern/StringAppendCallback.cpp
 	options/modern/ModernOptionsParser.cpp
 	options/modern/SenderOptionsParser.cpp
 	options/modern/ReceiverOptionsParser.cpp
