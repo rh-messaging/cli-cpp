@@ -22,8 +22,6 @@ namespace common {
 class ReceiverOptionsParser : public ModernOptionsParser {
   public:
     ReceiverOptionsParser();
-
-
     virtual ~ReceiverOptionsParser();
 
     virtual void validate(const Values &options) const;

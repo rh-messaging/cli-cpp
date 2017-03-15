@@ -149,6 +149,10 @@ void ReceiverHandler::on_container_start(container &c)
     } else {
         recv = c.open_receiver(
                 broker_url,
+                c.receiver_options()
+                    .source(
+                        source_options().filters(this->fm)
+                    ),
                 conn_opts
         );
     }
@@ -290,3 +294,7 @@ void ReceiverHandler::do_disconnect()
 
 }
 
+void ReceiverHandler::setSelector(string selector)
+{
+    fm.put(symbol("selector"), selector);
+}

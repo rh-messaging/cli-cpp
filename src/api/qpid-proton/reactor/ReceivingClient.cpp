@@ -181,6 +181,11 @@ int ReceivingClient::run(int argc, char **argv) const
         count = static_cast<int> (options.get("count"));
     }
 
+    string selector = "";
+    if (options.is_set("recv-selector")) {
+        selector = options["recv-selector"];
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         msg_action,
@@ -203,6 +208,11 @@ int ReceivingClient::run(int argc, char **argv) const
         process_reply_to,
         browse
     );
+
+    if (selector != "") {
+        handler.setSelector(selector);
+    }
+
     default_container(handler).run();
 
     return 0;
