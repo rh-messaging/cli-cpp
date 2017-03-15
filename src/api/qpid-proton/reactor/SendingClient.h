@@ -47,8 +47,10 @@ class SendingClient : public ModernClient {
     typedef ModernClient super;
 
     void setMessageOptions(const OptionsSetter &setter, message &msg) const;
-    void setMessageContent(const OptionsSetter &setter, 
-        const optparse::Values &options, message *msg) const;
+    void setMessageContent(const OptionsSetter &setter, const optparse::Values &options, message *msg) const;
+    bool nameVal(const string& in, string& name, string& value, string& separator) const;
+    void setMessageProperty(message *msg, const string &property) const;
+    void setMessageProperties(StringAppendCallback &callback, message *msg) const;
 };
 
 } /* namespace reactor */

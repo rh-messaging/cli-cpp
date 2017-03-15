@@ -71,16 +71,48 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
 
     setter.setBoolean("msg-durable", &msg,
             static_cast<boolean_setter> (&message::durable));
-
+/*
+ * This is replaced by setMessageProperties
+ *
 #ifdef REACTOR_PROPERTY_MAP_USES_STL
     message::property_map &properties = msg.properties();
-
-    setter.setMap("msg-properties", properties);
+    
+    setter.setMap("msg-property", properties);
 #endif // REACTOR_PROPERTY_MAP_USES_STL
+ */
 }
 
-void SendingClient::setMessageContent(const OptionsSetter &setter,
-        const optparse::Values &options, message *msg) const
+bool SendingClient::nameVal(const string &in, string &name, string &value, string &separator) const
+{
+    std::string::size_type i = in.find("=");
+    separator = "=";
+    if (i == std::string::npos) {
+        std::string::size_type i = in.find("~");
+        separator = "~";
+        if (i == std::string::npos) {
+          name = in;
+          return false;
+        } else {
+          name = in.substr(0, i);
+          if (i+1 < in.size()) {
+              value = in.substr(i+1);
+              return true;
+          } else {
+              return false;
+          }
+        }
+    } else {
+        name = in.substr(0, i);
+        if (i+1 < in.size()) {
+            value = in.substr(i+1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+void SendingClient::setMessageContent(const OptionsSetter &setter, const optparse::Values &options, message *msg) const
 {
     string content_type = options["msg-content-type"];
 
@@ -98,6 +130,57 @@ void SendingClient::setMessageContent(const OptionsSetter &setter,
         } else {
             msg->body(content);
         }
+    }
+}
+
+void SendingClient::setMessageProperty(message *msg, const string &property) const
+{
+    string name;
+    string val;
+    string separator;
+    string temp;
+
+    if (nameVal(property, name, val, separator)) {
+        if (separator == "~") {
+          temp.resize(val.size());
+          
+          std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
+
+          if (temp == "true") {
+            // true
+            msg->properties().put(name, true);
+          } else if (temp == "false") {
+            // false
+            msg->properties().put(name, false);
+          } else if (val.find(".") != std::string::npos || val.find("e") != std::string::npos || val.find("E") != std::string::npos) {
+            // maybe double
+            try {
+                // double
+                msg->properties().put(name, stod(val));
+            } catch (exception& e) {
+                // string
+                msg->properties().put(name, val);
+            }
+          } else {
+            // long
+            msg->properties().put(name, stoll(val));
+          }
+          // msg->properties().get(name).setEncoding("utf8");
+        } else {
+          msg->properties().put(name, val);
+          // msg->properties().get(name).setEncoding("utf8");
+        }
+    } else {
+        msg->properties().put(name, val);
+    }
+}
+
+void SendingClient::setMessageProperties(StringAppendCallback &callback, message *msg) const
+{
+    vector<string> properties = callback.getStrings();
+
+    for (vector<string>::iterator it = properties.begin(); it != properties.end(); ++it) {
+        setMessageProperty(msg, *it);
     }
 }
 
@@ -224,6 +307,8 @@ int SendingClient::run(int argc, char **argv) const
 
     setMessageOptions(setter, msg);
     setMessageContent(setter, options, &msg);
+    setMessageProperties(parser.callback, &msg);
+
    
 /*
  * Note 1: this is a left-over from setMessageOptions. Since I don't want to 

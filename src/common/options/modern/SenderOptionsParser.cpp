@@ -13,6 +13,8 @@ using namespace dtests::common;
 SenderOptionsParser::SenderOptionsParser()
     : super()
 {
+    callback = StringAppendCallback();
+
     add_option("--msg-content")
             .dest("msg-content")
             .help("specify CONTENT of message")
@@ -75,10 +77,11 @@ SenderOptionsParser::SenderOptionsParser()
             .help("specify FILENAME to load content from")
             .metavar("FILENAME");
 
-    add_option("--msg-properties")
-            .dest("msg-properties")
-            .help("specify message PROPERTIES")
-            .metavar("PROPERTIES");
+    add_option("--msg-property")
+            .action("callback")
+            .callback(callback)
+            .help("specify message PROPERTY")
+            .metavar("PROPERTY");
 
 #ifdef ENABLE_BLOCKING
     add_option("--tx-size")
