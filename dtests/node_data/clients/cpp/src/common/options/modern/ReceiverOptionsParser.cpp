@@ -60,6 +60,11 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .help("browsing receiver if enabled")
             .type("bool")
             .action("store_true");
+
+    add_option("--recv-selector")
+            .dest("recv-selector")
+            .help("specify message SELECTOR")
+            .metavar("SELECTOR");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()

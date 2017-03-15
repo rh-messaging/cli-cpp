@@ -45,6 +45,7 @@ using proton::source_options;
 using proton::reconnect_timer;
 using proton::transport;
 using proton::connection_options;
+using proton::symbol;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
@@ -121,6 +122,8 @@ class ReceiverHandler : public CommonHandler {
     //void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
+    void setSelector(string selector);
+
   private:
     typedef CommonHandler super;
     receiver recv;
@@ -132,8 +135,9 @@ class ReceiverHandler : public CommonHandler {
             parent.timerEvent();
         }
     };
-    
-    
+
+    source::filter_map fm;
+
     duration interval;
     timer_event_t timer_event;
 
