@@ -13,7 +13,9 @@ using namespace dtests::common;
 SenderOptionsParser::SenderOptionsParser()
     : super()
 {
-    callback = StringAppendCallback();
+    callbackProperty = StringAppendCallback();
+    callbackList = StringAppendCallback();
+    callbackMap = StringAppendCallback();
 
     add_option("--msg-content")
             .dest("msg-content")
@@ -79,9 +81,21 @@ SenderOptionsParser::SenderOptionsParser()
 
     add_option("--msg-property")
             .action("callback")
-            .callback(callback)
-            .help("specify message PROPERTY")
+            .callback(callbackProperty)
+            .help("specify message PROPERTY (NAME=VALUE|NAME~VALUE, '~' enables type auto-cast)")
             .metavar("PROPERTY");
+
+    add_option("--msg-content-list-item")
+            .action("callback")
+            .callback(callbackList)
+            .help("specify list ENTRY for message body (VALUE|~VALUE, '~' enables type auto-cast)")
+            .metavar("ENTRY");
+
+    add_option("--msg-content-map-item")
+            .action("callback")
+            .callback(callbackMap)
+            .help("specify map ENTRY for message body (NAME=VALUE|NAME~VALUE, '~' enables type auto-cast)")
+            .metavar("ENTRY");
 
 #ifdef ENABLE_BLOCKING
     add_option("--tx-size")

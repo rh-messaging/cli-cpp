@@ -27,7 +27,9 @@ class SenderOptionsParser : public ModernOptionsParser {
 
     virtual void validate(const Values &options) const;
 
-    StringAppendCallback callback;
+    StringAppendCallback callbackProperty;
+    StringAppendCallback callbackList;
+    StringAppendCallback callbackMap;
 
   private:
     typedef ModernOptionsParser super;
