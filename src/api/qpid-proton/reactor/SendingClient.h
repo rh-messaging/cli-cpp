@@ -50,7 +50,11 @@ class SendingClient : public ModernClient {
     void setMessageContent(const OptionsSetter &setter, const optparse::Values &options, message *msg) const;
     bool nameVal(const string& in, string& name, string& value, string& separator) const;
     void setMessageProperty(message *msg, const string &property) const;
-    void setMessageProperties(StringAppendCallback &callback, message *msg) const;
+    void setMessageListItem(message *msg, const string &property) const;
+    void setMessageMapItem(message *msg, const string &property) const;
+    void setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const;
+    void setMessageList(StringAppendCallback &callbackList, message *msg) const;
+    void setMessageMap(StringAppendCallback &callbackMap, message *msg) const;
 };
 
 } /* namespace reactor */

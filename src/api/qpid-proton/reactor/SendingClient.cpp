@@ -156,14 +156,14 @@ void SendingClient::setMessageProperty(message *msg, const string &property) con
             // maybe double
             try {
                 // double
-                msg->properties().put(name, stod(val));
+                msg->properties().put(name, atof(val.c_str()));
             } catch (exception& e) {
                 // string
                 msg->properties().put(name, val);
             }
           } else {
             // long
-            msg->properties().put(name, stoll(val));
+            msg->properties().put(name, atol(val.c_str()));
           }
           // msg->properties().get(name).setEncoding("utf8");
         } else {
@@ -175,12 +175,38 @@ void SendingClient::setMessageProperty(message *msg, const string &property) con
     }
 }
 
-void SendingClient::setMessageProperties(StringAppendCallback &callback, message *msg) const
+void SendingClient::setMessageListItem(message *msg, const string &property) const
 {
-    vector<string> properties = callback.getStrings();
+}
+
+void SendingClient::setMessageMapItem(message *msg, const string &property) const
+{
+}
+
+void SendingClient::setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const
+{
+    vector<string> properties = callbackProperty.getStrings();
 
     for (vector<string>::iterator it = properties.begin(); it != properties.end(); ++it) {
         setMessageProperty(msg, *it);
+    }
+}
+
+void SendingClient::setMessageList(StringAppendCallback &callbackList, message *msg) const
+{
+    vector<string> list = callbackList.getStrings();
+
+    for (vector<string>::iterator it = list.begin(); it != list.end(); ++it) {
+        setMessageListItem(msg, *it);
+    }
+}
+
+void SendingClient::setMessageMap(StringAppendCallback &callbackMap, message *msg) const
+{
+    vector<string> map = callbackMap.getStrings();
+
+    for (vector<string>::iterator it = map.begin(); it != map.end(); ++it) {
+        setMessageMapItem(msg, *it);
     }
 }
 
@@ -307,7 +333,15 @@ int SendingClient::run(int argc, char **argv) const
 
     setMessageOptions(setter, msg);
     setMessageContent(setter, options, &msg);
-    setMessageProperties(parser.callback, &msg);
+    setMessageProperties(parser.callbackProperty, &msg);
+
+    if (parser.callbackList.str.length() > 0) {
+        // List
+        setMessageList(parser.callbackList, &msg);
+    } else if (parser.callbackMap.str.length() > 0) {
+        // Map
+        setMessageMap(parser.callbackMap, &msg);
+    }
 
    
 /*
