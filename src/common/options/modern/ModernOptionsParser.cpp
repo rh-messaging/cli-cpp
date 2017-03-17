@@ -94,7 +94,11 @@ ModernOptionsParser::ModernOptionsParser()
             .help("client reconnect DOUBLING (true/false, default: true)")
             .metavar("DOUBLING");
 /******************************************************************************/
-    
+   
+   add_option("--conn-heartbeat")
+            .dest("conn-heartbeat")
+            .help("enable and set connection HEARTBEAT (seconds)")
+            .metavar("HEARTBEAT");
 
     std::stringstream sstm;
     sstm << "maximum frame SIZE (" << MIN_MAX_FRAME_SIZE << " - " << UINT32_MAX << ", default: " << UINT32_MAX << ")";

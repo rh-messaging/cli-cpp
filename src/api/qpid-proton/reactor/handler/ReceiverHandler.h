@@ -78,6 +78,7 @@ class ReceiverHandler : public CommonHandler {
      * @param conn_reconnect_increment reconnect increment
      * @param conn_reconnect_doubling reconnect doubling
      * @param conn_reconnect_custom custom reconnect values
+     * @param conn_heartbeat connection heartbeat in seconds
      * @param max_frame_size maximum frame size
      * @param log_msgs message log format
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
@@ -100,6 +101,7 @@ class ReceiverHandler : public CommonHandler {
         uint32_t conn_reconnect_increment = 100,
         bool conn_reconnect_doubling = true,
         bool conn_reconnect_custom = false,
+        uint32_t conn_heartbeat = 0,
         uint32_t max_frame_size = -1,
         string log_msgs = "",
         bool process_reply_to = false,
