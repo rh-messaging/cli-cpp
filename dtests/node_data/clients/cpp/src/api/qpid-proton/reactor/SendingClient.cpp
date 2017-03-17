@@ -312,6 +312,11 @@ int SendingClient::run(int argc, char **argv) const
         conn_reconnect_custom = true;
     }
 
+    uint32_t conn_heartbeat = 0;
+    if (options.is_set("conn-heartbeat")) {
+        conn_heartbeat = std::strtoul(options["conn-heartbeat"].c_str(), NULL, 10);
+    }
+
     uint32_t max_frame_size = -1;
     if (options.is_set("conn-max-frame-size")) {
         max_frame_size = std::strtoul(options["conn-max-frame-size"].c_str(), NULL, 10);
@@ -371,6 +376,7 @@ int SendingClient::run(int argc, char **argv) const
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
+        conn_heartbeat,
         max_frame_size,
         log_msgs
     );
