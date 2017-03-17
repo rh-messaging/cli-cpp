@@ -38,6 +38,7 @@ SenderHandler::SenderHandler(
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
+    uint32_t conn_heartbeat,
     uint32_t max_frame_size,
     string log_msgs
 )
@@ -55,6 +56,7 @@ SenderHandler::SenderHandler(
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
+        conn_heartbeat,
         max_frame_size,
         log_msgs
     ),
@@ -131,6 +133,14 @@ void SenderHandler::on_container_start(container &c)
                 conn_reconnect_timeout
             )
         );
+    }
+
+    if (conn_heartbeat != 0) {
+        logger(debug) << "Heartbeat: " << conn_heartbeat;
+
+        duration heartbeat_seconds = conn_heartbeat * duration::SECOND;
+
+        conn_opts.idle_timeout(heartbeat_seconds);
     }
 
     logger(debug) << "Creating a sender";
