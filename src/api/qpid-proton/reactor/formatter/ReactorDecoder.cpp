@@ -111,6 +111,14 @@ void ReactorDecoder::writeTTL(Writer *writer) const
             super::decodeValue(ttl)));
 }
 
+void ReactorDecoder::writeRedelivered(Writer *writer) const
+{
+    string redelivered = m.delivery_count() > 0 ? "True" : "False";
+
+    writer->write(KeyValue(MessageHeader::REDELIVERED.name,
+            super::decodeValue(redelivered)));
+}
+
 /**
  * Writes the content size for plain text messages
  * @param writer the writer to use
@@ -136,8 +144,7 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
 
 void ReactorDecoder::decodeHeader(Writer *writer) const
 {
-    write<Uint32Reader, uint32_t>(writer, MessageHeader::REDELIVERED, 
-            static_cast<Uint32Reader> (&message::delivery_count));
+    writeRedelivered(writer);
     write(writer, MessageHeader::REPLY_TO,
             static_cast<StringReader> (&message::reply_to));
     write(writer, MessageHeader::SUBJECT,
@@ -337,6 +344,10 @@ void ReactorDecoder::decodeContent(Writer *writer) const
     }
 
     string content = decodeValue(m.body());
+
+    if (content == "") {
+        content = "None";
+    }
 
     writer->write(content);
 }

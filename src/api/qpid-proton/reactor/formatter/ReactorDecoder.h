@@ -98,6 +98,7 @@ class ReactorDecoder : public AbstractDecoder {
     }
     
     void writeTTL(Writer *writer) const;
+    void writeRedelivered(Writer *writer) const;
     void writeContentSize(Writer *writer) const;
 
     
