@@ -65,6 +65,16 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("recv-selector")
             .help("specify message SELECTOR")
             .metavar("SELECTOR");
+
+    add_option("--duration")
+            .dest("duration")
+            .help("message actions total DURATION (defines msg-rate together with count in seconds)")
+            .metavar("DURATION");
+
+    add_option("--duration-mode")
+            .dest("duration-mode")
+            .help("specifies where to wait to achieve expected duration MODE (after-receive, after-receive-action, after-receive-action-tx-action, default: after-receive)")
+            .metavar("MODE");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
@@ -78,5 +88,9 @@ void ReceiverOptionsParser::validate(const Values& options) const
     if(options.is_set("msg-action-size") && (atoi(options["msg-action-size"].c_str()) < 1)) {
         print_help();
         error("action-size must not be less than 1");
+    }
+
+    if(options.is_set("duration-mode") && options["duration-mode"] == "after-receive-action-tx-action") {
+        error("transactions are not supported yet");
     }
 }

@@ -334,6 +334,16 @@ int SendingClient::run(int argc, char **argv) const
         log_msgs = options["log-msgs"];
     }
 
+    int duration = 0;
+    if (options.is_set("duration")) {
+        duration = static_cast<int> (options.get("duration"));
+    }
+
+    string duration_mode = "after-send";
+    if (options.is_set("duration-mode")) {
+        duration_mode = options["duration-mode"];
+    }
+
     message msg;
 
     setMessageOptions(setter, msg);
@@ -368,6 +378,8 @@ int SendingClient::run(int argc, char **argv) const
         password,
         sasl_mechanisms,
         timeout,
+        duration,
+        duration_mode,
         conn_reconnect,
         conn_reconnect_interval,
         conn_reconnect_limit,
