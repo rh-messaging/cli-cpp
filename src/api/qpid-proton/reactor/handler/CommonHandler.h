@@ -5,6 +5,10 @@
  *      Author: opiske
  */
 
+#ifndef __REACTOR_HAS_TIMER
+#define __REACTOR_HAS_TIMER
+#endif
+
 #ifndef COMMON_HANDLER_H_
 #define COMMON_HANDLER_H_
 
@@ -171,6 +175,8 @@ class CommonHandler : public messaging_handler {
     container *cont;
     
     Timer timer;
+
+    int timeout;
 
   private:
     

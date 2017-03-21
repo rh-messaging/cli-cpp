@@ -88,7 +88,7 @@ void ReceiverHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
         
-        duration d = duration(1 * duration::SECOND.milliseconds());
+        duration d = duration(timeout * duration::SECOND.milliseconds());
         recv.container().schedule(d, timer_event);
     }
 #endif
@@ -172,7 +172,7 @@ void ReceiverHandler::on_container_start(container &c)
     }
     logger(debug) << "Connected to the broker and waiting for messages";
 
-    duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+    duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 
     ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)

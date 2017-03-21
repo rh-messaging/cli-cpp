@@ -87,8 +87,8 @@ void SenderHandler::timerEvent() {
     } else {
         timer--;
         logger(debug) << "Waiting ...";
-        
-        duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+
+        duration d = duration(int(timeout * duration::SECOND.milliseconds()));
         sndr.container().schedule(d, timer_event);
     }
 #endif
@@ -154,7 +154,7 @@ void SenderHandler::on_container_start(container &c)
     );
     
     logger(trace) << "Setting up timer";
-    duration d = duration(1000 * duration::SECOND.milliseconds());
+    duration d = duration(this->timeout * duration::SECOND.milliseconds());
 #if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_event);
 #endif
