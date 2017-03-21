@@ -88,7 +88,7 @@ void SenderHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
 
-        duration d = duration(int(timeout * duration::SECOND.milliseconds()));
+        duration d = duration(0 * duration::SECOND.milliseconds());
         sndr.container().schedule(d, timer_event);
     }
 #endif
