@@ -139,7 +139,7 @@ void ConnectorHandler::on_container_start(container &c)
         receiverObj = conn.open_receiver(broker_url.path());
     }
     
-    duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+    duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 #if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_event);
 #endif

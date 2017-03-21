@@ -54,7 +54,8 @@ CommonHandler::CommonHandler(
     max_frame_size(max_frame_size),
     log_msgs(log_msgs),
     cont(NULL),
-    timer(timeout, "timeout")
+    timer(timeout, "timeout"),
+    timeout(timeout)
 {
     logger(debug) << "Creating a handler for " << url_str;
 }
