@@ -88,7 +88,7 @@ void ReceiverHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
         
-        duration d = duration(timeout * duration::SECOND.milliseconds());
+        duration d = duration(0 * duration::SECOND.milliseconds());
         recv.container().schedule(d, timer_event);
     }
 #endif
