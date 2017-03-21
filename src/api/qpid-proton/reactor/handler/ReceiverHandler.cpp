@@ -27,6 +27,8 @@ ReceiverHandler::ReceiverHandler(
     string sasl_mechanisms,
     int timeout,
     int count,
+    int duration_time,
+    string duration_mode,
     string conn_reconnect,
     int32_t conn_reconnect_interval,
     int32_t conn_reconnect_limit,
@@ -60,6 +62,8 @@ ReceiverHandler::ReceiverHandler(
         log_msgs
     ),
     count(count),
+    duration_time(duration_time),
+    duration_mode(duration_mode),
     interval(timeout * duration::SECOND.milliseconds()),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
@@ -169,6 +173,8 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "Connected to the broker and waiting for messages";
 
     duration d = duration(int(1000 * duration::SECOND.milliseconds()));
+
+    ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_event);
 #endif
@@ -240,8 +246,21 @@ void ReceiverHandler::on_message(delivery &d, message &m)
         std::cout << writer.toString();
     }
 
+    if (duration_time > 0 && duration_mode == "after-receive") {
+        logger(debug) << "Waiting...";
+        sleep4next(ts, count, duration_time, msg_received_cnt);
+    }
+
     if((msg_received_cnt % msg_action_size) == 0) {
         do_message_action(d);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-receive-action") {
+        sleep4next(ts, count, duration_time, msg_received_cnt);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
+        // TODO: Transactions are not supported yet
     }
 
     logger(debug) << "Process-reply-to: " << process_reply_to;

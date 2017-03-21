@@ -117,6 +117,16 @@ SenderOptionsParser::SenderOptionsParser()
             .dest("log-msgs")
             .help("log message OPTIONS")
             .metavar("OPTIONS");
+
+    add_option("--duration")
+            .dest("duration")
+            .help("message actions total DURATION (defines msg-rate together with count in seconds)")
+            .metavar("DURATION");
+
+    add_option("--duration-mode")
+            .dest("duration-mode")
+            .help("specifies where to wait to achieve expected duration MODE (before-send, after-send, after-send-tx-action, default: after-send)")
+            .metavar("MODE");
 }
 
 SenderOptionsParser::~SenderOptionsParser()
@@ -126,4 +136,8 @@ SenderOptionsParser::~SenderOptionsParser()
 void SenderOptionsParser::validate(const Values& options) const
 {
     super::validate(options);
+
+    if(options.is_set("duration-mode") && options["duration-mode"] == "after-send-tx-action") {
+        error("transactions are not supported yet");
+    }
 }

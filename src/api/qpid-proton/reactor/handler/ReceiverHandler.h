@@ -30,6 +30,7 @@
 
 #include "formatter/UpstreamFormatter.h"
 #include "formatter/UpstreamWriter.h"
+#include "Utils.h"
 
 using proton::message;
 using proton::container;
@@ -70,6 +71,8 @@ class ReceiverHandler : public CommonHandler {
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
      * @param count count of messages to receive
+     * @param duration_time message actions total duration
+     * @param duration_mode specifies where to wait to achieve expected duration
      * @param conn_reconnect type of reconnection
      * @param conn_reconnect_interval reconnect interval
      * @param conn_reconnect_limit reconnect limit
@@ -93,6 +96,8 @@ class ReceiverHandler : public CommonHandler {
         string sasl_mechanisms,
         int timeout = 10,
         int count = 0,
+        int duration_time = 0,
+        string duration_mode = "after-receive",
         string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
         int32_t conn_reconnect_limit = -1,
@@ -129,6 +134,7 @@ class ReceiverHandler : public CommonHandler {
   private:
     typedef CommonHandler super;
     receiver recv;
+    double ts;
     
     struct timer_event_t : public void_function0 {
         ReceiverHandler &parent;
@@ -149,6 +155,8 @@ class ReceiverHandler : public CommonHandler {
     bool process_reply_to;
     bool browse;
     int count;
+    int duration_time;
+    string duration_mode;
     std::map<string, sender> senders;
 
     void do_disconnect();
