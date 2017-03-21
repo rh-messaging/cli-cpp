@@ -22,6 +22,7 @@
 
 #include "CommonHandler.h"
 #include "Timer.h"
+#include "Utils.h"
 
 using proton::message;
 using proton::message_id;
@@ -51,6 +52,8 @@ class SenderHandler : public CommonHandler {
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      * @param timeout timeout
+     * @param duration message actions total duration
+     * @param duration_mode specifies where to wait to achieve expected duration
      * @param conn_reconnect type or reconnection
      * @param conn_reconnect_interval reconnect interval
      * @param conn_reconnect_limit reconnect limit
@@ -69,6 +72,8 @@ class SenderHandler : public CommonHandler {
         string password,
         string sasl_mechanisms,
         int timeout = -1,
+        int duration_time = 0,
+        string duration_mode = "after-send",
         string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
         int32_t conn_reconnect_limit = -1,
@@ -122,6 +127,8 @@ class SenderHandler : public CommonHandler {
   private:
     typedef CommonHandler super;
     int count;
+    int duration_time;
+    string duration_mode;
     int sent;
     int confirmedSent;
     sender sndr;

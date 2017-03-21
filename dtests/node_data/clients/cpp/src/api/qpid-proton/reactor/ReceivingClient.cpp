@@ -191,6 +191,16 @@ int ReceivingClient::run(int argc, char **argv) const
         selector = options["recv-selector"];
     }
 
+    int duration = 0;
+    if (options.is_set("duration")) {
+        duration = static_cast<int> (options.get("duration"));
+    }
+
+    string duration_mode = "after-receive";
+    if (options.is_set("duration-mode")) {
+        duration_mode = options["duration-mode"];
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         msg_action,
@@ -200,6 +210,8 @@ int ReceivingClient::run(int argc, char **argv) const
         sasl_mechanisms,
         timeout,
         count,
+        duration,
+        duration_mode,
         conn_reconnect,
         conn_reconnect_interval,
         conn_reconnect_limit,

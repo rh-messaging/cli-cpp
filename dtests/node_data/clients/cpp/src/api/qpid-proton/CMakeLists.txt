@@ -43,6 +43,7 @@ target_link_libraries(
 	dtests-proton-common
 
 	qpid-proton
+	boost_regex
 	dtests-cpp-contrib
 	dtests-cpp-common
 	dtests-cpp-common-options

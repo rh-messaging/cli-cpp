@@ -30,6 +30,8 @@ SenderHandler::SenderHandler(
     string password,
     string sasl_mechanisms,
     int timeout,
+    int duration_time,
+    string duration_mode,
     string conn_reconnect,
     int32_t conn_reconnect_interval,
     int32_t conn_reconnect_limit,
@@ -61,6 +63,8 @@ SenderHandler::SenderHandler(
         log_msgs
     ),
     count(1),
+    duration_time(duration_time),
+    duration_mode(duration_mode),
     sent(0),
     confirmedSent(0),
     m(),
@@ -170,11 +174,17 @@ void SenderHandler::on_sendable(sender &s)
     logger(debug) << "The handler has sent " << sent << " messages"  
             << (sent > 1 ? "s" : "" );
 
+    double ts = get_time();
+
     while (credit > 0 && sent < count) {
         logger(trace) << "Sending messages through the link";
         
-        s.send(m);
+        if (duration_time > 0 && duration_mode == "before-send") {
+            sleep4next(ts, count, duration_time, sent+1);
+        }
 
+        s.send(m);
+        
         logger(trace) << "Sent message: " << m.body().as_string();
 
         if (log_msgs == "dict") {
@@ -188,6 +198,14 @@ void SenderHandler::on_sendable(sender &s)
 
             writer.endLine();
             std::cout << writer.toString();
+        }
+
+        if (duration_time > 0 && duration_mode == "after-send") {
+            sleep4next(ts, count, duration_time, sent+1);
+        }
+
+        if (duration_time > 0 && duration_mode == "after-send-tx-action") {
+            // TODO: Transactions are not supported yet
         }
          
         sent++;
