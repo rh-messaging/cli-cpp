@@ -119,6 +119,11 @@ void ReactorDecoder::writeRedelivered(Writer *writer) const
             super::decodeValue(redelivered)));
 }
 
+void ReactorDecoder::writeProperties(Writer *writer) const
+{
+    writer->write("TODO");
+}
+
 /**
  * Writes the content size for plain text messages
  * @param writer the writer to use
@@ -169,10 +174,18 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
 void ReactorDecoder::decodeProperties(Writer *writer) const
 {
     logger(debug) << "Decoding message properties";
-    // writer->startProperties();
-    // The call below should be replaced with one that can handle regular maps
-    // decodeValue(writer, m.application_properties().);
-    // writer->endProperties();
+    
+    message::property_map props = m.properties();
+
+    if (props.size() > 0) {
+        logger(debug) << "Number of properties: " << props.size();
+
+        // TODO: iterate over properties
+
+        writer->startProperties();
+        writeProperties(writer);
+        writer->endProperties();
+    }
 }
 
 void ReactorDecoder::decodeValue(Writer *writer, value &value) const
