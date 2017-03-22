@@ -325,5 +325,15 @@ void ReceiverHandler::do_disconnect()
 
 void ReceiverHandler::setSelector(string selector)
 {
-    fm.put(symbol("selector"), selector);
+    source::filter_map map;
+    symbol filter_key("selector");
+    value filter_value;
+    encoder enc(filter_value);
+
+    enc << start::described()
+        << symbol("apache.org:selector-filter:string")
+        << binary(selector)
+        << finish();
+    
+    fm.put(filter_key, filter_value);
 }
