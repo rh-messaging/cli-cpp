@@ -14,6 +14,7 @@
 #ifndef RECEIVERHANDLER_H
 #define RECEIVERHANDLER_H
 
+#include <proton/binary.hpp>
 #include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
 #include <proton/source_options.hpp>
@@ -21,6 +22,7 @@
 #include <proton/receiver_options.hpp>
 #include <proton/reconnect_timer.hpp>
 #include <proton/thread_safe.hpp>
+#include <proton/codec/encoder.hpp>
 
 #include "CommonHandler.h"
 
@@ -47,6 +49,10 @@ using proton::reconnect_timer;
 using proton::transport;
 using proton::connection_options;
 using proton::symbol;
+using proton::codec::start;
+using proton::codec::finish;
+using proton::codec::encoder;
+using proton::binary;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
