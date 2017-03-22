@@ -166,7 +166,7 @@ int ReceivingClient::run(int argc, char **argv) const
 
     OptionsSetter setter = OptionsSetter(options);
     
-    int timeout = 0;
+    int timeout = -1;
     if (options.is_set("timeout")) {
         timeout = static_cast<int> (options.get("timeout"));
     }

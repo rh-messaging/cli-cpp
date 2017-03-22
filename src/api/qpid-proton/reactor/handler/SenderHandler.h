@@ -71,7 +71,7 @@ class SenderHandler : public CommonHandler {
         string user,
         string password,
         string sasl_mechanisms,
-        int timeout = -1,
+        int timeout = 10,
         int duration_time = 0,
         string duration_mode = "after-send",
         string conn_reconnect = "true",
