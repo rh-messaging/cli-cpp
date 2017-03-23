@@ -39,6 +39,7 @@ using proton::STRING;
 using proton::UINT;
 using proton::INT;
 using proton::DOUBLE;
+using proton::LONG;
 using proton::value;
 using proton::type_id;
 using proton::conversion_error;
@@ -103,7 +104,7 @@ class ReactorDecoder : public AbstractDecoder {
     void writeContentSize(Writer *writer) const;
 
     
-    void decodeValue(Writer *writer, value &dec) const;
+    void decodeValue(Writer *writer, const value &dec) const;
     
     string decodeValue(const value &dec) const;
     string decodeValue(const string &str) const;
