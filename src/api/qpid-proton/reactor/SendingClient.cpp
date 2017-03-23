@@ -179,8 +179,46 @@ void SendingClient::setMessageListItem(message *msg, const string &property) con
 {
 }
 
-void SendingClient::setMessageMapItem(message *msg, const string &property) const
+void SendingClient::setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const
 {
+    string name;
+    string val;
+    string separator;
+    string temp;
+
+    if (nameVal(property, name, val, separator)) {
+        if (separator == "~") {
+          temp.resize(val.size());
+          
+          std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
+
+          if (temp == "true") {
+            // true
+            messageMap[name] = true;
+          } else if (temp == "false") {
+            // false
+            messageMap[name] = false;
+          } else if (val.find(".") != std::string::npos || val.find("e") != std::string::npos || val.find("E") != std::string::npos) {
+            // maybe double
+            try {
+                // double
+                messageMap[name] = atof(val.c_str());
+            } catch (exception& e) {
+                // string
+                messageMap[name] = val;
+            }
+          } else {
+            // long
+            messageMap[name] = atol(val.c_str());
+          }
+          // msg->properties().get(name).setEncoding("utf8");
+        } else {
+          messageMap[name] = val;
+          // msg->properties().get(name).setEncoding("utf8");
+        }
+    } else {
+        messageMap[name] = val;
+    }
 }
 
 void SendingClient::setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const
@@ -205,9 +243,17 @@ void SendingClient::setMessageMap(StringAppendCallback &callbackMap, message *ms
 {
     vector<string> map = callbackMap.getStrings();
 
+    std::map<std::string, value> messageMap;
+
     for (vector<string>::iterator it = map.begin(); it != map.end(); ++it) {
-        setMessageMapItem(msg, *it);
+        setMessageMapItem(msg, *it, messageMap);
     }
+
+    msg->body() = messageMap;
+}
+
+void SendingClient::setMessageText(string content, message *msg) const {
+    msg->body(content);
 }
 
 int SendingClient::run(int argc, char **argv) const
@@ -347,7 +393,7 @@ int SendingClient::run(int argc, char **argv) const
     message msg;
 
     setMessageOptions(setter, msg);
-    setMessageContent(setter, options, &msg);
+    // setMessageContent(setter, options, &msg);
     setMessageProperties(parser.callbackProperty, &msg);
 
     if (parser.callbackList.str.length() > 0) {
@@ -356,6 +402,9 @@ int SendingClient::run(int argc, char **argv) const
     } else if (parser.callbackMap.str.length() > 0) {
         // Map
         setMessageMap(parser.callbackMap, &msg);
+    } else {
+        // Text
+        setMessageText(options["msg-content"], &msg);
     }
 
    

@@ -51,10 +51,11 @@ class SendingClient : public ModernClient {
     bool nameVal(const string& in, string& name, string& value, string& separator) const;
     void setMessageProperty(message *msg, const string &property) const;
     void setMessageListItem(message *msg, const string &property) const;
-    void setMessageMapItem(message *msg, const string &property) const;
+    void setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const;
     void setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const;
     void setMessageList(StringAppendCallback &callbackList, message *msg) const;
     void setMessageMap(StringAppendCallback &callbackMap, message *msg) const;
+    void setMessageText(string content, message *msg) const;
 };
 
 } /* namespace reactor */
