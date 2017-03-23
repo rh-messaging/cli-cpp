@@ -185,7 +185,7 @@ void SenderHandler::on_sendable(sender &s)
 
         s.send(m);
         
-        logger(trace) << "Sent message: " << m.body().as_string();
+        // logger(trace) << "Sent message: " << m.body().as_string();
 
         if (log_msgs == "dict") {
             ReactorDecoder decoder = ReactorDecoder(m);
