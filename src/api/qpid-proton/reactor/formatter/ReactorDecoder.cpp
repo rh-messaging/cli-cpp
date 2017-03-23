@@ -188,9 +188,9 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
     }
 }
 
-void ReactorDecoder::decodeValue(Writer *writer, value &value) const
+void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
 {
-    type_id type = value.type();
+    type_id type = val.type();
         
     switch (type) {
         case ARRAY:
@@ -208,7 +208,7 @@ void ReactorDecoder::decodeValue(Writer *writer, value &value) const
             /*
             logger(debug) << "(m) Size: " << s.size;
             
-            value.get();
+            val.get();
             for (size_t i = 0; i < s.size; i++) {
                 decodeValue(writer, dec);
                 writer->write(": ");
@@ -220,29 +220,42 @@ void ReactorDecoder::decodeValue(Writer *writer, value &value) const
             */
             
             // dec >> finish();
-            writer->endMap();        
+            writer->endMap();
+            break;
         }
         case MAP:
         {
             
             writer->startMap();
             logger(debug) << "(m) Type id: " << type;
-            /*
-            dec >> s;
             
-            logger(debug) << "(m) Size: " << s.size;
-            for (size_t i = 0; i < s.size/2; i++) {
-                decodeValue(writer, dec);
+            // val >> s;
+            std::map<std::string, value> value_map = get<std::map<std::string, value> >(val);
+
+            uint32_t index = 1;
+
+            for (std::map<std::string, value>::iterator it = value_map.begin(); it != value_map.end(); ++it, index++) {
+                writer->write(it->first);
                 writer->separate();
-                decodeValue(writer, dec);
-                
-                if (i < ((s.size/2) - 1)) {
+                writer->write(decodeValue(it->second));
+                if (index < value_map.size()) {
                     writer->endField();
                 }
             }
             
-            dec >> finish();
-            */
+            // std::cout << value_map.end()->second << std::endl;
+            // logger(debug) << "(m) Size: " << s.size;
+            // for (size_t i = 0; i < s.size/2; i++) {
+            //    decodeValue(writer, dec);
+            //    writer->separate();
+            //    decodeValue(writer, dec);
+                
+            //    if (i < ((s.size/2) - 1)) {
+            //        writer->endField();
+            //    }
+            //}
+            
+            //dec >> finish();
             writer->endMap();
         }
         default:
@@ -250,7 +263,7 @@ void ReactorDecoder::decodeValue(Writer *writer, value &value) const
             /*
             std::ostringstream stream;
             
-            value v;
+            val v;
             dec >> v;
             stream << v;
 
@@ -291,6 +304,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
 
             // dec >> finish();
             // writer->endMap();
+            break;
         }
         case MAP:
         {
@@ -313,6 +327,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
             dec >> finish();
             */
             // writer->endMap();
+            break;
         }
         case STRING: {
             s << value.as_string();
@@ -324,19 +339,22 @@ string ReactorDecoder::decodeValue(const value &value) const {
             logger(debug) << "(m) UInt: ";
             break;
         }
+        case LONG:
         case INT: {
             s << value.as_int();
-            logger(debug) << "(m) UInt: ";
+            logger(debug) << "(m) Long/Int: ";
             break;
         }
         case DOUBLE: {
             s << value.as_double();
-            logger(debug) << "(m) UInt: ";
+            logger(debug) << "(m) Double: ";
             break;
         }
         default: {
-            s << value.as_string();
-            logger(debug) << "(m) Other: ";
+            if (!value.empty()) {
+                s << value.as_string();
+                logger(debug) << "(m) Other: ";
+            }
         }
     }
 
@@ -354,6 +372,10 @@ void ReactorDecoder::decodeContent(Writer *writer) const
 {
     if (m.body().type() == MAP) {
         logger(debug) << "Decoding a map message";
+        
+        decodeValue(writer, m.body());
+
+        return;
     }
 
     string content = decodeValue(m.body());
