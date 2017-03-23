@@ -77,6 +77,9 @@ class DictWriter : public Writer {
     static const char SECTION_START = '{';
     static const char SECTION_END = '}';
 
+    static const char LIST_START = '[';
+    static const char LIST_END = ']';
+
     static const char HEADER_START = SECTION_START;
     static const char HEADER_END = SECTION_END;
 
