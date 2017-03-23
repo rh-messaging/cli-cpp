@@ -175,8 +175,46 @@ void SendingClient::setMessageProperty(message *msg, const string &property) con
     }
 }
 
-void SendingClient::setMessageListItem(message *msg, const string &property) const
+void SendingClient::setMessageListItem(message *msg, const string &property, std::list<value> &messageList) const
 {
+    string name;
+    string val;
+    string separator;
+    string temp;
+
+    if (nameVal(property, name, val, separator)) {
+        if (separator == "~") {
+          temp.resize(val.size());
+          
+          std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
+
+          if (temp == "true") {
+            // true
+            messageList.push_back(true);
+          } else if (temp == "false") {
+            // false
+            messageList.push_back(false);
+          } else if (val.find(".") != std::string::npos || val.find("e") != std::string::npos || val.find("E") != std::string::npos) {
+            // maybe double
+            try {
+                // double
+                messageList.push_back(atof(val.c_str()));
+            } catch (exception& e) {
+                // string
+                messageList.push_back(val);
+            }
+          } else {
+            // long
+            messageList.push_back(atol(val.c_str()));
+          }
+          // msg->properties().get(name).setEncoding("utf8");
+        } else {
+          messageList.push_back(name);
+          // msg->properties().get(name).setEncoding("utf8");
+        }
+    } else {
+        messageList.push_back(name);
+    }
 }
 
 void SendingClient::setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const
@@ -234,9 +272,13 @@ void SendingClient::setMessageList(StringAppendCallback &callbackList, message *
 {
     vector<string> list = callbackList.getStrings();
 
+    std::list<value> messageList;
+
     for (vector<string>::iterator it = list.begin(); it != list.end(); ++it) {
-        setMessageListItem(msg, *it);
+        setMessageListItem(msg, *it, messageList);
     }
+
+    msg->body() = messageList;
 }
 
 void SendingClient::setMessageMap(StringAppendCallback &callbackMap, message *msg) const
