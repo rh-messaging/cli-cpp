@@ -74,12 +74,12 @@ void DictWriter::endMap()
 
 void DictWriter::startList()
 {
-    (*stream) << SECTION_START;
+    (*stream) << LIST_START;
 }
 
 void DictWriter::endList()
 {
-    (*stream) << SECTION_END;
+    (*stream) << LIST_END;
 }
 
 void DictWriter::startStatistics()
