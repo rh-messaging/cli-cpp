@@ -51,7 +51,7 @@ vector<string> StringAppendCallback::getStrings() const
             
             start = (colon_position + 1);
         }
-    } else {
+    } else if (str.length() > 0) {
         strings.push_back(str);
     }
 
