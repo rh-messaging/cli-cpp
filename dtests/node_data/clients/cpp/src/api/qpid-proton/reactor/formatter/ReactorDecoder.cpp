@@ -202,7 +202,18 @@ void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
             logger(debug) << "(m) Type id: " << type;
         
             writer->startList();
-            logger(debug) << "(m) Type id: " << type;
+
+            std::list<value> value_list = get<std::list<value> >(val);
+
+            uint32_t index = 1;
+
+            for (std::list<value>::const_iterator iterator = value_list.begin(); iterator != value_list.end(); ++iterator, index++) {
+                writer->write(decodeValue(*iterator));
+
+                if (index < value_list.size()) {
+                    writer->endField();
+                }
+            }
             // dec >> s;
             
             /*
@@ -220,7 +231,7 @@ void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
             */
             
             // dec >> finish();
-            writer->endMap();
+            writer->endList();
             break;
         }
         case MAP:
@@ -373,6 +384,12 @@ void ReactorDecoder::decodeContent(Writer *writer) const
     if (m.body().type() == MAP) {
         logger(debug) << "Decoding a map message";
         
+        decodeValue(writer, m.body());
+
+        return;
+    } else if (m.body().type() == LIST) {
+        logger(debug) << "Decoding a list message";
+
         decodeValue(writer, m.body());
 
         return;
