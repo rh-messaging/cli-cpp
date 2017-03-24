@@ -121,7 +121,9 @@ void ReactorDecoder::writeRedelivered(Writer *writer) const
 
 void ReactorDecoder::writeProperties(Writer *writer) const
 {
-    writer->write("TODO");
+    writer->startMap();
+    // TODO: write properties
+    writer->endMap();
 }
 
 /**
