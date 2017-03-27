@@ -244,6 +244,13 @@ void SenderHandler::on_transport_error(transport &t) {
 }
 */
 
+void SenderHandler::on_tracker_reject(tracker &t)
+{
+    std::cerr << "[error] Delivery rejected" << std::endl;
+
+    exit(1);
+}
+
 void SenderHandler::on_connection_close(connection &c)
 {
     logger(debug) << "Closing connection";
