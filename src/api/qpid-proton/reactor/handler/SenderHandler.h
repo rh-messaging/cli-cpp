@@ -15,6 +15,8 @@
 #define SENDERHANDLER_H
 
 #include <proton/tracker.hpp>
+#include <proton/transport.hpp>
+#include <proton/error_condition.hpp>
 #include <proton/message_id.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/reconnect_timer.hpp>
@@ -98,7 +100,7 @@ class SenderHandler : public CommonHandler {
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     
-    // void on_transport_error(transport &t);
+    void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
     /**
