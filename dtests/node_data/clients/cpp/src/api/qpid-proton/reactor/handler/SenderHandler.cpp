@@ -88,7 +88,7 @@ void SenderHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
 
-        duration d = duration(0 * duration::SECOND.milliseconds());
+        duration d = duration(1 * duration::SECOND.milliseconds());
         sndr.container().schedule(d, timer_event);
     }
 #endif
@@ -235,14 +235,15 @@ void SenderHandler::on_tracker_accept(tracker &t)
 
 void SenderHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
+
+    if (conn_reconnect == "false") {
+        exit(1);
+    }
 }
 
-/*
 void SenderHandler::on_transport_error(transport &t) {
-    logger(error) << "The connection with " << broker_url.host_port() << 
-            " was interrupted";
+    logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
 }
-*/
 
 void SenderHandler::on_tracker_reject(tracker &t)
 {

@@ -88,7 +88,7 @@ void ReceiverHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
         
-        duration d = duration(0 * duration::SECOND.milliseconds());
+        duration d = duration(1 * duration::SECOND.milliseconds());
         recv.container().schedule(d, timer_event);
     }
 #endif
@@ -278,11 +278,11 @@ void ReceiverHandler::on_message(delivery &d, message &m)
     if (msg_received_cnt == count) {
         d.receiver().close();
         d.connection().close();
-    }
-
+    } else {
 #if defined(__REACTOR_HAS_TIMER)
-    super::timer.reset();
+        super::timer.reset();
 #endif
+    }
 }
 
 
@@ -299,14 +299,17 @@ void ReceiverHandler::on_tracker_reject(tracker &t)
 
 void ReceiverHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
+
+    if (conn_reconnect == "false") {
+        exit(1);
+    } else if (msg_received_cnt == count) {
+        exit(0);
+    }
 }
 
-/*
 void ReceiverHandler::on_transport_error(transport &t) {
-    logger(error) << "The connection with " << broker_url.host_port() << 
-            " was interrupted";
+    logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
 }
-*/
 
 void ReceiverHandler::on_connection_close(connection &conn)
 {
