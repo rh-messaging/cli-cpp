@@ -179,15 +179,11 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
     
     message::property_map props = m.properties();
 
-    if (props.size() > 0) {
-        logger(debug) << "Number of properties: " << props.size();
+    logger(debug) << "Number of properties: " << props.size();
 
-        // TODO: iterate over properties
-
-        writer->startProperties();
-        writeProperties(writer);
-        writer->endProperties();
-    }
+    writer->startProperties();
+    writeProperties(writer);
+    writer->endProperties();
 }
 
 void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
