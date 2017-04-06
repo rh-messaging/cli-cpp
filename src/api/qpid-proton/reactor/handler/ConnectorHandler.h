@@ -13,6 +13,8 @@
 #include "ObjectControl.h"
 
 #include <list>
+#include <proton/transport.hpp>
+#include <proton/error_condition.hpp>
 #include <proton/connection.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/reconnect_timer.hpp>
@@ -82,7 +84,7 @@ class ConnectorHandler : public CommonHandler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
    
-    //void on_transport_error(transport &trans);
+    void on_transport_error(transport &trans);
     void on_transport_close(transport &t);
     
     void on_session_error(session &s);

@@ -17,6 +17,8 @@
 #include <proton/binary.hpp>
 #include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
+#include <proton/transport.hpp>
+#include <proton/error_condition.hpp>
 #include <proton/source_options.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/receiver_options.hpp>
@@ -132,7 +134,7 @@ class ReceiverHandler : public CommonHandler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
 
-    //void on_transport_error(transport &t);
+    void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
     void setSelector(string selector);
