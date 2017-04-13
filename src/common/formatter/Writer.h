@@ -114,7 +114,7 @@ class Writer {
      * Write string data to the medium
      * @param str the data to write
      */
-    virtual void write(const string &str) = 0;
+    virtual void write(const string &str, const bool raw = false) = 0;
 
     /**
      * Write key/value based data to the medium

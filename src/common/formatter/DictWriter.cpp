@@ -97,10 +97,13 @@ void DictWriter::endField()
     (*stream) << FIELD_SEPARATOR << ' ';
 }
 
-void DictWriter::write(const string &str)
+void DictWriter::write(const string &str, const bool raw)
 {
-    (*stream) << VALUE_START << str << VALUE_END;
-
+    if (raw) {
+        (*stream) << str;
+    } else {
+        (*stream) << VALUE_START << str << VALUE_END;
+    }
 }
 
 void DictWriter::write(const KeyValue &keyValue)
