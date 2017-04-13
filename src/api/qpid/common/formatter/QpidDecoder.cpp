@@ -61,9 +61,14 @@ void QpidDecoder::writeReplyTo(Writer *writer) const {
 
 void QpidDecoder::writeTTL(Writer *writer) const {
     uint64_t ttl = message.getTtl().getMilliseconds();
-    
-    writer->write(KeyValue(MessageHeader::TTL.name, 
-            super::decodeValue(ttl)));
+
+    std::ostringstream ttl_stream;
+    ttl_stream << ttl;
+ 
+    writer->write(MessageHeader::TTL.name);
+    writer->write(": ", true);
+    writer->write(ttl_stream.str(), true);
+    writer->write(", ", true);
 }
 
 void QpidDecoder::writeContentSize(Writer *writer) const {

@@ -9,6 +9,8 @@
 #define	QPIDDECODER_H
 
 #include <vector>
+#include <string>
+#include <sstream>
 
 #include <qpid/messaging/Message.h>
 #include <qpid/types/Variant.h>

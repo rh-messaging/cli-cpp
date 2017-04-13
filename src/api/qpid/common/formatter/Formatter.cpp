@@ -66,7 +66,7 @@ int_result << "{"
   << "'correlation_id': " << formatString(msg.getCorrelationId()) << ", "
   << "'priority': " << formatPriority(msg.getPriority()) << ", "
   << "'durable': " << formatBool(msg.getDurable()) << ", "
-  << "'ttl': " << formatTTL(msg.getTtl().getMilliseconds()) << ", "
+  << "'ttl': " << msg.getTtl().getMilliseconds() << ", "
 // BZ1023083 fixed in 0.22-23
   << "'size': " << formatContentSize(msg) << ", "
 

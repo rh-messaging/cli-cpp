@@ -60,7 +60,7 @@ class DictWriter : public Writer {
 
     void endField();
 
-    void write(const string &str);
+    void write(const string &str, const bool raw = false);
     void write(const KeyValue &keyValue);
     void write(const KeyValue &keyValue, bool separator);
 
