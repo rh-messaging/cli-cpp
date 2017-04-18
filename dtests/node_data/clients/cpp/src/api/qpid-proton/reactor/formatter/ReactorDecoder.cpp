@@ -44,15 +44,29 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, StringReader
 {
     string value = (m.*reader)();
 
-    writer->write(KeyValue(property.name, super::decodeValue(value)));
+    if (value.empty()) {
+        writer->write(property.name);
+        writer->write(": ", true);
+        writer->write("None", true);
+        writer->write(", ", true);
+    } else {
+        writer->write(KeyValue(property.name, super::decodeValue(value)));
+    }
 }
 
 void ReactorDecoder::write(Writer *writer, HeaderProperty property, Uint8Reader reader) const {
     const uint8_t value = (m.*reader)();
 
     logger(info) << "Reading short property " << property.name << ": " << value;
-               
-    writer->write(KeyValue(property.name, super::decodeValue((uint16_t) value)));
+    
+    std::ostringstream value_stream;
+    value_stream << ((uint16_t) value);
+
+    //writer->write(KeyValue(property.name, super::decodeValue((uint16_t) value)));
+    writer->write(property.name);
+    writer->write(": ", true);
+    writer->write(value_stream.str(), true);
+    writer->write(", ", true);
 }
 
 /**
@@ -77,25 +91,49 @@ void ReactorDecoder::write(Writer *writer, HeaderProperty property, MessageIdRea
         catch (conversion_error &e) {
             try {
                 string id = coerce<string>(value);
-                writer->write(KeyValue(property.name, super::decodeValue(id)));
+
+                if (id.empty()) {
+                    writer->write(property.name);
+                    writer->write(": ", true);
+                    writer->write("None", true);
+                    writer->write(", ", true);                  
+                } else {
+                    writer->write(KeyValue(property.name, super::decodeValue(id)));
+                }
 
             } catch (conversion_error &e) {
                 try {
                     string id = coerce<uuid>(value).str();
-
-                    writer->write(KeyValue(property.name, super::decodeValue(id)));
+                    if (id.empty()) {
+                        writer->write(property.name);
+                        writer->write(": ", true);
+                        writer->write("None", true);
+                        writer->write(", ", true);                  
+                    } else {
+                        writer->write(KeyValue(property.name, super::decodeValue(id)));
+                    }
                 } catch (conversion_error &e) {
                     logger(error) << "Unable to convert the property " << property.name
                         << " because its value cannot be converted";
 
-                    writer->write(KeyValue(property.name, super::decodeValue("None")));
+                    // writer->write(KeyValue(property.name, super::decodeValue("")));
+                    writer->write(property.name);
+                    writer->write(": ", true);
+                    writer->write("None", true);
+                    writer->write(", ", true);
+
                 }
             }
         }
     } else {
-        string id = "None";
+        //string id = "";
 
-        writer->write(KeyValue(property.name, super::decodeValue(id)));
+        // writer->write(KeyValue(property.name, super::decodeValue(id)));
+        writer->write(property.name);
+        writer->write(": ", true);
+        writer->write("None", true);
+        writer->write(", ", true);
+
     }
 }
 
@@ -107,16 +145,37 @@ void ReactorDecoder::writeTTL(Writer *writer) const
 {
     int64_t ttl = m.ttl().milliseconds();
     
-    writer->write(KeyValue(MessageHeader::TTL.name,
-            super::decodeValue(ttl)));
+    std::ostringstream ttl_stream;
+    ttl_stream << ttl;
+
+    //writer->write(KeyValue(MessageHeader::TTL.name,
+    //        super::decodeValue(ttl)));
+    writer->write(MessageHeader::TTL.name);
+    writer->write(": ", true);
+    writer->write(ttl_stream.str(), true);
+    writer->write(", ", true);
+}
+
+void ReactorDecoder::writeDurable(Writer *writer) const
+{
+    string durable = m.durable() > 0 ? "True" : "False";
+
+    writer->write(MessageHeader::DURABLE.name);
+    writer->write(": ", true);
+    writer->write(durable, true);
+    writer->write(", ", true);
 }
 
 void ReactorDecoder::writeRedelivered(Writer *writer) const
 {
     string redelivered = m.delivery_count() > 0 ? "True" : "False";
 
-    writer->write(KeyValue(MessageHeader::REDELIVERED.name,
-            super::decodeValue(redelivered)));
+    //writer->write(KeyValue(MessageHeader::REDELIVERED.name,
+    //        super::decodeValue(redelivered)));
+    writer->write(MessageHeader::REDELIVERED.name);
+    writer->write(": ", true);
+    writer->write(redelivered, true);
+    writer->write(", ", true);
 }
 
 void ReactorDecoder::writeProperties(Writer *writer) const
@@ -134,7 +193,11 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
 {
 
     if (m.content_type() != ContentType::TEXT_PLAIN) {
-        writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name, "None"));
+        // writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name, ""));
+        writer->write(MessageHeader::CONTENT_SIZE.name);
+        writer->write(": ", true);
+        writer->write("0", true);
+        writer->write(", ", true);
 
         return;
     } else {
@@ -142,8 +205,12 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
         string body = "";
         string len = super::decodeValue(body.size());
 
-        writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name,
-                len));
+        // writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name,
+        //        len));
+        writer->write(MessageHeader::CONTENT_SIZE.name);
+        writer->write(": ", true);
+        writer->write(len, true);
+        writer->write(", ", true);
 
         return;
     }
@@ -167,8 +234,9 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
 
     write(writer, MessageHeader::PRIORITY, 
             static_cast<Uint8Reader> (&message::priority));
-    write<BoolReader, bool>(writer, MessageHeader::DURABLE, 
-            static_cast<BoolReader> (&message::durable));
+    //write<BoolReader, bool>(writer, MessageHeader::DURABLE, 
+    //        static_cast<BoolReader> (&message::durable));
+    writeDurable(writer);
     writeTTL(writer);
     writeContentSize(writer);
 }
@@ -395,9 +463,9 @@ void ReactorDecoder::decodeContent(Writer *writer) const
 
     string content = decodeValue(m.body());
 
-    if (content == "") {
-        content = "None";
+    if (content.empty()) {
+        writer->write("None", true);
+    } else {
+        writer->write(content);
     }
-
-    writer->write(content);
 }
