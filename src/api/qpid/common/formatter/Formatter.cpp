@@ -182,7 +182,7 @@ std::string Formatter::formatList(const qpid::types::Variant::List& in_data) {
 std::string Formatter::formatPriority(int in_data) {
   /*
   if (in_data == 0) {
-    return std::string("None");
+    return std::string("");
   }
   */
   return formatInt(in_data);
@@ -200,7 +200,7 @@ std::string Formatter::formatContentSize(qpid::messaging::Message & in_msg) {
 
   if (in_msg.getContentSize() == 0) {
     if (in_msg.getContentType() != "text/plain") {
-      int_result.assign("None");
+      int_result.assign("0");
     }
   }
   return int_result;
@@ -229,7 +229,7 @@ std::string Formatter::formatVariant(const qpid::types::Variant in_data) {
   } else if (varType == qpid::types::VAR_UUID) {
     int_result.append(formatString(in_data.asString()));
   } else if (varType == qpid::types::VAR_VOID) {
-    int_result.append("None");
+    int_result.append("''");
   } else if (varType == qpid::types::VAR_MAP) {
     int_result.append(formatMap(in_data.asMap()));
   } else if (varType == qpid::types::VAR_LIST) {

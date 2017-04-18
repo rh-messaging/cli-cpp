@@ -35,7 +35,7 @@ string AbstractDecoder::decodeValue(bool in_data) const
 
 void AbstractDecoder::decodeValue(Writer *writer, bool in_data) const
 {
-    writer->write(decodeValue(in_data));
+    writer->write(decodeValue(in_data), true);
 }
 
 string AbstractDecoder::quoteStringEscape(const string &a) const
@@ -69,7 +69,7 @@ string AbstractDecoder::quoteStringEscape(const string &a) const
 string AbstractDecoder::decodeValue(const string &in_data) const
 {
     if (in_data.empty()) {
-        return string("None");
+        return string("");
     }
 
     // string int_result = string("'");

@@ -76,9 +76,12 @@ void QpidDecoder::writeContentSize(Writer *writer) const {
     
     if (size == 0) {
         if (message.getContentType() != ContentType::TEXT_PLAIN) {
-            writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name, "None"));
-	    
-	    return;
+            writer->write(MessageHeader::CONTENT_SIZE.name, true);
+            writer->write(": ", );
+            writer->write("None", true);
+            writer->write(", ", true);
+            
+            return;
         }
     }
         
@@ -107,7 +110,7 @@ void QpidDecoder::decodeProperties(Writer *writer) const {
     Variant::Map properties = message.getProperties();
     
     if (properties.size() > 0) {
-	writer->startProperties();
+        writer->startProperties();
         decodeValue(writer, properties);
         writer->endProperties();
     }
@@ -133,7 +136,8 @@ void QpidDecoder::decodeValue(Writer *writer, const Variant &in_data) const {
   } else if (varType == VAR_UUID) {
     decodeValue(writer, in_data.asString());
   } else if (varType == VAR_VOID) {
-    decodeValue(writer, string("None"));
+    // decodeValue(writer, string(""));
+    writer->write("None", true);
   } else if (varType == VAR_MAP) {
       super::decodeValue(writer, static_cast<std::map<string, Variant> >(in_data.asMap()));
   } else if (varType == VAR_LIST) {
