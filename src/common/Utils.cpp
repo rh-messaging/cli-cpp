@@ -188,7 +188,7 @@ std::string ts_report(double *in_tsdata, long in_msgcnt, long in_msgsize,
             double int_value = *(in_tsdata + int_indx);
             int_result << ", 'ts-" << (char) ((int) (int_indx) + (int) ('A')) << "' : ";
             if (int_value <= 0)
-                int_result << "None";
+                int_result << "";
             else
                 int_result << std::fixed << int_value;
         }
