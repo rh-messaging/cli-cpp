@@ -32,6 +32,7 @@ using namespace qpid::messaging;
 using namespace qpid::types;
 
 using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printMessageInterop;
 using dtests::qpid::messaging::printStatistics;
 
 typedef std::vector<std::string> string_vector;
@@ -164,7 +165,7 @@ struct Options : OptionParser
         add("capacity", capacity, "set sender's capacity");
 
         
-        add("log-msgs", log_msgs, "message[s] reporting style (dict|body|upstream|none)");
+        add("log-msgs", log_msgs, "message[s] reporting style (dict|interop|body)");
         add("log-stats", log_stats, "report various statistic/debug information");
         add("log-lib", log_lib, "client logging library level");
 
@@ -476,6 +477,8 @@ int main(int argc, char** argv)
                     std::cout << message.getContent() << std::endl;
                 } else if (options.log_msgs == "dict") {
                     printMessageDict(message);
+                } else if (options.log_msgs == "interop") {
+                    printMessageInterop(message);
                 }
 
                 // define message rate --count + --duration
