@@ -9,6 +9,7 @@
 #define	FORMATUTIL_H
 
 #include <cstdlib>
+#include <cstdio>
 #include <string>
 #include <vector>
 #include <exception>
