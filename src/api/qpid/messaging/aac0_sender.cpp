@@ -80,6 +80,10 @@ struct Options : OptionParser
     std::string log_stats;
     std::string log_lib;
 
+    std::string msg_group_id;
+    std::string msg_group_seq;
+    std::string msg_reply_to_group_id;
+
 
     Options()
         : OptionParser("Usage: aac0_sender [OPTIONS]", "Send messages to the specified address"),
@@ -168,6 +172,10 @@ struct Options : OptionParser
         add("log-msgs", log_msgs, "message[s] reporting style (dict|interop|body)");
         add("log-stats", log_stats, "report various statistic/debug information");
         add("log-lib", log_lib, "client logging library level");
+        
+        add("msg-group-id", msg_group_id, "message group id");
+        add("msg-group-seq", msg_group_seq, "message group sequence");
+        add("msg-reply-to-group-id", msg_reply_to_group_id, "reply to message group id");
 
     }
 
@@ -224,6 +232,22 @@ struct Options : OptionParser
         for (string_vector::const_iterator i = msg_properties.begin();
              i != msg_properties.end(); ++i) {
             setProperty(message, *i);
+        }
+
+        /** Add group properties **/
+        if (!msg_group_id.empty()) {
+            message.getProperties()["x-amqp-group-id"] = Variant().parse(msg_group_id);
+            message.getProperties()["x-amqp-group-id"].setEncoding("utf8");
+        }
+
+        if (!msg_group_seq.empty()) {
+            message.getProperties()["x-amqp-group-sequence"] = Variant().parse(msg_group_seq);
+            message.getProperties()["x-amqp-group-sequence"].setEncoding("utf8");
+        }
+
+        if (!msg_reply_to_group_id.empty()) {
+            message.getProperties()["x-amqp-reply-to-group-id"] = Variant().parse(msg_reply_to_group_id);
+            message.getProperties()["x-amqp-reply-to-group-id"].setEncoding("utf8");
         }
     }
 
