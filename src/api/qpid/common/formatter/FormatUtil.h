@@ -42,7 +42,7 @@ namespace messaging {
 void printMessageUpstream(const Message &message, bool verbose = true);
 std::string formatBool(const bool b);
 std::string formatBool(const Variant b);
-std::string formatString(const std::string s);
+std::string formatString(const std::string s, bool remove_id_prefix = false);
 std::string formatMap(const std::map <std::string, Variant>m);
 std::string formatProperties(const Variant::Map p);
 std::string getValue(const Variant &in_data);

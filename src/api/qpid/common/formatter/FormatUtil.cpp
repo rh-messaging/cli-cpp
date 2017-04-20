@@ -58,11 +58,15 @@ std::string formatBool(const Variant b) {
     return b == "true" ? "True" : "False";
 }
 
-std::string formatString(const std::string s) {
+std::string formatString(const std::string s, bool remove_id_prefix) {
     if (s.empty()) {
         return std::string("None");
     } else {
-        return std::string("'").append(s).append("'");
+        if (remove_id_prefix && (s.find("ID:") == 0)) {
+            return std::string("'").append(s.substr(s.find(":")+1)).append("'");
+        } else {
+            return std::string("'").append(s).append("'");
+        }
     }
 }
 
@@ -231,9 +235,9 @@ void printMessageInterop(const Message &message) {
 
 
         /** AMQP Properties **/
-        msgString.append(", 'id': ").append(formatString(message.getMessageId()));
+        msgString.append(", 'id': ").append(formatString(message.getMessageId(), true));
 
-        msgString.append(", 'user-id': ").append(formatString(message.getUserId()));
+        msgString.append(", 'user-id': ").append(formatString(message.getUserId(), true));
       
         // TODO: Not supported in API, get from properties
         if (props.find("x-amqp-to") != props.end()) {
