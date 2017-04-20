@@ -128,15 +128,21 @@ std::string getValue(const Variant &in_data) {
     std::ostringstream oss;
 
     VariantType varType = in_data.getType();
-  
+
     if (varType == ::qpid::types::VAR_STRING) {
-        oss << "'" << in_data.asString() << "'";
+        if (in_data.asString().empty()) {
+            oss << "None";
+        } else {
+            oss << "'" << in_data.asString() << "'";
+        }
     } else if (varType == ::qpid::types::VAR_BOOL) {
         oss << in_data.asBool();
     } else if (varType == ::qpid::types::VAR_FLOAT) {
         oss << in_data.asFloat();
     } else if (varType == ::qpid::types::VAR_DOUBLE) {
-        oss << in_data.asDouble();
+        char buffer [50];
+        sprintf(buffer, "%f", in_data.asDouble());
+        oss << buffer;
     } else if (varType == ::qpid::types::VAR_UUID) {
         oss << "'" << in_data.asString() << "'";
     } else if (varType == ::qpid::types::VAR_VOID) {
@@ -175,7 +181,7 @@ std::string getValue(const Variant &in_data) {
         if (flagDone == false) {
             for (varTypeIterator = varTypeInts.begin(); varTypeIterator != varTypeInts.end(); varTypeIterator++) {
                 if (varType == *varTypeIterator) {
-                    oss << in_data.asUint64();
+                    oss << in_data.asInt64();
 
                     flagDone = true;
 
