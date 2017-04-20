@@ -26,6 +26,7 @@ using namespace qpid::messaging;
 using namespace qpid::types;
 
 using dtests::qpid::messaging::printMessageDict;
+using dtests::qpid::messaging::printMessageInterop;
 using dtests::qpid::messaging::printStatistics;
 
 struct Options : OptionParser
@@ -119,7 +120,7 @@ struct Options : OptionParser
         add("sync-mode", sync_mode, "synchronization mode: none/session/action");
         add("capacity", capacity, "set receiver's capacity");
 
-        add("log-msgs", log_msgs, "message[s] reporting style (dict|body|upstream|none)");
+        add("log-msgs", log_msgs, "message[s] reporting style (dict|interop|body)");
         add("log-stats", log_stats, "report various statistic/debug information");
         add("log-lib", log_lib, "client logging library level");
     }
@@ -222,6 +223,8 @@ int main(int argc, char** argv)
                     std::cout << message.getContent() << std::endl;
                 } else if (options.log_msgs == "dict") {
                     printMessageDict(message);
+                } else if (options.log_msgs == "interop") {
+                    printMessageInterop(message);
                 }
 
                 // define message rate --count + --duration
