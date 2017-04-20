@@ -50,6 +50,259 @@ void printMessageDict(const Message &message) {
 #endif // ENABLE_MODERN
 }
 
+string formatBool(const bool b) {
+    return b ? "True" : "False";
+}
+
+string formatBool(const Variant b) {
+    return b == "true" ? "True" : "False";
+}
+
+string formatString(const string s) {
+    if (s.empty()) {
+        return string("None");
+    } else {
+        return string("'").append(s).append("'");
+    }
+}
+
+string formatList(const std::list <Variant>l) {
+    std::ostringstream oss;
+    string::size_type index = 0;
+
+    oss << "[";
+    for (std::list<Variant>::const_iterator it = l.begin(); it != l.end(); it++) {
+        oss << getValue(*it);
+        index++;
+
+        if (index < l.size()) {
+            oss << ", ";
+        }
+    }
+    oss << "]";
+
+    return oss.str();
+}
+
+string formatMap(const std::map <string, Variant>m) {
+    std::ostringstream oss;
+    string::size_type index = 0;
+
+    oss << "{";
+    for (map<string, Variant>::const_iterator it = m.begin(); it != m.end(); it++) {
+        oss << "'" << it->first << "': " << getValue(it->second);
+        index++;
+
+        if (index < m.size()) {
+            oss << ", ";
+        }
+    }
+    oss << "}";
+
+    return oss.str();
+}
+
+string formatProperties(const Variant::Map p) {
+    std::ostringstream oss;
+    string::size_type index = 0;
+
+    oss << "{";
+    for (map<string, Variant>::const_iterator it = p.begin(); it != p.end(); it++) {
+        oss << "'" << it->first << "': " << getValue(it->second);
+        index++;
+
+        if (index < p.size()) {
+            oss << ", ";
+        }
+    }
+    oss << "}";
+
+    return oss.str();
+}
+
+string getValue(const Variant &in_data) {
+    std::ostringstream oss;
+
+    VariantType varType = in_data.getType();
+  
+    if (varType == VAR_STRING) {
+        oss << "'" << in_data.asString() << "'";
+    } else if (varType == VAR_BOOL) {
+        oss << in_data.asBool();
+    } else if (varType == VAR_FLOAT) {
+        oss << in_data.asFloat();
+    } else if (varType == VAR_DOUBLE) {
+        oss << in_data.asDouble();
+    } else if (varType == VAR_UUID) {
+        oss << "'" << in_data.asString() << "'";
+    } else if (varType == VAR_VOID) {
+        oss << "None";
+    } else if (varType == VAR_MAP) {
+        oss << formatMap(static_cast<std::map<string, Variant> >(in_data.asMap()));
+    } else if (varType == VAR_LIST) {
+        oss << formatList(in_data.asList());
+    }
+    else {
+        // UInt, Int, and default section
+        bool flagDone = false;
+        vector<VariantType> varTypeInts;
+        vector<VariantType> varTypeUInts;
+
+        varTypeUInts.push_back(VAR_UINT8);
+        varTypeUInts.push_back(VAR_UINT16);
+        varTypeUInts.push_back(VAR_UINT32);
+        varTypeUInts.push_back(VAR_UINT64);
+
+        varTypeInts.push_back(VAR_INT8);
+        varTypeInts.push_back(VAR_INT16);
+        varTypeInts.push_back(VAR_INT32);
+        varTypeInts.push_back(VAR_INT64);
+
+        vector<VariantType>::iterator varTypeIterator;
+        for (varTypeIterator = varTypeUInts.begin(); varTypeIterator != varTypeUInts.end(); varTypeIterator++) {
+            if (varType == *varTypeIterator) {
+                oss << in_data.asUint64();
+
+                flagDone = true;
+
+                break;
+            }
+        }
+        if (flagDone == false) {
+            for (varTypeIterator = varTypeInts.begin(); varTypeIterator != varTypeInts.end(); varTypeIterator++) {
+                if (varType == *varTypeIterator) {
+                    oss << in_data.asUint64();
+
+                    flagDone = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (flagDone == false) {
+            oss << "'" << in_data << "'";
+        }
+    }
+
+    return oss.str();
+}
+
+void printMessageInterop(const Message &message) {
+    string msgString = "";
+    std::ostringstream helper;
+    Variant::Map props = message.getProperties();
+
+    try {
+        msgString.append("{");
+
+
+        /** AMQP Header **/
+        msgString.append("'durable': ").append(formatBool(message.getDurable()));
+
+        helper << ((uint16_t) message.getPriority());
+        msgString.append(", 'priority': ").append(helper.str());
+        helper.str("");
+
+        helper << message.getTtl().getMilliseconds();
+        msgString.append(", 'ttl': ").append(helper.str()); // TODO ttl/expiration ?
+        helper.str("");
+
+        // TODO: Not supported in API, get from properties
+        // astitcher: qpid::messaging::Message::getRedlivered() is the boolean neagtion of first-acquirer (although it may not be exact)
+        if (props.find("x-amqp-first-acquirer") != props.end()) {
+            msgString.append(", 'first-acquirer': ").append(formatBool(props.find("x-amqp-first-acquirer")->second));
+        } else {
+            msgString.append(", 'first-acquirer': ").append("False");
+        }
+
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-delivery-count") != props.end()) {
+            msgString.append(", 'delivery-count': ").append(props.find("x-amqp-delivery-count")->second);
+        } else {
+            msgString.append(", 'delivery-count': ").append("0");
+        }
+
+
+        /** Delivery Annotations **/
+        // REMOVED: msgString.append(", 'redelivered': ").append(formatBool(message.getRedelivered()));
+        // TODO: Not supported in API, JMS 2.0
+        // msgString.append(", 'delivery-time': ").append("0");
+
+
+        /** AMQP Properties **/
+        msgString.append(", 'id': ").append(formatString(message.getMessageId()));
+
+        msgString.append(", 'user-id': ").append(formatString(message.getUserId()));
+      
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-to") != props.end()) {
+            msgString.append(", 'address': ").append(formatString(props.find("x-amqp-to")->second));
+        } else {
+            msgString.append(", 'address': ").append("None");
+        }
+
+        msgString.append(", 'subject': ").append(formatString(message.getSubject())); // OW: JMS_AMQP_Subject
+
+        msgString.append(", 'reply-to': ").append(formatString(message.getReplyTo().str()));
+
+        msgString.append(", 'correlation-id': ").append(formatString(message.getCorrelationId()));
+
+        msgString.append(", 'content-type': ").append(formatString(message.getContentType()));
+
+        msgString.append(", 'content-encoding': ").append(formatString(message.getContentObject().getEncoding()));
+
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-absolute-expiry-time") != props.end()) {
+            msgString.append(", 'absolute-expiry-time': ").append(props.find("x-amqp-absolute-expiry-time")->second);
+        } else {
+            msgString.append(", 'absolute-expiry-time': ").append("0");
+        }
+
+        if (props.find("x-amqp-creation-time") != props.end()) {
+            msgString.append(", 'creation-time': ").append(props.find("x-amqp-creation-time")->second);
+        } else {
+            msgString.append(", 'creation-time': ").append("0");
+        }
+
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-group-id") != props.end()) {
+            msgString.append(", 'group-id': ").append(formatString(props.find("x-amqp-group-id")->second));
+        } else {
+            msgString.append(", 'group-id': ").append("None");
+        }
+
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-group-sequence") != props.end()) {
+            msgString.append(", 'group-sequence': ").append(props.find("x-amqp-group-sequence")->second);
+        } else {
+            msgString.append(", 'group-sequence': ").append("0");
+        }
+
+        // TODO: Not supported in API, get from properties
+        if (props.find("x-amqp-reply-to-group-id") != props.end()) {
+            msgString.append(", 'reply-to-group-id': ").append(formatString(props.find("x-amqp-reply-to-group-id")->second));
+        } else {
+            msgString.append(", 'reply-to-group-id': ").append("None");
+        }
+
+
+        /** Application Properties **/
+        msgString.append(", 'properties': ").append(formatProperties(props));
+
+
+        /** Application Data **/
+        msgString.append(", 'content': ").append(getValue(message.getContentObject()));
+
+        msgString.append("}");
+    } catch (Exception e) {
+        std::cerr << "Error while getting message properties: " << e.what() << std::endl;
+
+        exit(1);
+    }
+
+    std::cout << msgString << std::endl;
+}
 
 void printStatistics(const Message &message, const Variant::Map &stats) {
 #ifdef ENABLE_MODERN

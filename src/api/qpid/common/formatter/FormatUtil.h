@@ -9,6 +9,7 @@
 #define	FORMATUTIL_H
 
 #include <qpid/messaging/Message.h>
+#include <qpid/messaging/Address.h>
 
 #include <iostream>
 
@@ -33,7 +34,14 @@ namespace qpid {
 namespace messaging {
     
 void printMessageUpstream(const Message &message, bool verbose = true);
+string formatBool(const bool b);
+string formatBool(const Variant b);
+string formatString(const string s);
+string formatMap(const std::map <string, Variant>m);
+string formatProperties(const Variant::Map p);
+string getValue(const Variant &in_data);
 void printMessageDict(const Message &message);
+void printMessageInterop(const Message &message);
 void printStatistics(const Message &message, const Variant::Map &stats);
     
 }}}
