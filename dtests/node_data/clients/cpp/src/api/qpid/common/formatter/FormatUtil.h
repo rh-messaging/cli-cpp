@@ -8,8 +8,14 @@
 #ifndef FORMATUTIL_H
 #define	FORMATUTIL_H
 
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <exception>
+
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Address.h>
+#include <qpid/types/Variant.h>
 
 #include <iostream>
 
@@ -25,21 +31,21 @@
  #include "Formatter.h"
 #endif // ENABLE_MODERN
 
-
 using qpid::messaging::Message;
-using qpid::types::Variant; 
+using qpid::types::Variant;
+using qpid::types::VariantType;
 
 namespace dtests {
 namespace qpid {
 namespace messaging {
     
 void printMessageUpstream(const Message &message, bool verbose = true);
-string formatBool(const bool b);
-string formatBool(const Variant b);
-string formatString(const string s);
-string formatMap(const std::map <string, Variant>m);
-string formatProperties(const Variant::Map p);
-string getValue(const Variant &in_data);
+std::string formatBool(const bool b);
+std::string formatBool(const Variant b);
+std::string formatString(const std::string s);
+std::string formatMap(const std::map <std::string, Variant>m);
+std::string formatProperties(const Variant::Map p);
+std::string getValue(const Variant &in_data);
 void printMessageDict(const Message &message);
 void printMessageInterop(const Message &message);
 void printStatistics(const Message &message, const Variant::Map &stats);

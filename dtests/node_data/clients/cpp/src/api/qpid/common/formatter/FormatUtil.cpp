@@ -50,25 +50,25 @@ void printMessageDict(const Message &message) {
 #endif // ENABLE_MODERN
 }
 
-string formatBool(const bool b) {
+std::string formatBool(const bool b) {
     return b ? "True" : "False";
 }
 
-string formatBool(const Variant b) {
+std::string formatBool(const Variant b) {
     return b == "true" ? "True" : "False";
 }
 
-string formatString(const string s) {
+std::string formatString(const std::string s) {
     if (s.empty()) {
-        return string("None");
+        return std::string("None");
     } else {
-        return string("'").append(s).append("'");
+        return std::string("'").append(s).append("'");
     }
 }
 
-string formatList(const std::list <Variant>l) {
+std::string formatList(const std::list <Variant>l) {
     std::ostringstream oss;
-    string::size_type index = 0;
+    std::string::size_type index = 0;
 
     oss << "[";
     for (std::list<Variant>::const_iterator it = l.begin(); it != l.end(); it++) {
@@ -84,12 +84,12 @@ string formatList(const std::list <Variant>l) {
     return oss.str();
 }
 
-string formatMap(const std::map <string, Variant>m) {
+std::string formatMap(const std::map <std::string, Variant>m) {
     std::ostringstream oss;
-    string::size_type index = 0;
+    std::string::size_type index = 0;
 
     oss << "{";
-    for (map<string, Variant>::const_iterator it = m.begin(); it != m.end(); it++) {
+    for (std::map<std::string, Variant>::const_iterator it = m.begin(); it != m.end(); it++) {
         oss << "'" << it->first << "': " << getValue(it->second);
         index++;
 
@@ -102,12 +102,12 @@ string formatMap(const std::map <string, Variant>m) {
     return oss.str();
 }
 
-string formatProperties(const Variant::Map p) {
+std::string formatProperties(const Variant::Map p) {
     std::ostringstream oss;
-    string::size_type index = 0;
+    std::string::size_type index = 0;
 
     oss << "{";
-    for (map<string, Variant>::const_iterator it = p.begin(); it != p.end(); it++) {
+    for (std::map<std::string, Variant>::const_iterator it = p.begin(); it != p.end(); it++) {
         oss << "'" << it->first << "': " << getValue(it->second);
         index++;
 
@@ -120,45 +120,45 @@ string formatProperties(const Variant::Map p) {
     return oss.str();
 }
 
-string getValue(const Variant &in_data) {
+std::string getValue(const Variant &in_data) {
     std::ostringstream oss;
 
     VariantType varType = in_data.getType();
   
-    if (varType == VAR_STRING) {
+    if (varType == ::qpid::types::VAR_STRING) {
         oss << "'" << in_data.asString() << "'";
-    } else if (varType == VAR_BOOL) {
+    } else if (varType == ::qpid::types::VAR_BOOL) {
         oss << in_data.asBool();
-    } else if (varType == VAR_FLOAT) {
+    } else if (varType == ::qpid::types::VAR_FLOAT) {
         oss << in_data.asFloat();
-    } else if (varType == VAR_DOUBLE) {
+    } else if (varType == ::qpid::types::VAR_DOUBLE) {
         oss << in_data.asDouble();
-    } else if (varType == VAR_UUID) {
+    } else if (varType == ::qpid::types::VAR_UUID) {
         oss << "'" << in_data.asString() << "'";
-    } else if (varType == VAR_VOID) {
+    } else if (varType == ::qpid::types::VAR_VOID) {
         oss << "None";
-    } else if (varType == VAR_MAP) {
-        oss << formatMap(static_cast<std::map<string, Variant> >(in_data.asMap()));
-    } else if (varType == VAR_LIST) {
+    } else if (varType == ::qpid::types::VAR_MAP) {
+        oss << formatMap(static_cast<std::map<std::string, Variant> >(in_data.asMap()));
+    } else if (varType == ::qpid::types::VAR_LIST) {
         oss << formatList(in_data.asList());
     }
     else {
         // UInt, Int, and default section
         bool flagDone = false;
-        vector<VariantType> varTypeInts;
-        vector<VariantType> varTypeUInts;
+        std::vector<VariantType> varTypeInts;
+        std::vector<VariantType> varTypeUInts;
 
-        varTypeUInts.push_back(VAR_UINT8);
-        varTypeUInts.push_back(VAR_UINT16);
-        varTypeUInts.push_back(VAR_UINT32);
-        varTypeUInts.push_back(VAR_UINT64);
+        varTypeUInts.push_back(::qpid::types::VAR_UINT8);
+        varTypeUInts.push_back(::qpid::types::VAR_UINT16);
+        varTypeUInts.push_back(::qpid::types::VAR_UINT32);
+        varTypeUInts.push_back(::qpid::types::VAR_UINT64);
 
-        varTypeInts.push_back(VAR_INT8);
-        varTypeInts.push_back(VAR_INT16);
-        varTypeInts.push_back(VAR_INT32);
-        varTypeInts.push_back(VAR_INT64);
+        varTypeInts.push_back(::qpid::types::VAR_INT8);
+        varTypeInts.push_back(::qpid::types::VAR_INT16);
+        varTypeInts.push_back(::qpid::types::VAR_INT32);
+        varTypeInts.push_back(::qpid::types::VAR_INT64);
 
-        vector<VariantType>::iterator varTypeIterator;
+        std::vector<VariantType>::iterator varTypeIterator;
         for (varTypeIterator = varTypeUInts.begin(); varTypeIterator != varTypeUInts.end(); varTypeIterator++) {
             if (varType == *varTypeIterator) {
                 oss << in_data.asUint64();
@@ -189,7 +189,7 @@ string getValue(const Variant &in_data) {
 }
 
 void printMessageInterop(const Message &message) {
-    string msgString = "";
+    std::string msgString = "";
     std::ostringstream helper;
     Variant::Map props = message.getProperties();
 
@@ -295,7 +295,7 @@ void printMessageInterop(const Message &message) {
         msgString.append(", 'content': ").append(getValue(message.getContentObject()));
 
         msgString.append("}");
-    } catch (Exception e) {
+    } catch (std::exception e) {
         std::cerr << "Error while getting message properties: " << e.what() << std::endl;
 
         exit(1);
