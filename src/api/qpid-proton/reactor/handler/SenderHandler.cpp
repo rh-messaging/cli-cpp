@@ -198,6 +198,10 @@ void SenderHandler::on_sendable(sender &s)
 
             writer.endLine();
             std::cout << writer.toString();
+        } else if (log_msgs == "interop") {
+            DictFormatter formatter = DictFormatter();
+
+            formatter.printMessageInterop(m);
         }
 
         if (duration_time > 0 && duration_mode == "after-send") {
