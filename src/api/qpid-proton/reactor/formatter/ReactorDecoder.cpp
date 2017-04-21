@@ -422,8 +422,11 @@ string ReactorDecoder::decodeValue(const value &value) const {
             logger(debug) << "(m) Long/Int: ";
             break;
         }
+        case FLOAT:
         case DOUBLE: {
-            s << value.as_double();
+            char buffer[50];
+            sprintf(buffer, "%f", value.as_double());
+            s << buffer;
             logger(debug) << "(m) Double: ";
             break;
         }

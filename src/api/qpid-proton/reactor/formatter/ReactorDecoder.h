@@ -39,6 +39,7 @@ using proton::STRING;
 using proton::UINT;
 using proton::INT;
 using proton::DOUBLE;
+using proton::FLOAT;
 using proton::LONG;
 using proton::value;
 using proton::type_id;
