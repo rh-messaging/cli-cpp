@@ -274,7 +274,7 @@ void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
             uint32_t index = 1;
 
             for (std::list<value>::const_iterator iterator = value_list.begin(); iterator != value_list.end(); ++iterator, index++) {
-                writer->write(decodeValue(*iterator));
+                writer->write(decodeValue(*iterator), true);
 
                 if (index < value_list.size()) {
                     writer->endField();
@@ -314,7 +314,7 @@ void ReactorDecoder::decodeValue(Writer *writer, const value &val) const
             for (std::map<std::string, value>::iterator it = value_map.begin(); it != value_map.end(); ++it, index++) {
                 writer->write(it->first);
                 writer->separate();
-                writer->write(decodeValue(it->second));
+                writer->write(decodeValue(it->second), true);
                 if (index < value_map.size()) {
                     writer->endField();
                 }
@@ -407,7 +407,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
             break;
         }
         case STRING: {
-            s << value.as_string();
+            s << "'" << value.as_string() << "'";
             logger(debug) << "(m) String: ";
             break;
         }
@@ -432,8 +432,8 @@ string ReactorDecoder::decodeValue(const value &value) const {
         }
         default: {
             if (!value.empty()) {
-                s << value.as_string();
                 logger(debug) << "(m) Other: ";
+                s << "'" << value.as_string() << "'";
             }
         }
     }
@@ -469,6 +469,6 @@ void ReactorDecoder::decodeContent(Writer *writer) const
     if (content.empty()) {
         writer->write("None", true);
     } else {
-        writer->write(content);
+        writer->write(content, true);
     }
 }
