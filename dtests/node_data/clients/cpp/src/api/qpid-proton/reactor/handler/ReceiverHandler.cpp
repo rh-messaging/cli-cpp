@@ -244,6 +244,10 @@ void ReceiverHandler::on_message(delivery &d, message &m)
 
         writer.endLine();
         std::cout << writer.toString();
+    } else if (log_msgs == "interop") {
+        DictFormatter formatter = DictFormatter();
+
+        formatter.printMessageInterop(m);
     }
 
     if (duration_time > 0 && duration_mode == "after-receive") {
