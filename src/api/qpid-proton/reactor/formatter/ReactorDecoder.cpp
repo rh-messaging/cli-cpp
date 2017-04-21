@@ -203,13 +203,14 @@ void ReactorDecoder::writeContentSize(Writer *writer) const
     } else {
         // string body = decodeValue(writer, m.body());
         string body = "";
-        string len = super::decodeValue(body.size());
+        //string len = super::decodeValue(body.size());
 
         // writer->write(KeyValue(MessageHeader::CONTENT_SIZE.name,
         //        len));
         writer->write(MessageHeader::CONTENT_SIZE.name);
         writer->write(": ", true);
-        writer->write(len, true);
+        //writer->write(len, true);
+        writer->write("0", true);
         writer->write(", ", true);
 
         return;
