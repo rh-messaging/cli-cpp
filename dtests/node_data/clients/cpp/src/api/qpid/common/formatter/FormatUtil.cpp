@@ -76,7 +76,7 @@ std::string formatList(const std::list <Variant>l) {
 
     oss << "[";
     for (std::list<Variant>::const_iterator it = l.begin(); it != l.end(); it++) {
-        oss << getValue(*it);
+        oss << getValue(*it, false);
         index++;
 
         if (index < l.size()) {
@@ -94,7 +94,7 @@ std::string formatMap(const std::map <std::string, Variant>m) {
 
     oss << "{";
     for (std::map<std::string, Variant>::const_iterator it = m.begin(); it != m.end(); it++) {
-        oss << "'" << it->first << "': " << getValue(it->second);
+        oss << "'" << it->first << "': " << getValue(it->second, false);
         index++;
 
         if (index < m.size()) {
@@ -124,13 +124,13 @@ std::string formatProperties(const Variant::Map p) {
     return oss.str();
 }
 
-std::string getValue(const Variant &in_data) {
+std::string getValue(const Variant &in_data, bool empty_string_as_none) {
     std::ostringstream oss;
 
     VariantType varType = in_data.getType();
 
     if (varType == ::qpid::types::VAR_STRING) {
-        if (in_data.asString().empty()) {
+        if (in_data.asString().empty() && empty_string_as_none) {
             oss << "None";
         } else {
             oss << "'" << in_data.asString() << "'";
