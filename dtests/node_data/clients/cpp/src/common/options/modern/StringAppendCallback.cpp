@@ -27,10 +27,11 @@ void StringAppendCallback::operator()(const optparse::Option &option, const stri
 void StringAppendCallback::append(const string &s)
 {
     if(str.length() > 0) {
+        str.append(s);
         str.append(";");
+    } else {
+        str.append("'';");
     }
-
-    str.append(s);
 }
 
 vector<string> StringAppendCallback::getStrings() const
@@ -47,7 +48,11 @@ vector<string> StringAppendCallback::getStrings() const
 
             length = (colon_position - start);
 
-            strings.push_back(str.substr(start, length));
+            if (str.substr(start, length) == "''") {
+                strings.push_back("");
+            } else if(str.substr(start, length).length() > 0) {
+                strings.push_back(str.substr(start, length));
+            }
             
             start = (colon_position + 1);
         }
