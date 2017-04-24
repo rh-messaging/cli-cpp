@@ -203,6 +203,9 @@ void SendingClient::setMessageListItem(message *msg, const string &property, std
                 // string
                 messageList.push_back(val);
             }
+          } else if (val.find("~") != std::string::npos) {
+            // string
+            messageList.push_back(val);
           } else {
             // long
             messageList.push_back(atol(val.c_str()));
