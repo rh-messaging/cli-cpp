@@ -68,7 +68,7 @@ int_result << "{"
   << "'durable': " << formatBool(msg.getDurable()) << ", "
   << "'ttl': " << msg.getTtl().getMilliseconds() << ", "
 // BZ1023083 fixed in 0.22-23
-  << "'size': " << formatContentSize(msg) << ", "
+  //<< "'size': " << formatContentSize(msg) << ", "
 
   << "'properties': " << formatMap(msg.getProperties()) << ", "
 
