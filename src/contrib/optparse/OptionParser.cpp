@@ -247,8 +247,11 @@ void OptionParser::handle_long_opt(const string& optstr) {
     }
   }
 
-  if (option._nargs == 1 and value == "")
-    error("--" + opt + " " + _("option requires an argument"));
+  if (option._nargs == 1 and value == "") {
+    if (opt != "msg-content-list-item") {
+      error("--" + opt + " " + _("option requires an argument"));
+    }
+  }
 
   process_opt(option, string("--") + opt, value);
 }
