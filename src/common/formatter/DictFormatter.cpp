@@ -254,7 +254,7 @@ void DictFormatter::printMessageInterop(const message &m)
         if (m.correlation_id().empty()) {
             msgString.append(", 'correlation-id': ").append("None");
         } else {
-            msgString.append(", 'correlation-id': ").append(formatString(get<std::string>(m.correlation_id()), true));
+            msgString.append(", 'correlation-id': ").append(formatString(coerce<std::string>(m.correlation_id()), true));
         }
 
         msgString.append(", 'content-type': ").append(formatString(m.content_type()));

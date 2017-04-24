@@ -19,6 +19,7 @@ using proton::message;
 using proton::message_id;
 using proton::scalar;
 using proton::get;
+using proton::coerce;
 using proton::value;
 using proton::type_id;
 
