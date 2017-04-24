@@ -239,7 +239,7 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
     //        static_cast<BoolReader> (&message::durable));
     writeDurable(writer);
     writeTTL(writer);
-    writeContentSize(writer);
+    //writeContentSize(writer);
 }
 
 void ReactorDecoder::decodeProperties(Writer *writer) const
