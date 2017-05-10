@@ -408,7 +408,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
             break;
         }
         case STRING: {
-            s << "'" << value.as_string() << "'";
+            s << "'" << escapeQuotes(value.as_string()) << "'";
             logger(debug) << "(m) String: ";
             break;
         }
@@ -442,6 +442,17 @@ string ReactorDecoder::decodeValue(const value &value) const {
     return s.str();
 }
 
+string ReactorDecoder::escapeQuotes(const string s) const {
+    string retVal = s;
+    string::size_type indexOfQuote = retVal.find("'");
+
+    while(indexOfQuote != string::npos) {
+        retVal = retVal.replace(indexOfQuote, 1, "\\'");
+        indexOfQuote = retVal.find("'", indexOfQuote+2);
+    }
+
+    return retVal;
+}
 
 // TODO: this is likely to be deprecated and should be removed
 string ReactorDecoder::decodeValue(const string &str) const
