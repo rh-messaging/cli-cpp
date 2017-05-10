@@ -109,6 +109,7 @@ class ReactorDecoder : public AbstractDecoder {
     void decodeValue(Writer *writer, const value &dec) const;
     
     string decodeValue(const value &dec) const;
+    string escapeQuotes(const string s) const;
     string decodeValue(const string &str) const;
 
 };
