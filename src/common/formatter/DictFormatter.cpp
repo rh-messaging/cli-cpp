@@ -169,7 +169,7 @@ std::string DictFormatter::getValue(const value &v) {
             if (v.as_string().empty()) {
                 oss << "None";
             } else {
-                oss << "'" << v.as_string() << "'";
+                oss << "'" << escapeQuotes(v.as_string()) << "'";
             }
 
             break;
@@ -200,6 +200,18 @@ std::string DictFormatter::getValue(const value &v) {
     }
     
     return oss.str();
+}
+
+std::string DictFormatter::escapeQuotes(const std::string s) {
+    std::string retVal = s;
+    std::string::size_type indexOfQuote = retVal.find("'");
+
+    while(indexOfQuote != std::string::npos) {
+        retVal = retVal.replace(indexOfQuote, 1, "\\'");
+        indexOfQuote = retVal.find("'", indexOfQuote+2);
+    }
+
+    return retVal;
 }
 
 void DictFormatter::printMessageInterop(const message &m)

@@ -44,6 +44,7 @@ class DictFormatter : public AbstractFormatter {
     std::string formatMap(const std::map <std::string, value>m);
     std::string formatProperties(message::property_map p);
     std::string getValue(const value &v);
+    std::string escapeQuotes(const std::string s);
     void printMessageInterop(const message &m);
 
   private:
