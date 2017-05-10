@@ -47,6 +47,7 @@ std::string formatString(const std::string s, bool remove_id_prefix = false);
 std::string formatMap(const std::map <std::string, Variant>m);
 std::string formatProperties(const Variant::Map p);
 std::string getValue(const Variant &in_data, bool empty_string_as_none = true);
+std::string escapeQuotes(const std::string s);
 void printMessageDict(const Message &message);
 void printMessageInterop(const Message &message);
 void printStatistics(const Message &message, const Variant::Map &stats);

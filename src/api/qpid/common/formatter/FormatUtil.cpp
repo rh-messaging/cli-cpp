@@ -133,7 +133,7 @@ std::string getValue(const Variant &in_data, bool empty_string_as_none) {
         if (in_data.asString().empty() && empty_string_as_none) {
             oss << "None";
         } else {
-            oss << "'" << in_data.asString() << "'";
+            oss << "'" << escapeQuotes(in_data.asString()) << "'";
         }
     } else if (varType == ::qpid::types::VAR_BOOL) {
         oss << in_data.asBool();
@@ -196,6 +196,18 @@ std::string getValue(const Variant &in_data, bool empty_string_as_none) {
     }
 
     return oss.str();
+}
+
+std::string escapeQuotes(const std::string s) {
+    std::string retVal = s;
+    std::string::size_type indexOfQuote = retVal.find("'");
+
+    while(indexOfQuote != std::string::npos) {
+        retVal = retVal.replace(indexOfQuote, 1, "\\'");
+        indexOfQuote = retVal.find("'", indexOfQuote+2);
+    }
+
+    return retVal;
 }
 
 void printMessageInterop(const Message &message) {
