@@ -247,6 +247,10 @@ void SenderHandler::on_transport_close(transport &t) {
 
 void SenderHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
+
+    if (t.error().what().find("unauthorized") != string::npos) {
+        exit(1);
+    }
 }
 
 void SenderHandler::on_tracker_reject(tracker &t)
