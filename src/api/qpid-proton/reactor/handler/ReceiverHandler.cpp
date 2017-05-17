@@ -313,6 +313,10 @@ void ReceiverHandler::on_transport_close(transport &t) {
 
 void ReceiverHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
+    
+    if (t.error().what().find("unauthorized") != string::npos) {
+        exit(1);
+    }
 }
 
 void ReceiverHandler::on_connection_close(connection &conn)
