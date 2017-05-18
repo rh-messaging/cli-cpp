@@ -26,7 +26,7 @@ void StringAppendCallback::operator()(const optparse::Option &option, const stri
 
 void StringAppendCallback::append(const string &s)
 {
-    if(str.length() > 0) {
+    if(s.length() > 0) {
         str.append(s);
         str.append(";");
     } else {
