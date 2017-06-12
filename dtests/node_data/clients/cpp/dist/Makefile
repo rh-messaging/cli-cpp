@@ -5,7 +5,7 @@ BASEDIR=$(PREFIX)/dtests/$(PROJECT_NAME)
 USERNAME=repoadm
 SERVER=messaging-qe-repo.usersys.redhat.com
 
-VERSION=20160704
+VERSION=20170612
 DISTRO_NAME?=rhel
 REPO_PATH=/home/repoadm/public_html/repos/$(DISTRO_NAME)/$(DISTRO_VERSION)/$(DISTRO_ARCH)
 
