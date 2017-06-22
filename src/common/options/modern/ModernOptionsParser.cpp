@@ -125,7 +125,13 @@ ModernOptionsParser::~ModernOptionsParser()
 
 void ModernOptionsParser::validate(const Values &options) const
 {
-    if (!options.is_set("broker-url")) {
+    string is_listener = "false";
+    if (options.is_set("recv-listen")) {
+        is_listener = options["recv-listen"];
+        std::transform(is_listener.begin(), is_listener.end(), is_listener.begin(), ::tolower);
+    }
+
+    if (!options.is_set("broker-url") && is_listener != "true") {
         print_help();
         error("Broker URL is not set");
     }

@@ -41,7 +41,9 @@ ReceiverHandler::ReceiverHandler(
     uint32_t max_frame_size,
     string log_msgs,
     bool process_reply_to,
-    bool browse
+    bool browse,
+    string recv_listen,
+    int recv_listen_port
 )
     : super(
         url,
@@ -70,7 +72,9 @@ ReceiverHandler::ReceiverHandler(
     msg_received_cnt(0),
     process_reply_to(process_reply_to),
     browse(browse),
-    timer_event(*this)
+    timer_event(*this),
+    recv_listen(recv_listen),
+    recv_listen_port(recv_listen_port)
 {
 }
 
@@ -83,13 +87,21 @@ void ReceiverHandler::timerEvent() {
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
-        recv.container().stop();
+        if (recv_listen != "true") {
+            recv.container().stop();
+        } else {
+            exit(0);
+        }
     } else {
         timer--;
         logger(debug) << "Waiting ...";
         
         duration d = duration(1 * duration::SECOND.milliseconds());
-        recv.container().schedule(d, timer_event);
+        if (recv_listen != "true") {
+            recv.container().schedule(d, timer_event);
+        } else {
+            cont.schedule(d, timer_event);
+        }
     }
 #endif
 }
@@ -97,6 +109,8 @@ void ReceiverHandler::timerEvent() {
 void ReceiverHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
+
+    cont = c;
 
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
@@ -147,11 +161,11 @@ void ReceiverHandler::on_container_start(container &c)
         conn_opts.idle_timeout(heartbeat_seconds);
     }
 
-    logger(debug) << "Creating a receiver and connecting to the server";
-
     logger(debug) << "Browsing: " << browse;
 
     if (browse) {
+        logger(debug) << "Creating a receiver and connecting to the server";
+
         recv = c.open_receiver(
                 broker_url,
                 c.receiver_options()
@@ -161,16 +175,30 @@ void ReceiverHandler::on_container_start(container &c)
                 conn_opts
         );
     } else {
-        recv = c.open_receiver(
-                broker_url,
-                c.receiver_options()
-                    .source(
-                        source_options().filters(this->fm)
-                    ),
-                conn_opts
-        );
+        logger(debug) << "Peer-to-peer: " << recv_listen;
+        logger(debug) << "Peer-to-peer port: " << recv_listen_port;
+
+        if (recv_listen == "true") {
+            logger(debug) << "Creating a listener";
+            // P2P
+            stringstream ss;
+            ss << "0.0.0.0:";
+            ss << recv_listen_port;
+            lsnr = c.listen(ss.str(), conn_opts);
+        } else {
+            logger(debug) << "Creating a receiver and connecting to the server";
+
+            recv = c.open_receiver(
+                    broker_url,
+                    c.receiver_options()
+                        .source(
+                            source_options().filters(this->fm)
+                        ),
+                    conn_opts
+            );
+        }
     }
-    logger(debug) << "Connected to the broker and waiting for messages";
+    logger(debug) << "Connected to the broker/p2p and waiting for messages";
 
     duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 

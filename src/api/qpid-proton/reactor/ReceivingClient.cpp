@@ -201,6 +201,17 @@ int ReceivingClient::run(int argc, char **argv) const
         duration_mode = options["duration-mode"];
     }
 
+    int recv_listen_port = 5672;
+    if(options.is_set("recv-listen-port")) {
+        recv_listen_port = atoi(options["recv-listen-port"].c_str());
+    }
+
+    string recv_listen = "false";
+    if (options.is_set("recv-listen")) {
+        recv_listen = options["recv-listen"];
+        std::transform(recv_listen.begin(), recv_listen.end(), recv_listen.begin(), ::tolower);
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         msg_action,
@@ -224,7 +235,9 @@ int ReceivingClient::run(int argc, char **argv) const
         max_frame_size,
         log_msgs,
         process_reply_to,
-        browse
+        browse,
+        recv_listen,
+        recv_listen_port
     );
 
     if (selector != "") {
