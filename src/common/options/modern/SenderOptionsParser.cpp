@@ -127,6 +127,21 @@ SenderOptionsParser::SenderOptionsParser()
             .dest("duration-mode")
             .help("specifies where to wait to achieve expected duration MODE (before-send, after-send, after-send-tx-action, default: after-send)")
             .metavar("MODE");
+
+    add_option("--msg-group-id")
+            .dest("msg-group-id")
+            .help("message group ID")
+            .metavar("ID");
+
+    add_option("--msg-group-seq")
+            .dest("msg-group-seq")
+            .help("message group sequence")
+            .metavar("SEQUENCE");
+
+    add_option("--msg-reply-to-group-id")
+            .dest("reply-to-group-id")
+            .help("reply to message group ID")
+            .metavar("ID");
 }
 
 SenderOptionsParser::~SenderOptionsParser()
