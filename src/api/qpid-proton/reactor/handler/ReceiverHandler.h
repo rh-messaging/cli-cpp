@@ -17,6 +17,7 @@
 #include <proton/binary.hpp>
 #include <proton/delivery.hpp>
 #include <proton/tracker.hpp>
+#include <proton/listener.hpp>
 #include <proton/transport.hpp>
 #include <proton/error_condition.hpp>
 #include <proton/source_options.hpp>
@@ -41,6 +42,7 @@ using proton::container;
 using proton::connection;
 using proton::sender;
 using proton::receiver;
+using proton::listener;
 using proton::delivery;
 using proton::tracker;
 using proton::void_function0;
@@ -94,6 +96,8 @@ class ReceiverHandler : public CommonHandler {
      * @param log_msgs message log format
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      * @param browse enable browsing receiver
+     * @param recv_listen enable p2p listener
+     * @param recv_listen_port p2p listener port
      */
     ReceiverHandler(
         const string &url,
@@ -118,7 +122,9 @@ class ReceiverHandler : public CommonHandler {
         uint32_t max_frame_size = -1,
         string log_msgs = "",
         bool process_reply_to = false,
-        bool browse = false
+        bool browse = false,
+        string recv_listen = "false",
+        int recv_listen_port = 5672
     );
     
     void timerEvent();
@@ -142,6 +148,8 @@ class ReceiverHandler : public CommonHandler {
   private:
     typedef CommonHandler super;
     receiver recv;
+    listener lsnr;
+    container cont;
     double ts;
     
     struct timer_event_t : public void_function0 {
@@ -166,6 +174,8 @@ class ReceiverHandler : public CommonHandler {
     int duration_time;
     string duration_mode;
     std::map<string, sender> senders;
+    string recv_listen;
+    int recv_listen_port;
 
     void do_disconnect();
 };

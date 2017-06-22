@@ -75,6 +75,17 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("duration-mode")
             .help("specifies where to wait to achieve expected duration MODE (after-receive, after-receive-action, after-receive-action-tx-action, default: after-receive)")
             .metavar("MODE");
+
+    add_option("--recv-listen")
+            .dest("recv-listen")
+            .help("enable receiver listen (P2P) (true/false, default: false)")
+            .metavar("LISTEN");
+
+    add_option("--recv-listen-port")
+            .dest("recv-listen-port")
+            .help("define port for local listening (default: 5672)")
+            .type("int")
+            .metavar("PORT");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
