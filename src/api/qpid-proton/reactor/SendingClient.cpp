@@ -71,6 +71,12 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
 
     setter.setBoolean("msg-durable", &msg,
             static_cast<boolean_setter> (&message::durable));
+
+    setter.set("msg-group-id", &msg,
+            static_cast<string_setter> (&message::group_id));
+
+    setter.set("reply-to-group-id", &msg,
+            static_cast<string_setter> (&message::reply_to_group_id));
 /*
  * This is replaced by setMessageProperties
  *
@@ -465,6 +471,9 @@ int SendingClient::run(int argc, char **argv) const
     
     msg.ttl(duration(value));
 #endif
+    if (options.is_set("msg-group-seq")) {
+        msg.group_sequence(std::strtol(options["msg-group-seq"].c_str(), NULL, 10));
+    }
 
     SenderHandler handler = SenderHandler(
         address,
