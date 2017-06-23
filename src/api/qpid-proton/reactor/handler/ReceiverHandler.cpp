@@ -110,7 +110,9 @@ void ReceiverHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
-    cont = c;
+    if (recv_listen == "true") {
+        cont = c;
+    }
 
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
