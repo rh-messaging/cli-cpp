@@ -373,7 +373,7 @@ void ReceiverHandler::setSelector(string selector)
 
     enc << start::described()
         << symbol("apache.org:selector-filter:string")
-        << binary(selector)
+        << selector
         << finish();
     
     fm.put(filter_key, filter_value);
