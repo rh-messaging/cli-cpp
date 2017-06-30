@@ -191,7 +191,17 @@ int main(int argc, char** argv)
             else
                 session = connection.createSession();
             ts_snap_store(ptsdata, 'D', options.log_stats);
-            Receiver receiver = session.createReceiver(options.address);
+
+            // Remove prefix 'topic://'
+            std::string fixedAddress;
+            std::size_t prefix_index = options.address.find("topic://");
+            if (prefix_index != std::string::npos) {
+                fixedAddress = options.address.replace(prefix_index, 8, "");
+            } else {
+                fixedAddress = options.address;
+            }
+
+            Receiver receiver = session.createReceiver(fixedAddress);
             Sender sender = NULL;
             // set receiver's capacity (if defined as > -1)
             if (options.capacity > -1)
