@@ -60,8 +60,15 @@ int ReceivingClient::run(int argc, char **argv) const
 
     setLogLevel(options);
 
-    const string address = options["broker-url"];
-    
+    string tempAddress = options["broker-url"];
+    string address;
+    std::size_t prefix_index = tempAddress.find("topic://");
+    if (prefix_index != std::string::npos) {
+        address = tempAddress.replace(prefix_index, 8, "");
+    } else {
+        address = tempAddress;
+    }
+
     uri_parser.parse(options["broker-url"]);
     
     string msg_action = "no-action";
@@ -244,10 +251,15 @@ int ReceivingClient::run(int argc, char **argv) const
         handler.setSelector(selector);
     }
 
-    default_container(handler).run();
+    try {
+        default_container(handler).run();
 
-    return 0;
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "error: " << e.what() << std::endl;
+    }
 
+    return 1;
 }
 
 } /* namespace reactor */

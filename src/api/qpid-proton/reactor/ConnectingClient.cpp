@@ -198,12 +198,17 @@ int ConnectingClient::run(int argc, char** argv) const
     
     int connControl = setConnectionOptions(options);
     handler.setObjectControl(connControl);
-    
-    default_container(handler).run();
 
-    return 0;
+    try {    
+        default_container(handler).run();
+
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "error: " << e.what() << std::endl;
+    }
+
+    return 1;
 }
-
 
 } /* namespace reactor */
 } /* namespace proton */
