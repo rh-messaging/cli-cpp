@@ -504,10 +504,15 @@ int SendingClient::run(int argc, char **argv) const
     }
     handler.setCount(count);
     
-    default_container(handler).run();
+    try {
+        default_container(handler).run();
 
-    return 0;
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "error: " << e.what() << std::endl;
+    }
 
+    return 1;
 }
 
 } /* namespace reactor */
