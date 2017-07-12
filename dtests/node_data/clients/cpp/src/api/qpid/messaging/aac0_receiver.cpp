@@ -29,12 +29,14 @@ using dtests::qpid::messaging::printMessageDict;
 using dtests::qpid::messaging::printMessageInterop;
 using dtests::qpid::messaging::printStatistics;
 
+
 struct Options : OptionParser
 {
     std::string broker;
     std::string conn_opts;
     std::string max_frame_size;
     std::string address;
+    std::string selector;
     
     int timeout;
     int count;
@@ -66,6 +68,7 @@ struct Options : OptionParser
           conn_opts(""),
           max_frame_size(""),
           address(""),
+          selector(""),
           
           timeout(0),
           count(0),
@@ -99,6 +102,7 @@ struct Options : OptionParser
         add("conn-max-frame-size", max_frame_size, sstm.str());
 
         add("address,a", address, "AMQP address");
+        add("msg-selector", selector, "message server side selector. Please note that Qpid C++ Messaging API supply selector via address, this will just substitue \"'%MSG_SELECTOR%'\" (with singlequotes) string in the address field.");
         
         add("timeout,t", timeout, "timeout in seconds to wait before exiting");
         add("count,c", count, "number of messages to read before exiting");
@@ -201,7 +205,18 @@ int main(int argc, char** argv)
                 fixedAddress = options.address;
             }
 
+            // selector substitution
+            if (options.selector != "") {
+              std::string pattern = "'%MSG_SELECTOR%'";
+              size_t xpos = fixedAddress.find(pattern);
+              if (xpos != std::string::npos) {
+                std::string tmp = "\"" + options.selector + "\"";
+                fixedAddress.replace(xpos, pattern.length(), tmp);
+              }
+            }
+
             Receiver receiver = session.createReceiver(fixedAddress);
+
             Sender sender = NULL;
             // set receiver's capacity (if defined as > -1)
             if (options.capacity > -1)
