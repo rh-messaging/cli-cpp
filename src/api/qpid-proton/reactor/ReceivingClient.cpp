@@ -62,7 +62,7 @@ int ReceivingClient::run(int argc, char **argv) const
 
     string tempAddress = options["broker-url"];
     string address;
-    std::size_t prefix_index = tempAddress.find("topic://");
+    std::size_t prefix_index = std::string::npos; // tempAddress.find("topic://");
     if (prefix_index != std::string::npos) {
         address = tempAddress.replace(prefix_index, 8, "");
     } else {
