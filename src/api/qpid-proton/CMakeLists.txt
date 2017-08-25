@@ -3,7 +3,6 @@ PROJECT(dtests-proton-cpp)
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.4)
 
-
 set(PROTON_DIR /usr CACHE String "QPID Proton base directory")
 
 # Do not change. Please see the comments on the aac{1,2}_* clients
@@ -15,141 +14,142 @@ if (QPID_PROTON_WITH_MESSAGING_API)
     add_definitions(-DQPID_PROTON_WITH_MESSAGING_API) 
 endif(QPID_PROTON_WITH_MESSAGING_API)
 
-
 include_directories(
-	${PROTON_DIR}/include
-	common
-        .
+    ${PROTON_DIR}/include
+    common
+    .
 )
 
 if (${DTEST_BUILD_PLATFORM} EQUAL "64")
-	link_directories(
-		${PROTON_DIR}/lib64
-	)
+    link_directories(
+        ${PROTON_DIR}/lib64
+    )
 else(${DTEST_BUILD_PLATFORM} EQUAL "64")
-	link_directories(
-		${PROTON_DIR}/lib
-	)
+    link_directories(
+        ${PROTON_DIR}/lib
+    )
 endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
 cmake_policy(SET CMP0003 OLD)
 add_library(
-	dtests-proton-common
-	
-	common/ModernClient.cpp
+    dtests-proton-common
+    
+    common/ModernClient.cpp
 )
 
-target_link_libraries(
-	dtests-proton-common
+if (WIN32)
+    target_link_libraries(
+        dtests-proton-common
 
-	qpid-proton
-	boost_regex
-	dtests-cpp-contrib
-	dtests-cpp-common
-	dtests-cpp-common-options
-)
+        qpid-proton
+        dtests-cpp-contrib
+        dtests-cpp-common
+        dtests-cpp-common-options
+    )
+else (WIN32)
+    target_link_libraries(
+        dtests-proton-common
 
-
+        qpid-proton
+        boost_regex
+        dtests-cpp-contrib
+        dtests-cpp-common
+        dtests-cpp-common-options
+    )
+endif (WIN32)
 
 cmake_policy(SET CMP0003 OLD)
 add_library(
-	dtests-proton-messenger
-	
-	messenger/exceptions/ProtonException.cpp
-	messenger/exceptions/DataSerializationException.cpp
-	
-	messenger/ProtonObject.cpp
-	messenger/Data.cpp
-	messenger/Message.cpp
-	messenger/Messenger.cpp
-	messenger/SendingClient.cpp
-	messenger/ReceivingClient.cpp
+    dtests-proton-messenger
+    
+    messenger/exceptions/ProtonException.cpp
+    messenger/exceptions/DataSerializationException.cpp
+    
+    messenger/ProtonObject.cpp
+    messenger/Data.cpp
+    messenger/Message.cpp
+    messenger/Messenger.cpp
+    messenger/SendingClient.cpp
+    messenger/ReceivingClient.cpp
 )
 
 target_link_libraries(
-	dtests-proton-messenger
+    dtests-proton-messenger
 
-	dtests-cpp-contrib
-	dtests-cpp-common
-	dtests-cpp-common-options
-	dtests-proton-common
+    dtests-cpp-contrib
+    dtests-cpp-common
+    dtests-cpp-common-options
+    dtests-proton-common
 )
 
 cmake_policy(SET CMP0003 OLD)
 add_library(
-	dtests-proton-reactor
-	
-	reactor/formatter/ReactorDecoder.cpp
-	reactor/handler/CommonHandler.cpp
-	reactor/handler/ConnectorHandler.cpp
-	reactor/handler/SenderHandler.cpp
-	reactor/handler/ReceiverHandler.cpp
-	reactor/ConnectingClient.cpp
-	reactor/SendingClient.cpp
-	reactor/ReceivingClient.cpp
+    dtests-proton-reactor
+    
+    reactor/formatter/ReactorDecoder.cpp
+    reactor/handler/CommonHandler.cpp
+    reactor/handler/ConnectorHandler.cpp
+    reactor/handler/SenderHandler.cpp
+    reactor/handler/ReceiverHandler.cpp
+    reactor/ConnectingClient.cpp
+    reactor/SendingClient.cpp
+    reactor/ReceivingClient.cpp
 )
 
 target_link_libraries(
-	dtests-proton-reactor
+    dtests-proton-reactor
 
-	dtests-cpp-contrib
-	dtests-cpp-common
-	dtests-cpp-common-options
-	dtests-proton-common
-        # Temporarily disabled because this is not yet available
-	qpid-proton-cpp
+    dtests-cpp-contrib
+    dtests-cpp-common
+    dtests-cpp-common-options
+    dtests-proton-common
+
+    qpid-proton-cpp
 )
-
 
 set(proton-reactor-clients
-	aac3_connector
-	aac3_sender
-	aac3_receiver
+    aac3_connector
+    aac3_sender
+    aac3_receiver
 )
 
 set(proton-messenger-clients
-	aac4_sender
-        aac4_receiver
+    aac4_sender
+    aac4_receiver
 )
 
- 
 foreach(client ${proton-reactor-clients})
-        cmake_policy(SET CMP0003 OLD)
-        add_executable(${client}
-                clients/${client}.cpp
-        )
+    cmake_policy(SET CMP0003 OLD)
+    add_executable(${client}
+            clients/${client}.cpp
+    )
 
-
-        target_link_libraries(${client}
-                dtests-proton-reactor
-        )
+    target_link_libraries(${client}
+            dtests-proton-reactor
+    )
 endforeach(client)
-
 
 foreach(client ${proton-messenger-clients})
-        cmake_policy(SET CMP0003 OLD)
-	add_executable(${client}
-		clients/${client}.cpp
-	)
+    cmake_policy(SET CMP0003 OLD)
+    add_executable(${client}
+        clients/${client}.cpp
+    )
 
-
-	target_link_libraries(${client}
-		dtests-proton-messenger
-	)
+    target_link_libraries(${client}
+        dtests-proton-messenger
+    )
 endforeach(client)
 
-
 install(TARGETS 
-            dtests-proton-common 
-            dtests-proton-messenger 
-            dtests-proton-reactor 
-            ${proton-reactor-clients} 
-            ${proton-messenger-clients}
-	LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
-	RUNTIME DESTINATION ${CPP_RUNTIME_DIR}
-        ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
+    dtests-proton-common 
+    dtests-proton-messenger 
+    dtests-proton-reactor 
+    ${proton-reactor-clients} 
+    ${proton-messenger-clients}
+    LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
+    RUNTIME DESTINATION ${CPP_RUNTIME_DIR}
+    ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
 )
-
 
 InstallHeaders(src/api/qpid-proton qpid-proton)
 InstallHeaders(src/api/qpid-proton/common qpid-proton/common)
