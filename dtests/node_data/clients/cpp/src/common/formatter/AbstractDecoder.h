@@ -116,10 +116,11 @@ class AbstractDecoder {
     string decodeValue(T number) const {
         ostringstream ret;
 
-#ifdef ENABLE_IMPLICIT_CONVERSIONS
-        // TODO: Investigate how to use on Windows
-        // logger(info) << "Decoding number " << (T) number << ".";
+#if defined(ENABLE_IMPLICIT_CONVERSIONS) && defined(_WIN32)
         logger(info) << "Decoding number.";
+#elif defined(ENABLE_IMPLICIT_CONVERSIONS)
+        // TODO: Investigate how to use on Windows
+        logger(info) << "Decoding number " << number << ".";
 #endif
         ret << number;
 

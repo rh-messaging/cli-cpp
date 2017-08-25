@@ -96,11 +96,14 @@ class OptionsSetter {
     template<typename T, typename Y, typename K>
     void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
         if (options.is_set(name)) {
-            // TODO: Investigate how to use on Windows
-            // K value = static_cast<K> (options.get(name));
-
-            // BeanUtils::set(value, obj, setter);
+#if defined(_WIN32)
             BeanUtils::set(defaultValue, obj, setter);
+#else
+            // TODO: Investigate how to use on Windows
+            K value = static_cast<K> (options.get(name));
+
+            BeanUtils::set(value, obj, setter);
+#endif
         } else {
             BeanUtils::set(defaultValue, obj, setter);
         }
