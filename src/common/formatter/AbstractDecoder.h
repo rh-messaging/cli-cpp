@@ -99,7 +99,6 @@ class AbstractDecoder {
      */
     virtual string decodeValue(const string &) const;
 
-
     /**
      * Decodes a string
      * @param writer a pointer to a writer object that can write the decoded 
@@ -118,7 +117,9 @@ class AbstractDecoder {
         ostringstream ret;
 
 #ifdef ENABLE_IMPLICIT_CONVERSIONS
-        logger(info) << "Decoding number " << number << ".";
+        // TODO: Investigate how to use on Windows
+        // logger(info) << "Decoding number " << (T) number << ".";
+        logger(info) << "Decoding number.";
 #endif
         ret << number;
 

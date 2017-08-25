@@ -7,22 +7,20 @@ cmake_minimum_required(VERSION 2.4)
 # FailIfNotSet(HAVE_QPID_TYPES_EXCEPTION qpid/types/Exception.h)
 
 include_directories(
-	common/
-	common/exceptions
-	common/options
-	common/options/modern
+    common/
+    common/exceptions
+    common/options
+    common/options/modern
 )
-
-
 
 if (ENABLE_MODERN) 
     set(COMMON_MODERN_SRC
         output/Printer.cpp            
         exceptions/BaseException.cpp
-	exceptions/IOException.cpp
-	exceptions/TimerExpiredException.cpp
-	options/BaseOptionsParser.cpp
-	options/OptionsHelper.cpp
+        exceptions/IOException.cpp
+        exceptions/TimerExpiredException.cpp
+        options/BaseOptionsParser.cpp
+        options/OptionsHelper.cpp
         formatter/Writer.cpp
         formatter/DictWriter.cpp
         formatter/UpstreamWriter.cpp
@@ -33,10 +31,10 @@ if (ENABLE_MODERN)
         logger/Logger.cpp
         logger/LoggerWrapper.cpp
 
-	Timer.cpp
-	UriParser.cpp
-	Client.cpp
-	ContentType.cpp
+        Timer.cpp
+        UriParser.cpp
+        Client.cpp
+        ContentType.cpp
         MessageHeader.cpp
     )
 
@@ -45,7 +43,7 @@ if (ENABLE_MODERN)
             TestUtils.cpp
         )
 
-	add_subdirectory(test)
+    add_subdirectory(test)
         add_subdirectory(output/test)
         add_subdirectory(logger/test)
         add_subdirectory(options/test)
@@ -54,45 +52,46 @@ if (ENABLE_MODERN)
 endif (ENABLE_MODERN)
 
 add_library(dtests-cpp-common
-        ${COMMON_MODERN_SRC}
-        ${TEST_SUPPORT_SRC}
+    ${COMMON_MODERN_SRC}
+    ${TEST_SUPPORT_SRC}
 
-	Utils.cpp
+    Utils.cpp
 )
 
-target_link_libraries(dtests-cpp-common
-	boost_filesystem
-	boost_system
-	pthread
-)
+if (WIN32)
+    target_link_libraries(dtests-cpp-common)
+else (WIN32)
+    target_link_libraries(dtests-cpp-common
+        boost_filesystem
+        boost_system
+        pthread
+    )
+endif (WIN32)
 
 cmake_policy(SET CMP0003 OLD)
 add_library(dtests-cpp-common-options
 
-	options/modern/StringAppendCallback.cpp
-	options/modern/ModernOptionsParser.cpp
-	options/modern/SenderOptionsParser.cpp
-	options/modern/ReceiverOptionsParser.cpp
-	options/modern/ConnectorOptionsParser.cpp
+    options/modern/StringAppendCallback.cpp
+    options/modern/ModernOptionsParser.cpp
+    options/modern/SenderOptionsParser.cpp
+    options/modern/ReceiverOptionsParser.cpp
+    options/modern/ConnectorOptionsParser.cpp
 )
 
 if(COMMAND cmake_policy)
-	cmake_policy(SET CMP0003 NEW)
+    cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-
 target_link_libraries(dtests-cpp-common-options
-	dtests-cpp-common
-	dtests-cpp-contrib
+    dtests-cpp-common
+    dtests-cpp-contrib
 )
-
 
 install(TARGETS dtests-cpp-common dtests-cpp-common-options
-	LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
-	RUNTIME DESTINATION ${CPP_LIBRARY_DIR}
-        ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
+    LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
+    RUNTIME DESTINATION ${CPP_LIBRARY_DIR}
+    ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
 )
-
 
 InstallHeaders(src/common common)
 InstallHeaders(src/common/exceptions common/exceptions)

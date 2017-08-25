@@ -7,10 +7,10 @@ INCLUDE (CheckIncludeFile)
 INCLUDE (CheckIncludeFileCXX)
 
 macro (FailIfNotSet VARIABLE name)
-	if (NOT ${VARIABLE}) 
-		set(MSG "** A required include file, " ${name} ", was not found on your system **")
-		message(FATAL_ERROR ${MSG})
-	endif (NOT ${VARIABLE}) 
+    if (NOT ${VARIABLE}) 
+        set(MSG "** A required include file, " ${name} ", was not found on your system **")
+        message(FATAL_ERROR ${MSG})
+    endif (NOT ${VARIABLE}) 
 endmacro(FailIfNotSet)
 
 CHECK_INCLUDE_FILE_CXX(cstdio HAVE_CSTDIO)
@@ -19,8 +19,7 @@ FailIfNotSet(HAVE_CSTDIO cstdio)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/lib)
 
-
-if( CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(STATUS "64 bits compiler detected")
     set(DTEST_BUILD_PLATFORM 64)
     set(DTEST_BUILD_PLATFORM_NAME "x64")
@@ -34,30 +33,50 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(STATUS "Implicit conversions are disabled")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-set(BOOST_INCLUDE_DIR "/usr/include" CACHE String "Boost include directory")
-set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost library directory")
+if (WIN32)
+    set(BOOST_INCLUDE_DIR "C:/qpid_proton/boost_1_64_0" CACHE String "Boost include directory")
+    set(BOOST_LIBRARY_DIR "C:/qpid_proton/boost_1_64_0/lib64-msvc-12.0" CACHE String "Boost library directory")
 
+    set(PROTON_INCLUDE_DIR "C:/qpid_proton/qpid-proton-winsdk/include" CACHE String "Proton include directory")
+    set(PROTON_LIBRARY_DIR "C:/qpid_proton/qpid-proton-winsdk/lib" CACHE String "Proton library directory")
+else (WIN32)
+    set(BOOST_INCLUDE_DIR "/usr/include" CACHE String "Boost include directory")
+    set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost library directory")
+endif (WIN32)
 
 if (EXISTS "${BOOST_INCLUDE_DIR}")
-        include_directories(${BOOST_INCLUDE_DIR})
+    include_directories(${BOOST_INCLUDE_DIR})
 else (EXISTS "${BOOST_INCLUDE_DIR}") 
-	message(FATAL_ERROR "Boost ${BOOST_VERSION} headers were not found in ${BOOST_INCLUDE_DIR}")
+    message(FATAL_ERROR "Boost ${BOOST_VERSION} headers were not found in ${BOOST_INCLUDE_DIR}")
 endif (EXISTS "${BOOST_INCLUDE_DIR}") 
 
 if (EXISTS "${BOOST_LIBRARY_DIR}")
-       	link_directories(${BOOST_LIBRARY_DIR})
+    link_directories(${BOOST_LIBRARY_DIR})
 else (EXISTS "${BOOST_LIBRARY_DIR}") 
-	message(FATAL_ERROR "Boost ${BOOST_VERSION} libraries were not found in ${BOOST_LIBRARY_DIR}")
+    message(FATAL_ERROR "Boost ${BOOST_VERSION} libraries were not found in ${BOOST_LIBRARY_DIR}")
 endif (EXISTS "${BOOST_LIBRARY_DIR}") 
 
+if (WIN32)
+    if (EXISTS "${PROTON_INCLUDE_DIR}")
+        include_directories(${PROTON_INCLUDE_DIR})
+    else (EXISTS "${PROTON_INCLUDE_DIR}") 
+        message(FATAL_ERROR "Proton ${PROTON_VERSION} headers were not found in ${PROTON_INCLUDE_DIR}")
+    endif (EXISTS "${PROTON_INCLUDE_DIR}") 
+
+    if (EXISTS "${PROTON_LIBRARY_DIR}")
+        link_directories(${PROTON_LIBRARY_DIR})
+    else (EXISTS "${PROTON_LIBRARY_DIR}") 
+        message(FATAL_ERROR "Proton ${PROTON_VERSION} libraries were not found in ${PROTON_LIBRARY_DIR}")
+    endif (EXISTS "${PROTON_LIBRARY_DIR}") 
+endif (WIN32)
 
 enable_testing()
 
 include_directories(
-	src/contrib/
-	src/common/
-	src/common/exceptions
-	src/common/options
+    src/contrib/
+    src/common/
+    src/common/exceptions
+    src/common/options
 )
 
 SET(CPP_RUNTIME_DIR "bin")
@@ -67,36 +86,34 @@ SET(CPP_INCLUDE_DIR "include")
 INCLUDE(${CMAKE_BINARY_DIR}/dist/CMakeInstall.cmake)
 
 if(NOT CMAKE_BUILD_TYPE)
-	SET(CMAKE_BUILD_TYPE Debug CACHE STRING
-      	"Choose the type of build, options are: None Debug Release."
-      	FORCE
-	)
+    SET(CMAKE_BUILD_TYPE Debug CACHE STRING
+        "Choose the type of build, options are: None Debug Release."
+        FORCE
+    )
 endif(NOT CMAKE_BUILD_TYPE)
 
-
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
-		"Flags used by the compiler during all build types." FORCE
-	)
+    set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
+        "Flags used by the compiler during all build types." FORCE
+    )
 
-	set(CMAKE_CXX_FLAGS "-Wall -O2 -pipe" CACHE STRING
-		"Flags used by the compiler during all build types." FORCE
-	)
+    set(CMAKE_CXX_FLAGS "-Wall -O2 -pipe" CACHE STRING
+        "Flags used by the compiler during all build types." FORCE
+    )
 
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O2 -g -pipe ${CMAKE_USER_C_FLAGS}" CACHE STRING
-		"Flags used by the compiler during all build types." FORCE
-	)
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O2 -g -pipe ${CMAKE_USER_C_FLAGS}" CACHE STRING
+        "Flags used by the compiler during all build types." FORCE
+    )
 
-	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -Wall -Weffc++ -Wshadow -pipe" CACHE STRING
-            	"Flags used by the compiler during release." FORCE
-	)
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -Wall -Weffc++ -Wshadow -pipe" CACHE STRING
+        "Flags used by the compiler during release." FORCE
+    )
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 add_custom_target(distclean
    COMMAND ${CMAKE_BUILD_TOOL} clean
    COMMAND ${CMAKE_COMMAND} -P clean-all.cmake
 )
-
 
 add_custom_target(documentation
    COMMAND ${CMAKE_COMMAND} -P documentation.cmake
@@ -126,7 +143,6 @@ if (ENABLE_QPID_PROTON)
     add_definitions(-DENABLE_QPID_PROTON) 
     add_subdirectory(src/api/qpid-proton)
 endif(ENABLE_QPID_PROTON)
-
 
 if (ENABLE_QPID_MESSAGING) 
     add_definitions(-DENABLE_QPID_MESSAGING)    
