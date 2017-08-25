@@ -248,7 +248,7 @@ void ReactorDecoder::decodeProperties(Writer *writer) const
     
     message::property_map props = m.properties();
 
-    logger(debug) << "Number of properties: " << props.size();
+    logger(debug) << "Number of properties: " << (unsigned long) props.size();
 
     writer->startProperties();
     writeProperties(writer);
@@ -369,7 +369,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
             value.get(l);
             logger(debug) << "(m) Type id: " << type;
 
-            logger(debug) << "(m) Size: " << l.size();
+            logger(debug) << "(m) Size: " << (unsigned long) l.size();
 
             for (size_t i = 0; i < l.size(); i++) {
                 // decodeValue(writer, dec);

@@ -41,8 +41,6 @@ using namespace std;
  * 
  */
 
-
-
 namespace dtests {
 namespace common {
 
@@ -98,9 +96,11 @@ class OptionsSetter {
     template<typename T, typename Y, typename K>
     void setNumber(const string &name, T *obj, Y setter, K defaultValue) const {
         if (options.is_set(name)) {
-            K value = static_cast<K> (options.get(name));
+            // TODO: Investigate how to use on Windows
+            // K value = static_cast<K> (options.get(name));
 
-            BeanUtils::set(value, obj, setter);
+            // BeanUtils::set(value, obj, setter);
+            BeanUtils::set(defaultValue, obj, setter);
         } else {
             BeanUtils::set(defaultValue, obj, setter);
         }
@@ -259,7 +259,6 @@ class OptionsSetter {
             (obj->*setter)(normalizedValue);
         }
     }
-
 
   private:
     optparse::Values options;

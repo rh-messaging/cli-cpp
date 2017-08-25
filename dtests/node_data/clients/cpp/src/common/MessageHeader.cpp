@@ -12,7 +12,7 @@ using namespace dtests::common;
 HeaderProperty MessageHeader::REDELIVERED = {"redelivered"};
 HeaderProperty MessageHeader::REPLY_TO = {"reply_to"};
 
-HeaderProperty MessageHeader::MessageHeader::SUBJECT = {"subject"};
+HeaderProperty MessageHeader::SUBJECT = {"subject"};
 HeaderProperty MessageHeader::CONTENT_TYPE = {"content_type"};
 HeaderProperty MessageHeader::ID = {"id"};
 HeaderProperty MessageHeader::CORRELATION_ID = {"correlation_id"};
@@ -29,7 +29,6 @@ HeaderProperty MessageHeader::GROUP_ID = {"group_id"};
 HeaderProperty MessageHeader::GROUP_SEQ = {"group_seq"};
 HeaderProperty MessageHeader::BROKER_PATH = {"broker_path"};
 HeaderProperty MessageHeader::ORIGINAL_DESTINATIION = {"original_destination"};
-
 
 HeaderProperty MessageHeader::printableProperties[] = {
     REDELIVERED,
