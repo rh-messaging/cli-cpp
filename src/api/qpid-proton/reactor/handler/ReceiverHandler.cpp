@@ -76,6 +76,7 @@ ReceiverHandler::ReceiverHandler(
     process_reply_to(process_reply_to),
     browse(browse),
     timer_event(*this),
+    timer_callback(timer_event),
     recv_listen(recv_listen),
     recv_listen_port(recv_listen_port)
 {
@@ -101,9 +102,9 @@ void ReceiverHandler::timerEvent() {
         
         duration d = duration(1 * duration::SECOND.milliseconds());
         if (recv_listen != "true") {
-            recv.container().schedule(d, timer_event);
+             recv.container().schedule(d, timer_callback);
         } else {
-            cont.schedule(d, timer_event);
+             cont.schedule(d, timer_callback);
         }
     }
 #endif
