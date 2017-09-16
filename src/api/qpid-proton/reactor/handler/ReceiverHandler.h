@@ -148,7 +148,7 @@ class ReceiverHandler : public CommonHandler {
     typedef CommonHandler super;
     receiver recv;
     listener lsnr;
-    container cont;
+    container *cont;
     double ts;
     
     struct timer_event_t : public void_function0 {

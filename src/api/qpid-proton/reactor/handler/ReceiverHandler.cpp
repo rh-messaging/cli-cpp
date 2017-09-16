@@ -104,7 +104,7 @@ void ReceiverHandler::timerEvent() {
         if (recv_listen != "true") {
              recv.container().schedule(d, timer_callback);
         } else {
-             cont.schedule(d, timer_callback);
+             cont->schedule(d, timer_callback);
         }
     }
 #endif
@@ -114,9 +114,9 @@ void ReceiverHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
-    if (recv_listen == "true") {
-        cont = c;
-    }
+     if (recv_listen == "true") {
+         cont = &c;
+     }
 
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
