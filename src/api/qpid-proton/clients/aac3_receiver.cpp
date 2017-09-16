@@ -15,7 +15,3 @@ int main(int argc, char** argv)
 
     return client.run(argc, argv);
 }
-
-
-
-
