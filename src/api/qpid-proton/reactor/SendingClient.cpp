@@ -365,21 +365,21 @@ int SendingClient::run(int argc, char **argv) const
         std::transform(conn_reconnect.begin(), conn_reconnect.end(), conn_reconnect.begin(), ::tolower);
     }
 
-    int32_t conn_reconnect_interval = -1;
+    int32_t conn_reconnect_interval = 10;
     if (options.is_set("conn-reconnect-interval")) {
         conn_reconnect_interval = std::strtol(options["conn-reconnect-interval"].c_str(), NULL, 10);
 
         conn_reconnect_custom = true;
     }
 
-    int32_t conn_reconnect_limit = -1;
+    int32_t conn_reconnect_limit = 0;
     if (options.is_set("conn-reconnect-limit")) {
         conn_reconnect_limit = std::strtol(options["conn-reconnect-limit"].c_str(), NULL, 10);
 
         conn_reconnect_custom = true;
     }
 
-    int32_t conn_reconnect_timeout = -1;
+    int32_t conn_reconnect_timeout = duration::FOREVER.milliseconds();
     if (options.is_set("conn-reconnect-timeout")) {
         conn_reconnect_timeout = std::strtol(options["conn-reconnect-timeout"].c_str(), NULL, 10);
 

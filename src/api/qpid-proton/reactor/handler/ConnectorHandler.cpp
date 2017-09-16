@@ -100,28 +100,7 @@ void ConnectorHandler::on_container_start(container &c)
     logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
     logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
     
-    if (conn_reconnect == "true" && conn_reconnect_custom == false) {
-        conn_opts.reconnect(reconnect_timer());
-    } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
-        logger(debug) << "Reconnect first: " << conn_reconnect_first;
-        logger(debug) << "Reconnect interval (max): " << conn_reconnect_interval;
-        logger(debug) << "Reconnect increment: " << conn_reconnect_increment;
-        logger(debug) << "Reconnect doubling: " << conn_reconnect_doubling;
-        logger(debug) << "Reconnect limit (max_retries): " << conn_reconnect_limit;
-        logger(debug) << "Reconnect timeout: " << conn_reconnect_timeout;
-
-        conn_opts.reconnect(
-            reconnect_timer(
-                conn_reconnect_first,
-                conn_reconnect_interval,
-                conn_reconnect_increment,
-                conn_reconnect_doubling,
-                conn_reconnect_limit,
-                conn_reconnect_timeout
-            )
-        );
-    }
-
+    configure_reconnect(conn_opts);
     conn = c.connect(broker_url, conn_opts);
     
     if ((objectControl & SESSION)) {

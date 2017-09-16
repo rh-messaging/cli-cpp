@@ -6,6 +6,8 @@
  */
 
 #include <proton/container.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/reconnect_options.hpp>
 
 #include "CommonHandler.h"
 
@@ -65,6 +67,26 @@ CommonHandler::~CommonHandler()
     logger(debug) << "Destroying the common handler";
 }
 
+void CommonHandler::configure_reconnect(::proton::connection_options & conn_opts) {
+    ::proton::reconnect_options ro;
+    if (conn_reconnect == "true" && conn_reconnect_custom == false) {
+        conn_opts.reconnect(ro);
+    } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
+        logger(debug) << "Reconnect first: " << conn_reconnect_first;
+        logger(debug) << "Reconnect interval (max): " << conn_reconnect_interval;
+        logger(debug) << "Reconnect increment: " << conn_reconnect_increment;
+        logger(debug) << "Reconnect doubling: " << conn_reconnect_doubling;
+        logger(debug) << "Reconnect limit (max_retries): " << conn_reconnect_limit;
+        logger(debug) << "Reconnect timeout: " << conn_reconnect_timeout;
+
+        ro.delay(duration(conn_reconnect_interval));
+        if (conn_reconnect_doubling) {
+            ro.delay_multiplier(2.0);
+        }
+        ro.max_attempts(conn_reconnect_limit);
+        ro.max_delay(duration(conn_reconnect_timeout));
+    }
+}
 
 } /* namespace reactor */
 } /* namespace proton */
