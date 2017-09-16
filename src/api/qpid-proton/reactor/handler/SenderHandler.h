@@ -19,7 +19,6 @@
 #include <proton/error_condition.hpp>
 #include <proton/message_id.hpp>
 #include <proton/connection_options.hpp>
-#include <proton/reconnect_timer.hpp>
 #include <proton/thread_safe.hpp>
 
 #include "CommonHandler.h"
@@ -33,7 +32,6 @@ using proton::sender;
 using proton::delivery;
 using proton::transport;
 using proton::tracker;
-using proton::reconnect_timer;
 using proton::connection_options;
 
 namespace dtests {

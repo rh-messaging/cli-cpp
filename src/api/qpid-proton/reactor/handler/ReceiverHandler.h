@@ -23,7 +23,6 @@
 #include <proton/source_options.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/receiver_options.hpp>
-#include <proton/reconnect_timer.hpp>
 #include <proton/thread_safe.hpp>
 #include <proton/codec/encoder.hpp>
 
@@ -49,7 +48,6 @@ using proton::void_function0;
 using proton::endpoint;
 using proton::source;
 using proton::source_options;
-using proton::reconnect_timer;
 using proton::transport;
 using proton::connection_options;
 using proton::symbol;

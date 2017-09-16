@@ -177,6 +177,7 @@ class CommonHandler : public messaging_handler {
     Timer timer;
 
     int timeout;
+    void configure_reconnect(::proton::connection_options & conn_opts);
 
   private:
     
