@@ -17,7 +17,6 @@
 #include <proton/error_condition.hpp>
 #include <proton/connection.hpp>
 #include <proton/connection_options.hpp>
-#include <proton/reconnect_timer.hpp>
 #include <proton/thread_safe.hpp>
 
 using proton::connection;
@@ -27,7 +26,6 @@ using proton::receiver;
 using proton::event;
 using proton::container;
 using proton::transport;
-using proton::reconnect_timer;
 using proton::connection_options;
 
 namespace dtests {
