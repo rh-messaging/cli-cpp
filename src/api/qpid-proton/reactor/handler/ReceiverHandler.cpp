@@ -11,10 +11,12 @@
  * Created on October 19, 2015, 4:43 PM
  */
 
-#include "ReceiverHandler.h"
 #include <sstream>
 
 #include <proton/reconnect_options.hpp>
+
+#include "ReceiverHandler.h"
+
 using namespace dtests::common;
 using namespace dtests::common::log;
 using namespace dtests::proton::reactor;

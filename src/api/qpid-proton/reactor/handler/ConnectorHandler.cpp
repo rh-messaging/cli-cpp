@@ -60,7 +60,6 @@ void ConnectorHandler::timerEvent() {
     } else {
         timer--;
         logger(debug) << "Waiting ...";
-
     }
 #endif
 }
@@ -101,6 +100,7 @@ void ConnectorHandler::on_container_start(container &c)
     logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
     
     configure_reconnect(conn_opts);
+    
     conn = c.connect(broker_url, conn_opts);
     
     if ((objectControl & SESSION)) {

@@ -139,7 +139,7 @@ class SenderHandler : public CommonHandler {
     struct timer_event_t : public void_function0 {
         SenderHandler &parent;
         timer_event_t(SenderHandler &handler) : parent(handler) {}
-        void operator()() { 
+        void operator()() {
             parent.timerEvent();
         }
     };
