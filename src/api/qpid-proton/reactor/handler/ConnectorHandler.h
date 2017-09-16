@@ -18,6 +18,7 @@
 #include <proton/connection.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/thread_safe.hpp>
+#include <proton/work_queue.hpp>
 
 using proton::connection;
 using proton::session;
@@ -123,8 +124,9 @@ class ConnectorHandler : public CommonHandler {
             parent.timerEvent();
         }
     };
-    
+
     timer_event_t timer_event;
+    ::proton::work timer_callback;
        
     void closeObjects();
 };

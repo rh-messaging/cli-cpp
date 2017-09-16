@@ -20,6 +20,7 @@
 #include <proton/message_id.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/thread_safe.hpp>
+#include <proton/work_queue.hpp>
 
 #include "CommonHandler.h"
 #include "Timer.h"
@@ -145,6 +146,7 @@ class SenderHandler : public CommonHandler {
     };
     
     timer_event_t timer_event;
+    ::proton::work timer_callback;
 
 };
 
