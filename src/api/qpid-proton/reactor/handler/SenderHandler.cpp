@@ -81,16 +81,13 @@ SenderHandler::~SenderHandler()
 
 void SenderHandler::timerEvent() {
 #if defined(__REACTOR_HAS_TIMER)
-    if (timer.isExpired()) {
+    scheduled_task_counter--;
+    if (scheduled_task_counter == 0) {
         logger(info) << "Timed out";
 
         sndr.container().stop();
     } else {
-        timer--;
         logger(debug) << "Waiting ...";
-
-        duration d = duration(1 * duration::SECOND.milliseconds());
-        sndr.container().schedule(d, timer_event);
     }
 #endif
 }
@@ -137,6 +134,7 @@ void SenderHandler::on_container_start(container &c)
     logger(trace) << "Setting up timer";
     duration d = duration(this->timeout * duration::SECOND.milliseconds());
 #if defined(__REACTOR_HAS_TIMER)
+    scheduled_task_counter++;
     c.schedule(d, timer_callback);
 #endif
 }
@@ -195,7 +193,9 @@ void SenderHandler::on_sendable(sender &s)
          
         sent++;
 #if defined(__REACTOR_HAS_TIMER)
-        timer.reset();
+        scheduled_task_counter++;
+        duration d = duration(timeout * duration::SECOND.milliseconds());
+        sndr.container().schedule(d, timer_callback);
 #endif
     }    
 }
