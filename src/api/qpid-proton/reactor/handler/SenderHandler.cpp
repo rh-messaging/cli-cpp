@@ -249,6 +249,10 @@ void SenderHandler::on_connection_close(connection &c)
 void SenderHandler::on_connection_error(connection &c)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
+
+    if (c.error().what().find("Unable to validate user") != string::npos) {
+        exit(1);
+    }
 }
 
 
