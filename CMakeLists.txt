@@ -108,9 +108,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.7)
         # FIXME: Apparently, the RHEL 7 package is now built with -std=c++11 and
         # there seems to be incompatibility between such library and -std=c++03 built client
+        # FIXME: GCC on RHEL 6 does not understand -std=c++03, it's probably building gnu98, anyways...
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++03")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
     endif ()
 
     set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
