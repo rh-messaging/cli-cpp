@@ -110,7 +110,8 @@ class ConnectorHandler : public CommonHandler {
 
     typedef CommonHandler super;
     int count;
-    
+
+    Timer timer;
     int objectControl;
     connection conn;
     session sessionObj; 

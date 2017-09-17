@@ -88,7 +88,8 @@ ReceiverHandler::~ReceiverHandler()
 
 void ReceiverHandler::timerEvent() {
 #if defined(__REACTOR_HAS_TIMER)
-    if (timer.isExpired()) {
+    scheduled_task_counter--;
+    if (scheduled_task_counter == 0) {
         logger(info) << "Timed out";
 
         if (recv_listen != "true") {
@@ -97,15 +98,7 @@ void ReceiverHandler::timerEvent() {
             exit(0);
         }
     } else {
-        timer--;
         logger(debug) << "Waiting ...";
-        
-        duration d = duration(1 * duration::SECOND.milliseconds());
-        if (recv_listen != "true") {
-             recv.container().schedule(d, timer_callback);
-        } else {
-             cont->schedule(d, timer_callback);
-        }
     }
 #endif
 }
@@ -298,7 +291,13 @@ void ReceiverHandler::on_message(delivery &d, message &m)
         d.connection().close();
     } else {
 #if defined(__REACTOR_HAS_TIMER)
-        super::timer.reset();
+        scheduled_task_counter++;
+        duration d = duration(1 * duration::SECOND.milliseconds());
+        if (recv_listen != "true") {
+            recv.container().schedule(d, timer_callback);
+        } else {
+            cont->schedule(d, timer_callback);
+        }
 #endif
     }
 }
