@@ -85,7 +85,7 @@ void SenderHandler::timerEvent() {
     if (scheduled_task_counter == 0) {
         logger(info) << "Timed out";
 
-        sndr.container().stop();
+        exit(EXIT_SUCCESS);
     } else {
         logger(debug) << "Waiting ...";
     }
