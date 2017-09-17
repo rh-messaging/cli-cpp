@@ -41,7 +41,9 @@ ConnectorHandler::ConnectorHandler(
     ),
     objectControl(CONNECTION),
     timer_event(*this),
-    timer_callback(timer_event)
+    timer_callback(timer_event),
+    count(0),
+    timer(timeout, "timeout")
 {
     logger(debug) << "Initializing the connector handler";
 
@@ -84,11 +86,11 @@ void ConnectorHandler::on_container_start(container &c)
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
-    
+
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
     connection_options conn_opts;
-    
+
     if (!user.empty()) conn_opts.user(user);
     if (!password.empty()) conn_opts.password(password);
 
@@ -103,22 +105,22 @@ void ConnectorHandler::on_container_start(container &c)
     configure_reconnect(conn_opts);
     
     conn = c.connect(broker_url, conn_opts);
-    
+
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
         sessionObj = conn.default_session();
     }
-    
+
     if ((objectControl & SENDER)) {
         logger(trace) << "Opening the sender as requested";
         senderObj = conn.open_sender(broker_url.path());
     }
-    
+
     if ((objectControl & RECEIVER)) {
         logger(trace) << "Opening the receiver as requested";
         receiverObj = conn.open_receiver(broker_url.path());
     }
-    
+
     duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 #if defined(__REACTOR_HAS_TIMER)
     c.schedule(d, timer_callback);
