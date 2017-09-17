@@ -146,6 +146,10 @@ void ConnectorHandler::on_connection_close(connection &conn)
 void ConnectorHandler::on_connection_error(connection &conn)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
+
+    if (conn.error().what().find("Unable to validate user") != string::npos) {
+        exit(1);
+    }
 }
 
 void ConnectorHandler::on_transport_error(transport &trans) {
