@@ -44,17 +44,19 @@ else (WIN32)
     set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost library directory")
 endif (WIN32)
 
-find_package(Proton REQUIRED Core Proactor)
-find_package(ProtonCpp REQUIRED)
-include_directories(
-    ${ProtonCpp_INCLUDE_DIRS}
-)
-link_libraries(
-    ${Proton_Core_LIBRARIES}
-    ${Proton_Proactor_LIBRARIES}
-    ${ProtonCpp_LIBRARIES}
-)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+if (NOT WIN32)
+    find_package(Proton REQUIRED Core Proactor)
+    find_package(ProtonCpp REQUIRED)
+    include_directories(
+        ${ProtonCpp_INCLUDE_DIRS}
+    )
+    link_libraries(
+        ${Proton_Core_LIBRARIES}
+        ${Proton_Proactor_LIBRARIES}
+        ${ProtonCpp_LIBRARIES}
+    )
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif (NOT WIN32)
 
 if (EXISTS "${BOOST_INCLUDE_DIR}")
     include_directories(${BOOST_INCLUDE_DIR})
