@@ -12,6 +12,7 @@
 #include <proton/message_id.hpp>
 #include <proton/scalar.hpp>
 #include <proton/value.hpp>
+#include <proton/types.hpp>
 
 #include "AbstractFormatter.h"
 
@@ -42,7 +43,7 @@ class DictFormatter : public AbstractFormatter {
     std::string formatString(std::string s, bool remove_id_prefix = false);
     std::string formatList(const std::list <value>l);
     std::string formatMap(const std::map <std::string, value>m);
-    std::string formatProperties(message::property_map p);
+    std::string formatProperties(message m);
     std::string getValue(const value &v);
     std::string escapeQuotes(const std::string s);
     void printMessageInterop(const message &m);

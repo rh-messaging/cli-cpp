@@ -17,6 +17,7 @@
 #include <proton/message.hpp>
 #include <proton/message_id.hpp>
 #include <proton/types.hpp>
+#include <proton/scalar.hpp>
 #include <proton/error.hpp>
 #include <proton/uuid.hpp>
 
@@ -45,6 +46,7 @@ using proton::value;
 using proton::type_id;
 using proton::conversion_error;
 using proton::uuid;
+using proton::scalar;
 
 /*
 #if PN_VERSION_MAJOR > 0 && PN_VERSION_MINOR == 12

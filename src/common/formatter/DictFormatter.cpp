@@ -117,7 +117,7 @@ std::string DictFormatter::formatMap(const std::map <std::string, value>m) {
     return oss.str();
 }
 
-std::string DictFormatter::formatProperties(message::property_map p) {
+std::string DictFormatter::formatProperties(message m) {
     std::ostringstream oss;
     std::string::size_type index = 0;
 
@@ -132,6 +132,17 @@ std::string DictFormatter::formatProperties(message::property_map p) {
         }
     }
     */
+    typedef std::map<std::string, proton::scalar> property_map;
+    property_map props;
+    proton::get(m.properties(), props);
+
+    for (property_map::iterator it = props.begin(); it != props.end(); ++it) {
+        oss << "'" << it->first << "': " << getValue(it->second);
+        index++;
+        if (index < props.size()) {
+            oss << ", ";
+        }
+    }
     oss << "}";
 
     return oss.str();
@@ -218,7 +229,6 @@ void DictFormatter::printMessageInterop(const message &m)
 {
     std::string msgString = "";
     std::ostringstream helper;
-    message::property_map props = m.properties();
 
     try {
         msgString.append("{");
@@ -291,7 +301,7 @@ void DictFormatter::printMessageInterop(const message &m)
 
 
         /** Application Properties **/
-        msgString.append(", 'properties': ").append(formatProperties(props));
+        msgString.append(", 'properties': ").append(formatProperties(m));
 
 
         /** Application Data **/
