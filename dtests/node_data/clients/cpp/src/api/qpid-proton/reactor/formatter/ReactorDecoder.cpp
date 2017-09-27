@@ -181,7 +181,24 @@ void ReactorDecoder::writeRedelivered(Writer *writer) const
 void ReactorDecoder::writeProperties(Writer *writer) const
 {
     writer->startMap();
-    // TODO: write properties
+    typedef std::map<std::string, ::proton::scalar> property_map;
+    property_map props;
+    ::proton::get(m.properties(), props);
+    
+    std::string::size_type index = 0;
+
+    logger(debug) << "Number of properties: " << (unsigned long) props.size();
+
+    for (property_map::iterator it = props.begin(); it != props.end(); ++it) {
+        writer->write("'", true);
+        writer->write(it->first, true);
+        writer->write("': ", true);
+        writer->write(decodeValue(it->second), true);
+        index++;
+        if (index < props.size()) {
+            writer->write(", ", true);
+        }
+    }
     writer->endMap();
 }
 
@@ -245,10 +262,6 @@ void ReactorDecoder::decodeHeader(Writer *writer) const
 void ReactorDecoder::decodeProperties(Writer *writer) const
 {
     logger(debug) << "Decoding message properties";
-    
-    message::property_map props = m.properties();
-
-    logger(debug) << "Number of properties: " << (unsigned long) props.size();
 
     writer->startProperties();
     writeProperties(writer);
