@@ -421,33 +421,23 @@ string ReactorDecoder::decodeValue(const value &value) const {
             break;
         }
         case STRING: {
-            s << "'" << escapeQuotes(value.as_string()) << "'";
+            s << "'" << escapeQuotes(::proton::get<string>(value)) << "'";
             logger(debug) << "(m) String: ";
             break;
         }
-        case UINT: {
-            s << value.as_uint();
-            logger(debug) << "(m) UInt: ";
-            break;
-        }
+        case UINT:
         case LONG:
-        case INT: {
-            s << value.as_int();
-            logger(debug) << "(m) Long/Int: ";
-            break;
-        }
+        case INT:
         case FLOAT:
         case DOUBLE: {
-            char buffer[50];
-            sprintf(buffer, "%f", value.as_double());
-            s << buffer;
-            logger(debug) << "(m) Double: ";
+            s << value;
+            logger(debug) << "(m) " << value.type() << ": ";
             break;
         }
         default: {
             if (!value.empty()) {
                 logger(debug) << "(m) Other: ";
-                s << "'" << value.as_string() << "'";
+                s << "'" << ::proton::get<string>(value) << "'";
             }
         }
     }

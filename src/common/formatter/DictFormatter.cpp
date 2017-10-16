@@ -177,33 +177,25 @@ std::string DictFormatter::getValue(const value &v) {
             break;
         }
         case ::proton::STRING: {
-            if (v.as_string().empty()) {
+            if (proton::get<string>(v).empty()) {
                 oss << "None";
             } else {
-                oss << "'" << escapeQuotes(v.as_string()) << "'";
+                oss << "'" << escapeQuotes(proton::get<string>(v)) << "'";
             }
 
             break;
         }
-        case ::proton::UINT: {
-            oss << v.as_uint();
-
-            break;
-        }
+        case ::proton::UINT:
         case ::proton::LONG:
-        case ::proton::INT: {
-            oss << v.as_int();
-
-            break;
-        }
+        case ::proton::INT:
         case ::proton::DOUBLE: {
-            oss << v.as_double();
+            oss << v;
 
             break;
         }
         default: {
             if (!v.empty()) {
-                oss << "'" << v.as_string() << "'";
+                oss << "'" << v << "'";
             } else {
                 oss << "None";
             }
