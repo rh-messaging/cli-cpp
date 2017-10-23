@@ -173,12 +173,8 @@ class CommonHandler : public messaging_handler {
     string log_msgs;
 
     container *cont;
-
-    // TODO: We cannot currently schedule tasks from a scheduled task, so use this as temporary workaround:
-    /// When the last scheduled task executes, that means it is exactly _timeout_ since it was planned
-    /// and no additional task was scheduled between the time it was planned and it executes.
-    /// Meaning that we should timeout when _scheduled_task_counter_ == 0.
-    int scheduled_task_counter;
+    
+    Timer timer;
 
     int timeout;
     
