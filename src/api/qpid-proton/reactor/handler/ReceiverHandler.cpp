@@ -92,14 +92,14 @@ void ReceiverHandler::timerEvent() {
         logger(info) << "Timed out";
 
         if (recv_listen != "true") {
-            recv.container().stop();
+            exit(EXIT_SUCCESS);
         } else {
             exit(0);
         }
     } else {
         timer--;
         logger(debug) << "Waiting ...";
-        
+
         duration d = duration(1 * duration::SECOND.milliseconds());
         if (recv_listen != "true") {
              recv.container().schedule(d, timer_callback);
