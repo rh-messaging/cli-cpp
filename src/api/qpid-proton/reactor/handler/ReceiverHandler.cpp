@@ -76,7 +76,6 @@ ReceiverHandler::ReceiverHandler(
     process_reply_to(process_reply_to),
     browse(browse),
     timer_event(*this),
-    timer_callback(timer_event),
     recv_listen(recv_listen),
     recv_listen_port(recv_listen_port)
 {
@@ -99,12 +98,12 @@ void ReceiverHandler::timerEvent() {
     } else {
         timer--;
         logger(debug) << "Waiting ...";
-
+        
         duration d = duration(1 * duration::SECOND.milliseconds());
         if (recv_listen != "true") {
-             recv.container().schedule(d, timer_callback);
+            recv.container().schedule(d, timer_event);
         } else {
-             cont->schedule(d, timer_callback);
+            cont->schedule(d, timer_event);
         }
     }
 #endif
@@ -341,7 +340,7 @@ void ReceiverHandler::on_connection_close(connection &conn)
 void ReceiverHandler::on_connection_error(connection &c)
 {
     logger(error) << "Failed to connect to " << broker_url.host_port();
-    
+
     if (c.error().what().find("Unable to validate user") != string::npos) {
         exit(1);
     }

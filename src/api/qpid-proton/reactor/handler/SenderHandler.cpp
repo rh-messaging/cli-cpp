@@ -68,8 +68,7 @@ SenderHandler::SenderHandler(
     sent(0),
     confirmedSent(0),
     m(),
-    timer_event(*this),
-    timer_callback(timer_event)
+    timer_event(*this)
 {
 
 }
@@ -137,7 +136,7 @@ void SenderHandler::on_container_start(container &c)
     logger(trace) << "Setting up timer";
     duration d = duration(this->timeout * duration::SECOND.milliseconds());
 #if defined(__REACTOR_HAS_TIMER)
-    c.schedule(d, timer_callback);
+    c.schedule(d, timer_event);
 #endif
 }
 
