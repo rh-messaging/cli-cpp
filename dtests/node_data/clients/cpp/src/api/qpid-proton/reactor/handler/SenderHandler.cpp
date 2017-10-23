@@ -84,7 +84,7 @@ void SenderHandler::timerEvent() {
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
-        sndr.container().stop();
+        exit(EXIT_SUCCESS);
     } else {
         timer--;
         logger(debug) << "Waiting ...";
