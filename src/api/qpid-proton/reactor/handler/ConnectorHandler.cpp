@@ -40,8 +40,7 @@ ConnectorHandler::ConnectorHandler(
         max_frame_size
     ),
     objectControl(CONNECTION),
-    timer_event(*this),
-    timer_callback(timer_event)
+    timer_event(*this)
 {
     logger(debug) << "Initializing the connector handler";
 
@@ -121,7 +120,7 @@ void ConnectorHandler::on_container_start(container &c)
     
     duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 #if defined(__REACTOR_HAS_TIMER)
-    c.schedule(d, timer_callback);
+    c.schedule(d, timer_event);
 #endif
 }
 

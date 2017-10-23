@@ -25,7 +25,6 @@
 #include <proton/receiver_options.hpp>
 #include <proton/thread_safe.hpp>
 #include <proton/codec/encoder.hpp>
-#include <proton/work_queue.hpp>
 
 #include "CommonHandler.h"
 
@@ -163,7 +162,6 @@ class ReceiverHandler : public CommonHandler {
 
     duration interval;
     timer_event_t timer_event;
-    ::proton::work timer_callback;
 
     string msg_action;
     int msg_action_size;
