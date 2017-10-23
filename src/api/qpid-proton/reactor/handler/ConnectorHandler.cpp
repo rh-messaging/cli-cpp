@@ -59,7 +59,7 @@ void ConnectorHandler::timerEvent() {
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
-        exit(EXIT_SUCCESS);
+        senderObj.container().stop();
     } else {
         timer--;
         logger(debug) << "Waiting ...";

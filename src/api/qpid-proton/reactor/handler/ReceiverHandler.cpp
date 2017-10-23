@@ -89,12 +89,11 @@ ReceiverHandler::~ReceiverHandler()
 void ReceiverHandler::timerEvent() {
 #if defined(__REACTOR_HAS_TIMER)
     scheduled_task_counter--;
-    logger(info) << "scheduled_task_counter: " << scheduled_task_counter;
     if (scheduled_task_counter == 0) {
         logger(info) << "Timed out";
 
         if (recv_listen != "true") {
-            exit(EXIT_SUCCESS);
+            recv.container().stop();
         } else {
             exit(0);
         }
@@ -184,7 +183,6 @@ void ReceiverHandler::on_container_start(container &c)
 
     ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)
-    scheduled_task_counter++;
     c.schedule(d, timer_event);
 #endif
 
