@@ -434,10 +434,15 @@ string ReactorDecoder::decodeValue(const value &value) const {
             logger(debug) << "(m) " << value.type() << ": ";
             break;
         }
+        case ::proton::BOOLEAN: {
+            s << AbstractDecoder::decodeValue(::proton::get<bool>(value));
+            logger(debug) << "(m) bool: ";
+            break;
+        }
         default: {
             if (!value.empty()) {
                 logger(debug) << "(m) Other: ";
-                s << "'" << ::proton::get<string>(value) << "'";
+                s << "'" << value << "'";
             }
         }
     }
