@@ -156,7 +156,7 @@ void SenderHandler::on_sendable(sender &s)
 
     double ts = get_time();
 
-    while (credit > 0 && sent < count) {
+    while (s.credit() > 0 && sent < count) {
         logger(trace) << "Sending messages through the link";
         
         if (duration_time > 0 && duration_mode == "before-send") {
@@ -196,7 +196,7 @@ void SenderHandler::on_sendable(sender &s)
 #if defined(__REACTOR_HAS_TIMER)
         timer.reset();
 #endif
-    }    
+    }
 }
 
 
