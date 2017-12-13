@@ -41,8 +41,8 @@ class DictFormatter : public AbstractFormatter {
     std::string formatBool(bool b);
     std::string formatBool(scalar b);
     std::string formatString(std::string s, bool remove_id_prefix = false);
-    std::string formatList(const std::list <value>l);
-    std::string formatMap(const std::map <std::string, value>m);
+    std::string formatList(const std::list <scalar>l);
+    std::string formatMap(const std::map <std::string, scalar>m);
     std::string formatProperties(message m);
     std::string getValue(const value &v);
     std::string escapeQuotes(const std::string s);
