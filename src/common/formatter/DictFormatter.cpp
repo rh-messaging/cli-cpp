@@ -55,13 +55,13 @@ std::string DictFormatter::formatString(std::string s, bool remove_id_prefix) {
     }
 }
 
-std::string DictFormatter::formatList(const std::list <value>l) {
+std::string DictFormatter::formatList(const std::list <scalar>l) {
     std::ostringstream oss;
     std::string::size_type index = 0;
 
     oss << "[";
-    /*
-    for (std::list<Variant>::const_iterator it = l.begin(); it != l.end(); it++) {
+
+    for (std::list<scalar>::const_iterator it = l.begin(); it != l.end(); it++) {
         oss << getValue(*it);
         index++;
 
@@ -70,29 +70,18 @@ std::string DictFormatter::formatList(const std::list <value>l) {
         }
     }
 
-    uint32_t index = 1;
-
-            for (std::list<value>::const_iterator iterator = value_list.begin(); iterator != value_list.end(); ++iterator, index++) {
-                writer->write(decodeValue(*iterator));
-
-                if (index < value_list.size()) {
-                    writer->endField();
-                }
-            }
-            writer->endList();
-    */
     oss << "]";
 
     return oss.str();
 }
 
-std::string DictFormatter::formatMap(const std::map <std::string, value>m) {
+std::string DictFormatter::formatMap(const std::map <std::string, scalar>m) {
     std::ostringstream oss;
     std::string::size_type index = 0;
 
     oss << "{";
-    /*
-    for (std::map<std::string, Variant>::const_iterator it = m.begin(); it != m.end(); it++) {
+
+    for (std::map<std::string, scalar>::const_iterator it = m.begin(); it != m.end(); it++) {
         oss << "'" << it->first << "': " << getValue(it->second);
         index++;
 
@@ -101,17 +90,6 @@ std::string DictFormatter::formatMap(const std::map <std::string, value>m) {
         }
     }
 
-    uint32_t index = 1;
-
-            for (std::map<std::string, value>::iterator it = value_map.begin(); it != value_map.end(); ++it, index++) {
-                writer->write(it->first);
-                writer->separate();
-                writer->write(decodeValue(it->second));
-                if (index < value_map.size()) {
-                    writer->endField();
-                }
-            }
-    */
     oss << "}";
 
     return oss.str();
@@ -122,16 +100,7 @@ std::string DictFormatter::formatProperties(message m) {
     std::string::size_type index = 0;
 
     oss << "{";
-    /* TODO: Not supported in API, ENTMQCL-420
-    for (std::map<std::string, Variant>::const_iterator it = p.begin(); it != p.end(); it++) {
-        oss << "'" << it->first << "': " << getValue(it->second);
-        index++;
 
-        if (index < p.size()) {
-            oss << ", ";
-        }
-    }
-    */
     typedef std::map<std::string, proton::scalar> property_map;
     property_map props;
     proton::get(m.properties(), props);
@@ -158,19 +127,19 @@ std::string DictFormatter::getValue(const value &v) {
             break;
         }
         case ::proton::LIST: {
-            //std::list<value> value_list = get<std::list<value> >(v);
-            std::list<value> value_list = std::list<value>();
+            typedef std::list< ::proton::scalar > property_list;
+            property_list value_list;
 
-            //v.get(value_list);
-            
+            ::proton::get(v, value_list);
+
             oss << formatList(value_list);
             
             break;
         }
         case ::proton::MAP: {
-            std::map<std::string, value> value_map = std::map<std::string, value>();
-
-            //v.get(value_map);
+            typedef std::map<std::string, ::proton::scalar> property_map;
+            property_map value_map;
+            ::proton::get(v, value_map);
 
             oss << formatMap(value_map);
 
