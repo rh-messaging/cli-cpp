@@ -26,6 +26,7 @@ using namespace dtests::common::log;
 
 SenderHandler::SenderHandler(
     const string &url,
+    bool is_topic,
     string user,
     string password,
     string sasl_mechanisms,
@@ -46,6 +47,7 @@ SenderHandler::SenderHandler(
 )
     : super(
         url,
+        is_topic,
         user,
         password,
         sasl_mechanisms,
@@ -104,7 +106,19 @@ void SenderHandler::on_container_start(container &c)
 
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
+    logger(debug) << "Topic: " << is_topic;
+
     connection_options conn_opts;
+    std::vector< ::proton::symbol > caps;
+
+    if (is_topic) {
+        caps.push_back("topic");
+    }
+
+    logger(debug) << "Source capabilities: ";
+    for (std::vector< ::proton::symbol >::const_iterator i = caps.begin(); i != caps.end(); ++i) {
+        logger(debug) << *i;
+    }
 
     if (!user.empty()) conn_opts.user(user);
     if (!password.empty()) conn_opts.password(password);
@@ -130,6 +144,10 @@ void SenderHandler::on_container_start(container &c)
     logger(debug) << "Creating a sender";
     sndr = c.open_sender(
             broker_url,
+            c.sender_options()
+                .source(
+                    source_options().capabilities(caps)
+                ),
             conn_opts
     );
     

@@ -42,6 +42,7 @@ class ConnectorHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param is_topic if target is topic
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
@@ -58,6 +59,7 @@ class ConnectorHandler : public CommonHandler {
      */
     ConnectorHandler(
         const string &url,
+        bool is_topic,
         string user,
         string password,
         string sasl_mechanisms,

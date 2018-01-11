@@ -18,7 +18,9 @@
 #include <proton/transport.hpp>
 #include <proton/error_condition.hpp>
 #include <proton/message_id.hpp>
+#include <proton/source_options.hpp>
 #include <proton/connection_options.hpp>
+#include <proton/sender_options.hpp>
 #include <proton/thread_safe.hpp>
 
 #include "CommonHandler.h"
@@ -30,6 +32,7 @@ using proton::message_id;
 using proton::connection;
 using proton::sender;
 using proton::delivery;
+using proton::source_options;
 using proton::transport;
 using proton::tracker;
 using proton::connection_options;
@@ -48,6 +51,7 @@ class SenderHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param is_topic if target is topic
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
@@ -68,6 +72,7 @@ class SenderHandler : public CommonHandler {
      */
     SenderHandler(
         const string &url,
+        bool is_topic,
         string user,
         string password,
         string sasl_mechanisms,

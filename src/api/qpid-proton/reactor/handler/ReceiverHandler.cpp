@@ -23,6 +23,7 @@ using namespace dtests::proton::reactor;
 
 ReceiverHandler::ReceiverHandler(
     const string &url,
+    bool is_topic,
     string msg_action,
     int msg_action_size,
     string user,
@@ -50,6 +51,7 @@ ReceiverHandler::ReceiverHandler(
 )
     : super(
         url,
+        is_topic,
         user,
         password,
         sasl_mechanisms,
@@ -123,8 +125,20 @@ void ReceiverHandler::on_container_start(container &c)
     
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
+    logger(debug) << "Topic: " << is_topic;
+
     connection_options conn_opts;
-    
+    std::vector< ::proton::symbol > caps;
+
+    if (is_topic) {
+        caps.push_back("topic");
+    }
+
+    logger(debug) << "Source capabilities: ";
+    for (std::vector< ::proton::symbol >::const_iterator i = caps.begin(); i != caps.end(); ++i) {
+        logger(debug) << *i;
+    }
+
     if (!user.empty()) conn_opts.user(user);
     if (!password.empty()) conn_opts.password(password);
 
@@ -155,7 +169,7 @@ void ReceiverHandler::on_container_start(container &c)
                 broker_url,
                 c.receiver_options()
                     .source(
-                        source_options().distribution_mode(source::COPY)
+                        source_options().distribution_mode(source::COPY).capabilities(caps)
                     ),
                 conn_opts
         );
@@ -177,7 +191,7 @@ void ReceiverHandler::on_container_start(container &c)
                     broker_url,
                     c.receiver_options()
                         .source(
-                            source_options().filters(this->fm)
+                            source_options().filters(this->fm).capabilities(caps)
                         ),
                     conn_opts
             );
