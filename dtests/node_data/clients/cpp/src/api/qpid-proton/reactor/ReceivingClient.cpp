@@ -60,17 +60,28 @@ int ReceivingClient::run(int argc, char **argv) const
 
     setLogLevel(options);
 
+    // Temporary variable for address, will search for prefix
     string tempAddress = options["broker-url"];
+    // Variable for final address
     string address;
-    std::size_t prefix_index = std::string::npos; // tempAddress.find("topic://");
+    // Variable for recognition of topic
+    bool is_topic = false;
+    // Search for prefix
+    std::size_t prefix_index = tempAddress.find("topic://");
+    // If prefix is present
     if (prefix_index != std::string::npos) {
+        // Delete prefix
         address = tempAddress.replace(prefix_index, 8, "");
+        // Set that it will be topic
+        is_topic = true;
+    // If prefix is NOT present
     } else {
+        // Use full address
         address = tempAddress;
     }
 
     uri_parser.parse(options["broker-url"]);
-    
+
     string msg_action = "no-action";
     if(options.is_set("msg-action")) {
         msg_action = options["msg-action"];
@@ -221,6 +232,7 @@ int ReceivingClient::run(int argc, char **argv) const
 
     ReceiverHandler handler = ReceiverHandler(
         address,
+        is_topic,
         msg_action,
         msg_action_size,
         user,

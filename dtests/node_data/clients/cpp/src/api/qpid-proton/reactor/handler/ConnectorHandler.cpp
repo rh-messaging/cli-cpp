@@ -9,6 +9,7 @@ using namespace dtests::common::log;
 
 ConnectorHandler::ConnectorHandler(
     const string &url,
+    bool is_topic,
     string user,
     string password,
     string sasl_mechanisms,
@@ -25,6 +26,7 @@ ConnectorHandler::ConnectorHandler(
 )
     : super(
         url,
+        is_topic,
         user,
         password,
         sasl_mechanisms,
