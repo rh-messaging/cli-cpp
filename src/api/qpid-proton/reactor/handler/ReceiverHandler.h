@@ -72,6 +72,7 @@ class ReceiverHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param is_topic if target is topic
      * @param msg_action message action
      * @param msg_action_size apply action in the batch of given size
      * @param user username
@@ -99,6 +100,7 @@ class ReceiverHandler : public CommonHandler {
      */
     ReceiverHandler(
         const string &url,
+        bool is_topic,
         string msg_action,
         int msg_action_size,
         string user,

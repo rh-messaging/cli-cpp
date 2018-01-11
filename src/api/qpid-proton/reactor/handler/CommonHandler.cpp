@@ -23,6 +23,7 @@ Logger CommonHandler::logger = LoggerWrapper::getLogger();
 
 CommonHandler::CommonHandler(
     const string &url_str,
+    bool is_topic,
     string user,
     string password,
     string sasl_mechanisms,
@@ -41,6 +42,7 @@ CommonHandler::CommonHandler(
 )
     : super(),
     broker_url(url_str),
+    is_topic(is_topic),
     user(user),
     password(password),
     sasl_mechanisms(sasl_mechanisms),

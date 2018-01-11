@@ -330,8 +330,26 @@ int SendingClient::run(int argc, char **argv) const
 
     setLogLevel(options);
 
-    const string address = options["broker-url"];
-    
+    // Temporary variable for address, will search for prefix
+    string tempAddress = options["broker-url"];
+    // Variable for final address
+    string address;
+    // Variable for recognition of topic
+    bool is_topic = false;
+    // Search for prefix
+    std::size_t prefix_index = tempAddress.find("topic://");
+    // If prefix is present
+    if (prefix_index != std::string::npos) {
+        // Delete prefix
+        address = tempAddress.replace(prefix_index, 8, "");
+        // Set that it will be topic
+        is_topic = true;
+    // If prefix is NOT present
+    } else {
+        // Use full address
+        address = tempAddress;
+    }
+
     uri_parser.parse(options["broker-url"]);
 
     string user = "";
@@ -477,6 +495,7 @@ int SendingClient::run(int argc, char **argv) const
 
     SenderHandler handler = SenderHandler(
         address,
+        is_topic,
         user,
         password,
         sasl_mechanisms,

@@ -51,6 +51,7 @@ class CommonHandler : public messaging_handler {
     /**
      * Constructor
      * @param url broker URL
+     * @param is_topic if target is topic
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
@@ -69,6 +70,7 @@ class CommonHandler : public messaging_handler {
      */
     CommonHandler(
         const string &url,
+        bool is_topic,
         string user,
         string password,
         string sasl_mechanisms,
@@ -101,6 +103,11 @@ class CommonHandler : public messaging_handler {
      * Broker URL
      */
     url broker_url;
+
+    /**
+     * If is topic
+     */
+    bool is_topic;
 
     /**
      * Username
