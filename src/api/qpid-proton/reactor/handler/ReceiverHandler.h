@@ -80,6 +80,7 @@ class ReceiverHandler : public CommonHandler {
      * @param subscriber_unsubscribe unsubscribe durable subscriptor
      * @param durable_subscriber_prefix prefix to use to identify subscriber
      * @param durable_subscriber_name name of the durable subscriber to be unsubscribe
+     * @param shared_subscriber shared subscription to topic
      * @param msg_action message action
      * @param msg_action_size apply action in the batch of given size
      * @param user username
@@ -112,6 +113,7 @@ class ReceiverHandler : public CommonHandler {
         bool subscriber_unsubscribe,
         string durable_subscriber_prefix,
         string durable_subscriber_name,
+        bool shared_subscriber,
         string msg_action,
         int msg_action_size,
         string user,
@@ -178,6 +180,7 @@ class ReceiverHandler : public CommonHandler {
     bool subscriber_unsubscribe;
     string durable_subscriber_prefix;
     string durable_subscriber_name;
+    bool shared_subscriber;
 
     duration interval;
     timer_event_t timer_event;
