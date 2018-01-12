@@ -10,6 +10,9 @@
 
 #include <optparse/OptionParser.h>
 
+#include <string>
+#include <algorithm>
+
 #include "options/modern/ModernOptionsParser.h"
 
 namespace dtests {

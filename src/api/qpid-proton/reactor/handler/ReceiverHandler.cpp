@@ -24,6 +24,10 @@ using namespace dtests::proton::reactor;
 ReceiverHandler::ReceiverHandler(
     const string &url,
     bool is_topic,
+    bool durable_subscriber,
+    bool subscriber_unsubscribe,
+    string durable_subscriber_prefix,
+    string durable_subscriber_name,
     string msg_action,
     int msg_action_size,
     string user,
@@ -68,6 +72,10 @@ ReceiverHandler::ReceiverHandler(
         max_frame_size,
         log_msgs
     ),
+    durable_subscriber(durable_subscriber),
+    subscriber_unsubscribe(subscriber_unsubscribe),
+    durable_subscriber_prefix(durable_subscriber_prefix),
+    durable_subscriber_name(durable_subscriber_name),
     count(count),
     duration_time(duration_time),
     duration_mode(duration_mode),
@@ -115,9 +123,9 @@ void ReceiverHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
-     if (recv_listen == "true") {
-         cont = &c;
-     }
+    if (recv_listen == "true") {
+        cont = &c;
+    }
 
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
@@ -132,6 +140,10 @@ void ReceiverHandler::on_container_start(container &c)
 
     if (is_topic) {
         caps.push_back("topic");
+
+        if (durable_subscriber) {
+            createSubscriptionName(durable_subscriber_prefix);
+        }
     }
 
     logger(debug) << "Source capabilities: ";
@@ -165,12 +177,25 @@ void ReceiverHandler::on_container_start(container &c)
     if (browse) {
         logger(debug) << "Creating a receiver and connecting to the server";
 
+        source_options s_opts = source_options().distribution_mode(source::COPY).capabilities(caps);
+
+        if (durable_subscriber) {
+            s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
+            s_opts.expiry_policy( ::proton::source::NEVER );
+        }
+
+        receiver_options r_opts = c.receiver_options()
+            .source(
+                s_opts
+            );
+
+        if (durable_subscriber) {
+            r_opts.name(durable_subscriber_name);
+        }
+
         recv = c.open_receiver(
                 broker_url,
-                c.receiver_options()
-                    .source(
-                        source_options().distribution_mode(source::COPY).capabilities(caps)
-                    ),
+                r_opts,
                 conn_opts
         );
     } else {
@@ -187,24 +212,42 @@ void ReceiverHandler::on_container_start(container &c)
         } else {
             logger(debug) << "Creating a receiver and connecting to the server";
 
+            source_options s_opts = source_options().filters(this->fm).capabilities(caps);
+
+            if (durable_subscriber) {
+                s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
+                s_opts.expiry_policy( ::proton::source::NEVER );
+            }
+
+            receiver_options r_opts = c.receiver_options()
+                .source(
+                    s_opts
+                );
+
+            if (durable_subscriber) {
+                r_opts.name(durable_subscriber_name);
+            }
+
             recv = c.open_receiver(
                     broker_url,
-                    c.receiver_options()
-                        .source(
-                            source_options().filters(this->fm).capabilities(caps)
-                        ),
+                    r_opts,
                     conn_opts
             );
         }
     }
     logger(debug) << "Connected to the broker/p2p and waiting for messages";
 
-    duration d = duration(int(timeout * duration::SECOND.milliseconds()));
+    if (subscriber_unsubscribe && durable_subscriber_name != "") {
+        recv.close();
+        recv.connection().close();
+    } else {
+        duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 
-    ts = get_time();
+        ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)
-    c.schedule(d, timer_event);
+        c.schedule(d, timer_event);
 #endif
+    }
 
 }
 
@@ -307,7 +350,11 @@ void ReceiverHandler::on_message(delivery &d, message &m)
     }
 
     if (msg_received_cnt == count) {
-        d.receiver().close();
+        if (durable_subscriber) {
+            d.receiver().detach();
+        } else {
+            d.receiver().close();
+        }
         d.connection().close();
     } else {
 #if defined(__REACTOR_HAS_TIMER)
@@ -378,4 +425,19 @@ void ReceiverHandler::setSelector(string selector)
         << finish();
     
     fm.put(filter_key, filter_value);
+}
+
+void ReceiverHandler::createSubscriptionName(string customPrefix)
+{
+    if (durable_subscriber_name == "") {
+        uuid client_uuid = ::proton::uuid::random();
+
+        if (customPrefix == "") {
+            durable_subscriber_name = "qpid-proton-cpp-" + client_uuid.str();
+        } else {
+            durable_subscriber_name = customPrefix + client_uuid.str();
+        }
+    }
+
+    logger(debug) << "Durable subscription name: " << durable_subscriber_name;
 }

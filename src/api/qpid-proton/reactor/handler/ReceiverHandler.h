@@ -25,6 +25,7 @@
 #include <proton/receiver_options.hpp>
 #include <proton/thread_safe.hpp>
 #include <proton/codec/encoder.hpp>
+#include <proton/uuid.hpp>
 
 #include "CommonHandler.h"
 
@@ -50,11 +51,13 @@ using proton::source;
 using proton::source_options;
 using proton::transport;
 using proton::connection_options;
+using proton::receiver_options;
 using proton::symbol;
 using proton::codec::start;
 using proton::codec::finish;
 using proton::codec::encoder;
 using proton::binary;
+using proton::uuid;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
@@ -73,6 +76,10 @@ class ReceiverHandler : public CommonHandler {
      * Constructor
      * @param url broker URL
      * @param is_topic if target is topic
+     * @param durable_subscriber durable subscription to topic
+     * @param subscriber_unsubscribe unsubscribe durable subscriptor
+     * @param durable_subscriber_prefix prefix to use to identify subscriber
+     * @param durable_subscriber_name name of the durable subscriber to be unsubscribe
      * @param msg_action message action
      * @param msg_action_size apply action in the batch of given size
      * @param user username
@@ -101,6 +108,10 @@ class ReceiverHandler : public CommonHandler {
     ReceiverHandler(
         const string &url,
         bool is_topic,
+        bool durable_subscriber,
+        bool subscriber_unsubscribe,
+        string durable_subscriber_prefix,
+        string durable_subscriber_name,
         string msg_action,
         int msg_action_size,
         string user,
@@ -144,6 +155,7 @@ class ReceiverHandler : public CommonHandler {
     void on_transport_close(transport &t);
 
     void setSelector(string selector);
+    void createSubscriptionName(string customPrefix);
 
   private:
     typedef CommonHandler super;
@@ -161,6 +173,11 @@ class ReceiverHandler : public CommonHandler {
     };
 
     source::filter_map fm;
+
+    bool durable_subscriber;
+    bool subscriber_unsubscribe;
+    string durable_subscriber_prefix;
+    string durable_subscriber_name;
 
     duration interval;
     timer_event_t timer_event;

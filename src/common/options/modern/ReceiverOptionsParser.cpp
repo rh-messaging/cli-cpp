@@ -86,6 +86,26 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .help("define port for local listening (default: 5672)")
             .type("int")
             .metavar("PORT");
+
+    add_option("--durable-subscriber")
+            .dest("durable-subscriber")
+            .help("create durable subscription to topic (true/false, default: false)")
+            .metavar("ENABLED");
+
+    add_option("--subscriber-unsubscribe")
+            .dest("subscriber-unsubscribe")
+            .help("unsubscribe durable subscriptor with given name (true/false, default: false, provide --durable-subscriber-name)")
+            .metavar("UNSUBSCRIBE");
+
+    add_option("--durable-subscriber-prefix")
+            .dest("durable-subscriber-prefix")
+            .help("prefix to use to identify this connection subscriber")
+            .metavar("PREFIX");
+
+    add_option("--durable-subscriber-name")
+            .dest("durable-subscriber-name")
+            .help("name of the durable subscriber to be unsubscribe")
+            .metavar("NAME");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
@@ -103,5 +123,29 @@ void ReceiverOptionsParser::validate(const Values& options) const
 
     if(options.is_set("duration-mode") && options["duration-mode"] == "after-receive-action-tx-action") {
         error("transactions are not supported yet");
+    }
+
+    if (options.is_set("durable-subscriber")) {
+        std::string durable_subscriber_lower = options["durable-subscriber"];
+        std::transform(durable_subscriber_lower.begin(), durable_subscriber_lower.end(), durable_subscriber_lower.begin(), ::tolower);
+
+        if (durable_subscriber_lower != "true" && durable_subscriber_lower != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["durable-subscriber"] << "\" is not valid for --durable-subscriber option, must be one of true/false";
+            error(sstm.str());
+        }
+    }
+
+    if (options.is_set("subscriber-unsubscribe")) {
+        std::string subscriber_unsubscribe_lower = options["subscriber-unsubscribe"];
+        std::transform(subscriber_unsubscribe_lower.begin(), subscriber_unsubscribe_lower.end(), subscriber_unsubscribe_lower.begin(), ::tolower);
+
+        if (subscriber_unsubscribe_lower != "true" && subscriber_unsubscribe_lower != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["subscriber-unsubscribe"] << "\" is not valid for --subscriber-unsubscribe option, must be one of true/false";
+            error(sstm.str());
+        }
     }
 }
