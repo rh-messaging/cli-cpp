@@ -114,6 +114,36 @@ int ReceivingClient::run(int argc, char **argv) const
     } else {
         sasl_mechanisms = "ANONYMOUS";
     }
+
+    bool durable_subscriber = false;
+    if (options.is_set("durable-subscriber")) {
+        string durable_subscriber_lower = options["durable-subscriber"];
+        std::transform(durable_subscriber_lower.begin(), durable_subscriber_lower.end(), durable_subscriber_lower.begin(), ::tolower);
+
+        if (durable_subscriber_lower == "true") {
+            durable_subscriber = true;
+        }
+    }
+
+    bool subscriber_unsubscribe = false;
+    if (options.is_set("subscriber-unsubscribe")) {
+        string subscriber_unsubscribe_lower = options["subscriber-unsubscribe"];
+        std::transform(subscriber_unsubscribe_lower.begin(), subscriber_unsubscribe_lower.end(), subscriber_unsubscribe_lower.begin(), ::tolower);
+
+        if (subscriber_unsubscribe_lower == "true") {
+            subscriber_unsubscribe = true;
+        }
+    }
+
+    string durable_subscriber_prefix = "";
+    if (options.is_set("durable-subscriber-prefix")) {
+        durable_subscriber_prefix = options["durable-subscriber-prefix"];
+    }
+
+    string durable_subscriber_name = "";
+    if (options.is_set("durable-subscriber-name")) {
+        durable_subscriber_name = options["durable-subscriber-name"];
+    }
     
     bool conn_reconnect_custom = false;
 
@@ -233,6 +263,10 @@ int ReceivingClient::run(int argc, char **argv) const
     ReceiverHandler handler = ReceiverHandler(
         address,
         is_topic,
+        durable_subscriber,
+        subscriber_unsubscribe,
+        durable_subscriber_prefix,
+        durable_subscriber_name,
         msg_action,
         msg_action_size,
         user,
