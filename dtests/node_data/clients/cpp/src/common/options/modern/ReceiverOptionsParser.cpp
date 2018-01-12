@@ -106,6 +106,11 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("durable-subscriber-name")
             .help("name of the durable subscriber to be unsubscribe")
             .metavar("NAME");
+
+    add_option("--shared-subscriber")
+            .dest("shared-subscriber")
+            .help("create shared subscription to topic (true/false, default: false)")
+            .metavar("SHARED");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()
@@ -145,6 +150,18 @@ void ReceiverOptionsParser::validate(const Values& options) const
             print_help();
             std::stringstream sstm;
             sstm << "Value \"" << options["subscriber-unsubscribe"] << "\" is not valid for --subscriber-unsubscribe option, must be one of true/false";
+            error(sstm.str());
+        }
+    }
+
+    if (options.is_set("shared-subscriber")) {
+        std::string shared_subscriber_lower = options["shared-subscriber"];
+        std::transform(shared_subscriber_lower.begin(), shared_subscriber_lower.end(), shared_subscriber_lower.begin(), ::tolower);
+
+        if (shared_subscriber_lower != "true" && shared_subscriber_lower != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["shared-subscriber"] << "\" is not valid for --shared-subscriber option, must be one of true/false";
             error(sstm.str());
         }
     }
