@@ -144,6 +144,16 @@ int ReceivingClient::run(int argc, char **argv) const
     if (options.is_set("durable-subscriber-name")) {
         durable_subscriber_name = options["durable-subscriber-name"];
     }
+
+    bool shared_subscriber = false;
+    if (options.is_set("shared-subscriber")) {
+        string shared_subscriber_lower = options["shared-subscriber"];
+        std::transform(shared_subscriber_lower.begin(), shared_subscriber_lower.end(), shared_subscriber_lower.begin(), ::tolower);
+
+        if (shared_subscriber_lower == "true") {
+            shared_subscriber = true;
+        }
+    }
     
     bool conn_reconnect_custom = false;
 
@@ -267,6 +277,7 @@ int ReceivingClient::run(int argc, char **argv) const
         subscriber_unsubscribe,
         durable_subscriber_prefix,
         durable_subscriber_name,
+        shared_subscriber,
         msg_action,
         msg_action_size,
         user,

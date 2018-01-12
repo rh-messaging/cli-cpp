@@ -28,6 +28,7 @@ ReceiverHandler::ReceiverHandler(
     bool subscriber_unsubscribe,
     string durable_subscriber_prefix,
     string durable_subscriber_name,
+    bool shared_subscriber,
     string msg_action,
     int msg_action_size,
     string user,
@@ -76,6 +77,7 @@ ReceiverHandler::ReceiverHandler(
     subscriber_unsubscribe(subscriber_unsubscribe),
     durable_subscriber_prefix(durable_subscriber_prefix),
     durable_subscriber_name(durable_subscriber_name),
+    shared_subscriber(shared_subscriber),
     count(count),
     duration_time(duration_time),
     duration_mode(duration_mode),
@@ -143,6 +145,11 @@ void ReceiverHandler::on_container_start(container &c)
 
         if (durable_subscriber) {
             createSubscriptionName(durable_subscriber_prefix);
+        }
+
+        if (shared_subscriber) {
+            caps.push_back("shared");
+            caps.push_back("global");
         }
     }
 
