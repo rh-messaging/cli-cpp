@@ -184,7 +184,7 @@ void ReceiverHandler::on_container_start(container &c)
     if (browse) {
         logger(debug) << "Creating a receiver and connecting to the server";
 
-        source_options s_opts = source_options().distribution_mode(source::COPY).capabilities(caps);
+        source_options s_opts = source_options().distribution_mode(source::COPY); //.capabilities(caps);
 
         if (durable_subscriber) {
             s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
@@ -197,7 +197,7 @@ void ReceiverHandler::on_container_start(container &c)
             );
 
         if (durable_subscriber) {
-            r_opts.name(durable_subscriber_name);
+            // r_opts.name(durable_subscriber_name);
         }
 
         recv = c.open_receiver(
@@ -219,7 +219,7 @@ void ReceiverHandler::on_container_start(container &c)
         } else {
             logger(debug) << "Creating a receiver and connecting to the server";
 
-            source_options s_opts = source_options().filters(this->fm).capabilities(caps);
+            source_options s_opts = source_options().filters(this->fm); //.capabilities(caps);
 
             if (durable_subscriber) {
                 s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
@@ -232,7 +232,7 @@ void ReceiverHandler::on_container_start(container &c)
                 );
 
             if (durable_subscriber) {
-                r_opts.name(durable_subscriber_name);
+                // r_opts.name(durable_subscriber_name);
             }
 
             recv = c.open_receiver(
