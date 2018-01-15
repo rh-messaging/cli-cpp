@@ -144,10 +144,8 @@ void SenderHandler::on_container_start(container &c)
     logger(debug) << "Creating a sender";
     sndr = c.open_sender(
             broker_url,
-            c.sender_options()
-                .source(
-                    source_options().capabilities(caps)
-                ),
+            c.sender_options(),
+                // .source(source_options().capabilities(caps)),
             conn_opts
     );
     
