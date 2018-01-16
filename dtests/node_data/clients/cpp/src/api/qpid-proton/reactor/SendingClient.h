@@ -10,7 +10,7 @@
 
 
 #include <proton/message.hpp>
-#include <proton/default_container.hpp>
+#include <proton/container.hpp>
 #include <proton/types.hpp>
 #include <proton/duration.hpp>
 

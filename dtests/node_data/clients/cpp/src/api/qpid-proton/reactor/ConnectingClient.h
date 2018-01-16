@@ -14,7 +14,7 @@
 #ifndef CONNECTINGCLIENT_H
 #define CONNECTINGCLIENT_H
 
-#include <proton/default_container.hpp>
+#include <proton/container.hpp>
 
 #include "ModernClient.h"
 #include "handler/ConnectorHandler.h"

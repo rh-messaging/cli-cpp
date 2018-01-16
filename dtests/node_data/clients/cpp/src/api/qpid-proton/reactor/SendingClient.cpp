@@ -8,7 +8,7 @@
 #include "SendingClient.h"
 
 using proton::message;
-using proton::default_container;
+using proton::container;
 
 
 namespace dtests {
@@ -524,7 +524,7 @@ int SendingClient::run(int argc, char **argv) const
     handler.setCount(count);
     
     try {
-        default_container(handler).run();
+        container(handler).run();
 
         return 0;
     } catch (const std::exception& e) {

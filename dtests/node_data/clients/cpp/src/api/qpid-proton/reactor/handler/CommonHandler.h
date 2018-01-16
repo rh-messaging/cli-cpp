@@ -13,7 +13,6 @@
 #define COMMON_HANDLER_H_
 
 #include <proton/container.hpp>
-#include <proton/default_container.hpp>
 #include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
 

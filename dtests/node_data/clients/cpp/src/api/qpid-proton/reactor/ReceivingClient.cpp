@@ -15,7 +15,7 @@
 
 #include "ReceivingClient.h"
 
-using proton::default_container;
+using proton::container;
 
 namespace dtests {
 namespace proton {
@@ -154,7 +154,7 @@ int ReceivingClient::run(int argc, char **argv) const
             shared_subscriber = true;
         }
     }
-    
+
     bool conn_reconnect_custom = false;
 
     string conn_reconnect = "true";
@@ -309,7 +309,7 @@ int ReceivingClient::run(int argc, char **argv) const
     }
 
     try {
-        default_container(handler).run();
+        container(handler).run();
 
         return 0;
     } catch (const std::exception& e) {
