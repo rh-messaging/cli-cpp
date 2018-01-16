@@ -15,7 +15,7 @@
 #define RECEIVINGCLIENT_H
 
 #include <proton/message.hpp>
-#include <proton/default_container.hpp>
+#include <proton/container.hpp>
 
 #include "ModernClient.h"
 #include "handler/ReceiverHandler.h"

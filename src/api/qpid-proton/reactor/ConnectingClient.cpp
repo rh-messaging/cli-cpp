@@ -13,7 +13,7 @@
 
 #include "ConnectingClient.h"
 
-using proton::default_container;
+using proton::container;
 
 namespace dtests {
 namespace proton {
@@ -219,7 +219,7 @@ int ConnectingClient::run(int argc, char** argv) const
     handler.setObjectControl(connControl);
 
     try {    
-        default_container(handler).run();
+        container(handler).run();
 
         return 0;
     } catch (const std::exception& e) {
