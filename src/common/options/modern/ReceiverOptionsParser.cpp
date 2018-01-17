@@ -111,6 +111,16 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .dest("shared-subscriber")
             .help("create shared subscription to topic (true/false, default: false)")
             .metavar("SHARED");
+
+    add_option("--conn-clientid")
+            .dest("conn-clientid")
+            .help("client ID that is applied to the container")
+            .metavar("ID");
+
+    add_option("--conn-clientid-prefix")
+            .dest("conn-clientid-prefix")
+            .help("client ID prefix for new connections")
+            .metavar("PREFIX");
 }
 
 ReceiverOptionsParser::~ReceiverOptionsParser()

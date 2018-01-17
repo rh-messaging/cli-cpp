@@ -16,6 +16,7 @@
 
 #include <proton/message.hpp>
 #include <proton/container.hpp>
+#include <proton/uuid.hpp>
 
 #include "ModernClient.h"
 #include "handler/ReceiverHandler.h"
@@ -25,6 +26,7 @@
 #include "UriParser.h"
 
 using proton::message;
+using proton::uuid;
 
 namespace dtests {
 namespace proton {
