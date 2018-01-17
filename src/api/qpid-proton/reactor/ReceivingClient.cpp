@@ -155,6 +155,16 @@ int ReceivingClient::run(int argc, char **argv) const
         }
     }
 
+    string conn_clientid = "";
+    if (options.is_set("conn-clientid")) {
+        conn_clientid = options["conn-clientid"];
+    }
+
+    string conn_clientid_prefix = "";
+    if (options.is_set("conn-clientid-prefix")) {
+        conn_clientid_prefix = options["conn-clientid-prefix"];
+    }
+
     bool conn_reconnect_custom = false;
 
     string conn_reconnect = "true";
@@ -309,7 +319,15 @@ int ReceivingClient::run(int argc, char **argv) const
     }
 
     try {
-        container(handler).run();
+        if (conn_clientid != "") {
+            container(handler, conn_clientid).run();
+        } else if (conn_clientid_prefix != "") {
+            conn_clientid = conn_clientid_prefix + ::proton::uuid::random().str();
+
+            container(handler, conn_clientid).run();
+        } else {
+            container(handler).run();
+        }
 
         return 0;
     } catch (const std::exception& e) {
