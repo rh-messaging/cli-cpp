@@ -200,10 +200,11 @@ void ReceiverHandler::on_container_start(container &c)
             r_opts.name(durable_subscriber_name);
         }
 
-        recv = c.open_receiver(
-                broker_url,
-                r_opts,
-                conn_opts
+        connection conn = c.connect(broker_url, conn_opts);
+
+        recv = conn.open_receiver(
+                broker_url.path(),
+                r_opts
         );
     } else {
         logger(debug) << "Peer-to-peer: " << recv_listen;
@@ -235,10 +236,11 @@ void ReceiverHandler::on_container_start(container &c)
                 r_opts.name(durable_subscriber_name);
             }
 
-            recv = c.open_receiver(
-                    broker_url,
-                    r_opts,
-                    conn_opts
+            connection conn = c.connect(broker_url, conn_opts);
+
+            recv = conn.open_receiver(
+                    broker_url.path(),
+                    r_opts
             );
         }
     }
