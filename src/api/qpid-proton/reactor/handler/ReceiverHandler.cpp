@@ -143,7 +143,7 @@ void ReceiverHandler::on_container_start(container &c)
     if (is_topic) {
         caps.push_back("topic");
 
-        if (durable_subscriber) {
+        if (durable_subscriber || subscriber_unsubscribe) {
             createSubscriptionName(durable_subscriber_prefix);
         }
 
@@ -186,7 +186,7 @@ void ReceiverHandler::on_container_start(container &c)
 
         source_options s_opts = source_options().distribution_mode(source::COPY).capabilities(caps);
 
-        if (durable_subscriber) {
+        if (durable_subscriber || subscriber_unsubscribe) {
             s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
             s_opts.expiry_policy( ::proton::source::NEVER );
         }
@@ -196,7 +196,7 @@ void ReceiverHandler::on_container_start(container &c)
                 s_opts
             );
 
-        if (durable_subscriber) {
+        if (durable_subscriber || subscriber_unsubscribe) {
             r_opts.name(durable_subscriber_name);
         }
 
@@ -222,7 +222,7 @@ void ReceiverHandler::on_container_start(container &c)
 
             source_options s_opts = source_options().filters(this->fm).capabilities(caps);
 
-            if (durable_subscriber) {
+            if (durable_subscriber || subscriber_unsubscribe) {
                 s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
                 s_opts.expiry_policy( ::proton::source::NEVER );
             }
@@ -232,7 +232,7 @@ void ReceiverHandler::on_container_start(container &c)
                     s_opts
                 );
 
-            if (durable_subscriber) {
+            if (durable_subscriber || subscriber_unsubscribe) {
                 r_opts.name(durable_subscriber_name);
             }
 
