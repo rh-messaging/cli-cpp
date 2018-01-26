@@ -358,7 +358,7 @@ void ReceiverHandler::on_message(delivery &d, message &m)
         }
     }
 
-    if (msg_received_cnt == count) {
+    if (!process_reply_to && msg_received_cnt == count) {
         if (durable_subscriber) {
             d.receiver().detach();
         } else {
