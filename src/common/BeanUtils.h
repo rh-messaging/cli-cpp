@@ -90,7 +90,7 @@ class BeanUtils {
      */
     template<typename T, typename Y>
     static void setBoolean(const string &value, T *obj, Y setter) {
-        if (value == "yes") {
+        if (value == "yes" || value == "true" || value == "True") {
             (obj->*setter)(true);
         } else {
             (obj->*setter)(false);
