@@ -66,7 +66,7 @@ SenderOptionsParser::SenderOptionsParser()
 
     add_option("--msg-durable")
             .dest("msg-durable")
-            .help("send durable messages (yes/no)")
+            .help("send durable messages (true/false, default: false)")
             .metavar("DURABLE");
 
     add_option("--msg-subject")
