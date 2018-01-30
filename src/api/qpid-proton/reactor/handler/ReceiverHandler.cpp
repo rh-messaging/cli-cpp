@@ -220,9 +220,7 @@ void ReceiverHandler::on_container_start(container &c)
         } else {
             logger(debug) << "Creating a receiver and connecting to the server";
 
-            source_options s_opts = source_options()
-                .filters(this->fm)
-                .capabilities(caps);
+            source_options s_opts = source_options().filters(this->fm).capabilities(caps);
 
             if (durable_subscriber || subscriber_unsubscribe) {
                 s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
