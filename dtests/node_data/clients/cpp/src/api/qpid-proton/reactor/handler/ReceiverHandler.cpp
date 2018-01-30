@@ -184,7 +184,10 @@ void ReceiverHandler::on_container_start(container &c)
     if (browse) {
         logger(debug) << "Creating a receiver and connecting to the server";
 
-        source_options s_opts = source_options().distribution_mode(source::COPY).capabilities(caps);
+        source_options s_opts = source_options()
+            .distribution_mode(source::COPY)
+            .filters(this->fm)
+            .capabilities(caps);
 
         if (durable_subscriber || subscriber_unsubscribe) {
             s_opts.durability_mode( ::proton::source::UNSETTLED_STATE );
