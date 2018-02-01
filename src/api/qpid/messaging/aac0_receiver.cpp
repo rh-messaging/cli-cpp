@@ -196,11 +196,12 @@ int main(int argc, char** argv)
                 session = connection.createSession();
             ts_snap_store(ptsdata, 'D', options.log_stats);
 
-            // Remove prefix 'topic://'
+            // Remove prefix 'topic://' when FQQN is specified
             std::string fixedAddress;
-            std::size_t prefix_index = std::string::npos; // options.address.find("topic://");
-            if (prefix_index != std::string::npos) {
-                fixedAddress = options.address.replace(prefix_index, 8, "");
+            std::size_t topic_prefix_index = options.address.find("topic://");
+            std::size_t double_colon_index = options.address.find("::");
+            if (topic_prefix_index != std::string::npos && double_colon_index != std::string::npos) {
+                fixedAddress = options.address.replace(topic_prefix_index, 8, "");
             } else {
                 fixedAddress = options.address;
             }
