@@ -51,6 +51,7 @@ class SenderHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param failover_urls failover URLs
      * @param is_topic if target is topic
      * @param user username
      * @param password password
@@ -72,6 +73,7 @@ class SenderHandler : public CommonHandler {
      */
     SenderHandler(
         const string &url,
+        vector<string> failover_urls,
         bool is_topic,
         string user,
         string password,

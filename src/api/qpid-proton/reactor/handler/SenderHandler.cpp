@@ -26,6 +26,7 @@ using namespace dtests::common::log;
 
 SenderHandler::SenderHandler(
     const string &url,
+    vector<string> failover_url,
     bool is_topic,
     string user,
     string password,
@@ -47,6 +48,7 @@ SenderHandler::SenderHandler(
 )
     : super(
         url,
+        failover_url,
         is_topic,
         user,
         password,

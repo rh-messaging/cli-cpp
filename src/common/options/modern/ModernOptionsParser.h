@@ -13,6 +13,7 @@
 #include <string>
 
 #include "../BaseOptionsParser.h"
+#include "options/modern/StringAppendCallback.h"
 
 namespace dtests {
 namespace common {
@@ -29,6 +30,9 @@ class ModernOptionsParser : public BaseOptionsParser {
     virtual ~ModernOptionsParser();
 
     virtual void validate(const Values &options) const;
+
+    StringAppendCallback callbackFailoverUrl;
+
   private:
     typedef BaseOptionsParser super;
 

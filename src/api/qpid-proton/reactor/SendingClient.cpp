@@ -495,6 +495,7 @@ int SendingClient::run(int argc, char **argv) const
 
     SenderHandler handler = SenderHandler(
         address,
+        parser.callbackFailoverUrl.getStrings(),
         is_topic,
         user,
         password,

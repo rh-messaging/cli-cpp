@@ -198,6 +198,7 @@ int ConnectingClient::run(int argc, char** argv) const
 
     ConnectorHandler handler = ConnectorHandler(
         address,
+        parser.callbackFailoverUrl.getStrings(),
         is_topic,
         user,
         password,

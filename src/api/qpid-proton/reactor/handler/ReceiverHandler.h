@@ -75,6 +75,7 @@ class ReceiverHandler : public CommonHandler {
     /**
      * Constructor
      * @param url broker URL
+     * @param failover_urls failover URLs
      * @param is_topic if target is topic
      * @param durable_subscriber durable subscription to topic
      * @param subscriber_unsubscribe unsubscribe durable subscriptor
@@ -108,6 +109,7 @@ class ReceiverHandler : public CommonHandler {
      */
     ReceiverHandler(
         const string &url,
+        vector<string> failover_urls,
         bool is_topic,
         bool durable_subscriber,
         bool subscriber_unsubscribe,
