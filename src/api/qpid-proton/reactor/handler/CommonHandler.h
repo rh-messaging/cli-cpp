@@ -12,6 +12,8 @@
 #ifndef COMMON_HANDLER_H_
 #define COMMON_HANDLER_H_
 
+#include <vector>
+
 #include <proton/container.hpp>
 #include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
@@ -38,6 +40,7 @@ namespace proton {
 namespace reactor {
 
 using std::string;
+using std::vector;
 using dtests::common::Timer;
 
 
@@ -50,6 +53,7 @@ class CommonHandler : public messaging_handler {
     /**
      * Constructor
      * @param url broker URL
+     * @param failover_urls failover URLs
      * @param is_topic if target is topic
      * @param user username
      * @param password password
@@ -69,6 +73,7 @@ class CommonHandler : public messaging_handler {
      */
     CommonHandler(
         const string &url,
+        vector<string> failover_urls,
         bool is_topic,
         string user,
         string password,
@@ -102,6 +107,11 @@ class CommonHandler : public messaging_handler {
      * Broker URL
      */
     url broker_url;
+
+    /**
+     * Failover URLs
+     */
+    vector<string> failover_urls;
 
     /**
      * If is topic

@@ -282,6 +282,7 @@ int ReceivingClient::run(int argc, char **argv) const
 
     ReceiverHandler handler = ReceiverHandler(
         address,
+        parser.callbackFailoverUrl.getStrings(),
         is_topic,
         durable_subscriber,
         subscriber_unsubscribe,

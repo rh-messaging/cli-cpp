@@ -9,6 +9,7 @@ using namespace dtests::common::log;
 
 ConnectorHandler::ConnectorHandler(
     const string &url,
+    vector<string> failover_urls,
     bool is_topic,
     string user,
     string password,
@@ -26,6 +27,7 @@ ConnectorHandler::ConnectorHandler(
 )
     : super(
         url,
+        failover_urls,
         is_topic,
         user,
         password,

@@ -23,6 +23,7 @@ Logger CommonHandler::logger = LoggerWrapper::getLogger();
 
 CommonHandler::CommonHandler(
     const string &url_str,
+    vector<string> failover_urls,
     bool is_topic,
     string user,
     string password,
@@ -42,6 +43,7 @@ CommonHandler::CommonHandler(
 )
     : super(),
     broker_url(url_str),
+    failover_urls(failover_urls),
     is_topic(is_topic),
     user(user),
     password(password),
@@ -71,6 +73,9 @@ CommonHandler::~CommonHandler()
 
 void CommonHandler::configure_reconnect(::proton::connection_options & conn_opts) {
     ::proton::reconnect_options ro;
+
+    ro.failover_urls(failover_urls);
+
     if (conn_reconnect == "true" && conn_reconnect_custom == false) {
         conn_opts.reconnect(ro);
     } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
