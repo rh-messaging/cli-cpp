@@ -25,7 +25,7 @@ public:
  * */
 
 /* Print message "upstream style" => 'Message(...)'
- * additional data could be aquired by 'bool verbose' parameter
+ * additional data could be acquired by 'bool verbose' parameter
  * */
 void printMessage(qpid::messaging::Message&, bool);
 

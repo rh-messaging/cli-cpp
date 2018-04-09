@@ -28,7 +28,7 @@ class AbstractFormatter {
 
     /**
      * Print message "upstream style" => 'Message(...)'
-     * additional data could be aquired by 'bool verbose' parameter
+     * additional data could be acquired by 'bool verbose' parameter
      */
     virtual void printMessage(const AbstractDecoder *dec, Writer *wr) const = 0;
 
