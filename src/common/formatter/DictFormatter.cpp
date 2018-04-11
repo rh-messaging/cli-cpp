@@ -154,10 +154,12 @@ std::string DictFormatter::getValue(const value &v) {
 
             break;
         }
-        case ::proton::UINT:
-        case ::proton::LONG:
+        case ::proton::DOUBLE:
+        case ::proton::FLOAT:
         case ::proton::INT:
-        case ::proton::DOUBLE: {
+        case ::proton::LONG:
+        case ::proton::UINT:
+        case ::proton::ULONG: {
             oss << v;
 
             break;
