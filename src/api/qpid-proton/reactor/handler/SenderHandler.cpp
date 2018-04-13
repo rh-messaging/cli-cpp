@@ -183,12 +183,22 @@ void SenderHandler::on_sendable(sender &s)
             sleep4next(ts, count, duration_time, sent+1);
         }
 
-        s.send(m);
+        message message_to_send = message(m);
+
+        if (get<string>(message_to_send.body()).find("%d") != string::npos) {
+            size_t percent_position = get<string>(message_to_send.body()).find("%d");
+            stringstream ss;
+            ss << sent;
+            string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
+            message_to_send.body(replaced_number);
+        }
+
+        s.send(message_to_send);
         
-        // logger(trace) << "Sent message: " << m.body().as_string();
+        // logger(trace) << "Sent message: " << message_to_send.body().as_string();
 
         if (log_msgs == "dict") {
-            ReactorDecoder decoder = ReactorDecoder(m);
+            ReactorDecoder decoder = ReactorDecoder(message_to_send);
 
             std::ostringstream stream;
             DictWriter writer = DictWriter(&stream);
@@ -201,7 +211,7 @@ void SenderHandler::on_sendable(sender &s)
         } else if (log_msgs == "interop") {
             DictFormatter formatter = DictFormatter();
 
-            formatter.printMessageInterop(m);
+            formatter.printMessageInterop(message_to_send);
         }
 
         if (duration_time > 0 && duration_mode == "after-send") {
