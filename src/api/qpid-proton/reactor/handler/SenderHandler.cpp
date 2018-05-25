@@ -185,12 +185,15 @@ void SenderHandler::on_sendable(sender &s)
 
         message message_to_send = message(m);
 
-        if (get<string>(message_to_send.body()).find("%d") != string::npos) {
-            size_t percent_position = get<string>(message_to_send.body()).find("%d");
-            stringstream ss;
-            ss << sent;
-            string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
-            message_to_send.body(replaced_number);
+        try {
+            if (get<string>(message_to_send.body()).find("%d") != string::npos) {
+                size_t percent_position = get<string>(message_to_send.body()).find("%d");
+                stringstream ss;
+                ss << sent;
+                string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
+                message_to_send.body(replaced_number);
+            }
+        } catch (conversion_error) {
         }
 
         s.send(message_to_send);
