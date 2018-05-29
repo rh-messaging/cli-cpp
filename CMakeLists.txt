@@ -45,15 +45,18 @@ else (WIN32)
 endif (WIN32)
 
 if (NOT WIN32)
+    find_package(Qpid REQUIRED)
     find_package(Proton REQUIRED Core Proactor)
     find_package(ProtonCpp REQUIRED)
     include_directories(
         ${ProtonCpp_INCLUDE_DIRS}
+        ${Qpid_INCLUDE_DIRS}
     )
     link_libraries(
         ${Proton_Core_LIBRARIES}
         ${Proton_Proactor_LIBRARIES}
         ${ProtonCpp_LIBRARIES}
+        ${Qpid_LIBRARIES}
     )
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif (NOT WIN32)
