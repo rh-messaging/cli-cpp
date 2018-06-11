@@ -43,6 +43,11 @@ SenderOptionsParser::SenderOptionsParser()
             .help("message user ID")
             .metavar("ID");
 
+    add_option("--msg-to")
+            .dest("msg-to")
+            .help("destination ADDRESS")
+            .metavar("ADDRESS");
+
     add_option("--msg-ttl")
             .dest("msg-ttl")
             .help("message Time-To-Live (ms)")

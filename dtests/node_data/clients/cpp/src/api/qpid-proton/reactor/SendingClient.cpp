@@ -44,6 +44,9 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-reply-to", &msg,
             static_cast<string_setter> (&message::reply_to));
 
+    setter.set("msg-to", &msg,
+            static_cast<string_setter> (&message::to));
+
     setter.set("msg-correlation-id", &msg,
             static_cast<id_setter> (&message::correlation_id),
             &idNormalizer);
