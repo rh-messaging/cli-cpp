@@ -206,7 +206,10 @@ int main (int argc, char ** argv) {
         if (conn_options.length() > 0)
         {
           qpid::messaging::Connection tmp_connection(broker, conn_options);
-          tmp_connection.setOption("max_frame_size", max_frame_size);
+          if (!max_frame_size.empty()) {
+	    tmp_connection.setOption("max_frame_size", max_frame_size);
+          }
+
           con_list.push_back(tmp_connection);
         }
         else
