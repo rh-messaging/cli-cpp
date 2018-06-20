@@ -53,6 +53,7 @@ struct Options : OptionParser
     
     std::string msg_id;
     std::string msg_replyto;
+    std::string msg_to;
     std::string msg_subject;
     string_vector msg_properties;
     std::string msg_durable;
@@ -101,6 +102,7 @@ struct Options : OptionParser
 
           msg_id(""),
           msg_replyto(""),
+          msg_to(""),
           msg_subject(""),
           msg_durable(""),
           msg_ttl(-1),
@@ -141,6 +143,7 @@ struct Options : OptionParser
         
         add("msg-id", msg_id, "use the supplied id instead of generating one");
         add("msg-reply-to", msg_replyto, "specify reply-to address");
+        add("msg-to", msg_to, "destination address");
         add("msg-subject", msg_subject, "specify message subject");
         add("msg-property", msg_properties, "specify message property");
         add("msg-durable", msg_durable, "send durable messages yes/no");
@@ -459,6 +462,10 @@ int main(int argc, char** argv)
                 // set message headers and properties
                 if (!options.msg_replyto.empty()) {
                    message.setReplyTo(Address(options.msg_replyto));
+                }
+
+                if (!options.msg_to.empty()) {
+                   message.setProperty("x-amqp-to", options.msg_to);
                 }
 
                 if (options.msg_id != "")
