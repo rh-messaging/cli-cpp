@@ -205,10 +205,10 @@ void ReceiverHandler::on_container_start(container &c)
             r_opts.name(durable_subscriber_name);
         }
 
-        connection conn = c.connect(broker_url, conn_opts);
+        connection conn = c.connect(broker_url.getUri(), conn_opts);
 
         recv = conn.open_receiver(
-                broker_url.path(),
+                broker_url.getPath(),
                 r_opts
         );
     } else {
@@ -241,10 +241,10 @@ void ReceiverHandler::on_container_start(container &c)
                 r_opts.name(durable_subscriber_name);
             }
 
-            connection conn = c.connect(broker_url, conn_opts);
+            connection conn = c.connect(broker_url.getUri(), conn_opts);
 
             recv = conn.open_receiver(
-                    broker_url.path(),
+                    broker_url.getPath(),
                     r_opts
             );
         }
@@ -400,7 +400,7 @@ void ReceiverHandler::on_transport_close(transport &t) {
 }
 
 void ReceiverHandler::on_transport_error(transport &t) {
-    logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
+    logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
     
     if (t.error().what().find("unauthorized") != string::npos) {
         exit(1);
@@ -414,7 +414,7 @@ void ReceiverHandler::on_connection_close(connection &conn)
 
 void ReceiverHandler::on_connection_error(connection &c)
 {
-    logger(error) << "Failed to connect to " << broker_url.host_port();
+    logger(error) << "Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     if (c.error().what().find("Unable to validate user") != string::npos) {
         exit(1);
