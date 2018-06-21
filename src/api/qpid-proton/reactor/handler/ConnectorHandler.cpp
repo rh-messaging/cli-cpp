@@ -105,7 +105,7 @@ void ConnectorHandler::on_container_start(container &c)
     
     configure_reconnect(conn_opts);
     
-    conn = c.connect(broker_url, conn_opts);
+    conn = c.connect(broker_url.getUri(), conn_opts);
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
@@ -114,12 +114,12 @@ void ConnectorHandler::on_container_start(container &c)
     
     if ((objectControl & SENDER)) {
         logger(trace) << "Opening the sender as requested";
-        senderObj = conn.open_sender(broker_url.path());
+        senderObj = conn.open_sender(broker_url.getPath());
     }
     
     if ((objectControl & RECEIVER)) {
         logger(trace) << "Opening the receiver as requested";
-        receiverObj = conn.open_receiver(broker_url.path());
+        receiverObj = conn.open_receiver(broker_url.getPath());
     }
     
     duration d = duration(int(timeout * duration::SECOND.milliseconds()));
@@ -130,7 +130,7 @@ void ConnectorHandler::on_container_start(container &c)
 
 void ConnectorHandler::on_connection_open(connection &conn)
 {
-    logger(debug) << "Connected to " << broker_url.host_port();
+    logger(debug) << "Connected to " << broker_url.getHost() << ":" << broker_url.getPort();
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Opening the session as requested";
@@ -141,12 +141,12 @@ void ConnectorHandler::on_connection_open(connection &conn)
 
 void ConnectorHandler::on_connection_close(connection &conn)
 {
-    logger(debug) << "Closing the connection to " << broker_url.host_port();
+    logger(debug) << "Closing the connection to " << broker_url.getHost() << ":" << broker_url.getPort();
 }
 
 void ConnectorHandler::on_connection_error(connection &conn)
 {
-    logger(error) << "Failed to connect to " << broker_url.host_port();
+    logger(error) << "Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     if (conn.error().what().find("Unable to validate user") != string::npos) {
         exit(1);
@@ -154,7 +154,7 @@ void ConnectorHandler::on_connection_error(connection &conn)
 }
 
 void ConnectorHandler::on_transport_error(transport &trans) {
-    logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << trans.error().what();
+    logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << trans.error().what();
 }
 
 void ConnectorHandler::on_transport_close(transport &t) {
@@ -167,7 +167,7 @@ void ConnectorHandler::on_transport_close(transport &t) {
 
 
 void ConnectorHandler::on_session_error(session &s) {
-    logger(error) << "The remote peer at " << broker_url.host_port() << 
+    logger(error) << "The remote peer at " << broker_url.getHost() << ":" << broker_url.getPort() <<
             " closed the session with an error condition";
     closeObjects();
 } 
