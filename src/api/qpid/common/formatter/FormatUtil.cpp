@@ -210,6 +210,13 @@ std::string escapeQuotes(const std::string s) {
     return retVal;
 }
 
+std::string stripAddressPrefix(const std::string &s) {
+    if (s.find("topic://") == 0) {
+        return s.substr(std::string("topic://").length());
+    }
+    return s;
+}
+
 void printMessageInterop(const Message &message) {
     std::string msgString = "";
     std::ostringstream helper;
@@ -259,7 +266,7 @@ void printMessageInterop(const Message &message) {
       
         // TODO: Not supported in API, get from properties
         if (props.find("x-amqp-to") != props.end()) {
-            msgString.append(", 'address': ").append(formatString(props.find("x-amqp-to")->second));
+            msgString.append(", 'address': ").append(formatString(stripAddressPrefix(props.find("x-amqp-to")->second)));
         } else {
             msgString.append(", 'address': ").append("None");
         }
