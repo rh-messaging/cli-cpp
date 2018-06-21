@@ -145,7 +145,7 @@ void SenderHandler::on_container_start(container &c)
 
     logger(debug) << "Creating a sender";
     sndr = c.open_sender(
-            broker_url,
+            broker_url.getUri(),
             c.sender_options()
                 .source(
                     source_options().capabilities(caps)
@@ -259,7 +259,7 @@ void SenderHandler::on_transport_close(transport &t) {
 }
 
 void SenderHandler::on_transport_error(transport &t) {
-    logger(error) << "The connection with " << broker_url.host_port() << " was interrupted: " << t.error().what();
+    logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
 
     if (t.error().what().find("unauthorized") != string::npos) {
         exit(1);
@@ -280,7 +280,7 @@ void SenderHandler::on_connection_close(connection &c)
 
 void SenderHandler::on_connection_error(connection &c)
 {
-    logger(error) << "Failed to connect to " << broker_url.host_port();
+    logger(error) << "Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     if (c.error().what().find("Unable to validate user") != string::npos) {
         exit(1);

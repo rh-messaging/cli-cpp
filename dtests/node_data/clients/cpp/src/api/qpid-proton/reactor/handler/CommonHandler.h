@@ -18,19 +18,18 @@
 #include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
 
-#include <proton/url.hpp>
 #include <proton/function.hpp>
 
 #include <proton/message.hpp>
 
 
 #include "Timer.h"
+#include "UriParser.h"
 
 #include "logger/Logger.h"
 #include "logger/LoggerWrapper.h"
 
 using proton::messaging_handler;
-using proton::url;
 using proton::container;
 using proton::void_function0;
 using proton::duration;
@@ -42,6 +41,7 @@ namespace reactor {
 using std::string;
 using std::vector;
 using dtests::common::Timer;
+using dtests::common::UriParser;
 
 
 /**
@@ -106,7 +106,7 @@ class CommonHandler : public messaging_handler {
     /**
      * Broker URL
      */
-    url broker_url;
+    UriParser broker_url;
 
     /**
      * Failover URLs
