@@ -379,7 +379,7 @@ string ReactorDecoder::decodeValue(const value &value) const {
 
             std::list<string> l = std::list<string>();
 
-            value.get(l);
+            ::proton::get(value, l);
             logger(debug) << "(m) Type id: " << type;
 
             logger(debug) << "(m) Size: " << (unsigned long) l.size();
