@@ -188,6 +188,13 @@ std::string DictFormatter::escapeQuotes(const std::string s) {
     return retVal;
 }
 
+std::string stripAddressPrefix(const std::string &s) {
+    if (s.find("topic://") == 0) {
+        return s.substr(std::string("topic://").length());
+    }
+    return s;
+}
+
 void DictFormatter::printMessageInterop(const message &m)
 {
     std::string msgString = "";
@@ -230,7 +237,7 @@ void DictFormatter::printMessageInterop(const message &m)
 
         msgString.append(", 'user-id': ").append(formatString(m.user()));
       
-        msgString.append(", 'address': ").append(formatString(m.to()));
+        msgString.append(", 'address': ").append(formatString(stripAddressPrefix(m.to())));
 
         msgString.append(", 'subject': ").append(formatString(m.subject())); // OW: JMS_AMQP_Subject
 
