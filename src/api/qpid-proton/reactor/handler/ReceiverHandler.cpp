@@ -115,9 +115,9 @@ void ReceiverHandler::timerEvent() {
         
         duration d = duration(1 * duration::SECOND.milliseconds());
         if (recv_listen != "true") {
-            recv.container().schedule(d, timer_event);
+            work_q->schedule(d, make_work(&ReceiverHandler::timerEvent, this));
         } else {
-            cont->schedule(d, timer_event);
+            cont->schedule(d, make_work(&ReceiverHandler::timerEvent, this));
         }
     }
 #endif
@@ -211,6 +211,8 @@ void ReceiverHandler::on_container_start(container &c)
                 broker_url.getPath(),
                 r_opts
         );
+
+        work_q = &recv.work_queue();
     } else {
         logger(debug) << "Peer-to-peer: " << recv_listen;
         logger(debug) << "Peer-to-peer port: " << recv_listen_port;
@@ -247,6 +249,8 @@ void ReceiverHandler::on_container_start(container &c)
                     broker_url.getPath(),
                     r_opts
             );
+
+            work_q = &recv.work_queue();
         }
     }
     logger(debug) << "Connected to the broker/p2p and waiting for messages";
@@ -255,11 +259,13 @@ void ReceiverHandler::on_container_start(container &c)
         recv.close();
         recv.connection().close();
     } else {
-        duration d = duration(int(timeout * duration::SECOND.milliseconds()));
-
         ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)
-        c.schedule(d, timer_event);
+        if (recv_listen != "true") {
+            work_q->schedule(duration(0), make_work(&ReceiverHandler::timerEvent, this));
+        } else {
+            cont->schedule(duration(0), make_work(&ReceiverHandler::timerEvent, this));
+        }
 #endif
     }
 
