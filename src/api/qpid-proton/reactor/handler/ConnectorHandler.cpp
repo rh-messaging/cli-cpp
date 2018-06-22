@@ -64,6 +64,9 @@ void ConnectorHandler::timerEvent() {
     } else {
         timer--;
         logger(debug) << "Waiting ...";
+
+        duration d = duration(1 * duration::SECOND.milliseconds());
+        work_q->schedule(d, make_work(&ConnectorHandler::timerEvent, this));
     }
 #endif
 }
@@ -106,6 +109,8 @@ void ConnectorHandler::on_container_start(container &c)
     configure_reconnect(conn_opts);
     
     conn = c.connect(broker_url.getUri(), conn_opts);
+
+    work_q = &conn.work_queue();
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
@@ -122,9 +127,8 @@ void ConnectorHandler::on_container_start(container &c)
         receiverObj = conn.open_receiver(broker_url.getPath());
     }
     
-    duration d = duration(int(timeout * duration::SECOND.milliseconds()));
 #if defined(__REACTOR_HAS_TIMER)
-    c.schedule(d, timer_event);
+    work_q->schedule(duration(0), make_work(&ConnectorHandler::timerEvent, this));
 #endif
 }
 

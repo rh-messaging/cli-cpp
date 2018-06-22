@@ -21,6 +21,7 @@
 #include <proton/function.hpp>
 
 #include <proton/message.hpp>
+#include <proton/work_queue.hpp>
 
 
 #include "Timer.h"
@@ -33,6 +34,7 @@ using proton::messaging_handler;
 using proton::container;
 using proton::void_function0;
 using proton::duration;
+using proton::work_queue;
 
 namespace dtests {
 namespace proton {
@@ -102,6 +104,11 @@ class CommonHandler : public messaging_handler {
      * Logger
      */
     static Logger logger;
+
+    /**
+     * Work queue
+     */
+    work_queue* work_q;
     
     /**
      * Broker URL

@@ -42,6 +42,7 @@ CommonHandler::CommonHandler(
     string log_msgs
 )
     : super(),
+    work_q(0),
     broker_url(url_str),
     failover_urls(failover_urls),
     is_topic(is_topic),
