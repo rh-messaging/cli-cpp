@@ -48,8 +48,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
             static_cast<string_setter> (&message::to));
 
     setter.set("msg-correlation-id", &msg,
-            static_cast<id_setter> (&message::correlation_id),
-            &idNormalizer);
+            static_cast<id_setter> (&message::correlation_id));
 
     setter.set("msg-content-type", &msg,
             static_cast<string_setter> (&message::content_type));
@@ -57,8 +56,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
     setter.set("msg-subject", &msg,
             static_cast<string_setter> (&message::subject));
 
-    setter.set("msg-id", &msg, static_cast<id_setter> (&message::id),
-            &idNormalizer);
+    setter.set("msg-id", &msg, static_cast<id_setter> (&message::id));
 
 #ifdef ENABLE_IMPLICIT_CONVERSIONS
     duration def = duration(0);
@@ -117,27 +115,6 @@ bool SendingClient::nameVal(const string &in, string &name, string &value, strin
             return true;
         } else {
             return false;
-        }
-    }
-}
-
-void SendingClient::setMessageContent(const OptionsSetter &setter, const optparse::Values &options, message *msg) const
-{
-    string content_type = options["msg-content-type"];
-
-    const string content = setter.getContent();
-
-    if (content_type == ContentType::AMQP_LIST) {
-        setter.setList("msg-content", msg,
-                static_cast<value_setter> (&message::body), &listNormalizer);
-
-    } else {
-        if (content_type == ContentType::AMQP_MAP) {
-            setter.setMap("msg-content", msg,
-                    static_cast<value_setter> (&message::body), &mapNormalizer);
-
-        } else {
-            msg->body(content);
         }
     }
 }
@@ -465,7 +442,6 @@ int SendingClient::run(int argc, char **argv) const
     message msg;
 
     setMessageOptions(setter, msg);
-    // setMessageContent(setter, options, &msg);
     setMessageProperties(parser.callbackProperty, &msg);
 
     if (parser.callbackList.str.length() > 0) {

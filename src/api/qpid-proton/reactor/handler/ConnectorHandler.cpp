@@ -65,8 +65,7 @@ void ConnectorHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
 
-        duration d = duration(1 * duration::SECOND.milliseconds());
-        work_q->schedule(d, make_work(&ConnectorHandler::timerEvent, this));
+        work_q->schedule(duration::SECOND, make_work(&ConnectorHandler::timerEvent, this));
     }
 #endif
 }
@@ -128,7 +127,7 @@ void ConnectorHandler::on_container_start(container &c)
     }
     
 #if defined(__REACTOR_HAS_TIMER)
-    work_q->schedule(duration(0), make_work(&ConnectorHandler::timerEvent, this));
+    work_q->schedule(duration::IMMEDIATE, make_work(&ConnectorHandler::timerEvent, this));
 #endif
 }
 
