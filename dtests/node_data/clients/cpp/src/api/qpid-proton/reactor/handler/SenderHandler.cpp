@@ -92,8 +92,7 @@ void SenderHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
 
-        duration d = duration(1 * duration::SECOND.milliseconds());
-        work_q->schedule(d, make_work(&SenderHandler::timerEvent, this));
+        work_q->schedule(duration::SECOND, make_work(&SenderHandler::timerEvent, this));
     }
 #endif
 }
@@ -157,7 +156,7 @@ void SenderHandler::on_container_start(container &c)
     
     logger(trace) << "Setting up timer";
 #if defined(__REACTOR_HAS_TIMER)
-    work_q->schedule(duration(0), make_work(&SenderHandler::timerEvent, this));
+    work_q->schedule(duration::IMMEDIATE, make_work(&SenderHandler::timerEvent, this));
 #endif
 }
 

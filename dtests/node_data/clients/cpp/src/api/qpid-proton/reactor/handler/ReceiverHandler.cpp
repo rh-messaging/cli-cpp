@@ -80,16 +80,16 @@ ReceiverHandler::ReceiverHandler(
     durable_subscriber_prefix(durable_subscriber_prefix),
     durable_subscriber_name(durable_subscriber_name),
     shared_subscriber(shared_subscriber),
-    count(count),
-    duration_time(duration_time),
-    duration_mode(duration_mode),
-    interval(timeout * duration::SECOND.milliseconds()),
+    interval(timeout * duration::SECOND),
+    timer_event(*this),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
     msg_received_cnt(0),
     process_reply_to(process_reply_to),
     browse(browse),
-    timer_event(*this),
+    count(count),
+    duration_time(duration_time),
+    duration_mode(duration_mode),
     recv_listen(recv_listen),
     recv_listen_port(recv_listen_port)
 {
@@ -113,11 +113,10 @@ void ReceiverHandler::timerEvent() {
         timer--;
         logger(debug) << "Waiting ...";
         
-        duration d = duration(1 * duration::SECOND.milliseconds());
         if (recv_listen != "true") {
-            work_q->schedule(d, make_work(&ReceiverHandler::timerEvent, this));
+            work_q->schedule(duration::SECOND, make_work(&ReceiverHandler::timerEvent, this));
         } else {
-            cont->schedule(d, make_work(&ReceiverHandler::timerEvent, this));
+            cont->schedule(duration::SECOND, make_work(&ReceiverHandler::timerEvent, this));
         }
     }
 #endif
@@ -262,9 +261,9 @@ void ReceiverHandler::on_container_start(container &c)
         ts = get_time();
 #if defined(__REACTOR_HAS_TIMER)
         if (recv_listen != "true") {
-            work_q->schedule(duration(0), make_work(&ReceiverHandler::timerEvent, this));
+            work_q->schedule(duration::IMMEDIATE, make_work(&ReceiverHandler::timerEvent, this));
         } else {
-            cont->schedule(duration(0), make_work(&ReceiverHandler::timerEvent, this));
+            cont->schedule(duration::IMMEDIATE, make_work(&ReceiverHandler::timerEvent, this));
         }
 #endif
     }

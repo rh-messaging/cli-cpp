@@ -18,7 +18,6 @@
 #include "handler/SenderHandler.h"
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
-#include "Normalizer.h"
 #include "ContentType.h"
 #include "TypeUtils.h"
 #include "UriParser.h"
@@ -47,7 +46,6 @@ class SendingClient : public ModernClient {
     typedef ModernClient super;
 
     void setMessageOptions(const OptionsSetter &setter, message &msg) const;
-    void setMessageContent(const OptionsSetter &setter, const optparse::Values &options, message *msg) const;
     bool nameVal(const string& in, string& name, string& value, string& separator) const;
     void setMessageProperty(message *msg, const string &property) const;
     void setMessageListItem(message *msg, const string &property, std::list<value> &messageList) const;
