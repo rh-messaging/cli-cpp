@@ -200,6 +200,10 @@ void ReceiverHandler::on_container_start(container &c)
                 s_opts
             );
 
+        if (duration_time > 0) {
+            r_opts.credit_window(1);
+        }
+
         if (durable_subscriber || subscriber_unsubscribe) {
             r_opts.name(durable_subscriber_name);
         }
@@ -240,6 +244,10 @@ void ReceiverHandler::on_container_start(container &c)
 
             if (durable_subscriber || subscriber_unsubscribe) {
                 r_opts.name(durable_subscriber_name);
+            }
+
+            if (duration_time > 0) {
+                r_opts.credit_window(1);
             }
 
             connection conn = c.connect(broker_url.getUri(), conn_opts);
