@@ -125,6 +125,9 @@ class SenderHandler : public CommonHandler {
      * @param m the message to send
      */
     void setMessage(message &m);
+
+    void send();
+    void checkIfCanSend();
     
     /**
      * Gets the message to send
@@ -134,6 +137,7 @@ class SenderHandler : public CommonHandler {
 
   private:
     typedef CommonHandler super;
+    bool ready;
     int count;
     int duration_time;
     string duration_mode;
@@ -152,6 +156,8 @@ class SenderHandler : public CommonHandler {
     };
     
     timer_event_t timer_event;
+
+    duration interval;
 
 };
 
