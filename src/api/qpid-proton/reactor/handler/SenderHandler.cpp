@@ -66,13 +66,15 @@ SenderHandler::SenderHandler(
         max_frame_size,
         log_msgs
     ),
+    ready(false),
     count(1),
     duration_time(duration_time),
     duration_mode(duration_mode),
     sent(0),
     confirmedSent(0),
     m(),
-    timer_event(*this)
+    timer_event(*this),
+    interval(duration::IMMEDIATE)
 {
 
 }
@@ -155,80 +157,29 @@ void SenderHandler::on_container_start(container &c)
     work_q = &sndr.work_queue();
     
     logger(trace) << "Setting up timer";
+
+    if (duration_time > 0 && count > 0) {
+        interval = duration((duration_time * duration::SECOND) / count);
+
+        logger(trace) << "Interval for duration: " << interval.milliseconds() << " ms";
+    }
 #if defined(__REACTOR_HAS_TIMER)
     work_q->schedule(duration::IMMEDIATE, make_work(&SenderHandler::timerEvent, this));
+
+    if (duration_time > 0 && duration_mode == "after-send") {
+        work_q->schedule(duration::IMMEDIATE, make_work(&SenderHandler::checkIfCanSend, this));
+    } else if (duration_time > 0 && duration_mode == "before-send") {
+        work_q->schedule(interval, make_work(&SenderHandler::checkIfCanSend, this));
+    } else { 
+        work_q->schedule(duration::IMMEDIATE, make_work(&SenderHandler::checkIfCanSend, this));
+    }
 #endif
 }
 
 void SenderHandler::on_sendable(sender &s)
 {
-    logger(debug) << "Preparing to send message";
-    int credit = s.credit();
-
-    if (credit == 0) {
-        logger(warning) << "There not enough credit to send messages";
-    }
-
-    logger(debug) << "The handler has enough credit to send " << credit
-            << " message" << (credit > 1 ? "s" : "" );
-    logger(debug) << "The handler has sent " << sent << " messages"  
-            << (sent > 1 ? "s" : "" );
-
-    double ts = get_time();
-
-    while (s.credit() > 0 && sent < count) {
-        logger(trace) << "Sending messages through the link";
-        
-        if (duration_time > 0 && duration_mode == "before-send") {
-            sleep4next(ts, count, duration_time, sent+1);
-        }
-
-        message message_to_send = message(m);
-
-        try {
-            if (get<string>(message_to_send.body()).find("%d") != string::npos) {
-                size_t percent_position = get<string>(message_to_send.body()).find("%d");
-                stringstream ss;
-                ss << sent;
-                string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
-                message_to_send.body(replaced_number);
-            }
-        } catch (conversion_error) {
-        }
-
-        s.send(message_to_send);
-        
-        // logger(trace) << "Sent message: " << message_to_send.body().as_string();
-
-        if (log_msgs == "dict") {
-            ReactorDecoder decoder = ReactorDecoder(message_to_send);
-
-            std::ostringstream stream;
-            DictWriter writer = DictWriter(&stream);
-
-            DictFormatter formatter = DictFormatter();
-            formatter.printMessage(&decoder, &writer);
-
-            writer.endLine();
-            std::cout << writer.toString();
-        } else if (log_msgs == "interop") {
-            DictFormatter formatter = DictFormatter();
-
-            formatter.printMessageInterop(message_to_send);
-        }
-
-        if (duration_time > 0 && duration_mode == "after-send") {
-            sleep4next(ts, count, duration_time, sent+1);
-        }
-
-        if (duration_time > 0 && duration_mode == "after-send-tx-action") {
-            // TODO: Transactions are not supported yet
-        }
-         
-        sent++;
-#if defined(__REACTOR_HAS_TIMER)
-        timer.reset();
-#endif
+    if (ready) {
+        send();
     }
 }
 
@@ -308,6 +259,76 @@ message SenderHandler::getMessage() const
     return m;
 }
 
+void SenderHandler::checkIfCanSend() {
+    if (sent < count) {
+        work_q->schedule(interval, make_work(&SenderHandler::checkIfCanSend, this));
+
+        if (sndr.credit() > 0) {
+            send();
+        } else {
+            ready = true;
+        }
+    }
+}
+
+void SenderHandler::send()
+{
+    logger(debug) << "Preparing to send message";
+    int credit = sndr.credit();
+
+    if (credit == 0) {
+        logger(warning) << "There not enough credit to send messages";
+    }
+
+    logger(debug) << "The handler has enough credit to send " << credit
+            << " message" << (credit > 1 ? "s" : "" );
+    logger(debug) << "The handler has sent " << sent << " messages"  
+            << (sent > 1 ? "s" : "" );
+
+    logger(trace) << "Sending messages through the link";
+
+    message message_to_send = message(m);
+
+    try {
+        if (get<string>(message_to_send.body()).find("%d") != string::npos) {
+            size_t percent_position = get<string>(message_to_send.body()).find("%d");
+            stringstream ss;
+            ss << sent;
+            string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
+            message_to_send.body(replaced_number);
+        }
+    } catch (conversion_error) {
+    }
+
+    sndr.send(message_to_send);
+        
+    if (log_msgs == "dict") {
+        ReactorDecoder decoder = ReactorDecoder(message_to_send);
+
+        std::ostringstream stream;
+        DictWriter writer = DictWriter(&stream);
+
+        DictFormatter formatter = DictFormatter();
+        formatter.printMessage(&decoder, &writer);
+
+        writer.endLine();
+        std::cout << writer.toString();
+    } else if (log_msgs == "interop") {
+        DictFormatter formatter = DictFormatter();
+
+        formatter.printMessageInterop(message_to_send);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-send-tx-action") {
+        // TODO: Transactions are not supported yet
+    }
+         
+    sent++;
+#if defined(__REACTOR_HAS_TIMER)
+    timer.reset();
+#endif
+    ready = false;
+}
 
 } /* namespace reactor */
 } /* namespace proton */
