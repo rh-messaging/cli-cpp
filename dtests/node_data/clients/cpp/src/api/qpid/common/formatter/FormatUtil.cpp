@@ -210,6 +210,26 @@ std::string escapeQuotes(const std::string s) {
     return retVal;
 }
 
+std::string escapeChars(const std::string s) {
+    char range_low = 32;
+    char range_high = 126;
+    std::string int_result = "";
+    for (std::string::const_iterator it = s.begin(); it != s.end(); it++) {
+        if (*it < range_low || *it > range_high) {
+            std::ostringstream tmp;
+            /**
+             * \\\\ -- because of python eval escaping
+             */
+            tmp << "\\\\x" << std::setfill('0') << std::hex << std::setw(2) << int(*it);
+            int_result.append(tmp.str());
+        } else {
+            int_result.push_back(*it);
+        }
+  }
+
+  return int_result;
+}
+
 std::string stripAddressPrefix(const std::string &s) {
     if (s.find("topic://") == 0) {
         return s.substr(std::string("topic://").length());
@@ -330,7 +350,7 @@ void printMessageInterop(const Message &message) {
         exit(1);
     }
 
-    std::cout << msgString << std::endl;
+    std::cout << escapeChars(msgString) << std::endl;
 }
 
 void printStatistics(const Message &message, const Variant::Map &stats) {
