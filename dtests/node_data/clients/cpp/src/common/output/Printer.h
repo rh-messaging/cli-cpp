@@ -9,6 +9,7 @@
 #define DTESTS_COMMON_PRINTER_H
 
 #include <cstdio>
+#include <stdint.h>
 
 /**
  * Prints (writes) data to a FILE stream
@@ -67,6 +68,12 @@ class Printer {
      * @param c Char
      */
     void print(char c);
+
+    /**
+    * Prints an int64_t
+    * @param val Value
+    */
+    void print(int64_t val);
 
     /**
      * Prints the address of a pointer

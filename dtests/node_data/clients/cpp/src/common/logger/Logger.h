@@ -9,6 +9,7 @@
 #define DTESTS_COMMON_LOGGER_H
 
 #include <string>
+#include <stdint.h>
 
 #include "output/Printer.h"
 
@@ -94,6 +95,13 @@ class Logger {
      * @returns A reference to this
      */
     Logger &operator<<(char c);
+
+    /**
+    * Prints an int64_t
+    * @param val Value
+    * @returns A reference to this
+    */
+    Logger &operator<<(int64_t val);
 
     /**
      * Prints a string
