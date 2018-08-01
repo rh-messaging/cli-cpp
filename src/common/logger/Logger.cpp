@@ -92,6 +92,16 @@ Logger &Logger::operator<<(char c)
     return *this;
 }
 
+Logger &Logger::operator<<(int64_t val)
+{
+
+    if (level >= logConfiguration.minimumLevel) {
+        printer.print(val);
+    }
+
+    return *this;
+}
+
 Logger &Logger::operator<<(const string &str)
 {
 

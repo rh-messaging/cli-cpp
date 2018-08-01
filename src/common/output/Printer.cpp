@@ -153,6 +153,28 @@ void Printer::print(char c)
     fprintf(stream, "%c", c);
 }
 
+void Printer::print(int64_t val)
+{
+    switch (base) {
+    case HEXADECIMAL:
+    {
+        fprintf(stream, "%llx", val);
+        break;
+    }
+    case OCTAL:
+    {
+        fprintf(stream, "%#llo", val);
+        break;
+    }
+    case DECIMAL:
+    default:
+    {
+        fprintf(stream, "%lld", val);
+        break;
+    }
+    }
+}
+
 void Printer::print(const void *ptr)
 {
     fprintf(stream, "%p", ptr);
