@@ -97,11 +97,11 @@ class Logger {
     Logger &operator<<(char c);
 
     /**
-    * Prints an int64_t
+    * Prints a long long
     * @param val Value
     * @returns A reference to this
     */
-    Logger &operator<<(int64_t val);
+    Logger &operator<<(long long val);
 
     /**
      * Prints a string

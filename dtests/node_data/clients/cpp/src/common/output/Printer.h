@@ -70,10 +70,10 @@ class Printer {
     void print(char c);
 
     /**
-    * Prints an int64_t
+    * Prints a long long
     * @param val Value
     */
-    void print(int64_t val);
+    void print(long long val);
 
     /**
      * Prints the address of a pointer

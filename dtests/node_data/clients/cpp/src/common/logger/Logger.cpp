@@ -92,7 +92,7 @@ Logger &Logger::operator<<(char c)
     return *this;
 }
 
-Logger &Logger::operator<<(int64_t val)
+Logger &Logger::operator<<(long long val)
 {
 
     if (level >= logConfiguration.minimumLevel) {
