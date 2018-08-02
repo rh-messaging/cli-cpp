@@ -153,7 +153,7 @@ void Printer::print(char c)
     fprintf(stream, "%c", c);
 }
 
-void Printer::print(int64_t val)
+void Printer::print(long long val)
 {
     switch (base) {
     case HEXADECIMAL:
