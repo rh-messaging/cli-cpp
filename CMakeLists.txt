@@ -44,8 +44,15 @@ else (WIN32)
     set(BOOST_LIBRARY_DIR "/usr/lib" CACHE String "Boost library directory")
 endif (WIN32)
 
+set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
+set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
+set(ENABLE_MODERN ON CACHE BOOL "Enable usage of refactored code")
+set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
+
 if (NOT WIN32)
-    find_package(Qpid REQUIRED)
+    if (ENABLE_QPID_MESSAGING)
+        find_package(Qpid REQUIRED)
+    endif (ENABLE_QPID_MESSAGING)
     find_package(Proton REQUIRED Core Proactor)
     find_package(ProtonCpp REQUIRED)
     include_directories(
@@ -144,11 +151,6 @@ add_custom_target(distclean
 add_custom_target(documentation
    COMMAND ${CMAKE_COMMAND} -P documentation.cmake
 )
-
-set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
-set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
-set(ENABLE_MODERN ON CACHE BOOL "Enable usage of refactored code")
-set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
 
 if (BUILD_WITH_UNIT_TESTS)
     set (CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin)
