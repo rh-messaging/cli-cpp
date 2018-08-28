@@ -47,6 +47,7 @@ class ConnectorHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param conn_sasl_enabled enable connection SASL
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
      * @param conn_reconnect_interval reconnect interval
@@ -65,6 +66,7 @@ class ConnectorHandler : public CommonHandler {
         string user,
         string password,
         string sasl_mechanisms,
+        string conn_sasl_enabled = "true",
         int timeout = 10,
         string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,

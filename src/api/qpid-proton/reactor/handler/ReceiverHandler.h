@@ -87,6 +87,7 @@ class ReceiverHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param conn_sasl_enabled enable connection SASL
      * @param timeout timeout
      * @param count count of messages to receive
      * @param duration_time message actions total duration
@@ -121,6 +122,7 @@ class ReceiverHandler : public CommonHandler {
         string user,
         string password,
         string sasl_mechanisms,
+        string conn_sasl_enabled = "true",
         int timeout = 10,
         int count = 0,
         int duration_time = 0,
