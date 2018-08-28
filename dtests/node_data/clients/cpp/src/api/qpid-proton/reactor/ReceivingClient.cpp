@@ -115,6 +115,12 @@ int ReceivingClient::run(int argc, char **argv) const
         sasl_mechanisms = "ANONYMOUS";
     }
 
+    string conn_sasl_enabled = "true";
+    if (options.is_set("conn-sasl-enabled")) {
+        conn_sasl_enabled = options["conn-sasl-enabled"];
+        std::transform(conn_sasl_enabled.begin(), conn_sasl_enabled.end(), conn_sasl_enabled.begin(), ::tolower);
+    }
+
     bool durable_subscriber = false;
     if (options.is_set("durable-subscriber")) {
         string durable_subscriber_lower = options["durable-subscriber"];
@@ -294,6 +300,7 @@ int ReceivingClient::run(int argc, char **argv) const
         user,
         password,
         sasl_mechanisms,
+        conn_sasl_enabled,
         timeout,
         count,
         duration,

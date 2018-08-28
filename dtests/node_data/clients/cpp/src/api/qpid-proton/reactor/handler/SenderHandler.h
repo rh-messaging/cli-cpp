@@ -56,6 +56,7 @@ class SenderHandler : public CommonHandler {
      * @param user username
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
+     * @param conn_sasl_enabled enable connection SASL
      * @param timeout timeout
      * @param duration message actions total duration
      * @param duration_mode specifies where to wait to achieve expected duration
@@ -78,6 +79,7 @@ class SenderHandler : public CommonHandler {
         string user,
         string password,
         string sasl_mechanisms,
+        string conn_sasl_enabled = "true",
         int timeout = 10,
         int duration_time = 0,
         string duration_mode = "after-send",
