@@ -355,6 +355,12 @@ int SendingClient::run(int argc, char **argv) const
         sasl_mechanisms = "ANONYMOUS";
     }
     
+    string conn_sasl_enabled = "true";
+    if (options.is_set("conn-sasl-enabled")) {
+        conn_sasl_enabled = options["conn-sasl-enabled"];
+        std::transform(conn_sasl_enabled.begin(), conn_sasl_enabled.end(), conn_sasl_enabled.begin(), ::tolower);
+    }
+
     bool conn_reconnect_custom = false;
 
     string conn_reconnect = "true";
@@ -479,6 +485,7 @@ int SendingClient::run(int argc, char **argv) const
         user,
         password,
         sasl_mechanisms,
+        conn_sasl_enabled,
         timeout,
         duration,
         duration_mode,

@@ -35,6 +35,7 @@ ReceiverHandler::ReceiverHandler(
     string user,
     string password,
     string sasl_mechanisms,
+    string conn_sasl_enabled,
     int timeout,
     int count,
     int duration_time,
@@ -62,6 +63,7 @@ ReceiverHandler::ReceiverHandler(
         user,
         password,
         sasl_mechanisms,
+        conn_sasl_enabled,
         timeout,
         conn_reconnect,
         conn_reconnect_interval,
@@ -133,6 +135,7 @@ void ReceiverHandler::on_container_start(container &c)
     logger(debug) << "User: " << user;
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
+    logger(debug) << "SASL enabled: " << conn_sasl_enabled;
     
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
@@ -162,7 +165,12 @@ void ReceiverHandler::on_container_start(container &c)
     if (!user.empty()) conn_opts.user(user);
     if (!password.empty()) conn_opts.password(password);
 
-    conn_opts.sasl_enabled(true);
+    if (conn_sasl_enabled == "false") {
+        conn_opts.sasl_enabled(false);
+    } else {
+        conn_opts.sasl_enabled(true);
+    }
+
     conn_opts.sasl_allow_insecure_mechs(true);
     conn_opts.sasl_allowed_mechs(sasl_mechanisms);
     // conn_opts.max_frame_size(max_frame_size);

@@ -52,6 +52,11 @@ ModernOptionsParser::ModernOptionsParser()
             .help("specify the allowed MECHANISMS for use on the connection")
             .metavar("MECHANISMS");
 
+    add_option("--conn-sasl-enabled")
+            .dest("conn-sasl-enabled")
+            .help("enable connection SASL (true/false, default: true)")
+            .metavar("ENABLED");
+
     add_option("--client-log-level")
             .dest("client-log-level")
             .help("log LEVEL for the client")
@@ -173,4 +178,17 @@ void ModernOptionsParser::validate(const Values &options) const
         }
 
     }
+
+    if (options.is_set("conn-sasl-enabled")) {
+        string conn_sasl_enabled_lower = options["conn-sasl-enabled"];
+        std::transform(conn_sasl_enabled_lower.begin(), conn_sasl_enabled_lower.end(), conn_sasl_enabled_lower.begin(), ::tolower);
+
+        if (conn_sasl_enabled_lower != "true" && conn_sasl_enabled_lower != "false") {
+            print_help();
+            std::stringstream sstm;
+            sstm << "Value \"" << options["conn-sasl-enabled"] << "\" is not valid for --conn-sasl-enabled option, must be one of true/false";
+            error(sstm.str());
+        }
+    }
+
 }
