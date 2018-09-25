@@ -472,7 +472,7 @@ int SendingClient::run(int argc, char **argv) const
 #ifndef ENABLE_IMPLICIT_CONVERSIONS
     long value =  options.get("msg-ttl");
     
-    msg.ttl(duration(value));
+    msg.ttl(::proton::duration(value));
 #endif
     if (options.is_set("msg-group-seq")) {
         msg.group_sequence(std::strtol(options["msg-group-seq"].c_str(), NULL, 10));
