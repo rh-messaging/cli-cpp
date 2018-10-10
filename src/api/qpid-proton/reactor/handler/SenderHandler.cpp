@@ -153,24 +153,11 @@ void SenderHandler::on_container_start(container &c)
     }
 
     logger(debug) << "Creating a sender";
-    source_options so = source_options();
-
-    /*
-     * WORKAROUND 2018-09-21 rkubis
-     * .NET client is not able to receive attach frame when source capabilities are empty list,
-     * do NOT set capabilities when empty.
-     * ENTMQCL-941 [dotnet] Exception when source.capabilities is empty list in attach frame
-     * ENTMQCL-943 [cpp] Encode empty source capabilities properly
-     */
-    if (caps.size() > 0) {
-        so.capabilities(caps);
-    }
-
     sndr = c.open_sender(
             broker_url.getUri(),
             c.sender_options()
                 .source(
-                    so
+                    source_options().capabilities(caps)
                 ),
             conn_opts
     );
