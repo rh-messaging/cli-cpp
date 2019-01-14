@@ -58,6 +58,7 @@ class ConnectorHandler : public CommonHandler {
      * @param conn_reconnect_doubling reconnect doubling
      * @param conn_reconnect_custom custom reconnect values
      * @param max_frame_size maximum frame size
+     * @param use_default_connection use default connection options
      */
     ConnectorHandler(
         const string &url,
@@ -76,7 +77,8 @@ class ConnectorHandler : public CommonHandler {
         uint32_t conn_reconnect_increment = 100,
         bool conn_reconnect_doubling = true,
         bool conn_reconnect_custom = false,
-        uint32_t max_frame_size = -1
+        uint32_t max_frame_size = -1,
+        bool use_default_connection = false
     );
 
     virtual ~ConnectorHandler();
@@ -131,6 +133,7 @@ class ConnectorHandler : public CommonHandler {
     };
     
     timer_event_t timer_event;
+    bool use_default_connection;
        
     void closeObjects();
 };
