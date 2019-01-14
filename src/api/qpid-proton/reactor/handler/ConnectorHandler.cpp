@@ -24,7 +24,8 @@ ConnectorHandler::ConnectorHandler(
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
-    uint32_t max_frame_size
+    uint32_t max_frame_size,
+    bool use_default_connection
 )
     : super(
         url,
@@ -46,10 +47,12 @@ ConnectorHandler::ConnectorHandler(
         max_frame_size
     ),
     objectControl(CONNECTION),
-    timer_event(*this)
+    timer_event(*this),
+    use_default_connection(use_default_connection)
 {
     logger(debug) << "Initializing the connector handler";
 
+    logger(debug) << "Using default connection: " << use_default_connection;
 }
 
 ConnectorHandler::~ConnectorHandler()
@@ -88,34 +91,38 @@ void ConnectorHandler::on_container_start(container &c)
 
     logger(trace) << "Creating connection";
 
-    logger(debug) << "User: " << user;
-    logger(debug) << "Password: " << password;
-    logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
-    logger(debug) << "SASL enabled: " << conn_sasl_enabled;
-    
-    logger(debug) << "Maximum frame size: " << max_frame_size;
-
-    connection_options conn_opts;
-    
-    if (!user.empty()) conn_opts.user(user);
-    if (!password.empty()) conn_opts.password(password);
-
-    if (conn_sasl_enabled == "false") {
-        conn_opts.sasl_enabled(false);
+    if (use_default_connection) {
+        conn = c.connect();
     } else {
-        conn_opts.sasl_enabled(true);
+        logger(debug) << "User: " << user;
+        logger(debug) << "Password: " << password;
+        logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
+        logger(debug) << "SASL enabled: " << conn_sasl_enabled;
+        
+        logger(debug) << "Maximum frame size: " << max_frame_size;
+
+        connection_options conn_opts;
+        
+        if (!user.empty()) conn_opts.user(user);
+        if (!password.empty()) conn_opts.password(password);
+
+        if (conn_sasl_enabled == "false") {
+            conn_opts.sasl_enabled(false);
+        } else {
+            conn_opts.sasl_enabled(true);
+        }
+
+        conn_opts.sasl_allow_insecure_mechs(true);
+        conn_opts.sasl_allowed_mechs(sasl_mechanisms);
+        conn_opts.max_frame_size(max_frame_size);
+
+        logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
+        logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
+        
+        configure_reconnect(conn_opts);
+        
+        conn = c.connect(broker_url.getUri(), conn_opts);
     }
-
-    conn_opts.sasl_allow_insecure_mechs(true);
-    conn_opts.sasl_allowed_mechs(sasl_mechanisms);
-    conn_opts.max_frame_size(max_frame_size);
-
-    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
-    logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
-    
-    configure_reconnect(conn_opts);
-    
-    conn = c.connect(broker_url.getUri(), conn_opts);
 
     work_q = &conn.work_queue();
     

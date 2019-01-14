@@ -144,7 +144,7 @@ void ModernOptionsParser::validate(const Values &options) const
         std::transform(is_listener.begin(), is_listener.end(), is_listener.begin(), ::tolower);
     }
 
-    if (!options.is_set("broker-url") && is_listener != "true") {
+    if (!options.is_set("broker-url") && is_listener != "true" && !options.get("use-default-connection")) {
         print_help();
         error("Broker URL is not set");
     }

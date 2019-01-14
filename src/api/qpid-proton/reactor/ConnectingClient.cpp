@@ -202,6 +202,11 @@ int ConnectingClient::run(int argc, char** argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
+    bool use_default_connection = false;
+    if (options.is_set("use-default-connection")) {
+        use_default_connection = options.is_set("use-default-connection");
+    }
+
     ConnectorHandler handler = ConnectorHandler(
         address,
         parser.callbackFailoverUrl.getStrings(),
@@ -219,7 +224,8 @@ int ConnectingClient::run(int argc, char** argv) const
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
-        max_frame_size
+        max_frame_size,
+        use_default_connection
     );
     setMessageHandlerOptions(setter, handler);
     
