@@ -202,10 +202,7 @@ int ConnectingClient::run(int argc, char** argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    bool use_default_connection = false;
-    if (options.is_set("use-default-connection")) {
-        use_default_connection = options.is_set("use-default-connection");
-    }
+    bool use_default_connection = options.is_set("use-default-connection");
 
     ConnectorHandler handler = ConnectorHandler(
         address,
