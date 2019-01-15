@@ -81,8 +81,6 @@ class ConnectorHandler : public CommonHandler {
         bool use_default_connection = false
     );
 
-    virtual ~ConnectorHandler();
-    
     void timerEvent();
 
     void on_container_start(container &c);
@@ -119,7 +117,7 @@ class ConnectorHandler : public CommonHandler {
     int count;
     
     int objectControl;
-    connection conn;
+    connection connector_conn;
     session sessionObj; 
     sender senderObj;
     receiver receiverObj;

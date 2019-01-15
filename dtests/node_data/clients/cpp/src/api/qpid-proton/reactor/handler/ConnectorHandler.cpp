@@ -55,17 +55,12 @@ ConnectorHandler::ConnectorHandler(
     logger(debug) << "Using default connection: " << use_default_connection;
 }
 
-ConnectorHandler::~ConnectorHandler()
-{
-    closeObjects();
-}
-
 void ConnectorHandler::timerEvent() {
 #if defined(__REACTOR_HAS_TIMER)
     if (timer.isExpired()) {
         logger(info) << "Timed out";
 
-        exit(EXIT_SUCCESS);
+        closeObjects();
     } else {
         timer--;
         logger(debug) << "Waiting ...";
@@ -92,7 +87,7 @@ void ConnectorHandler::on_container_start(container &c)
     logger(trace) << "Creating connection";
 
     if (use_default_connection) {
-        conn = c.connect();
+        connector_conn = c.connect();
     } else {
         logger(debug) << "User: " << user;
         logger(debug) << "Password: " << password;
@@ -121,21 +116,28 @@ void ConnectorHandler::on_container_start(container &c)
         
         configure_reconnect(conn_opts);
         
-        conn = c.connect(broker_url.getUri(), conn_opts);
+        connector_conn = c.connect(broker_url.getUri(), conn_opts);
     }
+}
+
+void ConnectorHandler::on_connection_open(connection &conn)
+{
+    logger(debug) << "Connected to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     work_q = &conn.work_queue();
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Creating the session as requested";
         sessionObj = conn.default_session();
+        logger(trace) << "Opening the session as requested";
+        sessionObj.open();
     }
-    
+
     if ((objectControl & SENDER)) {
         logger(trace) << "Opening the sender as requested";
         senderObj = conn.open_sender(broker_url.getPath());
     }
-    
+
     if ((objectControl & RECEIVER)) {
         logger(trace) << "Opening the receiver as requested";
         receiverObj = conn.open_receiver(broker_url.getPath());
@@ -144,16 +146,6 @@ void ConnectorHandler::on_container_start(container &c)
 #if defined(__REACTOR_HAS_TIMER)
     work_q->schedule(duration::IMMEDIATE, make_work(&ConnectorHandler::timerEvent, this));
 #endif
-}
-
-void ConnectorHandler::on_connection_open(connection &conn)
-{
-    logger(debug) << "Connected to " << broker_url.getHost() << ":" << broker_url.getPort();
-    
-    if ((objectControl & SESSION)) {
-        logger(trace) << "Opening the session as requested";
-        sessionObj.open();
-    }
 }
 
 
@@ -183,7 +175,6 @@ void ConnectorHandler::on_transport_close(transport &t) {
     }
 }
 
-
 void ConnectorHandler::on_session_error(session &s) {
     logger(error) << "The remote peer at " << broker_url.getHost() << ":" << broker_url.getPort() <<
             " closed the session with an error condition";
@@ -196,22 +187,42 @@ void ConnectorHandler::setObjectControl(int control) {
 }
 
 void ConnectorHandler::closeObjects() {
+    connection conn = connector_conn;
+
     if ((objectControl & RECEIVER)) {
         logger(trace) << "Closing the receiver";
-        receiverObj.close();
+        if (!receiverObj.uninitialized()) {
+            conn = receiverObj.connection();
+            receiverObj.close();
+            logger(trace) << "Receiver closed";
+        }
     }
-    
+
     if ((objectControl & SENDER)) {
         logger(trace) << "Closing the sender";
-        senderObj.close();
+        if (!senderObj.uninitialized()) {
+            conn = senderObj.connection();
+            senderObj.close();
+            logger(trace) << "Sender closed";
+        }
     }
     
     if ((objectControl & SESSION)) {
         logger(trace) << "Closing the session (currently ignored)";
-        sessionObj.close();
+        if (!sessionObj.uninitialized()) {
+            conn = sessionObj.connection();
+            sessionObj.close();
+            logger(trace) << "Session closed";
+        }
     }
     
-    conn.close();
+    if (!conn.uninitialized()) {
+        conn.close();
+        logger(trace) << "Connection closed";
+    } else {
+        connector_conn.close();
+        logger(trace) << "Connector connection closed";
+    }
 }
 
 
