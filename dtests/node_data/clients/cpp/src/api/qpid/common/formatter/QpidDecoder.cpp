@@ -109,11 +109,15 @@ void QpidDecoder::decodeHeader(Writer *writer) const {
 void QpidDecoder::decodeProperties(Writer *writer) const {
     Variant::Map properties = message.getProperties();
     
+    writer->startProperties();
+
     if (properties.size() > 0) {
-        writer->startProperties();
         decodeValue(writer, properties);
-        writer->endProperties();
+    } else {
+        writer->write("{}", true);
     }
+
+    writer->endProperties();
 }
 
 void QpidDecoder::decodeContent(Writer *writer) const {
