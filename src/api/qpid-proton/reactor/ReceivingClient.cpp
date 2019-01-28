@@ -82,6 +82,16 @@ int ReceivingClient::run(int argc, char **argv) const
 
     uri_parser.parse(options["broker-url"]);
 
+    std::vector<std::string> conn_urls;
+    if (options.is_set("conn-urls")) {
+        std::stringstream conn_urls_string(options["conn-urls"]);
+        std::string segment;
+
+        while(std::getline(conn_urls_string, segment, ',')) {
+           conn_urls.push_back(segment);
+        }
+    }
+
     string msg_action = "no-action";
     if(options.is_set("msg-action")) {
         msg_action = options["msg-action"];
@@ -288,7 +298,7 @@ int ReceivingClient::run(int argc, char **argv) const
 
     ReceiverHandler handler = ReceiverHandler(
         address,
-        parser.callbackFailoverUrl.getStrings(),
+        conn_urls,
         is_topic,
         durable_subscriber,
         subscriber_unsubscribe,
