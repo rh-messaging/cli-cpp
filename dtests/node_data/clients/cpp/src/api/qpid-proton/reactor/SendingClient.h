@@ -8,6 +8,8 @@
 #ifndef DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 #define DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_
 
+#include <sstream>
+#include <string>
 
 #include <proton/message.hpp>
 #include <proton/container.hpp>

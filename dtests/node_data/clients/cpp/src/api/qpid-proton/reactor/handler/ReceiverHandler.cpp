@@ -23,7 +23,7 @@ using namespace dtests::proton::reactor;
 
 ReceiverHandler::ReceiverHandler(
     const string &url,
-    vector<string> failover_urls,
+    vector<string> conn_urls,
     bool is_topic,
     bool durable_subscriber,
     bool subscriber_unsubscribe,
@@ -58,7 +58,7 @@ ReceiverHandler::ReceiverHandler(
 )
     : super(
         url,
-        failover_urls,
+        conn_urls,
         is_topic,
         user,
         password,

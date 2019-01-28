@@ -14,6 +14,9 @@
 #ifndef CONNECTINGCLIENT_H
 #define CONNECTINGCLIENT_H
 
+#include <sstream>
+#include <string>
+
 #include <proton/container.hpp>
 
 #include "ModernClient.h"

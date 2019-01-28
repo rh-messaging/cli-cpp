@@ -109,6 +109,16 @@ int ConnectingClient::run(int argc, char** argv) const
 
     uri_parser.parse(options["broker-url"]);
 
+    std::vector<std::string> conn_urls;
+    if (options.is_set("conn-urls")) {
+        std::stringstream conn_urls_string(options["conn-urls"]);
+        std::string segment;
+
+        while(std::getline(conn_urls_string, segment, ',')) {
+           conn_urls.push_back(segment);
+        }
+    }
+
     string user = "";
     if (options.is_set("user")) {
         user = options["user"];
@@ -206,7 +216,7 @@ int ConnectingClient::run(int argc, char** argv) const
 
     ConnectorHandler handler = ConnectorHandler(
         address,
-        parser.callbackFailoverUrl.getStrings(),
+        conn_urls,
         is_topic,
         user,
         password,

@@ -31,8 +31,6 @@ class ModernOptionsParser : public BaseOptionsParser {
 
     virtual void validate(const Values &options) const;
 
-    StringAppendCallback callbackFailoverUrl;
-
   private:
     typedef BaseOptionsParser super;
 
