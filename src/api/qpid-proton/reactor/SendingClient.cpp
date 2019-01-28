@@ -332,6 +332,16 @@ int SendingClient::run(int argc, char **argv) const
 
     uri_parser.parse(options["broker-url"]);
 
+    std::vector<std::string> conn_urls;
+    if (options.is_set("conn-urls")) {
+        std::stringstream conn_urls_string(options["conn-urls"]);
+        std::string segment;
+
+        while(std::getline(conn_urls_string, segment, ',')) {
+           conn_urls.push_back(segment);
+        }
+    }
+
     string user = "";
     if (options.is_set("user")) {
         user = options["user"];
@@ -480,7 +490,7 @@ int SendingClient::run(int argc, char **argv) const
 
     SenderHandler handler = SenderHandler(
         address,
-        parser.callbackFailoverUrl.getStrings(),
+        conn_urls,
         is_topic,
         user,
         password,

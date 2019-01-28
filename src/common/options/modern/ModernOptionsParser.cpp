@@ -24,18 +24,15 @@ using std::string;
 ModernOptionsParser::ModernOptionsParser()
     : super()
 {
-    callbackFailoverUrl = StringAppendCallback();
-
     add_option("-b", "--broker-url")
             .dest("broker-url")
             .help("URL of broker to connect to")
             .metavar("URL");
 
-    add_option("--failover-url")
-            .action("callback")
-            .callback(callbackFailoverUrl)
-            .help("failover url")
-            .metavar("FAILOVER-URL");
+    add_option("--conn-urls")
+            .dest("conn-urls")
+            .help("define connection urls")
+            .metavar("CONN_URLS");
 
     add_option("-u", "--user")
             .dest("user")

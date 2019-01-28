@@ -14,6 +14,9 @@
 #ifndef RECEIVINGCLIENT_H
 #define RECEIVINGCLIENT_H
 
+#include <sstream>
+#include <string>
+
 #include <proton/message.hpp>
 #include <proton/container.hpp>
 #include <proton/uuid.hpp>
