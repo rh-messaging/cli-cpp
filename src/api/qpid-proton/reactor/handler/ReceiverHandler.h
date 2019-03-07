@@ -141,7 +141,8 @@ class ReceiverHandler : public CommonHandler {
         bool process_reply_to = false,
         bool browse = false,
         string recv_listen = "false",
-        int recv_listen_port = 5672
+        int recv_listen_port = 5672,
+        int recv_credit_window = -1
     );
     
     void timerEvent();
@@ -200,6 +201,7 @@ class ReceiverHandler : public CommonHandler {
     std::map<string, sender> senders;
     string recv_listen;
     int recv_listen_port;
+    int recv_credit_window;
 
     void do_disconnect();
 };

@@ -296,6 +296,11 @@ int ReceivingClient::run(int argc, char **argv) const
         std::transform(recv_listen.begin(), recv_listen.end(), recv_listen.begin(), ::tolower);
     }
 
+    int recv_credit_window = -1;
+    if(options.is_set("recv-credit-window")) {
+        recv_credit_window = atoi(options["recv-credit-window"].c_str());
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         conn_urls,
@@ -329,7 +334,8 @@ int ReceivingClient::run(int argc, char **argv) const
         process_reply_to,
         browse,
         recv_listen,
-        recv_listen_port
+        recv_listen_port,
+        recv_credit_window
     );
 
     if (selector != "") {
