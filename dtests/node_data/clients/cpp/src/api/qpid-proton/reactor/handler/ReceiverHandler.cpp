@@ -54,7 +54,8 @@ ReceiverHandler::ReceiverHandler(
     bool process_reply_to,
     bool browse,
     string recv_listen,
-    int recv_listen_port
+    int recv_listen_port,
+    int recv_credit_window
 )
     : super(
         url,
@@ -93,7 +94,8 @@ ReceiverHandler::ReceiverHandler(
     duration_time(duration_time),
     duration_mode(duration_mode),
     recv_listen(recv_listen),
-    recv_listen_port(recv_listen_port)
+    recv_listen_port(recv_listen_port),
+    recv_credit_window(recv_credit_window)
 {
 }
 
@@ -208,8 +210,10 @@ void ReceiverHandler::on_container_start(container &c)
                 s_opts
             );
 
-        if (duration_time > 0) {
+        if (duration_time > 0 && recv_credit_window == -1) {
             r_opts.credit_window(1);
+        } else if (recv_credit_window != -1) {
+            r_opts.credit_window(recv_credit_window);
         }
 
         if (durable_subscriber || subscriber_unsubscribe) {
@@ -254,8 +258,10 @@ void ReceiverHandler::on_container_start(container &c)
                 r_opts.name(durable_subscriber_name);
             }
 
-            if (duration_time > 0) {
+            if (duration_time > 0 && recv_credit_window == -1) {
                 r_opts.credit_window(1);
+            } else if (recv_credit_window != -1) {
+                r_opts.credit_window(recv_credit_window);
             }
 
             connection conn = c.connect(broker_url.getUri(), conn_opts);

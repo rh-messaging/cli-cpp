@@ -66,6 +66,12 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .help("specify message SELECTOR")
             .metavar("SELECTOR");
 
+    add_option("--recv-credit-window")
+            .dest("recv-credit-window")
+            .help("automatically replenish credit for flow control up to COUNT messages")
+            .type("int")
+            .metavar("COUNT");
+
     add_option("--duration")
             .dest("duration")
             .help("message actions total DURATION (defines msg-rate together with count in seconds)")
