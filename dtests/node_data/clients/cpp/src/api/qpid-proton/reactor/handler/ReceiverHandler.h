@@ -142,7 +142,8 @@ class ReceiverHandler : public CommonHandler {
         bool browse = false,
         string recv_listen = "false",
         int recv_listen_port = 5672,
-        int recv_credit_window = -1
+        int recv_credit_window = -1,
+        bool recv_drain_after_credit_window = false
     );
     
     void timerEvent();
@@ -153,6 +154,8 @@ class ReceiverHandler : public CommonHandler {
     void do_message_action(delivery &d);
     void do_process_reply_to(message &m);
     void on_message(delivery &d, message &m);
+    void drain();
+    void on_receiver_drain_finish(receiver &r);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     void on_connection_close(connection &conn);
@@ -202,6 +205,7 @@ class ReceiverHandler : public CommonHandler {
     string recv_listen;
     int recv_listen_port;
     int recv_credit_window;
+    bool recv_drain_after_credit_window;
 
     void do_disconnect();
 };
