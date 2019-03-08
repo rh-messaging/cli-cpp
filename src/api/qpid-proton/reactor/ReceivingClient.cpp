@@ -301,6 +301,8 @@ int ReceivingClient::run(int argc, char **argv) const
         recv_credit_window = atoi(options["recv-credit-window"].c_str());
     }
 
+    bool recv_drain_after_credit_window = options.is_set("recv-drain-after-credit-window");
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         conn_urls,
@@ -335,7 +337,8 @@ int ReceivingClient::run(int argc, char **argv) const
         browse,
         recv_listen,
         recv_listen_port,
-        recv_credit_window
+        recv_credit_window,
+        recv_drain_after_credit_window
     );
 
     if (selector != "") {

@@ -55,7 +55,8 @@ ReceiverHandler::ReceiverHandler(
     bool browse,
     string recv_listen,
     int recv_listen_port,
-    int recv_credit_window
+    int recv_credit_window,
+    bool recv_drain_after_credit_window
 )
     : super(
         url,
@@ -95,7 +96,8 @@ ReceiverHandler::ReceiverHandler(
     duration_mode(duration_mode),
     recv_listen(recv_listen),
     recv_listen_port(recv_listen_port),
-    recv_credit_window(recv_credit_window)
+    recv_credit_window(recv_credit_window),
+    recv_drain_after_credit_window(recv_drain_after_credit_window)
 {
 }
 
@@ -390,6 +392,11 @@ void ReceiverHandler::on_message(delivery &d, message &m)
         }
     }
 
+    if (recv_drain_after_credit_window && msg_received_cnt == recv_credit_window) {
+        logger(debug) << "Scheduling drain";
+        d.receiver().work_queue().add(make_work(&ReceiverHandler::drain, this));
+    }
+
     if (!process_reply_to && msg_received_cnt == count) {
         if (durable_subscriber) {
             d.receiver().detach();
@@ -404,6 +411,14 @@ void ReceiverHandler::on_message(delivery &d, message &m)
     }
 }
 
+void ReceiverHandler::drain() {
+    logger(debug) << "Draining...";
+    recv.drain();
+}
+
+void ReceiverHandler::on_receiver_drain_finish(receiver &r) {
+    logger(debug) << "Receiver drain finished";
+}
 
 void ReceiverHandler::on_tracker_accept(tracker &t)
 {
