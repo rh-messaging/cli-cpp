@@ -72,6 +72,12 @@ ReceiverOptionsParser::ReceiverOptionsParser()
             .type("int")
             .metavar("COUNT");
 
+    add_option("--recv-drain-after-credit-window")
+            .dest("recv-drain-after-credit-window")
+            .help("execute drain after credit window")
+            .type("bool")
+            .action("store_true");
+
     add_option("--duration")
             .dest("duration")
             .help("message actions total DURATION (defines msg-rate together with count in seconds)")
