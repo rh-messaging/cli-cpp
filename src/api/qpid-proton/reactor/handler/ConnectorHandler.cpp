@@ -24,6 +24,7 @@ ConnectorHandler::ConnectorHandler(
     uint32_t conn_reconnect_increment,
     bool conn_reconnect_doubling,
     bool conn_reconnect_custom,
+    uint32_t conn_heartbeat,
     uint32_t max_frame_size,
     bool use_default_connection
 )
@@ -44,6 +45,7 @@ ConnectorHandler::ConnectorHandler(
         conn_reconnect_increment,
         conn_reconnect_doubling,
         conn_reconnect_custom,
+        conn_heartbeat,
         max_frame_size
     ),
     objectControl(CONNECTION),
@@ -115,7 +117,15 @@ void ConnectorHandler::on_container_start(container &c)
         logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
         
         configure_reconnect(conn_opts);
-        
+
+        if (conn_heartbeat != 0) {
+            logger(debug) << "Heartbeat: " << conn_heartbeat;
+
+            duration heartbeat_seconds = conn_heartbeat * duration::SECOND;
+
+            conn_opts.idle_timeout(heartbeat_seconds);
+        }
+
         connector_conn = c.connect(broker_url.getUri(), conn_opts);
     }
 }
