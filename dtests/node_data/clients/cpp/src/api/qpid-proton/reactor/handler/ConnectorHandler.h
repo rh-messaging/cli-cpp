@@ -77,6 +77,7 @@ class ConnectorHandler : public CommonHandler {
         uint32_t conn_reconnect_increment = 100,
         bool conn_reconnect_doubling = true,
         bool conn_reconnect_custom = false,
+        uint32_t conn_heartbeat = 0,
         uint32_t max_frame_size = -1,
         bool use_default_connection = false
     );
