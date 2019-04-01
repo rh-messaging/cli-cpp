@@ -488,6 +488,8 @@ int SendingClient::run(int argc, char **argv) const
         msg.group_sequence(std::strtol(options["msg-group-seq"].c_str(), NULL, 10));
     }
 
+    bool conn_use_config_file = options.is_set("conn-use-config-file");
+
     SenderHandler handler = SenderHandler(
         address,
         conn_urls,
@@ -509,6 +511,7 @@ int SendingClient::run(int argc, char **argv) const
         conn_reconnect_custom,
         conn_heartbeat,
         max_frame_size,
+        conn_use_config_file,
         log_msgs
     );
 

@@ -217,7 +217,7 @@ int ConnectingClient::run(int argc, char** argv) const
         timeout = static_cast<int> (options.get("timeout"));
     }
 
-    bool use_default_connection = options.is_set("use-default-connection");
+    bool conn_use_config_file = options.is_set("conn-use-config-file");
 
     ConnectorHandler handler = ConnectorHandler(
         address,
@@ -238,7 +238,7 @@ int ConnectingClient::run(int argc, char** argv) const
         conn_reconnect_custom,
         conn_heartbeat,
         max_frame_size,
-        use_default_connection
+        conn_use_config_file
     );
     setMessageHandlerOptions(setter, handler);
     

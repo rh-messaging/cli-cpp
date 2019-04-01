@@ -102,6 +102,7 @@ class ReceiverHandler : public CommonHandler {
      * @param conn_reconnect_custom custom reconnect values
      * @param conn_heartbeat connection heartbeat in seconds
      * @param max_frame_size maximum frame size
+     * @param conn_use_config_file use configuration file for connection
      * @param log_msgs message log format
      * @param process_reply_to send message to reply-to address if enabled and message got reply-to address
      * @param browse enable browsing receiver
@@ -137,6 +138,7 @@ class ReceiverHandler : public CommonHandler {
         bool conn_reconnect_custom = false,
         uint32_t conn_heartbeat = 0,
         uint32_t max_frame_size = -1,
+        bool conn_use_config_file = false,
         string log_msgs = "",
         bool process_reply_to = false,
         bool browse = false,
