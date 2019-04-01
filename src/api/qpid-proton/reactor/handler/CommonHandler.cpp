@@ -40,6 +40,7 @@ CommonHandler::CommonHandler(
     bool conn_reconnect_custom,
     uint32_t conn_heartbeat,
     uint32_t max_frame_size,
+    bool conn_use_config_file,
     string log_msgs
 )
     : super(),
@@ -61,6 +62,7 @@ CommonHandler::CommonHandler(
     conn_reconnect_custom(conn_reconnect_custom),
     conn_heartbeat(conn_heartbeat),
     max_frame_size(max_frame_size),
+    conn_use_config_file(conn_use_config_file),
     log_msgs(log_msgs),
     cont(NULL),
     timer(timeout, "timeout"),

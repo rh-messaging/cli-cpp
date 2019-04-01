@@ -303,6 +303,8 @@ int ReceivingClient::run(int argc, char **argv) const
 
     bool recv_drain_after_credit_window = options.is_set("recv-drain-after-credit-window");
 
+    bool conn_use_config_file = options.is_set("conn-use-config-file");
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         conn_urls,
@@ -332,6 +334,7 @@ int ReceivingClient::run(int argc, char **argv) const
         conn_reconnect_custom,
         conn_heartbeat,
         max_frame_size,
+        conn_use_config_file,
         log_msgs,
         process_reply_to,
         browse,

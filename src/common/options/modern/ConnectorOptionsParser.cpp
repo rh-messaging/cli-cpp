@@ -37,12 +37,6 @@ ConnectorOptionsParser::ConnectorOptionsParser()
             .help("exit after the specified time")
             .type("int");
     
-    add_option("--use-default-connection")
-            .dest("use-default-connection")
-            .help("use default connection options")
-            .type("bool")
-            .action("store_true");
-
 #ifdef UNSUPPORTED_CONNECTOR_OPTS
     // Control options
 
