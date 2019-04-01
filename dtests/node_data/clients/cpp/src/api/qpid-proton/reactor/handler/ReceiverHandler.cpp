@@ -50,6 +50,7 @@ ReceiverHandler::ReceiverHandler(
     bool conn_reconnect_custom,
     uint32_t conn_heartbeat,
     uint32_t max_frame_size,
+    bool conn_use_config_file,
     string log_msgs,
     bool process_reply_to,
     bool browse,
@@ -77,6 +78,7 @@ ReceiverHandler::ReceiverHandler(
         conn_reconnect_custom,
         conn_heartbeat,
         max_frame_size,
+        conn_use_config_file,
         log_msgs
     ),
     durable_subscriber(durable_subscriber),
@@ -222,7 +224,12 @@ void ReceiverHandler::on_container_start(container &c)
             r_opts.name(durable_subscriber_name);
         }
 
-        connection conn = c.connect(broker_url.getUri(), conn_opts);
+        connection conn;
+        if (conn_use_config_file) {
+            conn = c.connect();
+        } else {
+            conn = c.connect(broker_url.getUri(), conn_opts);
+        }
 
         recv = conn.open_receiver(
                 broker_url.getPath(),
@@ -266,7 +273,12 @@ void ReceiverHandler::on_container_start(container &c)
                 r_opts.credit_window(recv_credit_window);
             }
 
-            connection conn = c.connect(broker_url.getUri(), conn_opts);
+            connection conn;
+            if (conn_use_config_file) {
+                conn = c.connect();
+            } else {
+                conn = c.connect(broker_url.getUri(), conn_opts);
+            }
 
             recv = conn.open_receiver(
                     broker_url.getPath(),

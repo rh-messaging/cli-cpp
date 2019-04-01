@@ -26,7 +26,7 @@ ConnectorHandler::ConnectorHandler(
     bool conn_reconnect_custom,
     uint32_t conn_heartbeat,
     uint32_t max_frame_size,
-    bool use_default_connection
+    bool conn_use_config_file
 )
     : super(
         url,
@@ -46,15 +46,15 @@ ConnectorHandler::ConnectorHandler(
         conn_reconnect_doubling,
         conn_reconnect_custom,
         conn_heartbeat,
-        max_frame_size
+        max_frame_size,
+        conn_use_config_file
     ),
     objectControl(CONNECTION),
-    timer_event(*this),
-    use_default_connection(use_default_connection)
+    timer_event(*this)
 {
     logger(debug) << "Initializing the connector handler";
 
-    logger(debug) << "Using default connection: " << use_default_connection;
+    logger(debug) << "Using connection config file: " << conn_use_config_file;
 }
 
 void ConnectorHandler::timerEvent() {
@@ -88,7 +88,7 @@ void ConnectorHandler::on_container_start(container &c)
 
     logger(trace) << "Creating connection";
 
-    if (use_default_connection) {
+    if (conn_use_config_file) {
         connector_conn = c.connect();
     } else {
         logger(debug) << "User: " << user;

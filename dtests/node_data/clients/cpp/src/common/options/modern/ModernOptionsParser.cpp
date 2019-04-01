@@ -34,6 +34,12 @@ ModernOptionsParser::ModernOptionsParser()
             .help("define connection urls")
             .metavar("CONN_URLS");
 
+    add_option("--conn-use-config-file")
+            .dest("conn-use-config-file")
+            .help("use configuration file for connection")
+            .type("bool")
+            .action("store_true");
+
     add_option("-u", "--user")
             .dest("user")
             .help("authenticate as USER")
@@ -141,7 +147,7 @@ void ModernOptionsParser::validate(const Values &options) const
         std::transform(is_listener.begin(), is_listener.end(), is_listener.begin(), ::tolower);
     }
 
-    if (!options.is_set("broker-url") && is_listener != "true" && !options.get("use-default-connection")) {
+    if (!options.is_set("broker-url") && is_listener != "true" && !options.get("conn-use-config-file")) {
         print_help();
         error("Broker URL is not set");
     }

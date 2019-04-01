@@ -45,6 +45,7 @@ SenderHandler::SenderHandler(
     bool conn_reconnect_custom,
     uint32_t conn_heartbeat,
     uint32_t max_frame_size,
+    bool conn_use_config_file,
     string log_msgs
 )
     : super(
@@ -66,6 +67,7 @@ SenderHandler::SenderHandler(
         conn_reconnect_custom,
         conn_heartbeat,
         max_frame_size,
+        conn_use_config_file,
         log_msgs
     ),
     ready(false),
@@ -153,13 +155,20 @@ void SenderHandler::on_container_start(container &c)
     }
 
     logger(debug) << "Creating a sender";
-    sndr = c.open_sender(
-            broker_url.getUri(),
+
+    connection conn;
+    if (conn_use_config_file) {
+        conn = c.connect();
+    } else {
+        conn = c.connect(broker_url.getUri(), conn_opts);
+    }
+
+    sndr = conn.open_sender(
+            broker_url.getPath(),
             c.sender_options()
                 .source(
                     source_options().capabilities(caps)
-                ),
-            conn_opts
+                )
     );
 
     work_q = &sndr.work_queue();
