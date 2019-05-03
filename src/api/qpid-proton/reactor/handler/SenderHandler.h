@@ -57,6 +57,12 @@ class SenderHandler : public CommonHandler {
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      * @param conn_sasl_enabled enable connection SASL
+     * @param conn_ssl_certificate path to client certificate
+     * @param conn_ssl_private_key path to client private key
+     * @param conn_ssl_password client's certificate database password
+     * @param conn_ssl_trust_store path to client trust store
+     * @param conn_ssl_verify_peer verifies server certificate
+     * @param conn_ssl_verify_peer_name verifies connection url against server hostname
      * @param timeout timeout
      * @param duration message actions total duration
      * @param duration_mode specifies where to wait to achieve expected duration
@@ -81,6 +87,12 @@ class SenderHandler : public CommonHandler {
         string password,
         string sasl_mechanisms,
         string conn_sasl_enabled = "true",
+        string conn_ssl_certificate = "",
+        string conn_ssl_private_key = "",
+        string conn_ssl_password = "",
+        string conn_ssl_trust_store = "",
+        bool conn_ssl_verify_peer = false,
+        bool conn_ssl_verify_peer_name = false,
         int timeout = 10,
         int duration_time = 0,
         string duration_mode = "after-send",
