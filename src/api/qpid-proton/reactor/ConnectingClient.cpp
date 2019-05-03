@@ -148,6 +148,30 @@ int ConnectingClient::run(int argc, char** argv) const
         std::transform(conn_sasl_enabled.begin(), conn_sasl_enabled.end(), conn_sasl_enabled.begin(), ::tolower);
     }
 
+    string conn_ssl_certificate = "";
+    if (options.is_set("conn-ssl-certificate")) {
+        conn_ssl_certificate = options["conn-ssl-certificate"];
+    }
+
+    string conn_ssl_private_key = "";
+    if (options.is_set("conn-ssl-private-key")) {
+        conn_ssl_private_key = options["conn-ssl-private-key"];
+    }
+
+    string conn_ssl_password = "";
+    if (options.is_set("conn-ssl-password")) {
+        conn_ssl_password = options["conn-ssl-password"];
+    }
+
+    string conn_ssl_trust_store = "";
+    if (options.is_set("conn-ssl-trust-store")) {
+        conn_ssl_trust_store = options["conn-ssl-trust-store"];
+    }
+
+    bool conn_ssl_verify_peer = options.is_set("conn-ssl-verify-peer");
+
+    bool conn_ssl_verify_peer_name = options.is_set("conn-ssl-verify-peer-name");
+
     bool conn_reconnect_custom = false;
 
     string conn_reconnect = "true";
@@ -227,6 +251,12 @@ int ConnectingClient::run(int argc, char** argv) const
         password,
         sasl_mechanisms,
         conn_sasl_enabled,
+        conn_ssl_certificate,
+        conn_ssl_private_key,
+        conn_ssl_password,
+        conn_ssl_trust_store,
+        conn_ssl_verify_peer,
+        conn_ssl_verify_peer_name,
         timeout,
         conn_reconnect,
         conn_reconnect_interval,
