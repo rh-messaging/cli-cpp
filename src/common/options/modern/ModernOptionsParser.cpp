@@ -60,6 +60,38 @@ ModernOptionsParser::ModernOptionsParser()
             .help("enable connection SASL (true/false, default: true)")
             .metavar("ENABLED");
 
+    add_option("--conn-ssl-certificate")
+            .dest("conn-ssl-certificate")
+            .help("path to client certificate")
+            .metavar("CERTIFICATE");
+
+    add_option("--conn-ssl-private-key")
+            .dest("conn-ssl-private-key")
+            .help("path to client private key")
+            .metavar("KEY");
+
+    add_option("--conn-ssl-password")
+            .dest("conn-ssl-password")
+            .help("client's certificate database password")
+            .metavar("PASSWORD");
+
+    add_option("--conn-ssl-trust-store")
+            .dest("conn-ssl-trust-store")
+            .help("path to client trust store")
+            .metavar("STORE");
+
+    add_option("--conn-ssl-verify-peer")
+            .dest("conn-ssl-verify-peer")
+            .help("verifies server certificate")
+            .type("bool")
+            .action("store_true");
+
+    add_option("--conn-ssl-verify-peer-name")
+            .dest("conn-ssl-verify-peer-name")
+            .help("verifies connection url against server hostname")
+            .type("bool")
+            .action("store_true");
+
     add_option("--client-log-level")
             .dest("client-log-level")
             .help("log LEVEL for the client")
@@ -192,6 +224,21 @@ void ModernOptionsParser::validate(const Values &options) const
             sstm << "Value \"" << options["conn-sasl-enabled"] << "\" is not valid for --conn-sasl-enabled option, must be one of true/false";
             error(sstm.str());
         }
+    }
+
+    /* SSL */
+    if ((options.is_set("conn-ssl-verify-peer-name") || options.is_set("con-ssl-verify-peer")) && options.is_set("conn-ssl-trust-store") == false) {
+        print_help();
+        std::stringstream sstm;
+        sstm << "SSL trust store (--conn-ssl-trust-store) must be given";
+        error(sstm.str());
+    }
+
+    if (options.is_set("conn-ssl-certificate") && options.is_set("conn-ssl-private-key") == false) {
+        print_help();
+        std::stringstream sstm;
+        sstm << "SSL private key (--conn-ssl-private-key) must be given";
+        error(sstm.str());
     }
 
 }
