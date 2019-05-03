@@ -61,6 +61,12 @@ class CommonHandler : public messaging_handler {
      * @param password password
      * @param sasl_mechanisms SASL mechanisms
      * @param conn_sasl_enabled enable connection SASL
+     * @param conn_ssl_certificate path to client certificate
+     * @param conn_ssl_private_key path to client private key
+     * @param conn_ssl_password client's certificate database password
+     * @param conn_ssl_trust_store path to client trust store
+     * @param conn_ssl_verify_peer verifies server certificate
+     * @param conn_ssl_verify_peer_name verifies connection url against server hostname
      * @param timeout timeout
      * @param conn_reconnect type of reconnection
      * @param conn_reconnect_interval reconnect interval
@@ -83,6 +89,12 @@ class CommonHandler : public messaging_handler {
         string password,
         string sasl_mechanisms,
         string conn_sasl_enabled = "true",
+        string conn_ssl_certificate = "",
+        string conn_ssl_private_key = "",
+        string conn_ssl_password = "",
+        string conn_ssl_trust_store = "",
+        bool conn_ssl_verify_peer = false,
+        bool conn_ssl_verify_peer_name = false,
         int timeout = 10,
         string conn_reconnect = "true",
         int32_t conn_reconnect_interval = -1,
@@ -148,6 +160,36 @@ class CommonHandler : public messaging_handler {
      * Connection SASL enabled
      */
     string conn_sasl_enabled;
+    
+    /**
+     * SLL certificate
+     */
+    string conn_ssl_certificate;
+
+    /**
+     * SLL private key
+     */
+    string conn_ssl_private_key;
+
+    /**
+     * SLL password
+     */
+    string conn_ssl_password;
+
+    /**
+     * SLL trust store
+     */
+    string conn_ssl_trust_store;
+
+    /**
+     * SLL verify peer
+     */
+    bool conn_ssl_verify_peer;
+
+    /**
+     * SLL verify peer name
+     */
+    bool conn_ssl_verify_peer_name;
 
     /**
      * Type of reconnection
