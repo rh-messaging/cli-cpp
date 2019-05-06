@@ -17,12 +17,16 @@
 #include <proton/container.hpp>
 #include <proton/messaging_handler.hpp>
 #include <proton/connection.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/reconnect_options.hpp>
+
 
 #include <proton/function.hpp>
 
 #include <proton/message.hpp>
 #include <proton/work_queue.hpp>
 
+#include <proton/ssl.hpp>
 
 #include "Timer.h"
 #include "UriParser.h"
@@ -35,6 +39,10 @@ using proton::container;
 using proton::void_function0;
 using proton::duration;
 using proton::work_queue;
+using proton::connection_options;
+using proton::ssl_client_options;
+using proton::ssl_server_options;
+using proton::ssl_certificate;
 
 namespace dtests {
 namespace proton {
@@ -258,6 +266,7 @@ class CommonHandler : public messaging_handler {
     int timeout;
     
     void configure_reconnect(::proton::connection_options & conn_opts);
+    void configure_ssl(::proton::container & c);
 
   private:
     

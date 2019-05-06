@@ -5,10 +5,6 @@
  *      Author: opiske
  */
 
-#include <proton/container.hpp>
-#include <proton/connection_options.hpp>
-#include <proton/reconnect_options.hpp>
-
 #include "CommonHandler.h"
 
 namespace dtests {
@@ -109,6 +105,52 @@ void CommonHandler::configure_reconnect(::proton::connection_options & conn_opts
         }
         ro.max_attempts(conn_reconnect_limit);
         ro.max_delay(duration(conn_reconnect_timeout));
+    }
+}
+
+void CommonHandler::configure_ssl(::proton::container & c) {
+    logger(debug) << "Configuring SSL...";
+
+    if (conn_ssl_trust_store != "" || conn_ssl_verify_peer_name || conn_ssl_verify_peer) {
+        // Setup server SSL
+        if (conn_ssl_trust_store == "") {
+            logger(error) << "Trust store must be given: '" << conn_ssl_trust_store << "'";
+        }
+
+        ::proton::ssl::verify_mode server_mode = ::proton::ssl::ANONYMOUS_PEER;
+        if (conn_ssl_verify_peer_name) {
+            server_mode = ::proton::ssl::VERIFY_PEER_NAME;
+        } else if (conn_ssl_verify_peer) {
+            server_mode = ::proton::ssl::VERIFY_PEER;
+        }
+
+        ssl_certificate server_cert = ssl_certificate(conn_ssl_trust_store, conn_ssl_private_key, conn_ssl_password);
+        ssl_server_options server_ssl(server_cert, conn_ssl_trust_store, string(), server_mode);
+        connection_options server_opts;
+
+        server_opts.ssl_server_options(server_ssl);
+        c.server_connection_options(server_opts);
+    }
+
+    if (conn_ssl_certificate != "") {
+        // Setup client SSL
+        if (conn_ssl_private_key == "") {
+            logger(error) << "Client private key must be given: '" << conn_ssl_private_key << "'";
+        }
+
+        ::proton::ssl::verify_mode client_mode = ::proton::ssl::ANONYMOUS_PEER;
+        if (conn_ssl_verify_peer_name) {
+            client_mode = ::proton::ssl::VERIFY_PEER_NAME;
+        } else if (conn_ssl_verify_peer) {
+            client_mode = ::proton::ssl::VERIFY_PEER;
+        }
+
+        connection_options client_opts;
+        ssl_certificate client_cert = ssl_certificate(conn_ssl_certificate, conn_ssl_private_key, conn_ssl_password);
+        ssl_client_options client_ssl(client_cert, conn_ssl_trust_store, client_mode);
+        client_opts.ssl_client_options(client_ssl);
+
+        c.client_connection_options(client_opts);
     }
 }
 
