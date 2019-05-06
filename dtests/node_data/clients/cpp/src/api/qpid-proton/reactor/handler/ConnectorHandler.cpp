@@ -129,6 +129,7 @@ void ConnectorHandler::on_container_start(container &c)
         logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
         
         configure_reconnect(conn_opts);
+        configure_ssl(c);
 
         if (conn_heartbeat != 0) {
             logger(debug) << "Heartbeat: " << conn_heartbeat;
