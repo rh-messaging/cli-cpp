@@ -188,6 +188,10 @@ void ConnectorHandler::on_connection_error(connection &conn)
 
 void ConnectorHandler::on_transport_error(transport &trans) {
     logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << trans.error().what();
+
+    if (conn_reconnect == "false") {
+        exit(1);
+    }
 }
 
 void ConnectorHandler::on_transport_close(transport &t) {
