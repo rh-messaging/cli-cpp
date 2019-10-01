@@ -52,6 +52,13 @@ class UriParser {
     string getUri();
 
     /**
+     * Getter for scheme parsed from input URI
+     *
+     * @return scheme parsed from input URI
+     */
+    string getScheme();
+
+    /**
      * Getter for user parsed from input URI
      *
      * @return user parsed from input URI
@@ -91,6 +98,11 @@ class UriParser {
      * Full input URI
      */
     string uri;
+
+    /**
+     * Scheme parsed from input URI
+     */
+    string scheme;
 
     /**
      * User parsed from input URI
