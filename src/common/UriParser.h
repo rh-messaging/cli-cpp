@@ -93,6 +93,13 @@ class UriParser {
      */
     string getPath();
 
+    /**
+     * Getter for fragment parsed from input URI
+     *
+     * @return fragment parsed from input URI
+     */
+    string getFragment();
+
   protected:
     /**
      * Full input URI
@@ -128,6 +135,11 @@ class UriParser {
      * Path parsed from input URI
      */
     string path;
+
+    /**
+     * Fragment parsed from input URI
+     */
+    string fragment;
 
 };
 
