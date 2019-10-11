@@ -17,6 +17,7 @@ UriParser::UriParser() :
     host(""),
     port(""),
     path(""),
+    query(""),
     fragment("")
 {
     // TODO Auto-generated constructor stub
@@ -45,6 +46,7 @@ void UriParser::parse(const string uri)
     string::size_type colon_position = (scheme_delimiter != string::npos) ? this->uri.find(":", (scheme_delimiter + 1)) : this->uri.find(":");
     string::size_type ampersand_position = this->uri.find("@");
     string::size_type slash_position = (scheme_delimiter != string::npos) ? this->uri.find("/", (scheme_delimiter + 3)) : this->uri.find("/");
+    string::size_type questionmark_position = this->uri.find("?");
     string::size_type hash_position = this->uri.find("#");
 
     if (ampersand_position != string::npos && colon_position != string::npos && colon_position < ampersand_position) {
@@ -71,10 +73,20 @@ void UriParser::parse(const string uri)
     }
 
     if (slash_position != string::npos) {
-        if (hash_position != string::npos) {
+        if (questionmark_position != string::npos) {
+            this->path = this->uri.substr(slash_position + 1, questionmark_position - slash_position - 1);
+        } else if (hash_position != string::npos) {
             this->path = this->uri.substr(slash_position + 1, hash_position - slash_position - 1);
         } else {
             this->path = this->uri.substr(slash_position + 1);
+        }
+    }
+
+    if (questionmark_position != string::npos) {
+        if (hash_position != string::npos) {
+            this->query = this->uri.substr((questionmark_position + 1), (hash_position - questionmark_position - 1));
+        } else {
+            this->query = this->uri.substr(questionmark_position + 1);
         }
     }
 
@@ -109,6 +121,10 @@ string UriParser::getPort() {
 
 string UriParser::getPath() {
     return this->path;
+}
+
+string UriParser::getQuery() {
+    return this->query;
 }
 
 string UriParser::getFragment() {
