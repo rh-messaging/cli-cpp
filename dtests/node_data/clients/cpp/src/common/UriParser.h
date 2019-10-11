@@ -94,6 +94,13 @@ class UriParser {
     string getPath();
 
     /**
+     * Getter for query parsed from input URI
+     *
+     * @return query parsed from input URI
+     */
+    string getQuery();
+
+    /**
      * Getter for fragment parsed from input URI
      *
      * @return fragment parsed from input URI
@@ -135,6 +142,11 @@ class UriParser {
      * Path parsed from input URI
      */
     string path;
+
+    /**
+     * Query parsed from input URI
+     */
+    string query;
 
     /**
      * Fragment parsed from input URI
