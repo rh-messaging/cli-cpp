@@ -45,6 +45,8 @@ void UriParser::parse(const string uri)
 
     string::size_type colon_position = (scheme_delimiter != string::npos) ? this->uri.find(":", (scheme_delimiter + 1)) : this->uri.find(":");
     string::size_type ampersand_position = this->uri.find("@");
+    string::size_type leftbracket_position = this->uri.find("[");
+    string::size_type rightbracket_position = this->uri.find("]");
     string::size_type slash_position = (scheme_delimiter != string::npos) ? this->uri.find("/", (scheme_delimiter + 3)) : this->uri.find("/");
     string::size_type questionmark_position = this->uri.find("?");
     string::size_type hash_position = this->uri.find("#");
@@ -58,6 +60,10 @@ void UriParser::parse(const string uri)
 
     if (ampersand_position == string::npos && scheme_delimiter != string::npos) {
         ampersand_position = (scheme_delimiter + 2);
+    }
+
+    if (rightbracket_position != string::npos) {
+        colon_position = this->uri.find(":", (rightbracket_position + 1));
     }
 
     if (colon_position != string::npos && slash_position != string::npos) {
