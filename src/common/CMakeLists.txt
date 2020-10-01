@@ -1,7 +1,7 @@
 PROJECT(dtests-cpp-common)
 
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.8.12)
 
 # CHECK_INCLUDE_FILE(qpid/types/Exception.h HAVE_QPID_TYPES_EXCEPTION)
 # FailIfNotSet(HAVE_QPID_TYPES_EXCEPTION qpid/types/Exception.h)

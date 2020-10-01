@@ -47,8 +47,8 @@ Default: off
 
 Control where required boost libraries can be found.
 
-* BOOST_INCLUDE_DIR: use to inform the Boost include directory.
-* BOOST_LIBRARY_DIR: use to inform the Boost library directory.
+* Boost_INCLUDE_DIRS: use to inform the Boost include directory.
+* Boost_LIBRARY_DIRS: use to inform the Boost library directory.
 
 
 #### Unit tests
@@ -119,8 +119,8 @@ cmake -DENABLE_QPID_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton \
     -DENABLE_MODERN=ON -DCMAKE_CXX_COMPILER=`which c++` \
     -DCMAKE_VERBOSE_MAKEFILE=OFF -DBUILD_WITH_UNIT_TESTS=OFF \
     -DQPID_WITH_GET_CONTENT_OBJECT=ON \
-    -DBOOST_INCLUDE_DIR=/usr/include/boost141/ \
-    -DBOOST_LIBRARY_DIR=/usr/lib/boost141/ .
+    -DBoost_INCLUDE_DIRS=/usr/include/boost141/ \
+    -DBoost_LIBRARY_DIRS=/usr/lib/boost141/ .
 ```
 
 RHEL 5.11 with QPID Proton and disabled unit tests
@@ -130,8 +130,8 @@ cmake -DENABLE_QPID_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton \
     -DENABLE_MODERN=ON -DCMAKE_CXX_COMPILER=`which c++` `
     -DCMAKE_VERBOSE_MAKEFILE=OFF -DBUILD_WITH_UNIT_TESTS=OFF `
     -DQPID_WITH_GET_CONTENT_OBJECT=ON `
-    -DBOOST_INCLUDE_DIR=/usr/include/boost141/ `
-    -DBOOST_LIBRARY_DIR=/usr/lib/boost141/ -DENABLE_QPID_CLIENT=ON .
+    -DBoost_INCLUDE_DIRS=/usr/include/boost141/ `
+    -DBoost_LIBRARY_DIRS=/usr/lib/boost141/ -DENABLE_QPID_CLIENT=ON .
 ```
 
 
