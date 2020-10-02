@@ -1,0 +1,15 @@
+build --action_env=CMAKE_PREFIX_PATH
+build --action_env=CMAKE_LIBRARY_PATH
+build --action_env=CMAKE_INCLUDE_PATH
+build --action_env=NIX_CFLAGS_COMPILE
+build --action_env=NIX_LDFLAGS
+build --action_env=PKG_CONFIG_PATH
+build --action_env=NIX_CC_WRAPPER_x86_64_unknown_linux_gnu_TARGET_HOST
+# for Python
+build --action_env=PYTHONPATH
+
+# get more ccache hits
+build --action_env=CCACHE_NOHASHDIR=true
+build --action_env=CCACHE_SLOPPINESS=file_macro,time_macros
+
+try-import %workspace%/user.bazelrc

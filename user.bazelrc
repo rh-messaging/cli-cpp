@@ -1,0 +1,2 @@
+# https://stackoverflow.com/questions/52370202/how-to-get-bazel-ccache-and-sandboxing-to-work-together-ccache-read-only-file
+#build --sandbox_writable_path=$HOME/.ccache
