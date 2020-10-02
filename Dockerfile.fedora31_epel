@@ -1,0 +1,21 @@
+FROM library/fedora:31
+# Fedora 31 and Centos 7 (epel 7) are latest versions that ship qpid-cpp
+
+RUN dnf install -y \
+    npm \
+    \
+    cmake \
+    make \
+    gcc \
+    gcc-c++ \
+    \
+    boost-devel \
+    \
+    qpid-cpp-client-devel \
+    \
+    qpid-proton-cpp-devel \
+    \
+&& dnf clean all \
+&& rm -rf /var/cache/dnf
+
+RUN npm install -g @bazel/bazelisk

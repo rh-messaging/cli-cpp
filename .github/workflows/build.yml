@@ -1,0 +1,77 @@
+on: [push, pull_request]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build_upstream:
+    name: CentOS 7 upstream (Bazel)
+    runs-on: ubuntu-latest
+    container: 'quay.io/jdanek/cli-cpp_centos7_upstream'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}")
+
+      - uses: actions/cache@v2
+        with:
+          path: "/.cache"
+          key: bazel-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: bazel
+
+      - run: mkdir -p /.cache
+      - run: echo "build --disk_cache=/.cache" >> .bazelrc
+        shell: bash
+
+      - run: bazelisk build //:cli-cpp --//:deps=upstream
+
+  build_bazel:
+    name: CentOS 7 EPEL (Bazel)
+    runs-on: ubuntu-latest
+    container: 'quay.io/jdanek/cli-cpp_centos7_epel'
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: bazelisk build //:cli-cpp --//:deps=rpms
+
+  build_cmake:
+    name: ${{ matrix.container }} (CMake)
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # checkout action node is broken on 'quay.io/jdanek/cli-cpp_centos6x_epel'
+        container: ['quay.io/jdanek/cli-cpp_centos7_epel', 'quay.io/jdanek/cli-cpp_fedora31_epel']
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create Build Environment
+        working-directory: ${{runner.workspace}}
+        run: cmake -E make_directory build
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        # Note the current convention is to use the -S and -B options here to specify source
+        # and build directories, but this is only available with CMake 3.13 and higher.
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        # Execute the build.  You can specify a specific target with "--target <NAME>"
+        run: cmake --build . --config $BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        # Execute tests defined by the CMake configuration.
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest -C $BUILD_TYPE
