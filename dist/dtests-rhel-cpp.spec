@@ -12,17 +12,19 @@ URL:                https://github.com/rh-messaging/cli-cpp
 BuildRequires:      cmake
 BuildRequires:      make
 BuildRequires:      gcc-c++
-BuildRequires:      qpid-proton-c-devel
-BuildRequires:      qpid-cpp-client-devel
 BuildRequires:      boost-devel
 BuildRequires:      qpid-proton-cpp-devel
-Requires:      qpid-proton-c
-Requires:      qpid-cpp-client
 Requires:      boost-filesystem
 Requires:      boost-regex
 Requires:      boost-system
 Requires:      qpid-proton-cpp
 
+%ifarch i386
+BuildRequires:      qpid-proton-c-devel
+BuildRequires:      qpid-cpp-client-devel
+Requires:      qpid-proton-c
+Requires:      qpid-cpp-client
+%endif
 
 %description
 C++ clients, tools and runtime libraries
