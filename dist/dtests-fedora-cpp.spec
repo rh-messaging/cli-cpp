@@ -28,7 +28,7 @@ Requires:      qpid-proton-cpp
 C++ clients, tools and runtime libraries
 
 %prep
-%autosetup -n dtests/dtests/node_data/clients/cpp
+%autosetup
 
 %build
 cmake -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON -DCMAKE_INSTALL_PREFIX=%{buildroot}/opt/dtests
