@@ -31,7 +31,7 @@ jobs:
     steps:
     - run: sudo add-apt-repository ppa:qpid/testing
     - run: sudo apt-get update
-    - run: sudo apt-get install -y libqpidmessaging-dev libqpid-proton-cpp12-dev
+    - run: sudo apt-get install -y libboost-dev libqpid-proton-cpp12-dev
 
     - name: Checkout repository
       uses: actions/checkout@v2
