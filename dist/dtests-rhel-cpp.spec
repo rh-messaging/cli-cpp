@@ -19,7 +19,7 @@ Requires:      boost-regex
 Requires:      boost-system
 Requires:      qpid-proton-cpp
 
-%ifarch i386
+%ifarch x86_64
 BuildRequires:      qpid-proton-c-devel
 BuildRequires:      qpid-cpp-client-devel
 Requires:      qpid-proton-c
@@ -34,7 +34,7 @@ C++ clients, tools and runtime libraries
 
 %build
 
-%ifnarch i386
+%ifarch x86_64
 cmake -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON -DCMAKE_INSTALL_PREFIX=%{buildroot}/opt/dtests
 %else
 cmake -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=OFF -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON -DCMAKE_INSTALL_PREFIX=%{buildroot}/opt/dtests
