@@ -70,8 +70,8 @@ target_link_libraries(
 
 	qpidmessaging
 	qpidtypes
-	boost_regex
 	dtests-cpp-legacy
+	Boost::regex
 	${qpid_client_link_libraries}
 )
 
