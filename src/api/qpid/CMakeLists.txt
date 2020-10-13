@@ -71,7 +71,7 @@ target_link_libraries(
 	qpidmessaging
 	qpidtypes
 	dtests-cpp-legacy
-	Boost::regex
+	boost_regex  # would be `Boost::regex` in new CMake
 	${qpid_client_link_libraries}
 )
 

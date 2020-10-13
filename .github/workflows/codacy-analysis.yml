@@ -8,7 +8,7 @@
 
 name: Codacy Security Scan
 
-on: 
+on:
   push:
     branches: [ "master", "main" ]
   pull_request:
