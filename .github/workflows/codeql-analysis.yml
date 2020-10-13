@@ -31,7 +31,7 @@ jobs:
     steps:
     - run: sudo add-apt-repository ppa:qpid/testing
     - run: sudo apt-get update
-    - run: sudo apt-get install -y libboost-dev libboost-filesystem-dev libboost-system-dev libboost-regex-dev libqpid-proton-cpp12-dev libqpidcommon-dev libqpidmessaging-dev
+    - run: sudo apt-get install -y libboost-dev libboost-dev-all libboost-filesystem-dev libboost-system-dev libboost-regex-dev libqpid-proton-cpp12-dev libqpidcommon-dev libqpidmessaging-dev
 
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -67,10 +67,11 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: |
+    - name: Build project manually (without Autobuild)
+      run: |
        mkdir build
        cd build
-       cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=OFF -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON
+       cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON
        make
 
     - name: Perform CodeQL Analysis
