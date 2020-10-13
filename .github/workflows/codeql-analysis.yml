@@ -71,6 +71,7 @@ jobs:
       run: |
        mkdir build
        cd build
+       export CPPFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
        cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_MODERN=ON -DENABLE_QPID_CLIENT=OFF -DENABLE_QPID_MESSAGING=ON -DENABLE_QPID_PROTON=ON -DBUILD_WITH_UNIT_TESTS=ON
        make
 
