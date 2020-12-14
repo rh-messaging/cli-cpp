@@ -14,9 +14,9 @@ string_flag = rule(
   build_setting = config.string(flag=True) # Settable at the command line
 )
 
-bool_setting = rule(
+bool_flag = rule(
   implementation = _build_setting_impl,
-  build_setting = config.bool() # Only settable by other rules
+  build_setting = config.bool(flag=True)
 )
 
 label_flag = rule(

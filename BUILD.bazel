@@ -3,7 +3,6 @@ load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
 # TODO
 
 # configuration: source of packages either download github, local checkout (can modify source), or rpms (present in standard paths)
-# ccache on or off
 # smart setting of CCACHE_BASEDIR is needed
 # lib64
 
@@ -13,24 +12,38 @@ load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
 
 # switch to ninja
 
+# https://docs.bazel.build/versions/master/configurable-attributes.html
+# https://github.com/bazelbuild/bazel/issues/8171
+# https://github.com/bazelbuild/bazel/issues/3902
+# (the select only evaluates inside rules)
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
+
+cmake_compiler_launcher = {
+  "CMAKE_C_COMPILER_LAUNCHER": "ccache",
+  "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+}
+
+proton_cache_entries = {
+   "CMAKE_CXX_COMPILER": "g++",
+
+   #"BUILD_BINDINGS": "OFF",
+   "BUILD_BINDINGS": "cpp",
+   "BUILD_TESTING": "OFF",
+   # these are optional by default, CMake would skip them if not found
+   "SASL_IMPL": "cyrus",
+   "SSL_IMPL": "openssl",
+   "PROACTOR": "epoll",
+   # normalize expectations (cmake_external expects ubuntu)
+   #"LIB_INSTALL_DIR": "lib",
+   #"LIB_SUFFIX": "",
+}
+
 cmake_external(
    name = "qpid-proton",
-   cache_entries = {
-       "CMAKE_C_COMPILER_LAUNCHER": "ccache",
-       "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
-       "CMAKE_CXX_COMPILER": "g++",
-
-       #"BUILD_BINDINGS": "OFF",
-       "BUILD_BINDINGS": "cpp",
-       "BUILD_TESTING": "OFF",
-       # these are optional by default, CMake would skip them if not found
-       "SASL_IMPL": "cyrus",
-       "SSL_IMPL": "openssl",
-       "PROACTOR": "epoll",
-       # normalize expectations (cmake_external expects ubuntu)
-       #"LIB_INSTALL_DIR": "lib",
-       #"LIB_SUFFIX": "",
-   },
+   cache_entries = select({
+       ":ccache_enabled": dicts.add(proton_cache_entries, cmake_compiler_launcher),
+       "//conditions:default": proton_cache_entries,
+   }),
    lib_source = "@qpid-proton//:all",
    out_lib_dir = "lib64",
 
@@ -43,37 +56,39 @@ cmake_external(
    #shared_libraries = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
 )
 
+qpid_cache_entries = {
+   "CMAKE_CXX_COMPILER": "g++",
+
+   "BUILD_AMQP": "ON",
+   "BUILD_SASL": "ON",
+   "BUILD_SSL": "ON",
+   # disable as much as we can
+   "BUILD_BINDING_PERL": "OFF",
+   "BUILD_BINDING_PYTHON": "OFF",
+   "BUILD_BINDING_DOTNET": "OFF",
+   "BUILD_BINDING_RUBY": "OFF",
+   "BUILD_TESTING": "OFF",
+   "BUILD_XML": "OFF",
+   "BUILD_DOCS": "OFF",
+   "BUILD_PROBES": "OFF",
+   "BUILD_LEGACYSTORE": "OFF",
+   "BUILD_LINEARSTORE": "OFF",
+   "BUILD_HA": "OFF",
+   "BUILD_RDMA": "OFF",
+   "BUILD_MSSQL": "OFF",
+   "BUILD_MSCLFS": "OFF",
+   "INSTALL_QMFGEN": "OFF",
+
+   "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
+   "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
+}
 
 cmake_external(
    name = "qpid-cpp",
-   cache_entries = {
-       "CMAKE_C_COMPILER_LAUNCHER": "ccache",
-       "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
-       "CMAKE_CXX_COMPILER": "g++",
-
-       "BUILD_AMQP": "ON",
-       "BUILD_SASL": "ON",
-       "BUILD_SSL": "ON",
-       # disable as much as we can
-       "BUILD_BINDING_PERL": "OFF",
-       "BUILD_BINDING_PYTHON": "OFF",
-       "BUILD_BINDING_DOTNET": "OFF",
-       "BUILD_BINDING_RUBY": "OFF",
-       "BUILD_TESTING": "OFF",
-       "BUILD_XML": "OFF",
-       "BUILD_DOCS": "OFF",
-       "BUILD_PROBES": "OFF",
-       "BUILD_LEGACYSTORE": "OFF",
-       "BUILD_LINEARSTORE": "OFF",
-       "BUILD_HA": "OFF",
-       "BUILD_RDMA": "OFF",
-       "BUILD_MSSQL": "OFF",
-       "BUILD_MSCLFS": "OFF",
-       "INSTALL_QMFGEN": "OFF",
-
-       "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
-       "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
-   },
+   cache_entries = select({
+       ":ccache_enabled": dicts.add(qpid_cache_entries, cmake_compiler_launcher),
+       "//conditions:default": qpid_cache_entries,
+   }),
    lib_source = "@qpid-cpp//:all",
    make_commands = [
         "make -j8",
@@ -111,29 +126,36 @@ cmake_external(
    working_directory = "..",
 
    deps = select({
-                  ":deps_upstream": [":qpid-cpp", ":qpid-proton"],
-                  ":deps_rpms": [],
-                  }),
+      ":deps_upstream": [":qpid-cpp", ":qpid-proton"],
+      ":deps_rpms": [],
+  }),
 )
 
 # This file uses the above definitions to define two custom build settings.
-load("//:build_settings.bzl", "string_flag")
+load("//:build_settings.bzl", "bool_flag", "string_flag")
 
 string_flag(
   name = "deps",
   build_setting_default = "upstream",
 )
-
 config_setting(
     name = "deps_upstream",
     flag_values = {
         "//:deps": "upstream"
     }
 )
-
 config_setting(
     name = "deps_rpms",
     flag_values = {
         "//:deps": "rpms"
     }
+)
+
+bool_flag(
+  name = "enable_ccache",
+  build_setting_default = False,
+)
+config_setting(
+    name = "ccache_enabled",
+    flag_values = {"//:enable_ccache": "True"},
 )
