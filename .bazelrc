@@ -5,8 +5,10 @@ build --action_env=NIX_CFLAGS_COMPILE
 build --action_env=NIX_LDFLAGS
 build --action_env=PKG_CONFIG_PATH
 build --action_env=NIX_CC_WRAPPER_x86_64_unknown_linux_gnu_TARGET_HOST
+build --action_env=NIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu
 # for Python
 build --action_env=PYTHONPATH
+build --action_env=PATH
 
 # get more ccache hits
 build --action_env=CCACHE_NOHASHDIR=true
