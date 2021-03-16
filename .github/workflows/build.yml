@@ -29,7 +29,7 @@ jobs:
       - run: echo "build --disk_cache=/.cache" >> .bazelrc
         shell: bash
 
-      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --//:deps=upstream --//:enable_ccache
+      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=upstream --//:enable_ccache
 
   build_bazel:
     name: CentOS 7 EPEL (Bazel)
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --//:deps=rpms --//:enable_ccache
+      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=rpms --//:enable_ccache
 
   build_cmake:
     name: ${{ matrix.container }} (CMake)
