@@ -114,6 +114,9 @@ cmake_external(
        "Qpid_DIR": "$EXT_BUILD_DEPS/qpid-cpp/lib64/cmake/Qpid",
        "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
        "ProtonCpp_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/ProtonCpp",
+
+       "CMAKE_BUILD_WITH_INSTALL_RPATH": "TRUE",
+       "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "TRUE",
    },
    lib_source = "sources",
 
