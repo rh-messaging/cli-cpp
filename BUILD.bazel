@@ -101,9 +101,7 @@ cmake_external(
    deps = [":qpid-proton"],
 )
 
-#filegroup(name = "sources", srcs = glob(["othersrc/**"]), visibility = ["//visibility:public"])
 filegroup(name = "sources", srcs = glob(["CMakeLists.txt", "src/**", "dist/**", "*.cmake"]), visibility = ["//visibility:public"])
-#filegroup(name = "sources", srcs = glob(["**"], exclude=["bazel-*", "bazel-*/**", ".bazelrc"]), visibility = ["//visibility:public"])
 
 cmake_external(
    name = "cli-cpp",
@@ -126,7 +124,6 @@ cmake_external(
    ],
 
    binaries = ["aac3_receiver"],
-   working_directory = "..",
 
    deps = select({
       ":deps_upstream": [":qpid-cpp", ":qpid-proton"],
