@@ -10,6 +10,7 @@ RUN yum install -y dnf \
     make \
     gcc \
     gcc-c++ \
+    ccache \
     \
     boost-devel \
     \
