@@ -166,6 +166,75 @@ To run quality checks on the code:
 ```make check```
 
 
-# References
+# Qpid Proton: QE building tips
 
-* [QPid Proton: QE building tips] (https://mojo.redhat.com/docs/DOC-1029945)
+This document contains some hacking tips for Qpid clients.
+
+Building Qpid Proton with C++ reactive API bindings
+
+Current Version (0.11-SNAPSHOT)
+
+Users with access to the source code should look at INSTALL.md file in the root directory of the project for latest details.
+
+```shell
+git clone https://github.com/apache/qpid-proton.git
+mkdir build
+cd build
+mkdir -p /opt/devel/qpid-proton-0.11
+cmake -DCMAKE_INSTALL_PREFIX=/opt/devel/qpid-proton-0.11-SNAPSHOT -DSYSINSTALL_BINDINGS=ON DBUILD_PYTHON=ON -DBUILD_PERL=OFF -DSWIG_EXECUTABLE=/usr/bin/swig ..
+make && sudo make install
+ln -sf /opt/devel/qpid-proton-0.11 /opt/devel/qpid-proton
+```
+
+Relevant: Swig executable must be informed to bypass PROTON-949.
+
+Older Versions (< 0.11-SNAPSHOT)
+
+Note: this is, probably, outdated since it is based on a older C++ work branch.
+
+```shell
+git clone git@github.com:cliffjansen/qpid-proton.git -b cpp-work
+cd qpid-proton
+curl "http://pastebin.test.redhat.com/pastebin.php?dl=281175" -o default-cpp-on.patch
+patch -p1 < default-cpp-on.patch
+cmake -DSYSINSTALL_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/opt/devel/qpid-proton -DDEFAULT_CPP=ON -DBUILD_TESTING=ON .
+make all test
+sudo make install
+```
+
+Building Qpid Proton from source RPM with tests
+
+Note: the rpm name, version and architecture may vary. Please adjust accordingly.
+
+```shell
+curl http://download.devel.redhat.com/brewroot/packages/qpid-proton/0.9/3.el6/src/qpid-proton-0.9-3.el6.src.rpm -O
+rpm -ivh qpid-proton-0.9-3.el6.src.rpm
+cd ~/rpmbuild/SPECS
+curl "http://pastebin.test.redhat.com/pastebin.php?dl=284041" -o make-test.patch
+patch -p0 < make-test.patch
+cd ..
+rpmbuild -ba SPECS/qpid-proton.spec
+```
+
+Running Qpid JMS unit tests from RPM
+
+```shell
+rpm -ivh qpid-jms-0.1.0-1.el6.src.rpm
+cd ~/rpmbuild/SOURCES
+unzip qpid-jms-parent-0.1.0-redhat-1-scm-sources.zip
+cd rh-qpid-jms
+# Download a patch to ignore long-running / timing out tests
+curl "http://pastebin.test.redhat.com/pastebin.php?dl=284210" -o ignore-long-running.patch
+patch -p1 < ignore-long-running.patch
+mvn -Dgeronimo-jms-1-1-spec-version=1.1.1 clean package
+```
+
+Running Qpid JMS unit tests from upstream
+
+```shell
+git clone https://github.com/apache/qpid-jms.git
+cd qpid-jms
+curl "http://pastebin.test.redhat.com/pastebin.php?dl=284210" -o ignore-long-running.patch
+patch -p1 < ignore-long-running.patch
+mvn clean package
+```
