@@ -41,13 +41,13 @@ rules_foreign_cc_dependencies()
 http_archive(
    name = "qpid-proton",
    build_file_content = all_content,
-   strip_prefix = "qpid-proton-master",
-   url = "https://github.com/apache/qpid-proton/archive/master.zip",
+   strip_prefix = "qpid-proton-main",
+   url = "https://github.com/apache/qpid-proton/archive/main.zip",
 )
 
 http_archive(
    name = "qpid-cpp",
    build_file_content = all_content,
-   strip_prefix = "qpid-cpp-master",
-   url = "https://github.com/apache/qpid-cpp/archive/master.zip",
+   strip_prefix = "qpid-cpp-main",
+   url = "https://github.com/apache/qpid-cpp/archive/main.zip",
 )
