@@ -1,4 +1,4 @@
-FROM library/centos:7
+FROM quay.io/centos/centos:7
 # Fedora 31 and Centos 7 (epel 7) are latest versions that ship qpid-cpp
 
 RUN yum install -y dnf \
@@ -17,10 +17,11 @@ RUN yum install -y dnf \
     ruby \
     nss-devel \
     libuuid-devel \
-    python3-setuptools \
+    python-setuptools \
     \
     cyrus-sasl-devel \
     openssl-devel \
+    python3-devel \
     \
 && yum clean all \
 && dnf clean all \
