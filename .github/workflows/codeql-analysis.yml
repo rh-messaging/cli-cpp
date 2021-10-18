@@ -34,7 +34,7 @@ jobs:
     - run: sudo apt-get install -y libboost-dev libboost-filesystem-dev libboost-system-dev libboost-regex-dev libqpid-proton-cpp12-dev libqpidcommon-dev libqpidmessaging-dev
 
     - name: Checkout repository
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v2.3.5
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
