@@ -1,4 +1,4 @@
-PROJECT(dtests-cpp-contrib)
+PROJECT(cli-cpp)
 
 # Ugly hack to avoid newer versions from complaining. Needs to be fixed
 cmake_minimum_required(VERSION 2.8.12)
