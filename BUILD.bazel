@@ -47,10 +47,7 @@ cmake(
    lib_source = "@qpid-proton//:all",
    out_lib_dir = "lib64",
 
-   #build_args = [
-   #    "make -j8",
-   #    "make install"
-   #],
+   build_args = ["-j8"],
 
    out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so"],
    #out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
@@ -90,10 +87,8 @@ cmake(
        "//conditions:default": qpid_cache_entries,
    }),
    lib_source = "@qpid-cpp//:all",
-   #build_args = [
-   #     "make -j8",
-   #     "make install"
-   #],
+
+   build_args = ["-j8"],
 
    out_lib_dir = "lib64",
    out_shared_libs = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
@@ -118,10 +113,7 @@ cmake(
    },
    lib_source = "sources",
 
-   #build_args = [
-   #    "make -j8",
-   #    "make install"
-   #],
+   build_args = ["-j8"],
 
    out_binaries = ["aac3_receiver"],
 
