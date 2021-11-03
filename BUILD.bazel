@@ -1,4 +1,4 @@
-load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 
 # TODO
 
@@ -33,12 +33,12 @@ proton_cache_entries = {
    "SASL_IMPL": "cyrus",
    "SSL_IMPL": "openssl",
    "PROACTOR": "epoll",
-   # normalize expectations (cmake_external expects ubuntu)
+   # normalize expectations (cmake rule expects ubuntu)
    #"LIB_INSTALL_DIR": "lib",
    #"LIB_SUFFIX": "",
 }
 
-cmake_external(
+cmake(
    name = "qpid-proton",
    cache_entries = select({
        ":ccache_enabled": dicts.add(proton_cache_entries, cmake_compiler_launcher),
@@ -47,13 +47,13 @@ cmake_external(
    lib_source = "@qpid-proton//:all",
    out_lib_dir = "lib64",
 
-   make_commands = [
-       "make -j8",
-       "make install"
-   ],
+   #build_args = [
+   #    "make -j8",
+   #    "make install"
+   #],
 
-   shared_libraries = ["libqpid-proton-core.so", "libqpid-proton.so"],
-   #shared_libraries = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
+   out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so"],
+   #out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
 )
 
 qpid_cache_entries = {
@@ -83,27 +83,27 @@ qpid_cache_entries = {
    "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
 }
 
-cmake_external(
+cmake(
    name = "qpid-cpp",
    cache_entries = select({
        ":ccache_enabled": dicts.add(qpid_cache_entries, cmake_compiler_launcher),
        "//conditions:default": qpid_cache_entries,
    }),
    lib_source = "@qpid-cpp//:all",
-   make_commands = [
-        "make -j8",
-        "make install"
-   ],
+   #build_args = [
+   #     "make -j8",
+   #     "make install"
+   #],
 
    out_lib_dir = "lib64",
-   shared_libraries = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
+   out_shared_libs = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
 
    deps = [":qpid-proton"],
 )
 
 filegroup(name = "sources", srcs = glob(["CMakeLists.txt", "src/**", "dist/**", "*.cmake"]), visibility = ["//visibility:public"])
 
-cmake_external(
+cmake(
    name = "cli-cpp",
    cache_entries = {
        "CMAKE_CXX_COMPILER": "g++",
@@ -118,12 +118,12 @@ cmake_external(
    },
    lib_source = "sources",
 
-   make_commands = [
-       "make -j8",
-       "make install"
-   ],
+   #build_args = [
+   #    "make -j8",
+   #    "make install"
+   #],
 
-   binaries = ["aac3_receiver"],
+   out_binaries = ["aac3_receiver"],
 
    deps = select({
       ":deps_upstream": [":qpid-cpp", ":qpid-proton"],

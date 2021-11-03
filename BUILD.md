@@ -4,6 +4,16 @@
 
 This project can be built either with CMake, or with CMake executed by Bazel.
 
+### CMake build
+
+   cmake \
+        -DQpid_DIR=...
+        -DProton_DIR=...
+        -DProtonCpp_DIR=...
+        -DENABLE_QPID_MESSAGING=OFF
+        -DENABLE_QPID_PROTON=ON
+        -DCMAKE_USER_C_FLAGS='-std=c++11'
+
 ### Bazel command line
 
 Bazel is used to also build the dependencies, qpid-cpp and qpid-proton.
