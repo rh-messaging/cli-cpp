@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 'quay.io/jdanek/cli-cpp_centos7_upstream'
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 'quay.io/jdanek/cli-cpp_centos7_epel'
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=rpms --//:enable_ccache
 
@@ -50,7 +50,7 @@ jobs:
         # checkout action node is broken on 'quay.io/jdanek/cli-cpp_centos6x_epel'
         container: ['quay.io/jdanek/cli-cpp_centos7_epel', 'quay.io/jdanek/cli-cpp_fedora31_epel']
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Create Build Environment
         working-directory: ${{runner.workspace}}
