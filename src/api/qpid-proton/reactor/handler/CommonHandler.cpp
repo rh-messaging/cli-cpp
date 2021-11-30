@@ -87,8 +87,6 @@ CommonHandler::~CommonHandler()
 void CommonHandler::configure_reconnect(::proton::connection_options & conn_opts) {
     ::proton::reconnect_options ro;
 
-    ro.failover_urls(conn_urls);
-
     if (conn_reconnect == "true" && conn_reconnect_custom == false) {
         conn_opts.reconnect(ro);
     } else if (conn_reconnect == "true" && conn_reconnect_custom == true) {
