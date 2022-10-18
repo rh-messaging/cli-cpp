@@ -92,6 +92,10 @@ cmake(
 
    build_args = ["-j8"],
 
+   # https://github.com/bazelbuild/rules_foreign_cc/issues/418#issuecomment-790423504
+   # this does not seem to be a problem for me, but it's weird
+   #includes = ["."],
+
    out_lib_dir = "lib64",
    out_shared_libs = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
 
@@ -106,7 +110,10 @@ cmake(
    cache_entries = {
        "CMAKE_CXX_COMPILER": "g++",
 
+       # https://github.com/bazelbuild/rules_foreign_cc/pull/970#issuecomment-1282134709
        "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
+       "EXT_BUILD_ROOT": "$EXT_BUILD_ROOT",
+
        "Qpid_DIR": "$EXT_BUILD_DEPS/qpid-cpp/lib64/cmake/Qpid",
        "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
        "ProtonCpp_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/ProtonCpp",
