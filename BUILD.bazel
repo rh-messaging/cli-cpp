@@ -107,6 +107,14 @@ filegroup(name = "sources", srcs = glob(["CMakeLists.txt", "src/**", "dist/**", 
 cmake(
    name = "cli-cpp",
    generate_crosstool_file = False,
+
+   # Qpid Cpp has absolute paths in QpidConfig.cmake, can't use that
+   #  Let's disable sandbox instead, and we'd need to fix in Qpid Cpp
+   #env = {
+   #    "LDFLAGS": "-L$$EXT_BUILD_DEPS/qpid-cpp/lib64"
+   #},
+   tags = ["no-sandbox"],
+
    cache_entries = {
        "CMAKE_CXX_COMPILER": "g++",
 
