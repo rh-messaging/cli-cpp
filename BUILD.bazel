@@ -40,6 +40,7 @@ proton_cache_entries = {
 
 cmake(
    name = "qpid-proton",
+   generate_crosstool_file = False,
    cache_entries = select({
        ":ccache_enabled": dicts.add(proton_cache_entries, cmake_compiler_launcher),
        "//conditions:default": proton_cache_entries,
@@ -82,6 +83,7 @@ qpid_cache_entries = {
 
 cmake(
    name = "qpid-cpp",
+   generate_crosstool_file = False,
    cache_entries = select({
        ":ccache_enabled": dicts.add(qpid_cache_entries, cmake_compiler_launcher),
        "//conditions:default": qpid_cache_entries,
@@ -89,6 +91,10 @@ cmake(
    lib_source = "@qpid-cpp//:all",
 
    build_args = ["-j8"],
+
+   # https://github.com/bazelbuild/rules_foreign_cc/issues/418#issuecomment-790423504
+   # this does not seem to be a problem for me, but it's weird
+   #includes = ["."],
 
    out_lib_dir = "lib64",
    out_shared_libs = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
@@ -100,13 +106,27 @@ filegroup(name = "sources", srcs = glob(["CMakeLists.txt", "src/**", "dist/**", 
 
 cmake(
    name = "cli-cpp",
+   generate_crosstool_file = False,
+
+   # Qpid Cpp has absolute paths in QpidConfig.cmake, can't use that
+   #  Let's disable sandbox instead, and we'd need to fix in Qpid Cpp
+   #env = {
+   #    "LDFLAGS": "-L$$EXT_BUILD_DEPS/qpid-cpp/lib64"
+   #},
+   tags = ["no-sandbox"],
+
    cache_entries = {
        "CMAKE_CXX_COMPILER": "g++",
 
+       # https://github.com/bazelbuild/rules_foreign_cc/pull/970#issuecomment-1282134709
        "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
+       "EXT_BUILD_ROOT": "$EXT_BUILD_ROOT",
+
        "Qpid_DIR": "$EXT_BUILD_DEPS/qpid-cpp/lib64/cmake/Qpid",
        "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
        "ProtonCpp_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/ProtonCpp",
+
+       "CMAKE_VERBOSE_MAKEFILE": "ON",
 
        "CMAKE_BUILD_WITH_INSTALL_RPATH": "TRUE",
        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "TRUE",

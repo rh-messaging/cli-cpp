@@ -1,5 +1,24 @@
 # Build instructions
 
+## Requirements
+
+This project depends on Qpid Cpp and Qpid Proton messaging libraries.
+These have their own dependencies in turn.
+Here is (possibly incomplete) list for Fedora/RHEL to install.
+(In other words, the build is not hermetic/self-contained, not even with Bazel.)
+
+Cli Cpp
+
+* boost_regex
+
+Proton Cpp
+
+Qpid Cpp
+
+* nss-devel
+* python2
+  * `python2 -m ensurepip --user --upgrade` to get setuptools for it
+
 ## Two ways to build
 
 This project can be built either with CMake, or with CMake executed by Bazel.
@@ -27,6 +46,13 @@ You can tell Bazel not to build these dependencies, and they will be then picked
 When building with ccache, add the following
 
     --sandbox_writable_path=$HOME/.ccache
+
+#### Troubleshooting
+
+Preserve sandbox with `--sandbox_debug` flag.
+Get more output with `--verbose_failures` flag.
+
+Disable sandbox with `--spawn_strategy=standalone` flag, use values of `processwrapper-sandbox`, `linux-sandbox`, ...
 
 ### CMake build
 
