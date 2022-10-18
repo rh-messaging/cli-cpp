@@ -47,6 +47,13 @@ When building with ccache, add the following
 
     --sandbox_writable_path=$HOME/.ccache
 
+#### Troubleshooting
+
+Preserve sandbox with `--sandbox_debug` flag.
+Get more output with `--verbose_failures` flag.
+
+Disable sandbox with `--spawn_strategy=standalone` flag, use values of `processwrapper-sandbox`, `linux-sandbox`, ...
+
 ### CMake build
 
 If you want to use the dependencies built by Bazel in your CMake build, do this.
