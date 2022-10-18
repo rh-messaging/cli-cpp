@@ -17,7 +17,7 @@ Qpid Cpp
 
 * nss-devel
 * python2
-  * ` python2 -m ensurepip --user --upgrade` to get setuptools for it
+  * `python2 -m ensurepip --user --upgrade` to get setuptools for it
 
 ## Two ways to build
 
