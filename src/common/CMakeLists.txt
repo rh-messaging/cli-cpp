@@ -55,9 +55,6 @@ add_library(dtests-cpp-common
     Utils.cpp
 )
 
-target_include_directories(dtests-cpp-common
-    PRIVATE ${PROTON_INCLUDE_DIR}
-)
 if (WIN32)
     target_link_libraries(dtests-cpp-common)
 else (WIN32)
