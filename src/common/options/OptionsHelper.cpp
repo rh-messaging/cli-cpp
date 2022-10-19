@@ -5,16 +5,19 @@
  *      Author: opiske
  */
 
+#include <fstream>
 #include "OptionsHelper.h"
 #include "logger/LoggerWrapper.h"
 
 
-namespace fs = boost::filesystem;
-
 using namespace dtests::common;
 using namespace dtests::common::log;
 
-
+static bool fileExists(const std::string& name)
+{
+    std::ifstream f(name);
+    return f.is_open();
+}
 
 OptionsSetter::OptionsSetter(const optparse::Values &options)
     : options(options)
@@ -34,15 +37,13 @@ string OptionsSetter::getContent() const
     } else if(options.is_set("msg-content-from-file")) {
         const string contentFile = options["msg-content-from-file"];
 
-        fs::path file(contentFile);
-
-        if (!exists(file)) {
+        if (!fileExists(contentFile)) {
             logger(error) << "The file " << contentFile << " does"
                     << " not exist";
             throw IOException("The file " + contentFile + " does not exist");
         }
 
-        fs::ifstream inputStream(file);
+        std::ifstream inputStream(contentFile);
 
         string content;
 

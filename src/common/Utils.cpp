@@ -10,11 +10,14 @@
 #include <unistd.h>
 #endif
 
-#include <boost/regex.hpp>
-#include <boost/format.hpp>
+#include <string>
+#include <cstdio>
 
 #include "Utils.h"
 
+//MAX_INT is 2^64 so the number can take a maximum of 20 characters
+//INT_CONSTANT is 32 just to be sure
+#define INT_CONSTANT 32
 
 // get_time ()
 // get current time downto miliseconds (as double) since epoch
@@ -106,23 +109,18 @@ void set_stdx_unbuffered()
  */
 std::string str_fmt(const std::string& in_str, int in_indx)
 {
-    std::string str_int(in_str);
-
-    if (!in_str.empty()) {
-        // string not empty
-        boost::regex regex("%[ 0-9]*[ds]"); // boost regexp
-
-        if (boost::regex_search(in_str, regex)) {
-            // formating *printf substring found
-            std::ostringstream stm;
-            stm << boost::format(in_str) % in_indx;
-
-            str_int = stm.str();
-        }
+    std::string outputString;
+    char *str_int = new char[sizeof(*str_int) *
+                             (in_str.size() + INT_CONSTANT)];
+    if (sprintf(str_int, in_str.c_str(), in_indx) > 0) {
+        outputString = str_int;
+    } else {
+        outputString = in_str;
     }
+    delete [] str_int;
 
     // return the string value
-    return (str_int);
+    return (outputString);
 }
 
 

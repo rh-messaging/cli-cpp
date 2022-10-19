@@ -40,23 +40,8 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 if (WIN32)
-    if (EXISTS "C:/Proton/qpid-proton-winsdk/2015")
-        set(Boost_INCLUDE_DIRS "C:/Boost2015" CACHE String "Boost include directory")
-        set(Boost_LIBRARY_DIRS "C:/Boost2015/lib64-msvc-14.0" CACHE String "Boost library directory")
-    else()
-        set(Boost_INCLUDE_DIRS "C:/Boost" CACHE String "Boost include directory")
-        set(Boost_LIBRARY_DIRS "C:/Boost/lib64-msvc-12.0" CACHE String "Boost library directory")
-    endif()
-
     set(PROTON_INCLUDE_DIR "C:/Proton/qpid-proton-winsdk/include" CACHE String "Proton include directory")
     set(PROTON_LIBRARY_DIR "C:/Proton/qpid-proton-winsdk/lib" CACHE String "Proton library directory")
-else (WIN32)
-    include(FindBoost)
-    find_package(Boost
-        1.41.0  # CentOS/RHEL 6
-        REQUIRED
-        COMPONENTS filesystem regex system
-        )
 endif (WIN32)
 
 set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
@@ -76,18 +61,6 @@ if (NOT WIN32)
         ${Qpid_LIBRARIES}
     )
 endif (NOT WIN32)
-
-if (EXISTS "${Boost_INCLUDE_DIRS}")
-    include_directories(${Boost_INCLUDE_DIRS})
-else (EXISTS "${Boost_INCLUDE_DIRS}")
-    message(FATAL_ERROR "Boost ${BOOST_VERSION} headers were not found in ${Boost_INCLUDE_DIRS}")
-endif (EXISTS "${Boost_INCLUDE_DIRS}")
-
-if (EXISTS "${Boost_LIBRARY_DIRS}")
-    link_directories(${Boost_LIBRARY_DIRS})
-else (EXISTS "${Boost_LIBRARY_DIRS}")
-    message(FATAL_ERROR "Boost ${BOOST_VERSION} libraries were not found in ${Boost_LIBRARY_DIRS}")
-endif (EXISTS "${Boost_LIBRARY_DIRS}")
 
 if (WIN32)
     if (EXISTS "${PROTON_INCLUDE_DIR}")
