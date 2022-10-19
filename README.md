@@ -39,6 +39,9 @@ sudo make install ;
 These variables apply to all code base and may affect what code is built with 
 along with the project. For example, they may enable refactored code.
 
+* ENABLE_MODERN: Enable new and/or refactored code. It is a requirement for -DENABLE_QPID_PROTON. 
+Default: off
+
 
 #### Boost libraries
 
@@ -93,7 +96,7 @@ for some older RHEL/qpid versions. Default: false.
 These variables affect only the QPID Proton clients.
 
 * ENABLE_QPID_PROTON: Enable qpid proton messaging/reactor clients (eg.: aac3 
-and aac4).
+and aac4). This variable requires ENABLE_MODERN.
 * PROTON_DIR: QPID Proton base directory.
 
 
@@ -106,14 +109,14 @@ RHEL >= 6, with QPID Proton clients, using a non-standard QPID Proton directory
 
 ```
 cmake -DENABLE_QPID_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton \
-    -DCMAKE_CXX_COMPILER=`which c++` .
+    -DENABLE_MODERN=ON -DCMAKE_CXX_COMPILER=`which c++` .
 ```
 
 RHEL 5.11 without QPID Proton and disabled unit tests
 
 ```
 cmake -DENABLE_QPID_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton \ 
-    -DCMAKE_CXX_COMPILER=`which c++` \
+    -DENABLE_MODERN=ON -DCMAKE_CXX_COMPILER=`which c++` \
     -DCMAKE_VERBOSE_MAKEFILE=OFF -DBUILD_WITH_UNIT_TESTS=OFF \
     -DQPID_WITH_GET_CONTENT_OBJECT=ON \
     -DBoost_INCLUDE_DIRS=/usr/include/boost141/ \
@@ -124,7 +127,7 @@ RHEL 5.11 with QPID Proton and disabled unit tests
 
 ```
 cmake -DENABLE_QPID_PROTON=ON -DPROTON_DIR=/opt/devel/qpid-proton \
-    -DCMAKE_CXX_COMPILER=`which c++` `
+    -DENABLE_MODERN=ON -DCMAKE_CXX_COMPILER=`which c++` `
     -DCMAKE_VERBOSE_MAKEFILE=OFF -DBUILD_WITH_UNIT_TESTS=OFF `
     -DQPID_WITH_GET_CONTENT_OBJECT=ON `
     -DBoost_INCLUDE_DIRS=/usr/include/boost141/ `

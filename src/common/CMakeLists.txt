@@ -13,40 +13,43 @@ include_directories(
     common/options/modern
 )
 
-set(COMMON_MODERN_SRC
-    output/Printer.cpp
-    exceptions/BaseException.cpp
-    exceptions/IOException.cpp
-    exceptions/TimerExpiredException.cpp
-    options/BaseOptionsParser.cpp
-    options/OptionsHelper.cpp
-    formatter/Writer.cpp
-    formatter/DictWriter.cpp
-    formatter/UpstreamWriter.cpp
-    formatter/AbstractDecoder.cpp
-    formatter/AbstractFormatter.cpp
-    formatter/DictFormatter.cpp
-    formatter/UpstreamFormatter.cpp
-    logger/Logger.cpp
-    logger/LoggerWrapper.cpp
+if (ENABLE_MODERN) 
+    set(COMMON_MODERN_SRC
+        output/Printer.cpp            
+        exceptions/BaseException.cpp
+        exceptions/IOException.cpp
+        exceptions/TimerExpiredException.cpp
+        options/BaseOptionsParser.cpp
+        options/OptionsHelper.cpp
+        formatter/Writer.cpp
+        formatter/DictWriter.cpp
+        formatter/UpstreamWriter.cpp
+        formatter/AbstractDecoder.cpp
+        formatter/AbstractFormatter.cpp
+        formatter/DictFormatter.cpp
+        formatter/UpstreamFormatter.cpp
+        logger/Logger.cpp
+        logger/LoggerWrapper.cpp
 
-    Timer.cpp
-    UriParser.cpp
-    Client.cpp
-    ContentType.cpp
-    MessageHeader.cpp
-)
-
-if (BUILD_WITH_UNIT_TESTS)
-    set(TEST_SUPPORT_SRC
-        TestUtils.cpp
+        Timer.cpp
+        UriParser.cpp
+        Client.cpp
+        ContentType.cpp
+        MessageHeader.cpp
     )
 
+    if (BUILD_WITH_UNIT_TESTS)
+        set(TEST_SUPPORT_SRC
+            TestUtils.cpp
+        )
+
     add_subdirectory(test)
-    add_subdirectory(output/test)
-    add_subdirectory(logger/test)
-    add_subdirectory(options/test)
-endif (BUILD_WITH_UNIT_TESTS)
+        add_subdirectory(output/test)
+        add_subdirectory(logger/test)
+        add_subdirectory(options/test)
+     endif (BUILD_WITH_UNIT_TESTS)
+        
+endif (ENABLE_MODERN)
 
 add_library(dtests-cpp-common
     ${COMMON_MODERN_SRC}

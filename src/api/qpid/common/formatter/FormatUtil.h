@@ -21,6 +21,7 @@
 #include <iostream>
 #include <iomanip>
 
+#ifdef ENABLE_MODERN
  #include "formatter/DictFormatter.h"
  #include "formatter/DictWriter.h"
 
@@ -28,6 +29,9 @@
  #include "formatter/UpstreamWriter.h"
 
  #include "QpidDecoder.h"
+#else
+ #include "Formatter.h"
+#endif // ENABLE_MODERN
 
 using qpid::messaging::Message;
 using qpid::types::Variant;
