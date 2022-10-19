@@ -1,10 +1,16 @@
-PROJECT(cli-cpp)
+# RHEL 7 has cmake-2.8.12.2-2.el7.x86_64.rpm
+cmake_minimum_required(VERSION 2.8.12.2)
+project(cli-cpp)
+enable_language(CXX)
 
-# Ugly hack to avoid newer versions from complaining. Needs to be fixed
-cmake_minimum_required(VERSION 2.8.12)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-INCLUDE (CheckIncludeFile)
-INCLUDE (CheckIncludeFileCXX)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+include(CheckIncludeFile)
+include(CheckIncludeFileCXX)
 
 macro (FailIfNotSet VARIABLE name)
     if (NOT ${VARIABLE})
@@ -13,7 +19,7 @@ macro (FailIfNotSet VARIABLE name)
     endif (NOT ${VARIABLE})
 endmacro(FailIfNotSet)
 
-CHECK_INCLUDE_FILE_CXX(cstdio HAVE_CSTDIO)
+check_include_file_cxx(cstdio HAVE_CSTDIO)
 FailIfNotSet(HAVE_CSTDIO cstdio)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/bin)
@@ -74,7 +80,6 @@ if (NOT WIN32)
         ${ProtonCpp_LIBRARIES}
         ${Qpid_LIBRARIES}
     )
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif (NOT WIN32)
 
 if (EXISTS "${Boost_INCLUDE_DIRS}")
@@ -103,8 +108,6 @@ if (WIN32)
     endif (EXISTS "${PROTON_LIBRARY_DIR}")
 endif (WIN32)
 
-enable_testing()
-
 include_directories(
     src/contrib/
     src/common/
@@ -118,6 +121,7 @@ SET(CPP_INCLUDE_DIR "include")
 
 INCLUDE(${CMAKE_SOURCE_DIR}/dist/CMakeInstall.cmake)
 
+# Set default build type. Must use FORCE because project() sets default to ""
 if(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE Debug CACHE STRING
         "Choose the type of build, options are: None Debug Release."
