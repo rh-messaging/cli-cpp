@@ -58,30 +58,6 @@ endif (WIN32)
 
 cmake_policy(SET CMP0003 OLD)
 add_library(
-    dtests-proton-messenger
-    
-    messenger/exceptions/ProtonException.cpp
-    messenger/exceptions/DataSerializationException.cpp
-    
-    messenger/ProtonObject.cpp
-    messenger/Data.cpp
-    messenger/Message.cpp
-    messenger/Messenger.cpp
-    messenger/SendingClient.cpp
-    messenger/ReceivingClient.cpp
-)
-
-target_link_libraries(
-    dtests-proton-messenger
-
-    dtests-cpp-contrib
-    dtests-cpp-common
-    dtests-cpp-common-options
-    dtests-proton-common
-)
-
-cmake_policy(SET CMP0003 OLD)
-add_library(
     dtests-proton-reactor
     
     reactor/formatter/ReactorDecoder.cpp
@@ -111,11 +87,6 @@ set(proton-reactor-clients
     aac3_receiver
 )
 
-set(proton-messenger-clients
-    aac4_sender
-    aac4_receiver
-)
-
 foreach(client ${proton-reactor-clients})
     cmake_policy(SET CMP0003 OLD)
     add_executable(${client}
@@ -127,23 +98,10 @@ foreach(client ${proton-reactor-clients})
     )
 endforeach(client)
 
-foreach(client ${proton-messenger-clients})
-    cmake_policy(SET CMP0003 OLD)
-    add_executable(${client}
-        clients/${client}.cpp
-    )
-
-    target_link_libraries(${client}
-        dtests-proton-messenger
-    )
-endforeach(client)
-
 install(TARGETS 
     dtests-proton-common 
-    dtests-proton-messenger 
-    dtests-proton-reactor 
+    dtests-proton-reactor
     ${proton-reactor-clients} 
-    ${proton-messenger-clients}
     LIBRARY DESTINATION ${CPP_LIBRARY_DIR}
     RUNTIME DESTINATION ${CPP_RUNTIME_DIR}
     ARCHIVE DESTINATION ${CPP_LIBRARY_DIR}
@@ -151,8 +109,6 @@ install(TARGETS
 
 InstallHeaders(src/api/qpid-proton qpid-proton)
 InstallHeaders(src/api/qpid-proton/common qpid-proton/common)
-InstallHeaders(src/api/qpid-proton/messenger qpid-proton/messenger)
-InstallHeaders(src/api/qpid-proton/messenger/exceptions qpid-proton/messenger/exceptions)
 InstallHeaders(src/api/qpid-proton/reactor qpid-proton/reactor)
 InstallHeaders(src/api/qpid-proton/reactor/formatter qpid-proton/reactor/formatter)
 InstallHeaders(src/api/qpid-proton/reactor/handler qpid-proton/reactor/handler)
