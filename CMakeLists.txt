@@ -75,9 +75,9 @@ if (NOT WIN32)
         ${Qpid_INCLUDE_DIRS}
     )
     link_libraries(
-#        ${Proton_Core_LIBRARIES}
-#        ${Proton_Proactor_LIBRARIES}
-
+        ${Proton_Core_LIBRARIES}
+        ${Proton_Proactor_LIBRARIES}
+        ${ProtonCpp_LIBRARIES}
         ${Qpid_LIBRARIES}
     )
 endif (NOT WIN32)
