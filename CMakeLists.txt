@@ -79,7 +79,6 @@ if (NOT WIN32)
         ${ProtonCpp_LIBRARIES}
         ${Qpid_LIBRARIES}
     )
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif (NOT WIN32)
 
 if (EXISTS "${Boost_INCLUDE_DIRS}")
