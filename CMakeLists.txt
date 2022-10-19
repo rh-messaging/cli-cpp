@@ -61,7 +61,6 @@ endif (WIN32)
 
 set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
 set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
-set(ENABLE_MODERN ON CACHE BOOL "Enable usage of refactored code")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
 
 if (NOT WIN32)
@@ -169,14 +168,6 @@ if (BUILD_WITH_UNIT_TESTS)
     set (CTEST_BINARY_DIRECTORY ${CMAKE_BINARY_DIR}/target/tests/bin)
 endif (BUILD_WITH_UNIT_TESTS)
 
-if (ENABLE_MODERN)
-    add_definitions(-DENABLE_MODERN)
-else (ENABLE_MODERN)
-    if (ENABLE_QPID_PROTON)
-        message(FATAL_ERROR "Modern code is a requirement for proton code")
-    endif(ENABLE_QPID_PROTON)
-endif(ENABLE_MODERN)
-
 add_subdirectory(src/contrib)
 add_subdirectory(src/common)
 
@@ -194,7 +185,7 @@ set(CPPCHECK_EXECUTABLE "/usr/bin/cppcheck" CACHE STRING "Path to cppcheck")
 set(CPPCHECK_FLAGS "--report-progress" "-v" "--enable=all" "--xml"
         CACHE STRING "Options for cppcheck")
 
-set(CPPCHECK_DEFS "-DENABLE_MODERN" "-DENABLE_PROTON" "-DENABLE_QPID_MESSAGING"
+set(CPPCHECK_DEFS "-DENABLE_PROTON" "-DENABLE_QPID_MESSAGING"
     "-DQPIDSYSEPOCH" CACHE STRING "Defines for cppcheck")
 
 add_custom_target(check
