@@ -1,6 +1,7 @@
 # RHEL 7 has cmake-2.8.12.2-2.el7.x86_64.rpm
 cmake_minimum_required(VERSION 2.8.12.2)
-project(cli-cpp LANGUAGES CXX)
+project(cli-cpp)
+enable_language(CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -74,9 +75,9 @@ if (NOT WIN32)
         ${Qpid_INCLUDE_DIRS}
     )
     link_libraries(
-        ${Proton_Core_LIBRARIES}
-        ${Proton_Proactor_LIBRARIES}
-        ${ProtonCpp_LIBRARIES}
+#        ${Proton_Core_LIBRARIES}
+#        ${Proton_Proactor_LIBRARIES}
+
         ${Qpid_LIBRARIES}
     )
 endif (NOT WIN32)
