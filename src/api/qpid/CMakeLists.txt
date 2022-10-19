@@ -59,10 +59,6 @@ add_library(
         
         # legacy code that should not be used
         common/formatter/Formatter.cpp
-
-        # TODO: make reusable
-	messaging/BrokerAgent.cpp
-	
 )
 
 target_link_libraries(
@@ -92,43 +88,12 @@ if (ENABLE_QPID_CLIENT)
         add_definitions(-DQPIDSYSDURATIONFROMEPOCH)
     endif (QPID_SOURCE_WITH_SYS_EPOCH)
 
-    set(qpid_messaging_ll_clients
-        qc2_qpid-receive
-        qc2_qpid-send
-        qpid-receive
-        qpid-send
-    )
-
     target_link_libraries(
 	qpidclient
     )
 endif(ENABLE_QPID_CLIENT)
 
 set(qpid_messaging_clients
-	qc2_connector
-	qc2_drain
-	qc2_map_receiver
-	# TODO: requires <qpid/Options.h>
-	# qc2_qpid-receive
-
-	# TODO: requires <qpid/sys/Time.h>
-	# qc2_qpid-send
-	qc2_server_example
-	qc2_spout
-
-	# TODO: requires <qpid/Options.h>
-	# qc2_txtest
-	qmf2_list_objects
-	qmf2_qpid_ctrl
-
-	# TODO: requires <qpid/Options.h>
-	# qpid-receive
-
-	# TODO: requires <qpid/sys/Time.h>
-	# qpid-send
-
-        ${qpid_messaging_ll_clients}
-
         aac0_connector
         aac0_receiver
         aac0_sender
