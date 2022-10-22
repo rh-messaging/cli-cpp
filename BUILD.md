@@ -54,6 +54,19 @@ Get more output with `--verbose_failures` flag.
 
 Disable sandbox with `--spawn_strategy=standalone` flag, use values of `processwrapper-sandbox`, `linux-sandbox`, ...
 
+Run `bazel sync` to redownload external dependencies (we reference `main` branches in `WORKSPACE`).
+
+##### Overriding repos
+Replace qpid-cpp external repo with (modified) local checkout `--override_repository=qpid-cpp=/home/jdanek/repos/qpid/qpid-cpp`.
+
+In the directory, create empty `WORKSPACE` file and a `BUILD.bazel` file containing the following `filegroup` def
+
+```python
+filegroup(name = "all", srcs = glob(["**/*"]), visibility = ["//visibility:public"])
+```
+
+See <https://bazel.build/docs/external#overriding-repositories> for additional discussion.
+
 ### CMake build
 
 If you want to use the dependencies built by Bazel in your CMake build, do this.
