@@ -1,5 +1,4 @@
-# RHEL 7 has cmake-2.8.12.2-2.el7.x86_64.rpm
-cmake_minimum_required(VERSION 2.8.12.2)
+cmake_minimum_required(VERSION 3.20.0)
 project(cli-cpp)
 enable_language(CXX)
 
@@ -98,14 +97,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.7)
-        # FIXME: Apparently, the RHEL 7 package is now built with -std=c++11 and
-        # there seems to be incompatibility between such library and -std=c++03 built client
-        # FIXME: GCC on RHEL 6 does not understand -std=c++03, it's probably building gnu98, anyways...
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-    endif ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
     set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
         "Flags used by the compiler during all build types." FORCE
