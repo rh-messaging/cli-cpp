@@ -60,13 +60,9 @@ else (WIN32)
 endif (WIN32)
 
 set(ENABLE_QPID_PROTON ON CACHE BOOL "Enable qpid proton clients")
-set(ENABLE_QPID_MESSAGING ON CACHE BOOL "Enable qpid messaging clients")
 set(BUILD_WITH_UNIT_TESTS OFF CACHE BOOL "Build unit tests for the CPP client code")
 
 if (NOT WIN32)
-    if (ENABLE_QPID_MESSAGING)
-        find_package(Qpid REQUIRED)
-    endif (ENABLE_QPID_MESSAGING)
     find_package(Proton REQUIRED Core Proactor)
     find_package(ProtonCpp REQUIRED)
     include_directories(
