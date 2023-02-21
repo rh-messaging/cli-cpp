@@ -1,8 +1,7 @@
-FROM library/centos:7
-# Fedora 31 and Centos 7 (epel 7) are latest versions that ship qpid-cpp
+FROM docker.io/almalinux/8-base
 
 RUN yum install -y dnf \
-&& dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+&& dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 && dnf install -y \
     npm \
     \
@@ -14,9 +13,9 @@ RUN yum install -y dnf \
     \
     boost-devel \
     \
-    qpid-cpp-client-devel \
-    \
-    qpid-proton-cpp-devel \
+    cyrus-sasl-devel \
+    openssl-devel \
+    python39-devel \
     \
 && yum clean all \
 && dnf clean all \

@@ -1,0 +1,23 @@
+FROM docker.io/almalinux/8-base
+
+RUN yum install -y dnf \
+&& dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+&& dnf install -y \
+    npm \
+    \
+    cmake \
+    make \
+    gcc \
+    gcc-c++ \
+    ccache \
+    \
+    boost-devel \
+    \
+    qpid-proton-cpp-devel \
+    \
+&& yum clean all \
+&& dnf clean all \
+&& rm -rf /var/cache/yum \
+&& rm -rf /var/cache/dnf
+
+RUN npm install -g @bazel/bazelisk
