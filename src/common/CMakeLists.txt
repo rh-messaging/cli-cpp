@@ -59,8 +59,6 @@ if (WIN32)
     target_link_libraries(dtests-cpp-common)
 else (WIN32)
     target_link_libraries(dtests-cpp-common
-        boost_filesystem
-        boost_system
         pthread
     )
 endif (WIN32)

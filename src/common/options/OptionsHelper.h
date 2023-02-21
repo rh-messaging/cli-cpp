@@ -8,11 +8,6 @@
 #ifndef DTESTS_COMMON_OPTIONSHELPER_H_
 #define DTESTS_COMMON_OPTIONSHELPER_H_
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-
 #include <optparse/OptionParser.h>
 
 #include <vector>
