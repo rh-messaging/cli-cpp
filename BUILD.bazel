@@ -6,10 +6,6 @@ load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 # smart setting of CCACHE_BASEDIR is needed
 # lib64
 
-#build ints
-# python2 -m pip install --user setuptools
-# sudo swupd bundle-add devpkg-nspr
-
 # switch to ninja
 
 # https://docs.bazel.build/versions/master/configurable-attributes.html
@@ -26,7 +22,6 @@ cmake_compiler_launcher = {
 proton_cache_entries = {
    "CMAKE_CXX_COMPILER": "g++",
 
-   #"BUILD_BINDINGS": "OFF",
    "BUILD_BINDINGS": "cpp",
    "BUILD_TESTING": "OFF",
    # these are optional by default, CMake would skip them if not found
@@ -50,56 +45,7 @@ cmake(
 
    build_args = ["-j8"],
 
-   out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so"],
-   #out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
-)
-
-qpid_cache_entries = {
-   "CMAKE_CXX_COMPILER": "g++",
-
-   "BUILD_AMQP": "ON",
-   "BUILD_SASL": "ON",
-   "BUILD_SSL": "ON",
-   # disable as much as we can
-   "BUILD_BINDING_PERL": "OFF",
-   "BUILD_BINDING_PYTHON": "OFF",
-   "BUILD_BINDING_DOTNET": "OFF",
-   "BUILD_BINDING_RUBY": "OFF",
-   "BUILD_TESTING": "OFF",
-   "BUILD_XML": "OFF",
-   "BUILD_DOCS": "OFF",
-   "BUILD_PROBES": "OFF",
-   "BUILD_LEGACYSTORE": "OFF",
-   "BUILD_LINEARSTORE": "OFF",
-   "BUILD_HA": "OFF",
-   "BUILD_RDMA": "OFF",
-   "BUILD_MSSQL": "OFF",
-   "BUILD_MSCLFS": "OFF",
-   "INSTALL_QMFGEN": "OFF",
-
-   "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
-   "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
-}
-
-cmake(
-   name = "qpid-cpp",
-   generate_crosstool_file = False,
-   cache_entries = select({
-       ":ccache_enabled": dicts.add(qpid_cache_entries, cmake_compiler_launcher),
-       "//conditions:default": qpid_cache_entries,
-   }),
-   lib_source = "@qpid-cpp//:all",
-
-   build_args = ["-j8"],
-
-   # https://github.com/bazelbuild/rules_foreign_cc/issues/418#issuecomment-790423504
-   # this does not seem to be a problem for me, but it's weird
-   #includes = ["."],
-
-   out_lib_dir = "lib64",
-   out_shared_libs = ["libqpidclient.so", "libqpidcommon.so", "libqpidtypes.so", "libqpidmessaging.so"],
-
-   deps = [":qpid-proton"],
+   out_shared_libs = ["libqpid-proton-core.so", "libqpid-proton.so", "libqpid-proton-cpp.so"],
 )
 
 filegroup(name = "sources", srcs = glob(["CMakeLists.txt", "src/**", "dist/**", "*.cmake"]), visibility = ["//visibility:public"])
@@ -108,13 +54,6 @@ cmake(
    name = "cli-cpp",
    generate_crosstool_file = False,
 
-   # Qpid Cpp has absolute paths in QpidConfig.cmake, can't use that
-   #  Let's disable sandbox instead, and we'd need to fix in Qpid Cpp
-   #env = {
-   #    "LDFLAGS": "-L$$EXT_BUILD_DEPS/qpid-cpp/lib64"
-   #},
-   tags = ["no-sandbox"],
-
    cache_entries = {
        "CMAKE_CXX_COMPILER": "g++",
 
@@ -122,7 +61,6 @@ cmake(
        "EXT_BUILD_DEPS": "$EXT_BUILD_DEPS",
        "EXT_BUILD_ROOT": "$EXT_BUILD_ROOT",
 
-       "Qpid_DIR": "$EXT_BUILD_DEPS/qpid-cpp/lib64/cmake/Qpid",
        "Proton_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/Proton",
        "ProtonCpp_DIR": "$EXT_BUILD_DEPS/qpid-proton/lib64/cmake/ProtonCpp",
 
@@ -138,7 +76,7 @@ cmake(
    out_binaries = ["aac3_receiver"],
 
    deps = select({
-      ":deps_upstream": [":qpid-cpp", ":qpid-proton"],
+      ":deps_upstream": [":qpid-proton"],
       ":deps_rpms": [],
   }),
 )
