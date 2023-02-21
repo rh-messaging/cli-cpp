@@ -65,6 +65,7 @@ target_link_libraries(
 	dtests-qpid-messaging-common
 
 	${Qpid_LIBRARIES}
+	${ProtonCpp_LIBRARIES}
 	dtests-cpp-legacy
 	boost_regex  # would be `Boost::regex` in new CMake
 	${qpid_client_link_libraries}
@@ -126,11 +127,9 @@ foreach(client ${qpid_messaging_clients})
 endforeach(client)
 
 
-if (ENABLE_MODERN) 
-    if (BUILD_WITH_UNIT_TESTS)
-        add_subdirectory(common/formatter/test)
-     endif (BUILD_WITH_UNIT_TESTS)
-endif (ENABLE_MODERN)
+if (BUILD_WITH_UNIT_TESTS)
+	add_subdirectory(common/formatter/test)
+endif (BUILD_WITH_UNIT_TESTS)
 
 
 install(TARGETS 
