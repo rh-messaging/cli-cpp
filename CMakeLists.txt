@@ -176,16 +176,11 @@ if (ENABLE_QPID_PROTON)
     add_subdirectory(src/api/qpid-proton)
 endif(ENABLE_QPID_PROTON)
 
-if (ENABLE_QPID_MESSAGING)
-    add_definitions(-DENABLE_QPID_MESSAGING)
-    add_subdirectory(src/api/qpid)
-endif(ENABLE_QPID_MESSAGING)
-
 set(CPPCHECK_EXECUTABLE "/usr/bin/cppcheck" CACHE STRING "Path to cppcheck")
 set(CPPCHECK_FLAGS "--report-progress" "-v" "--enable=all" "--xml"
         CACHE STRING "Options for cppcheck")
 
-set(CPPCHECK_DEFS "-DENABLE_PROTON" "-DENABLE_QPID_MESSAGING"
+set(CPPCHECK_DEFS "-DENABLE_PROTON"
     "-DQPIDSYSEPOCH" CACHE STRING "Defines for cppcheck")
 
 add_custom_target(check

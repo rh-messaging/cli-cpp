@@ -8,7 +8,7 @@ set(cmake_generated CMakeCache.txt
 )
 
 # In all project subdirectories
-set(cmake_dirs ${CMAKE_BINARY_DIR} src/api/proton src/api/qpid src/common src/contrib)
+set(cmake_dirs ${CMAKE_BINARY_DIR} src/api/proton src/common src/contrib)
 
 # ... then traverse subdirectories
 foreach(subdir ${cmake_dirs}) 
