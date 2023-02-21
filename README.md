@@ -22,7 +22,8 @@ QPID proton dependencies
 
 * QPID Proton with experimental CPP Reactor support
 
-```git clone git@github.com:cliffjansen/qpid-proton.git -b cpp-work ;
+```
+git clone git@github.com:cliffjansen/qpid-proton.git -b cpp-work ;
 cd qpid-proton ;
 curl "http://pastebin.test.redhat.com/pastebin.php?dl=281175" -o default-cpp-on.patch ;
 patch -p1 < default-cpp-on.patch ;

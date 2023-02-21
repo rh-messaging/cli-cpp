@@ -6,9 +6,9 @@ env:
 
 jobs:
   build_upstream:
-    name: CentOS 7 upstream (Bazel)
+    name: UBI 8 upstream (Bazel)
     runs-on: ubuntu-latest
-    container: 'quay.io/jdanek/cli-cpp_centos7_upstream'
+    container: 'quay.io/jdanek/cli-cpp_ubi8_upstream'
     steps:
       - uses: actions/checkout@v3
 
@@ -32,9 +32,9 @@ jobs:
       - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=upstream --//:enable_ccache
 
   build_bazel:
-    name: CentOS 7 EPEL (Bazel)
+    name: UBI 8 EPEL (Bazel)
     runs-on: ubuntu-latest
-    container: 'quay.io/jdanek/cli-cpp_centos7_epel'
+    container: 'quay.io/jdanek/cli-cpp_ubi8_epel'
     steps:
       - uses: actions/checkout@v3
 
@@ -47,8 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # checkout action node is broken on 'quay.io/jdanek/cli-cpp_centos6x_epel'
-        container: ['quay.io/jdanek/cli-cpp_centos7_epel', 'quay.io/jdanek/cli-cpp_fedora31_epel']
+        container: ['quay.io/jdanek/cli-cpp_ubi8_epel', 'quay.io/jdanek/cli-cpp_fedora37_epel']
     steps:
       - uses: actions/checkout@v3
 
