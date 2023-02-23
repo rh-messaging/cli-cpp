@@ -14,17 +14,12 @@
 #ifndef STLUTILS_H
 #define STLUTILS_H
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
-
 #include <vector>
 #include <map>
 #include <string>
 #include <list>
 
 using namespace std;
-
-namespace algo = boost::algorithm;
 
 /**
  * STL utilities
