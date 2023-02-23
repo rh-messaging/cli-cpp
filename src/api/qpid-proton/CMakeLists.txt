@@ -77,7 +77,7 @@ target_link_libraries(
     dtests-cpp-common-options
     dtests-proton-common
 
-    qpid-proton-cpp
+    Proton::cpp
 )
 
 set(proton-reactor-clients
