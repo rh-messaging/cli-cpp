@@ -37,17 +37,20 @@ namespace common {
 /**
  * Splits in the input string and return a vector of its parts
  * @param input the input string to split
- * @param sep the separator for the string
+ * @param sep the separator characters for the string
  * @return a vector object with each split part
  */
-static vector<string> split(const string &input, const string &sep)
-{
-    vector<string> ret;
-
-    algo::split(ret, input, algo::is_any_of(sep),
-            algo::token_compress_on);
-
-    return ret;
+static vector<string> split(const string &input, const string &sep) {
+    vector<string> result;
+    int curr = 0, next = 0;
+    while ((next = input.find_first_of(sep, curr)) != string::npos) {
+        result.push_back(input.substr(curr, next - curr));
+        curr = next + 1;
+    }
+    if (curr == 0 || curr < input.size()) {
+        result.push_back(input.substr(curr));
+    }
+    return result;
 }
 
 
