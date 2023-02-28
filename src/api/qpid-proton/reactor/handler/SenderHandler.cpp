@@ -328,7 +328,7 @@ void SenderHandler::send()
             string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
             message_to_send.body(replaced_number);
         }
-    } catch (conversion_error) {
+    } catch (conversion_error &) {
     }
 
     sndr.send(message_to_send);

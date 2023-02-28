@@ -278,7 +278,7 @@ void DictFormatter::printMessageInterop(const message &m)
         msgString.append(", 'content': ").append(getValue(m.body()));
 
         msgString.append("}");
-    } catch (std::exception e) {
+    } catch (std::exception &e) {
         std::cerr << "Error while getting message properties: " << e.what() << std::endl;
 
         // exit(1);

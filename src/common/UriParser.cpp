@@ -45,7 +45,6 @@ void UriParser::parse(const string uri)
 
     string::size_type colon_position = (scheme_delimiter != string::npos) ? this->uri.find(":", (scheme_delimiter + 1)) : this->uri.find(":");
     string::size_type ampersand_position = this->uri.find("@");
-    string::size_type leftbracket_position = this->uri.find("[");
     string::size_type rightbracket_position = this->uri.find("]");
     string::size_type slash_position = (scheme_delimiter != string::npos) ? this->uri.find("/", (scheme_delimiter + 3)) : this->uri.find("/");
     string::size_type questionmark_position = this->uri.find("?");
