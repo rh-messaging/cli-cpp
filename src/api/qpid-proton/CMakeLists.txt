@@ -5,15 +5,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 set(PROTON_DIR /usr CACHE String "QPID Proton base directory")
 
-# Do not change. Please see the comments on the aac{1,2}_* clients
-set(QPID_PROTON_WITH_MESSAGING_API OFF CACHE BOOL 
-    "Uses the messaging API instead of the reactor API")
-
-if (QPID_PROTON_WITH_MESSAGING_API)
-    message(WARNING "Building with the messaging API instead of the reactor API")
-    add_definitions(-DQPID_PROTON_WITH_MESSAGING_API) 
-endif(QPID_PROTON_WITH_MESSAGING_API)
-
 include_directories(
     ${PROTON_DIR}/include
     common
