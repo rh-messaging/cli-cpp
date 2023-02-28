@@ -26,10 +26,10 @@
 
 double get_time()
 {
-    timeb ts;
+    struct timespec ts;
 
-    ftime(&ts);
-    return ((unsigned long int) (ts.time) + (ts.millitm / 1000.0));
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return ((unsigned long int) (ts.tv_sec) + (ts.tv_nsec / (1000.0 * 1000.0)));
 }
 
 

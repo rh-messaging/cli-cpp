@@ -10,7 +10,7 @@ bool assertFileContent(const char *filename, const char *expected, size_t size)
 
     buffer = (char *) malloc(size + 1);
     if (!buffer) {
-        fprintf(stderr, "Unable to allocate %i bytes for memory buffer",
+        fprintf(stderr, "Unable to allocate %zu bytes for memory buffer",
                 size);
         goto err_sys;
     }
