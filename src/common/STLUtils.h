@@ -37,7 +37,7 @@ namespace common {
  */
 static vector<string> split(const string &input, const string &sep) {
     vector<string> result;
-    int curr = 0, next = 0;
+    std::string::size_type curr = 0, next = 0;
     while ((next = input.find_first_of(sep, curr)) != string::npos) {
         result.push_back(input.substr(curr, next - curr));
         curr = next + 1;
