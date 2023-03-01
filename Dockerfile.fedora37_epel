@@ -1,6 +1,8 @@
 FROM docker.io/library/fedora:37
 
-RUN dnf install -y \
+RUN dnf install -y 'dnf-command(copr)' \
+&& dnf copr enable -y kpvdr/opentelemetry-cpp \
+&& dnf install -y \
     npm \
     \
     cmake \
@@ -9,6 +11,8 @@ RUN dnf install -y \
     gcc-c++ \
     \
     boost-devel \
+    \
+    opentelemetry-cpp-devel \
     \
     qpid-proton-cpp-devel \
     \

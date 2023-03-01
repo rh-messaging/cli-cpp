@@ -1,8 +1,5 @@
 PROJECT(dtests-proton-cpp)
 
-# Ugly hack to avoid newer versions from complaining. Needs to be fixed
-cmake_minimum_required(VERSION 2.8.12)
-
 set(PROTON_DIR /usr CACHE String "QPID Proton base directory")
 
 include_directories(
@@ -68,8 +65,21 @@ target_link_libraries(
     dtests-cpp-common-options
     dtests-proton-common
 
+    # Proton::cpp
     qpid-proton-cpp
 )
+
+if (UNIX)
+    # TODO: not available on windows, must be able to compile without
+    set(CMAKE_BUILD_TYPE "")
+    find_package(opentelemetry-cpp)
+    include_directories(${OPENTELEMETRY_CPP_INCLUDE_DIRS})
+
+    target_link_libraries(dtests-proton-reactor
+            opentelemetry-cpp::trace
+            opentelemetry-cpp::jaeger_trace_exporter
+            opentelemetry-cpp::ostream_span_exporter)
+endif (UNIX)
 
 set(proton-reactor-clients
     aac3_connector

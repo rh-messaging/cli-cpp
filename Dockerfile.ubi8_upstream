@@ -1,6 +1,8 @@
 FROM docker.io/almalinux/8-base
 
-RUN yum install -y dnf \
+RUN dnf install -y 'dnf-command(copr)' \
+&& dnf copr enable -y kpvdr/opentelemetry-cpp \
+&& yum install -y dnf \
 && dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 && dnf install -y \
     npm \
@@ -12,6 +14,8 @@ RUN yum install -y dnf \
     ccache \
     \
     boost-devel \
+    \
+    opentelemetry-cpp-devel \
     \
     cyrus-sasl-devel \
     openssl-devel \

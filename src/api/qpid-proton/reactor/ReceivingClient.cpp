@@ -329,6 +329,16 @@ int ReceivingClient::run(int argc, char **argv) const
 
     bool conn_use_config_file = options.is_set("conn-use-config-file");
 
+    bool trace_messages = false;
+    if (options.is_set("trace-messages")) {
+        if (options["trace-messages"] == "1" || options["trace-messages"] == "true") {
+            trace_messages = true;
+        }
+    }
+    if (trace_messages) {
+        enableTracing("aac3_receiver");
+    }
+
     ReceiverHandler handler = ReceiverHandler(
         address,
         conn_urls,
