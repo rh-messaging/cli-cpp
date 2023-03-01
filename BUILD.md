@@ -70,3 +70,14 @@ Next, the Debug/Release build should be selected as needed.
 
 Bazel can provide caching of build actions, and it can be used both in CI or locally.
 
+## Rebuild images
+
+```shell
+podman build -f Dockerfile.fedora37_epel -t quay.io/jdanek/cli-cpp_fedora37_epel
+podman build -f Dockerfile.ubi8_epel -t quay.io/jdanek/cli-cpp_ubi8_epel
+podman build -f Dockerfile.ubi8_upstream -t quay.io/jdanek/cli-cpp_ubi8_upstream
+
+podman push quay.io/jdanek/cli-cpp_fedora37_epel
+podman push quay.io/jdanek/cli-cpp_ubi8_epel
+podman push quay.io/jdanek/cli-cpp_ubi8_upstream
+```

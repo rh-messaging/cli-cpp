@@ -11,6 +11,21 @@
 #include <optparse/OptionParser.h>
 
 #include <string>
+#include <memory>
+
+#include <proton/tracing.hpp>
+
+#include <opentelemetry/sdk/trace/simple_processor.h>
+#include <opentelemetry/sdk/trace/tracer_provider.h>
+#include <opentelemetry/trace/provider.h>
+#include <opentelemetry/nostd/unique_ptr.h>
+#include <opentelemetry/exporters/jaeger/jaeger_exporter.h>
+#include <opentelemetry/exporters/ostream/span_exporter.h>
+#include <opentelemetry/sdk/resource/resource.h>
+
+#include <opentelemetry/trace/span.h>
+#include <opentelemetry/trace/tracer.h>
+#include <opentelemetry/trace/context.h>
 
 #include "Client.h"
 #include "logger/Logger.h"
@@ -39,6 +54,7 @@ class ModernClient : public Client {
      * @param options the command line options
      */
     void setLogLevel(const optparse::Values &options) const;
+    void enableTracing(std::string service_name) const;
 
   private:
     typedef Client super;

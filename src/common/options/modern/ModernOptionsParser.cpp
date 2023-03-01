@@ -148,6 +148,12 @@ ModernOptionsParser::ModernOptionsParser()
             .help("enable and set connection HEARTBEAT (seconds)")
             .metavar("HEARTBEAT");
 
+   add_option("--trace-messages")
+            .dest("trace-messages")
+            .help("enable message tracing (true/false, default: false)")
+            .type("bool")
+            .action("store_true");
+
     std::stringstream sstm;
     sstm << "maximum frame SIZE (" << MIN_MAX_FRAME_SIZE << " - " << UINT32_MAX << ", default: " << UINT32_MAX << ")";
     add_option("--conn-max-frame-size")

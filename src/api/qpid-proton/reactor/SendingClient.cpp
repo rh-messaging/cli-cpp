@@ -479,6 +479,16 @@ int SendingClient::run(int argc, char **argv) const
         duration_mode = options["duration-mode"];
     }
 
+    bool trace_messages = false;
+    if (options.is_set("trace-messages")) {
+        if (options["trace-messages"] == "1" || options["trace-messages"] == "true") {
+            trace_messages = true;
+        }
+    }
+    if (trace_messages) {
+        enableTracing("aac3_sender");
+    }
+
     message msg;
 
     setMessageOptions(setter, msg);
