@@ -81,6 +81,7 @@ void ModernClient::setLogLevel(const optparse::Values &options) const
 void ModernClient::enableTracing(std::string service_name) const
 {
 
+#ifdef __unix__
     opentelemetry::exporter::jaeger::JaegerExporterOptions opts;
 
     // Initialize Jaeger Exporter
@@ -106,6 +107,7 @@ void ModernClient::enableTracing(std::string service_name) const
 
     // Enable tracing in proton cpp
     ::proton::initOpenTelemetryTracer();
+#endif
 
 }
 
