@@ -15,6 +15,7 @@
 
 #include <proton/tracing.hpp>
 
+#ifdef __unix__
 #include <opentelemetry/sdk/trace/simple_processor.h>
 #include <opentelemetry/sdk/trace/tracer_provider.h>
 #include <opentelemetry/trace/provider.h>
@@ -26,6 +27,7 @@
 #include <opentelemetry/trace/span.h>
 #include <opentelemetry/trace/tracer.h>
 #include <opentelemetry/trace/context.h>
+#endif
 
 #include "Client.h"
 #include "logger/Logger.h"
