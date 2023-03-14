@@ -19,8 +19,10 @@ else(${DTEST_BUILD_PLATFORM} EQUAL "64")
 endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
 if (UNIX AND ProtonCpp_VERSION VERSION_GREATER_EQUAL 0.38.0)
+    set(OPENTELEMETRY_ENABLED ON)
     set(MODERNClient_tracing_src common/ModernClient_tracing_opentracing.cpp)
 else ()
+    set(OPENTELEMETRY_ENABLED OFF)
     set(MODERNClient_tracing_src common/ModernClient_tracing_none.cpp)
 endif ()
 
@@ -77,8 +79,7 @@ target_link_libraries(
     qpid-proton-cpp
 )
 
-if (UNIX)
-    # TODO: not available on windows, must be able to compile without
+if (OPENTELEMETRY_ENABLED)
     set(CMAKE_BUILD_TYPE "")
     find_package(opentelemetry-cpp)
     include_directories(${OPENTELEMETRY_CPP_INCLUDE_DIRS})
