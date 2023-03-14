@@ -18,11 +18,19 @@ else(${DTEST_BUILD_PLATFORM} EQUAL "64")
     )
 endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
+if (UNIX AND PROTON_VERSION VERSION_GREATER_EQUAL 0.38.0)
+    set(MODERNClient_tracing_src common/ModernClient_tracing_opentracing.cpp)
+else ()
+    set(MODERNClient_tracing_src common/ModernClient_tracing_none.cpp)
+endif ()
+
+
 cmake_policy(SET CMP0003 OLD)
 add_library(
     dtests-proton-common
     
     common/ModernClient.cpp
+    ${MODERNClient_tracing_src}
 )
 
 if (WIN32)
