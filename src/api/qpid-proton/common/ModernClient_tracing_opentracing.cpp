@@ -14,7 +14,7 @@
 #include <opentelemetry/trace/tracer.h>
 #include <opentelemetry/trace/context.h>
 
-void ModernClient::enableTracing(std::string service_name) const
+void dtests::proton::common::ModernClient::enableTracing(std::string service_name) const
 {
 
     opentelemetry::exporter::jaeger::JaegerExporterOptions opts;

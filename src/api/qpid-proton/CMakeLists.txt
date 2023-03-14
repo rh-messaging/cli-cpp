@@ -18,7 +18,7 @@ else(${DTEST_BUILD_PLATFORM} EQUAL "64")
     )
 endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
 
-if (UNIX AND PROTON_VERSION VERSION_GREATER_EQUAL 0.38.0)
+if (UNIX AND ProtonCpp_VERSION VERSION_GREATER_EQUAL 0.38.0)
     set(MODERNClient_tracing_src common/ModernClient_tracing_opentracing.cpp)
 else ()
     set(MODERNClient_tracing_src common/ModernClient_tracing_none.cpp)
