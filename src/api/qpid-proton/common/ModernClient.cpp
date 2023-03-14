@@ -78,39 +78,6 @@ void ModernClient::setLogLevel(const optparse::Values &options) const
 
 }
 
-void ModernClient::enableTracing(std::string service_name) const
-{
-
-#ifdef __unix__
-    opentelemetry::exporter::jaeger::JaegerExporterOptions opts;
-
-    // Initialize Jaeger Exporter
-    std::unique_ptr<opentelemetry::sdk::trace::SpanExporter> exporter = std::unique_ptr<opentelemetry::sdk::trace::SpanExporter>(
-            new opentelemetry::exporter::jaeger::JaegerExporter(opts));
-
-    // Set service-name
-    auto resource_attributes = opentelemetry::sdk::resource::ResourceAttributes
-            {
-                    {"service.name", service_name}
-            };
-
-    // Creation of the resource for associating it with telemetry
-    auto resource = opentelemetry::sdk::resource::Resource::Create(resource_attributes);
-
-    auto processor = std::unique_ptr<opentelemetry::sdk::trace::SpanProcessor>(
-            new opentelemetry::sdk::trace::SimpleSpanProcessor(std::move(exporter)));
-    auto provider = opentelemetry::nostd::shared_ptr<opentelemetry::trace::TracerProvider>(
-            new opentelemetry::sdk::trace::TracerProvider(std::move(processor), resource));
-
-    // Set the global trace provider
-    opentelemetry::trace::Provider::SetTracerProvider(provider);
-
-    // Enable tracing in proton cpp
-    ::proton::initOpenTelemetryTracer();
-#endif
-
-}
-
 
 } /* namespace messenger */
 } /* namespace proton */
