@@ -1,4 +1,5 @@
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
+permissions: read-all
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -29,7 +30,7 @@ jobs:
       - run: echo "build --disk_cache=/.cache" >> .bazelrc
         shell: bash
 
-      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=upstream --//:enable_ccache
+      - run: bazelisk build //:cli-cpp --enable_bzlmod --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=upstream --//:enable_ccache
 
   build_bazel:
     name: UBI 8 EPEL (Bazel)
@@ -38,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: bazelisk build //:cli-cpp --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=rpms --//:enable_ccache
+      - run: bazelisk build //:cli-cpp --enable_bzlmod --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=rpms --//:enable_ccache
 
   build_cmake:
     name: ${{ matrix.container }} (CMake)
