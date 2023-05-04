@@ -23,6 +23,7 @@ proton_cache_entries = {
    "CMAKE_CXX_COMPILER": "g++",
 
    "BUILD_BINDINGS": "cpp",
+   "BUILD_EXAMPLES": "OFF",
    "BUILD_TESTING": "OFF",
    # these are optional by default, CMake would skip them if not found
    "SASL_IMPL": "cyrus",

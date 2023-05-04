@@ -39,12 +39,19 @@ When building with ccache, add the following
 
     --sandbox_writable_path=$HOME/.ccache
 
+To run the built binaries, use
+
+    LD_LIBRARY_PATH=bazel-bin/copy_qpid-proton/qpid-proton/lib64 bazel-bin/copy_cli-cpp/cli-cpp/bin/aac3_sender --help
+
 #### Troubleshooting
 
 Preserve sandbox with `--sandbox_debug` flag.
 Get more output with `--verbose_failures` flag.
 
 Disable sandbox with `--spawn_strategy=standalone` flag, use values of `processwrapper-sandbox`, `linux-sandbox`, ...
+
+If Proton fails to link, complaining about missing `main`,  try adding bazel option `--linkopt="-fuse-ld=gold"`.
+See https://github.com/bazelbuild/rules_foreign_cc/issues/863.
 
 ### CMake build
 
