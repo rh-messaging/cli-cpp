@@ -29,11 +29,11 @@ This project can be built either with CMake, or with CMake executed by Bazel.
 
 Bazel is used to also build the dependencies, qpid-cpp and qpid-proton.
 
-    bazelisk build //:cli-cpp --//:deps=upstream
+    bazelisk build //:cli-cpp --enable_bzlmod --//:deps=upstream
 
 You can tell Bazel not to build these dependencies, and they will be then picked by CMake from system location.
 
-    bazelisk build //:cli-cpp --//:deps=rpms
+    bazelisk build //:cli-cpp --enable_bzlmod --//:deps=rpms
 
 When building with ccache, add the following
 
