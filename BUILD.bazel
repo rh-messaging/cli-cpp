@@ -1,5 +1,9 @@
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 
+# to see all the commands, add "CMAKE_VERBOSE_MAKEFILE": "ON"
+# or use generate_args = ["-GNinja", "--trace-expand"] and build_args = ["--verbose"]
+# source: https://github.com/bazelbuild/rules_foreign_cc/issues/863
+
 # TODO
 
 # configuration: source of packages either download github, local checkout (can modify source), or rpms (present in standard paths)
