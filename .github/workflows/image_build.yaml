@@ -52,10 +52,10 @@ jobs:
       - name: Prepare registry cache vars
         id: cache
         run: |
-          echo "cache-from=--cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
+          echo "cache-from=--cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp/buildah-cache" >> $GITHUB_OUTPUT
           # don't pollute cache by output from pull request builds
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "cache-to=--cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
+            echo "cache-to=--cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp/buildah-cache" >> $GITHUB_OUTPUT
           fi
 
       - name: Set up QEMU
