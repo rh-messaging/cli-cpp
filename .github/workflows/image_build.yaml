@@ -21,25 +21,11 @@ jobs:
     name: Build and push image
     runs-on: ubuntu-22.04
     # https://github.com/redhat-actions/buildah-build/issues/90#issuecomment-1500807385
-#    container:
-#      image: quay.io/buildah/stable:latest
-#      options: --privileged
+    container:
+      image: quay.io/buildah/stable:latest
+      options: --privileged
 
     steps:
-
-      - name: login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Log in to ghrc.io
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username="${{ github.actor }}" --password-stdin
-          docker pull library/ubuntu
-          docker tag library/ubuntu ghcr.io/${{ github.repository_owner }}/cli-cpp:ubuntu
-          docker push ghcr.io/${{ github.repository_owner }}/cli-cpp:ubuntu
 
       - uses: actions/checkout@v3
         with:
@@ -60,15 +46,16 @@ jobs:
         run: mkdir -p "${{ env.CCACHE_DIR }}"
 
       - name: Log in to ghrc.io
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username="${{ github.actor }}" --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghcr.io --username="${{ github.actor }}" --password-stdin
 
+      # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
       - name: Prepare registry cache vars
         id: cache
         run: |
-          echo "cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
+          echo "cache-from=--cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
           # don't pollute cache by output from pull request builds
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
+            echo "cache-to=--cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
           fi
 
       - name: Cache CCACHE_DIR (restore)
@@ -89,12 +76,9 @@ jobs:
           tags: latest ${{ github.sha }} ${{ steps.cleaned_ref_name.outputs.ref_name }}
           archs: amd64, arm64, arm64, s390x
           layers: true
-          # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
-#            --cache-from=${{ steps.cache.outputs.cache-from }}
-#            --cache-to=${{ steps.cache.outputs.cache-to }}
           extra-args: |
-            --cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache
-            --cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache
+            ${{ steps.cache.outputs.cache-from }}
+            ${{ steps.cache.outputs.cache-to }}
             --volume=${{ env.CCACHE_DIR }}:/.ccache
           context: cli-cpp
           containerfiles: cli-cpp/Dockerfile
