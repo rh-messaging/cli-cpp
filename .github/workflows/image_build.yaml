@@ -35,7 +35,7 @@ jobs:
 
       - name: Log in to ghrc.io
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username="${{ github.actor }}" --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username="${{ github.repository_owner }}" --password-stdin
           docker pull library/ubuntu
           docker tag library/ubuntu ghcr.io/${{ github.repository_owner }}/cli-cpp:ubuntu
           docker push ghcr.io/${{ github.repository_owner }}/cli-cpp:ubuntu
