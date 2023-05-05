@@ -5,7 +5,7 @@ ARG UBI_RUNTIME_TAG=latest
 ARG IMAGE_BUILD=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_TAG}
 ARG IMAGE_BASE=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_RUNTIME_TAG}
 
-# Build this with something like buildah bud --arch arm64 --volume=/tmp/ccache:/.ccache
+# Build this with something like buildah bud --arch arm64 --volume=/tmp/ccache:/ccache
 
 #DEV FROM $IMAGE_BUILD
 FROM quay.io/centos/centos:stream9 as build
@@ -63,7 +63,6 @@ RUN CCACHE_DIR=/ccache/$(arch) cmake --install cmake-build-cli-cpp --config RelW
 RUN for i in cmake-install/bin/*; do patchelf --add-rpath /usr/local/lib64 $i; done
 
 FROM quay.io/centos/centos:stream9
-LABEL org.opencontainers.image.source https://github.com/rh-messaging/cli-cpp
 
 RUN curl -OL https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 RUN rpm -ivh epel-release-latest-9.noarch.rpm
