@@ -19,6 +19,10 @@ jobs:
   build:
     name: Build and push image
     runs-on: ubuntu-22.04
+    # https://github.com/redhat-actions/buildah-build/issues/90#issuecomment-1500807385
+    container:
+      image: quay.io/buildah/stable:latest
+      options: --privileged
 
     steps:
       - uses: actions/checkout@v3
