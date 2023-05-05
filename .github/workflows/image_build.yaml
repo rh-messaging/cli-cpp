@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
     branches: [ main ]
 
-permissions: write-all
+permissions:
+  packages: write
 
 env:
   IMAGE_REGISTRY: quay.io
