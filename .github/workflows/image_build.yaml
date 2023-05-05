@@ -13,8 +13,8 @@ env:
   IMAGE_REGISTRY: quay.io
   IMAGE_NAMESPACE: rhmessagingqe
   IMAGE_NAME: cli-cpp
-
-  CCACHE_DIR: ${{ github.workspace }}/ccache
+  # https://github.com/actions/cache/issues/814
+  CCACHE_DIR: /ccache
 
 jobs:
   build:
@@ -80,7 +80,7 @@ jobs:
           archs: amd64, arm64, arm64, s390x
           layers: true
           extra-args: |
-            --volume=${{ env.CCACHE_DIR }}:/.ccache
+            --volume=${{ env.CCACHE_DIR }}:/ccache
             ${{ steps.cache.outputs.cache-from }}
             ${{ steps.cache.outputs.cache-to }}
           context: cli-cpp
