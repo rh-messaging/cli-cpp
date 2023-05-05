@@ -20,11 +20,18 @@ jobs:
     name: Build and push image
     runs-on: ubuntu-22.04
     # https://github.com/redhat-actions/buildah-build/issues/90#issuecomment-1500807385
-    container:
-      image: quay.io/buildah/stable:latest
-      options: --privileged
+#    container:
+#      image: quay.io/buildah/stable:latest
+#      options: --privileged
 
     steps:
+      - name: Log in to ghrc.io
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghrc.io --username="${{ github.actor }}" --password-stdin
+          docker pull library/ubuntu
+          docker tag library/ubuntu ghcr.io/jiridanek/cli-cpp:ubuntu
+          docker push ghcr.io/jiridanek/cli-cpp:ubuntu
+
       - uses: actions/checkout@v3
         with:
           path: cli-cpp
