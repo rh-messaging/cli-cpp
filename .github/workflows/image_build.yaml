@@ -6,20 +6,34 @@ on:
   workflow_dispatch:
     branches: [ main ]
 
-permissions: read-all
+permissions:
+  packages: write
 
 env:
-  IMAGE_NAME: cli-cpp
   IMAGE_REGISTRY: quay.io
   IMAGE_NAMESPACE: rhmessagingqe
+  IMAGE_NAME: cli-cpp
+  # https://github.com/actions/cache/issues/814
+  CCACHE_DIR: /ccache
 
 jobs:
   build:
     name: Build and push image
     runs-on: ubuntu-22.04
+    # https://github.com/redhat-actions/buildah-build/issues/90#issuecomment-1500807385
+    container:
+      image: quay.io/buildah/stable:latest
+      options: --privileged
 
     steps:
+
       - uses: actions/checkout@v3
+        with:
+          path: cli-cpp
+
+      - name: Install dependencies
+        run: |
+          sudo dnf install -y perl podman qemu-user-static gawk
 
       # https://www.integralist.co.uk/posts/github-actions/
       - name: Prepare ref name
@@ -28,8 +42,34 @@ jobs:
           ref_name=$(echo ${{ github.ref_name }} | perl -pe 's/[^a-zA-Z0-9]+/-/g' | perl -pe 's/(\A-|-\Z)//g' | awk '{print tolower($0)}')
           echo "ref_name=${ref_name}" >> $GITHUB_OUTPUT
 
+      - name: Initialize ccache
+        run: mkdir -p "${{ env.CCACHE_DIR }}"
+
+      - name: Log in to ghcr.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghcr.io --username="${{ github.actor }}" --password-stdin
+
+      # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+      - name: Prepare registry cache vars
+        id: cache
+        run: |
+          echo "cache-from=--cache-from=ghcr.io/${{ github.repository_owner }}/cli-cpp/buildah-cache" >> $GITHUB_OUTPUT
+          # don't pollute cache by output from pull request builds
+          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
+            echo "cache-to=--cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp/buildah-cache" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        run: podman run --privileged --rm docker.io/tonistiigi/binfmt --install all
+
+      - name: Cache CCACHE_DIR (restore)
+        uses: actions/cache/restore@v3
+        id: restore-ccache-cache
+        with:
+          path: "${{ env.CCACHE_DIR }}"
+          key: ${{ runner.os }}-ccache-${{ matrix.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-${{ matrix.os }}-
+            ${{ runner.os }}-ccache-
 
       - name: Build Image
         id: build-image
@@ -38,8 +78,19 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }} ${{ steps.cleaned_ref_name.outputs.ref_name }}
           archs: amd64, arm64, arm64, s390x
-          containerfiles: |
-            ./Dockerfile
+          layers: true
+          extra-args: |
+            --volume=${{ env.CCACHE_DIR }}:/ccache
+            ${{ steps.cache.outputs.cache-from }}
+            ${{ steps.cache.outputs.cache-to }}
+          context: cli-cpp
+          containerfiles: cli-cpp/Dockerfile
+
+      - name: Cache CCACHE_DIR (save)
+        uses: actions/cache/save@v3
+        with:
+          path: "${{ env.CCACHE_DIR }}"
+          key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
 
       - name: Push To quay.io
         if: github.ref == 'refs/heads/main'
