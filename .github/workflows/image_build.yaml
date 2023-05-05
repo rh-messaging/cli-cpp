@@ -46,7 +46,7 @@ jobs:
         run: mkdir -p "${{ env.CCACHE_DIR }}"
 
       - name: Log in to ghrc.io
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username="${{ github.actor }}" --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username=rh-messaging --password-stdin
 
       - name: Cache CCACHE_DIR (restore)
         uses: actions/cache/restore@v3
