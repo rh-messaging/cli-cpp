@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo dnf install -y perl podman qemu-user-static
+          sudo dnf install -y perl podman qemu-user-static awk
 
       - name: Initialize ccache
         run: mkdir -p "${{ env.CCACHE_DIR }}"
