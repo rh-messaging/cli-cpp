@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo dnf install -y perl qemu-user-static awk
+          sudo dnf install -y perl qemu-user-static gawk
 
       # https://www.integralist.co.uk/posts/github-actions/
       - name: Prepare ref name
