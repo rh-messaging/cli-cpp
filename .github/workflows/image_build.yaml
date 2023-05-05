@@ -66,10 +66,10 @@ jobs:
         id: restore-ccache-cache
         with:
           path: "${{ env.CCACHE_DIR }}"
-          key: ${{ runner.os }}-sccache-${{ matrix.os }}-${{ github.sha }}
+          key: ${{ runner.os }}-ccache-${{ matrix.os }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-sccache-${{ matrix.os }}-
-            ${{ runner.os }}-sccache-
+            ${{ runner.os }}-ccache-${{ matrix.os }}-
+            ${{ runner.os }}-ccache-
 
       - name: Build Image
         id: build-image
@@ -89,7 +89,7 @@ jobs:
       - name: Cache CCACHE_DIR (save)
         uses: actions/cache/save@v3
         with:
-          path: "${{ env.SCCACHE_DIR }}"
+          path: "${{ env.CCACHE_DIR }}"
           key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
 
       - name: Push To quay.io
