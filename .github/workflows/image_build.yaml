@@ -66,7 +66,7 @@ jobs:
           extra-args: |
             --cache-to=ghcr.io/rh-messaging/cli-cpp/cache
             --cache-from=ghcr.io/rh-messaging/cli-cpp/cache
-            --volume=${CCACHE_DIR}:/.ccache
+            --volume=${{env.CCACHE_DIR}}:/.ccache
           containerfiles: |
             ./Dockerfile
 
