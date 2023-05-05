@@ -9,9 +9,11 @@ on:
 permissions: read-all
 
 env:
-  IMAGE_NAME: cli-cpp
   IMAGE_REGISTRY: quay.io
   IMAGE_NAMESPACE: rhmessagingqe
+  IMAGE_NAME: cli-cpp
+
+  CCACHE_DIR: ${HOME}/ccache
 
 jobs:
   build:
@@ -31,6 +33,26 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
+      - name: Initialize ccache
+        run: mkdir -p "${{ env.CCACHE_DIR }}"
+
+      - name: Cache CCACHE_DIR (restore)
+        uses: actions/cache/restore@v3
+        id: restore-ccache-cache
+        with:
+          path: "${{ env.CCACHE_DIR }}"
+          key: ${{ runner.os }}-sccache-${{ matrix.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-sccache-${{ matrix.os }}-
+            ${{ runner.os }}-sccache-
+
+      - name: Log in to ghrc.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ghrc.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Image
         id: build-image
         uses: redhat-actions/buildah-build@v2
@@ -38,8 +60,20 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }} ${{ steps.cleaned_ref_name.outputs.ref_name }}
           archs: amd64, arm64, arm64, s390x
+          layers: true
+          # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+          extra-args: |
+            --cache-to=ghcr.io/rh-messaging/cli-cpp/cache
+            --cache-from=ghcr.io/rh-messaging/cli-cpp/cache
+            --volume={{ env.CCACHE_DIR }}:/.ccache
           containerfiles: |
             ./Dockerfile
+
+      - name: Cache CCACHE_DIR (save)
+        uses: actions/cache/save@v3
+        with:
+          path: "${{ env.SCCACHE_DIR }}"
+          key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
 
       - name: Push To quay.io
         if: github.ref == 'refs/heads/main'

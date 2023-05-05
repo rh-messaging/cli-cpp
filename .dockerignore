@@ -2,4 +2,5 @@
 .idea
 /bazel-*
 /cmake-*
+/qpid-proton
 Dockerfile
