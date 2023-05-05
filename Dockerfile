@@ -37,7 +37,7 @@ ENV CCACHE_COMPRESS=true
 ENV CCACHE_MAXSIZE=400MB
 
 RUN git clone --depth=1 https://github.com/apache/qpid-proton.git
-RUN CCACHE_DIR=/.ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
+RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_INSTALL_PREFIX=cmake-install \
@@ -47,22 +47,23 @@ RUN CCACHE_DIR=/.ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton 
     -DSASL_IMPL=cyrus \
     -DSSL_IMPL=openssl \
     -DPROACTOR=epoll
-RUN CCACHE_DIR=/.ccache/$(arch) cmake --build cmake-build-qpid-proton
-RUN CCACHE_DIR=/.ccache/$(arch) cmake --install cmake-build-qpid-proton --config RelWithDebInfo
+RUN CCACHE_DIR=/ccache/$(arch) cmake --build cmake-build-qpid-proton
+RUN CCACHE_DIR=/ccache/$(arch) cmake --install cmake-build-qpid-proton --config RelWithDebInfo
 
-RUN CCACHE_DIR=/.ccache/$(arch) cmake -S . -B cmake-build-cli-cpp -GNinja \
+RUN CCACHE_DIR=/ccache/$(arch) cmake -S . -B cmake-build-cli-cpp -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_INSTALL_PREFIX=cmake-install
     #-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE \
     #-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
-RUN CCACHE_DIR=/.ccache/$(arch) cmake --build cmake-build-cli-cpp
-RUN CCACHE_DIR=/.ccache/$(arch) cmake --install cmake-build-cli-cpp --config RelWithDebInfo
+RUN CCACHE_DIR=/ccache/$(arch) cmake --build cmake-build-cli-cpp
+RUN CCACHE_DIR=/ccache/$(arch) cmake --install cmake-build-cli-cpp --config RelWithDebInfo
 
 # fixup finding the proton library, this is something that our build should handle by itself, though
 RUN for i in cmake-install/bin/*; do patchelf --add-rpath /usr/local/lib64 $i; done
 
 FROM quay.io/centos/centos:stream9
+LABEL org.opencontainers.image.source https://github.com/rh-messaging/cli-cpp
 
 RUN curl -OL https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 RUN rpm -ivh epel-release-latest-9.noarch.rpm
