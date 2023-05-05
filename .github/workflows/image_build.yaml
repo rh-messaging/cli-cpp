@@ -13,7 +13,7 @@ env:
   IMAGE_NAMESPACE: rhmessagingqe
   IMAGE_NAME: cli-cpp
 
-  CCACHE_DIR: ~/ccache
+  CCACHE_DIR: ${{ github.workspace }}/ccache
 
 jobs:
   build:
@@ -26,6 +26,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          path: cli-cpp
 
       - name: Install dependencies
         run: |
@@ -41,6 +43,9 @@ jobs:
       - name: Initialize ccache
         run: mkdir -p "${{ env.CCACHE_DIR }}"
 
+      - name: Log in to ghrc.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username="${{ github.actor }}" --password-stdin
+
       - name: Cache CCACHE_DIR (restore)
         uses: actions/cache/restore@v3
         id: restore-ccache-cache
@@ -50,9 +55,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sccache-${{ matrix.os }}-
             ${{ runner.os }}-sccache-
-
-      - name: Log in to ghrc.io
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username="${{ github.actor }}" --password-stdin
 
       - name: Build Image
         id: build-image
@@ -67,8 +69,8 @@ jobs:
             --cache-to=ghcr.io/rh-messaging/cli-cpp/cache
             --cache-from=ghcr.io/rh-messaging/cli-cpp/cache
             --volume=${{ env.CCACHE_DIR }}:/.ccache
-          containerfiles: |
-            ./Dockerfile
+          context: cli-cpp
+          containerfiles: cli-cpp/Dockerfile
 
       - name: Cache CCACHE_DIR (save)
         uses: actions/cache/save@v3
