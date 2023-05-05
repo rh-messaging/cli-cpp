@@ -27,16 +27,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: |
+          sudo dnf install -y perl podman qemu-user-static awk
+
       # https://www.integralist.co.uk/posts/github-actions/
       - name: Prepare ref name
         id: cleaned_ref_name
         run: |
           ref_name=$(echo ${{ github.ref_name }} | perl -pe 's/[^a-zA-Z0-9]+/-/g' | perl -pe 's/(\A-|-\Z)//g' | awk '{print tolower($0)}')
           echo "ref_name=${ref_name}" >> $GITHUB_OUTPUT
-
-      - name: Install dependencies
-        run: |
-          sudo dnf install -y perl podman qemu-user-static awk
 
       - name: Initialize ccache
         run: mkdir -p "${{ env.CCACHE_DIR }}"
