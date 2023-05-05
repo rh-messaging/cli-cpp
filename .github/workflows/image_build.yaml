@@ -66,8 +66,8 @@ jobs:
           layers: true
           # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
           extra-args: |
-            --cache-to=ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/cli-cpp_cache
-            --cache-from=ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/cli-cpp_cache
+            --cache-to=ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}
+            --cache-from=ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}
             --volume=${{ env.CCACHE_DIR }}:/.ccache
           context: cli-cpp
           containerfiles: cli-cpp/Dockerfile
