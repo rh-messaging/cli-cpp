@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo dnf install -y perl qemu-user-static gawk
+          sudo dnf install -y perl podman qemu-user-static gawk
 
       # https://www.integralist.co.uk/posts/github-actions/
       - name: Prepare ref name
@@ -57,6 +57,9 @@ jobs:
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
             echo "cache-to=--cache-to=ghcr.io/${{ github.repository_owner }}/cli-cpp_cache" >> $GITHUB_OUTPUT
           fi
+
+      - name: Set up QEMU
+        run: podman run --privileged --rm tonistiigi/binfmt --install all
 
       - name: Cache CCACHE_DIR (restore)
         uses: actions/cache/restore@v3
