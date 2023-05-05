@@ -34,8 +34,9 @@ jobs:
           ref_name=$(echo ${{ github.ref_name }} | perl -pe 's/[^a-zA-Z0-9]+/-/g' | perl -pe 's/(\A-|-\Z)//g' | awk '{print tolower($0)}')
           echo "ref_name=${ref_name}" >> $GITHUB_OUTPUT
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Install qemu dependency
+        run: |
+          sudo dnf install -y qemu-user-static
 
       - name: Initialize ccache
         run: mkdir -p "${{ env.CCACHE_DIR }}"
