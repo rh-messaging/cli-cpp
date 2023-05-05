@@ -52,11 +52,7 @@ jobs:
             ${{ runner.os }}-sccache-
 
       - name: Log in to ghrc.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: ghrc.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghrc.io --username="${{ github.actor }}" --password-stdin
 
       - name: Build Image
         id: build-image
