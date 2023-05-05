@@ -59,7 +59,7 @@ jobs:
           fi
 
       - name: Set up QEMU
-        run: podman run --privileged --rm tonistiigi/binfmt --install all
+        run: podman run --privileged --rm docker.io/tonistiigi/binfmt --install all
 
       - name: Cache CCACHE_DIR (restore)
         uses: actions/cache/restore@v3
