@@ -82,7 +82,7 @@ jobs:
           # https://github.com/containers/buildah/issues/4777#issuecomment-1542088081
           extra-args: |
             --retry=100
-            --retry-delay=5
+            --retry-delay=5s
             --volume=${{ env.CCACHE_DIR }}:/ccache
             ${{ steps.cache.outputs.cache-from }}
             ${{ steps.cache.outputs.cache-to }}
