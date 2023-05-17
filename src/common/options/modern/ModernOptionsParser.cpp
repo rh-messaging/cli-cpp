@@ -233,13 +233,6 @@ void ModernOptionsParser::validate(const Values &options) const
     }
 
     /* SSL */
-    if ((options.is_set("conn-ssl-verify-peer-name") || options.is_set("con-ssl-verify-peer")) && options.is_set("conn-ssl-trust-store") == false) {
-        print_help();
-        std::stringstream sstm;
-        sstm << "SSL trust store (--conn-ssl-trust-store) must be given";
-        error(sstm.str());
-    }
-
     if (options.is_set("conn-ssl-certificate") && options.is_set("conn-ssl-private-key") == false) {
         print_help();
         std::stringstream sstm;
