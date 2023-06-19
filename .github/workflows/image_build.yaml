@@ -77,7 +77,7 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }} ${{ steps.cleaned_ref_name.outputs.ref_name }}
-          archs: amd64, arm64, arm64, s390x
+          archs: amd64, arm64, ppc64le, s390x
           layers: true
           # https://github.com/containers/buildah/issues/4777#issuecomment-1542088081
           extra-args: |
