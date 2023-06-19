@@ -37,9 +37,10 @@ WORKDIR /src
 ENV CCACHE_COMPRESS=true
 ENV CCACHE_MAXSIZE=400MB
 
-# WORKAROUND: Use Proton 0.38.0 (without tracing) to get something compiling quickly
-RUN git clone --branch=0.38.0 --depth=1 https://github.com/apache/qpid-proton.git
+# WORKAROUND: Use Proton 0.37.0 (without tracing) to get something compiling quickly
+RUN git clone --branch=0.37.0 --depth=1 https://github.com/apache/qpid-proton.git
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
+    -DENABLE_WARNING_ERROR=OFF \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_INSTALL_PREFIX=cmake-install \
