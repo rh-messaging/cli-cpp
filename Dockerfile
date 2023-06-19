@@ -24,7 +24,6 @@ RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     cmake ninja-build \
     gcc gcc-c++ \
     \
-    opentelemetry-cpp-devel \
     cyrus-sasl-devel \
     openssl-devel \
     python-devel
@@ -75,7 +74,6 @@ RUN /usr/bin/crb enable
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp/repo/epel-9/kpvdr-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-epel-9.repo
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
-    opentelemetry-cpp \
     cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-lib cyrus-sasl-plain \
     openssl
 
