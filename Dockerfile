@@ -15,7 +15,7 @@ RUN rpm -ivh epel-release-latest-9.noarch.rpm
 RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
-RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp/repo/epel-9/kpvdr-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel/repo/epel-9/kpvdr-opentelemetry-cpp-rhel-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     ccache findutils git patchelf \
