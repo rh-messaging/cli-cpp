@@ -16,6 +16,7 @@ RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel/repo/epel-9/kpvdr-opentelemetry-cpp-rhel-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/protobuf/repo/epel-9/kpvdr-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     ccache findutils git patchelf \
@@ -36,7 +37,8 @@ WORKDIR /src
 ENV CCACHE_COMPRESS=true
 ENV CCACHE_MAXSIZE=400MB
 
-RUN git clone --depth=1 https://github.com/apache/qpid-proton.git
+# WORKAROUND: Use Proton 0.37.0 (without tracing) to get something compiling quickly
+RUN git clone --branch=0.37.0 --depth=1 https://github.com/apache/qpid-proton.git
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
