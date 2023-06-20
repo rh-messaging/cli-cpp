@@ -5,7 +5,7 @@ ARG UBI_RUNTIME_TAG=latest
 ARG IMAGE_BUILD=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_TAG}
 ARG IMAGE_BASE=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_RUNTIME_TAG}
 
-ARG PROTON_VERSION=0.39.0
+ENV PROTON_VERSION=0.39.0
 
 # Build this with something like buildah bud --arch arm64 --volume=/tmp/ccache:/ccache
 
@@ -19,12 +19,24 @@ RUN /usr/bin/crb enable
 
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel/repo/epel-9/kpvdr-opentelemetry-cpp-rhel-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/protobuf/repo/epel-9/kpvdr-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/json/repo/epel-9/kpvdr-json-epel-9.repo > /etc/yum.repos.d/kpvdr-json-epel-9.repo
+
+#CMake Error at /usr/lib64/cmake/protobuf/protobuf-targets.cmake:106 (message):
+#  The imported target "protobuf::libprotobuf-lite" references the file
+#
+#     "/usr/lib64/libprotobuf-lite.so.3.19.6.0"
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     ccache findutils git patchelf \
     \
     cmake ninja-build \
     gcc gcc-c++ \
+    \
+    protobuf-lite-devel \
+    \
+    opentelemetry-cpp-devel \
+    opentelemetry-cpp-exporter-otlp-devel \
+    opentelemetry-cpp-zpages-devel \
     \
     cyrus-sasl-devel \
     openssl-devel \
@@ -38,7 +50,7 @@ WORKDIR /src
 ENV CCACHE_COMPRESS=true
 ENV CCACHE_MAXSIZE=400MB
 
-RUN git clone --branch=$PROTON_VERSION --depth=1 https://github.com/apache/qpid-proton.git
+RUN git clone --branch=${PROTON_VERSION} --depth=1 https://github.com/apache/qpid-proton.git
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
     -DENABLE_WARNING_ERROR=OFF \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -72,9 +84,13 @@ RUN rpm -ivh epel-release-latest-9.noarch.rpm
 RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
-RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp/repo/epel-9/kpvdr-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel/repo/epel-9/kpvdr-opentelemetry-cpp-rhel-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/protobuf/repo/epel-9/kpvdr-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/json/repo/epel-9/kpvdr-json-epel-9.repo > /etc/yum.repos.d/kpvdr-json-epel-9.repo
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
+    protobuf-lite \
+    opentelemetry-cpp opentelemetry-cpp-exporter-otlp opentelemetry-cpp-zpages \
     cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-lib cyrus-sasl-plain \
     openssl
 
