@@ -5,12 +5,12 @@ ARG UBI_RUNTIME_TAG=latest
 ARG IMAGE_BUILD=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_TAG}
 ARG IMAGE_BASE=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_RUNTIME_TAG}
 
-ENV PROTON_VERSION=0.39.0
-
 # Build this with something like buildah bud --arch arm64 --volume=/tmp/ccache:/ccache
 
 #DEV FROM $IMAGE_BUILD
 FROM quay.io/centos/centos:stream9 as build
+
+ENV PROTON_VERSION=0.39.0
 
 RUN curl -OL https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 RUN rpm -ivh epel-release-latest-9.noarch.rpm
