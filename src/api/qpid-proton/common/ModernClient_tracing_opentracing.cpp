@@ -6,7 +6,7 @@
 #include <opentelemetry/sdk/trace/tracer_provider.h>
 #include <opentelemetry/trace/provider.h>
 #include <opentelemetry/nostd/unique_ptr.h>
-#include <opentelemetry/exporters/jaeger/jaeger_exporter.h>
+#include <opentelemetry/exporters/otlp/otlp_http_exporter.h>
 #include <opentelemetry/exporters/ostream/span_exporter.h>
 #include <opentelemetry/sdk/resource/resource.h>
 
@@ -17,11 +17,11 @@
 void dtests::proton::common::ModernClient::enableTracing(std::string service_name) const
 {
 
-    opentelemetry::exporter::jaeger::JaegerExporterOptions opts;
+    opentelemetry::exporter::otlp::OtlpHttpExporterOptions opts;
 
     // Initialize Jaeger Exporter
     std::unique_ptr<opentelemetry::sdk::trace::SpanExporter> exporter = std::unique_ptr<opentelemetry::sdk::trace::SpanExporter>(
-            new opentelemetry::exporter::jaeger::JaegerExporter(opts));
+            new opentelemetry::exporter::otlp::OtlpHttpExporter(opts));
 
     // Set service-name
     auto resource_attributes = opentelemetry::sdk::resource::ResourceAttributes

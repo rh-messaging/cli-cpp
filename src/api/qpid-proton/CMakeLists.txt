@@ -86,9 +86,9 @@ if (OPENTELEMETRY_ENABLED)
 
     target_link_libraries(dtests-proton-reactor
             opentelemetry-cpp::trace
-            opentelemetry-cpp::jaeger_trace_exporter
-            opentelemetry-cpp::ostream_span_exporter)
-endif (UNIX)
+            opentelemetry-cpp::otlp_http_exporter
+    )
+endif ()
 
 set(proton-reactor-clients
     aac3_connector
