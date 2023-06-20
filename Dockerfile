@@ -52,7 +52,6 @@ ENV CCACHE_MAXSIZE=400MB
 
 RUN git clone --branch=${PROTON_VERSION} --depth=1 https://github.com/apache/qpid-proton.git
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
-    -DENABLE_WARNING_ERROR=OFF \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_INSTALL_PREFIX=cmake-install \
