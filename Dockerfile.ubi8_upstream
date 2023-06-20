@@ -1,7 +1,11 @@
+# podman build -f Dockerfile.ubi8_upstream -t quay.io/jdanek/cli-cpp_ubi8_upstream .
+
 FROM docker.io/almalinux/8-base
 
 RUN dnf install -y 'dnf-command(copr)' \
-&& dnf copr enable -y kpvdr/opentelemetry-cpp \
+&& dnf copr enable -y kpvdr/json \
+&& dnf copr enable -y kpvdr/protobuf \
+&& dnf copr enable -y kpvdr/opentelemetry-cpp-rhel \
 && yum install -y dnf \
 && dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 && dnf install -y \
@@ -16,6 +20,8 @@ RUN dnf install -y 'dnf-command(copr)' \
     boost-devel \
     \
     opentelemetry-cpp-devel \
+    opentelemetry-cpp-exporter-otlp-devel \
+    opentelemetry-cpp-zpages-devel \
     \
     cyrus-sasl-devel \
     openssl-devel \
