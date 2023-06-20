@@ -5,6 +5,8 @@ ARG UBI_RUNTIME_TAG=latest
 ARG IMAGE_BUILD=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_TAG}
 ARG IMAGE_BASE=registry.access.redhat.com/ubi${UBI_VERSION}/ubi-minimal:${UBI_RUNTIME_TAG}
 
+ARG PROTON_VERSION=0.39.0
+
 # Build this with something like buildah bud --arch arm64 --volume=/tmp/ccache:/ccache
 
 #DEV FROM $IMAGE_BUILD
@@ -36,8 +38,7 @@ WORKDIR /src
 ENV CCACHE_COMPRESS=true
 ENV CCACHE_MAXSIZE=400MB
 
-# WORKAROUND: Use Proton 0.38.0 (without tracing) to get something compiling quickly
-RUN git clone --branch=0.38.0 --depth=1 https://github.com/apache/qpid-proton.git
+RUN git clone --branch=$PROTON_VERSION --depth=1 https://github.com/apache/qpid-proton.git
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S qpid-proton -B cmake-build-qpid-proton -GNinja \
     -DENABLE_WARNING_ERROR=OFF \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
