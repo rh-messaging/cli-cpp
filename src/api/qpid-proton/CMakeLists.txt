@@ -81,14 +81,17 @@ target_link_libraries(
 
 if (OPENTELEMETRY_ENABLED)
     set(CMAKE_BUILD_TYPE "")
-    find_package(opentelemetry-cpp)
+    # This is a workaround because the otlp exporter requires protobuf but most packaged versions
+    # of protobuf don't ship cmake config yet. We use this exporter in our examples
+    find_package(Protobuf REQUIRED)
+    find_package(opentelemetry-cpp REQUIRED)
     include_directories(${OPENTELEMETRY_CPP_INCLUDE_DIRS})
 
     target_link_libraries(dtests-proton-reactor
             opentelemetry-cpp::trace
-            opentelemetry-cpp::jaeger_trace_exporter
-            opentelemetry-cpp::ostream_span_exporter)
-endif (UNIX)
+            opentelemetry-cpp::otlp_http_exporter
+    )
+endif ()
 
 set(proton-reactor-clients
     aac3_connector
