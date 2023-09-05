@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 'quay.io/jdanek/cli-cpp_ubi8_upstream'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 'quay.io/jdanek/cli-cpp_ubi8_epel'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - run: bazelisk build //:cli-cpp --enable_bzlmod --verbose_failures --sandbox_debug --experimental_ui_max_stdouterr_bytes=104857600 --//:deps=rpms --//:enable_ccache
 
@@ -50,7 +50,7 @@ jobs:
       matrix:
         container: ['quay.io/jdanek/cli-cpp_ubi8_epel', 'quay.io/jdanek/cli-cpp_fedora37_epel']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Create Build Environment
         working-directory: ${{runner.workspace}}
