@@ -23,7 +23,7 @@ This project can be built either with CMake, or with CMake executed by Bazel.
         -DProton_DIR=...
         -DProtonCpp_DIR=...
         -DENABLE_QPID_PROTON=ON
-        -DCMAKE_USER_C_FLAGS='-std=c++11'
+        -DCMAKE_USER_C_FLAGS='-std=c++17'
 
 ### Bazel command line
 
