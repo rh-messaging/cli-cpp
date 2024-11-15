@@ -126,6 +126,27 @@ ModernOptionsParser::ModernOptionsParser()
             .help("client reconnect TIMEOUT (default: -1)")
             .metavar("TIMEOUT");
 
+    // transactions
+    add_option("--tx-size")
+            .dest("tx-size")
+            .help("transactional mode: batch message count size (default: 0)")
+            .metavar("TX_SIZE");
+
+    char const* const choices[] = { "commit", "rollback", "none" };
+    add_option("--tx-action")
+            .dest("tx-action")
+            .help("transactional action at the end of tx batch (default: commit)")
+            .type("choice")
+            .choices(std::begin(choices), std::end(choices))
+            .metavar("TX_ACTION");
+
+    add_option("--tx-endloop-action")
+            .dest("tx-endloop-action")
+            .help("transactional action after sending all messages in loop")
+            .type("choice")
+            .choices(std::begin(choices), std::end(choices))
+            .metavar("TX_ENDLOOP_ACTION");
+
 /*********************** Reactive C++ API client extras ***********************/
    add_option("--conn-reconnect-first")
             .dest("conn-reconnect-first")
