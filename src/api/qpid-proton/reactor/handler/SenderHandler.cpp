@@ -88,6 +88,11 @@ SenderHandler::SenderHandler(
     duration_mode(duration_mode),
     sent(0),
     confirmedSent(0),
+    batch_size(1),
+    current_batch(0),
+    committed(0),
+    confirmed(0),
+    total(0),
     m(),
     timer_event(*this),
     interval(duration::IMMEDIATE)
@@ -205,6 +210,11 @@ void SenderHandler::on_container_start(container &c)
         work_q->schedule(duration::IMMEDIATE, make_work(&SenderHandler::checkIfCanSend, this));
     }
 #endif
+    // TODO Transactions
+    tx = NULL;
+    cont = &c;
+    // currently causes seqfault
+    // c.declare_transaction(conn, th);
 }
 
 void SenderHandler::on_sendable(sender &s)
@@ -258,6 +268,14 @@ void SenderHandler::on_tracker_reject(tracker &t)
 void SenderHandler::on_connection_close(connection &c)
 {
     logger(debug) << "Closing connection";
+    // TODO debug remove
+    // logger(info) << "Transactions";
+    // logger(info) << "Transaction total: " << total;
+    // logger(info) << "Transaction sent: " << sent;
+    // logger(info) << "Transaction batch size: " << batch_size;
+    // logger(info) << "Transaction current batch: " << current_batch;
+    // logger(info) << "Transaction confirmed: " << confirmed;
+    // logger(info) << "Transaction committed: " << committed;
 }
 
 void SenderHandler::on_connection_error(connection &c)
@@ -269,7 +287,6 @@ void SenderHandler::on_connection_error(connection &c)
     }
 }
 
-
 void SenderHandler::setCount(int count)
 {
     this->count = count;
@@ -278,6 +295,16 @@ void SenderHandler::setCount(int count)
 int SenderHandler::getCount() const
 {
     return count;
+}
+
+void SenderHandler::setBatchSize(int batchSize)
+{
+    this->batch_size = batchSize;
+}
+
+int SenderHandler::getBatchSize() const
+{
+    return batch_size;
 }
 
 void SenderHandler::setMessage(message &msg)
@@ -360,6 +387,34 @@ void SenderHandler::send()
 #endif
     ready = false;
 }
+
+// TODO VIP TRANSACTIONS
+
+void SenderHandler::on_transaction_declared(transaction &t) {
+    tx = &t;
+    send();
+}
+
+void SenderHandler::on_transaction_committed(transaction &t) {
+    committed += current_batch;
+    connection conn = sndr.connection();
+    if(committed == total) {
+        std::cout << "All messages committed";
+        conn.close();
+    }
+    else {
+        current_batch = 0;
+        cont->declare_transaction(conn, th);
+    }
+}
+
+void SenderHandler::on_sender_close(sender &s) {
+    current_batch = 0;
+}
+
+// override
+// void SenderHandler::on_sendable(sender &s) override {}
+// void SenderHandler::on_tracker_accept(tracker &t) override {}
 
 } /* namespace reactor */
 } /* namespace proton */

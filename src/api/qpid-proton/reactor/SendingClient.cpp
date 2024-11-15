@@ -556,13 +556,19 @@ int SendingClient::run(int argc, char **argv) const
     );
 
     handler.setMessage(msg);
-    
+
     int count = 1;
     if (options.is_set("count")) {
         count = static_cast<int> (options.get("count"));
     }
     handler.setCount(count);
     
+    int tx_size = 1;
+    if (options.is_set("tx-size")) {
+        tx_size = static_cast<int> (options.get("tx-size"));
+    }
+    handler.setBatchSize(tx_size);
+
     try {
         container(handler).run();
 
