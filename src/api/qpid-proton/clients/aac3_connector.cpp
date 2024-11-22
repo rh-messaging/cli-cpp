@@ -4,8 +4,6 @@
  *  Created on: Apr 14, 2015
  *      Author: opiske
  */
-#include <cstdlib>
-
 #include <reactor/ConnectingClient.h>
 
 using dtests::proton::reactor::ConnectingClient;

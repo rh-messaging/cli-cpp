@@ -35,7 +35,6 @@
 #include "logger/LoggerWrapper.h"
 
 using proton::messaging_handler;
-using proton::transaction_handler;
 using proton::transaction;
 using proton::container;
 using proton::void_function0;
@@ -60,7 +59,7 @@ using dtests::common::UriParser;
  * An abstract proton message handler providing a common interface for other
  * client handlers
  */
-class CommonHandler : public messaging_handler, transaction_handler {
+class CommonHandler : public messaging_handler {
   public:
     /**
      * Constructor
@@ -122,8 +121,6 @@ class CommonHandler : public messaging_handler, transaction_handler {
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
-        
-    transaction_handler th;
 
   protected:    
     

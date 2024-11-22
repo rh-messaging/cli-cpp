@@ -22,7 +22,6 @@
 #include <proton/connection_options.hpp>
 #include <proton/sender_options.hpp>
 #include <proton/thread_safe.hpp>
-#include <proton/transaction.hpp>
 
 #include "CommonHandler.h"
 #include "Timer.h"
@@ -37,9 +36,6 @@ using proton::source_options;
 using proton::transport;
 using proton::tracker;
 using proton::connection_options;
-using proton::sender;
-using proton::transaction;
-using proton::transaction_handler;
 
 namespace dtests {
 namespace proton {
@@ -128,11 +124,6 @@ class SenderHandler : public CommonHandler {
     void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
-    // TODO TX Support
-    void on_sender_close(sender &s);
-    void on_transaction_declared(transaction &t);
-    void on_transaction_committed(transaction &t);
-
     /**
      * Sets the message count
      * @param count the message count
@@ -145,18 +136,6 @@ class SenderHandler : public CommonHandler {
      */
     int getCount() const;
     
-    /**
-     * Sets the transaction batch size
-     * @param batch_size the transaction batch size
-     */
-    void setBatchSize(int batchSize);
-
-    /**
-     * Gets the transaction batch size
-     * @return the transaction batch size
-     */
-    int getBatchSize() const;
-
     /**
      * Sets the message to send
      * @param m the message to send
@@ -180,17 +159,7 @@ class SenderHandler : public CommonHandler {
     string duration_mode;
     int sent;
     int confirmedSent;
-
-    // transactions
-    int batch_size = 0;
-    int current_batch = 0;
-    int committed = 0;
-    int confirmed = 0;
-    int total = 0;
-
     sender sndr;
-    transaction *tx;
-    container *cont;
 
     message m;
     

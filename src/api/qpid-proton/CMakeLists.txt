@@ -61,10 +61,14 @@ add_library(
     reactor/handler/CommonHandler.cpp
     reactor/handler/ConnectorHandler.cpp
     reactor/handler/SenderHandler.cpp
+    reactor/handler/TxSenderHandler.cpp
     reactor/handler/ReceiverHandler.cpp
+    reactor/handler/TxReceiverHandler.cpp
     reactor/ConnectingClient.cpp
     reactor/SendingClient.cpp
+    reactor/TxSendingClient.cpp
     reactor/ReceivingClient.cpp
+    reactor/TxReceivingClient.cpp
 )
 
 target_link_libraries(
