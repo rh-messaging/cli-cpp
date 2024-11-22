@@ -83,7 +83,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
  *
 #ifdef REACTOR_PROPERTY_MAP_USES_STL
     message::property_map &properties = msg.properties();
-    
+
     setter.setMap("msg-property", properties);
 #endif // REACTOR_PROPERTY_MAP_USES_STL
  */
@@ -129,7 +129,7 @@ void SendingClient::setMessageProperty(message *msg, const string &property) con
     if (nameVal(property, name, val, separator)) {
         if (separator == "~") {
           temp.resize(val.size());
-          
+
           std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
 
           if (temp == "true") {
@@ -171,7 +171,7 @@ void SendingClient::setMessageListItem(message *msg, const string &property, std
     if (nameVal(property, name, val, separator)) {
         if (separator == "~") {
           temp.resize(val.size());
-          
+
           std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
 
           if (temp == "true") {
@@ -216,7 +216,7 @@ void SendingClient::setMessageMapItem(message *msg, const string &property, std:
     if (nameVal(property, name, val, separator)) {
         if (separator == "~") {
           temp.resize(val.size());
-          
+
           std::transform(val.begin(), val.end(), temp.begin(), ::tolower);
 
           if (temp == "true") {
@@ -348,14 +348,14 @@ int SendingClient::run(int argc, char **argv) const
     } else {
         user = uri_parser.getUser();
     }
-    
+
     string password = "";
     if (options.is_set("password")) {
         password = options["password"];
     } else {
         password = uri_parser.getPassword();
     }
-    
+
     string sasl_mechanisms = "";
     if (options.is_set("sasl-mechanisms")) {
         sasl_mechanisms = options["sasl-mechanisms"];
@@ -364,7 +364,7 @@ int SendingClient::run(int argc, char **argv) const
     } else {
         sasl_mechanisms = "ANONYMOUS";
     }
-    
+
     string conn_sasl_enabled = "true";
     if (options.is_set("conn-sasl-enabled")) {
         conn_sasl_enabled = options["conn-sasl-enabled"];
@@ -505,17 +505,17 @@ int SendingClient::run(int argc, char **argv) const
         setMessageText(options["msg-content"], &msg);
     }
 
-   
+
 /*
- * Note 1: this is a left-over from setMessageOptions. Since I don't want to 
- * change the method signature there, I check again here and set the remaining
+ * Note 1: this is a left-over from setMessageOptions. Since I don't want to
+ *  change the method signature there, I check again here and set the remaining
  * option that cannot be done implicitly above.
- * 
- * Note 2: this is a hack for GCC ~4.4.7 on i686. 
- */    
+ *
+ * Note 2: this is a hack for GCC ~4.4.7 on i686.
+ */
 #ifndef ENABLE_IMPLICIT_CONVERSIONS
     long value =  options.get("msg-ttl");
-    
+
     msg.ttl(::proton::duration(value));
 #endif
     if (options.is_set("msg-group-seq")) {
@@ -562,12 +562,6 @@ int SendingClient::run(int argc, char **argv) const
         count = static_cast<int> (options.get("count"));
     }
     handler.setCount(count);
-    
-    int tx_size = 1;
-    if (options.is_set("tx-size")) {
-        tx_size = static_cast<int> (options.get("tx-size"));
-    }
-    handler.setBatchSize(tx_size);
 
     try {
         container(handler).run();
