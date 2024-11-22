@@ -1,0 +1,221 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   TxSenderHandler.h
+ * Author: pematous
+ *
+ * Created on November 20, 2024
+ */
+
+#ifndef TXSENDERHANDLER_H
+#define TXSENDERHANDLER_H
+
+#include <proton/tracker.hpp>
+#include <proton/transport.hpp>
+#include <proton/error_condition.hpp>
+#include <proton/message_id.hpp>
+#include <proton/source_options.hpp>
+#include <proton/connection_options.hpp>
+#include <proton/sender_options.hpp>
+#include <proton/thread_safe.hpp>
+#include <proton/transaction.hpp>
+
+#include "CommonHandler.h"
+#include "Timer.h"
+#include "Utils.h"
+
+using proton::message;
+using proton::message_id;
+using proton::connection;
+using proton::sender;
+using proton::delivery;
+using proton::source_options;
+using proton::transport;
+using proton::tracker;
+using proton::connection_options;
+using proton::sender;
+using proton::transaction;
+using proton::transaction_handler;
+
+namespace dtests {
+namespace proton {
+namespace reactor {
+
+using dtests::common::Timer;
+
+/**
+ * A proton message handler that handles message send events
+ */
+class TxSenderHandler : public CommonHandler, transaction_handler {
+  public:
+    /**
+     * Constructor
+     * @param url broker URL
+     * @param conn_urls connection URLs
+     * @param is_topic if target is topic
+     * @param user username
+     * @param password password
+     * @param sasl_mechanisms SASL mechanisms
+     * @param conn_sasl_enabled enable connection SASL
+     * @param conn_ssl_certificate path to client certificate
+     * @param conn_ssl_private_key path to client private key
+     * @param conn_ssl_password client's certificate database password
+     * @param conn_ssl_trust_store path to client trust store
+     * @param conn_ssl_verify_peer verifies server certificate
+     * @param conn_ssl_verify_peer_name verifies connection url against server hostname
+     * @param timeout timeout
+     * @param duration message actions total duration
+     * @param duration_mode specifies where to wait to achieve expected duration
+     * @param conn_reconnect type or reconnection
+     * @param conn_reconnect_interval reconnect interval
+     * @param conn_reconnect_limit reconnect limit
+     * @param conn_reconnect_timeout reconnect timeout
+     * @param conn_reconnect_first reconnect first
+     * @param conn_reconnect_increment reconnect increment
+     * @param conn_reconnect_doubling reconnect doubling
+     * @param conn_reconnect_custom custom reconnect values
+     * @param conn_heartbeat connection heartbeat in seconds
+     * @param max_frame_size maximum frame size
+     * @param conn_use_config_file use configuration file for connection
+     * @param log_msgs message log format
+     */
+    TxSenderHandler(
+        const string &url,
+        vector<string> conn_urls,
+        bool is_topic,
+        string user,
+        string password,
+        string sasl_mechanisms,
+        string conn_sasl_enabled = "true",
+        string conn_ssl_certificate = "",
+        string conn_ssl_private_key = "",
+        string conn_ssl_password = "",
+        string conn_ssl_trust_store = "",
+        bool conn_ssl_verify_peer = false,
+        bool conn_ssl_verify_peer_name = false,
+        int timeout = 10,
+        int duration_time = 0,
+        string duration_mode = "after-send",
+        string conn_reconnect = "true",
+        int32_t conn_reconnect_interval = -1,
+        int32_t conn_reconnect_limit = -1,
+        int32_t conn_reconnect_timeout = -1,
+        uint32_t conn_reconnect_first = 0,
+        uint32_t conn_reconnect_increment = 100,
+        bool conn_reconnect_doubling = true,
+        bool conn_reconnect_custom = false,
+        uint32_t conn_heartbeat = 0,
+        uint32_t max_frame_size = -1,
+        bool conn_use_config_file = false,
+        string log_msgs = ""
+    );
+    
+    void timerEvent();
+
+    virtual ~TxSenderHandler();
+
+    /**
+     * Sets the message count
+     * @param count the message count
+     */
+    void setCount(int count);
+    
+    /**
+     * Gets the message count
+     * @return the message count
+     */
+    int getCount() const;
+    
+    /**
+     * Sets the transaction batch size
+     * @param batch_size the transaction batch size
+     */
+    void setBatchSize(int batchSize);
+
+    /**
+     * Gets the transaction batch size
+     * @return the transaction batch size
+     */
+    int getBatchSize() const;
+
+    /**
+     * Sets the message to send
+     * @param m the message to send
+     */
+    void setMessage(message &m);
+
+    void checkIfCanSend();
+    void send();
+    
+    /**
+     * Gets the message to send
+     * @return the message to send
+     */
+    message getMessage() const;
+
+    transaction_handler th;
+
+    // reactor methods
+    void on_container_start(container &c);
+    void on_sendable(sender &s);
+    void on_tracker_accept(tracker &t);
+    void on_tracker_reject(tracker &t);
+    void on_transport_error(transport &t);
+    void on_transport_close(transport &t);
+    void on_connection_error(connection &c);
+    void on_connection_close(connection &c);
+
+    // TODO TX Support
+    void on_sender_close(sender &s);
+    void on_transaction_declared(transaction &t);
+    void on_transaction_committed(transaction &t);
+    void on_transaction_aborted(transaction &t);
+//    void on_transaction_declare_failed(transaction &t);
+//    void on_transaction_commit_failed(transaction &t);
+
+  private:
+    typedef CommonHandler super;
+    bool ready;
+    int count;
+    int duration_time;
+    string duration_mode;
+    int sent;
+    int confirmedSent;
+
+    // transact
+    int batch_size = 0;
+    int current_batch = 0;
+    int committed = 0;
+    int confirmed = 0;
+    int total = 0;
+
+    sender sndr;
+    transaction *tx;
+    container *cont;
+
+    message m;
+    
+    struct timer_event_t : public void_function0 {
+        TxSenderHandler &parent;
+        timer_event_t(TxSenderHandler &handler) : parent(handler) {}
+        void operator()() {
+            parent.timerEvent();
+        }
+    };
+    
+    timer_event_t timer_event;
+
+    duration interval;
+
+};
+
+} /* namespace reactor */
+} /* namespace proton */
+} /* namespace dtests */
+
+#endif /* SENDERHANDLER_H */
+

@@ -1,11 +1,11 @@
 /*
- * SendingClient.cpp
+ * TxSendingClient.cpp
  *
- *  Created on: Apr 30, 2015
- *      Author: opiske
+ *  Created on: Nov 20, 2024
+ *      Author: pematous
  */
 
-#include "SendingClient.h"
+#include "TxSendingClient.h"
 
 using proton::message;
 using proton::container;
@@ -19,19 +19,19 @@ using namespace std;
 using dtests::common::UriParser;
 using dtests::proton::common::ModernClient;
 
-SendingClient::SendingClient()
+TxSendingClient::TxSendingClient()
 : super()
 
 {
 
 }
 
-SendingClient::~SendingClient()
+TxSendingClient::~TxSendingClient()
 {
 
 }
 
-void SendingClient::setMessageOptions(const OptionsSetter &setter,
+void TxSendingClient::setMessageOptions(const OptionsSetter &setter,
         message &msg) const
 {
     /*
@@ -89,7 +89,7 @@ void SendingClient::setMessageOptions(const OptionsSetter &setter,
  */
 }
 
-bool SendingClient::nameVal(const string &in, string &name, string &value, string &separator) const
+bool TxSendingClient::nameVal(const string &in, string &name, string &value, string &separator) const
 {
     std::string::size_type i = in.find("=");
     separator = "=";
@@ -119,7 +119,7 @@ bool SendingClient::nameVal(const string &in, string &name, string &value, strin
     }
 }
 
-void SendingClient::setMessageProperty(message *msg, const string &property) const
+void TxSendingClient::setMessageProperty(message *msg, const string &property) const
 {
     string name;
     string val;
@@ -161,7 +161,7 @@ void SendingClient::setMessageProperty(message *msg, const string &property) con
     }
 }
 
-void SendingClient::setMessageListItem(message *msg, const string &property, std::list<value> &messageList) const
+void TxSendingClient::setMessageListItem(message *msg, const string &property, std::list<value> &messageList) const
 {
     string name;
     string val;
@@ -206,7 +206,7 @@ void SendingClient::setMessageListItem(message *msg, const string &property, std
     }
 }
 
-void SendingClient::setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const
+void TxSendingClient::setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const
 {
     string name;
     string val;
@@ -248,7 +248,7 @@ void SendingClient::setMessageMapItem(message *msg, const string &property, std:
     }
 }
 
-void SendingClient::setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const
+void TxSendingClient::setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const
 {
     vector<string> properties = callbackProperty.getStrings();
 
@@ -257,7 +257,7 @@ void SendingClient::setMessageProperties(StringAppendCallback &callbackProperty,
     }
 }
 
-void SendingClient::setMessageList(StringAppendCallback &callbackList, message *msg) const
+void TxSendingClient::setMessageList(StringAppendCallback &callbackList, message *msg) const
 {
     vector<string> list = callbackList.getStrings();
 
@@ -270,7 +270,7 @@ void SendingClient::setMessageList(StringAppendCallback &callbackList, message *
     msg->body() = messageList;
 }
 
-void SendingClient::setMessageMap(StringAppendCallback &callbackMap, message *msg) const
+void TxSendingClient::setMessageMap(StringAppendCallback &callbackMap, message *msg) const
 {
     vector<string> map = callbackMap.getStrings();
 
@@ -283,11 +283,11 @@ void SendingClient::setMessageMap(StringAppendCallback &callbackMap, message *ms
     msg->body() = messageMap;
 }
 
-void SendingClient::setMessageText(string content, message *msg) const {
+void TxSendingClient::setMessageText(string content, message *msg) const {
     msg->body(content);
 }
 
-int SendingClient::run(int argc, char **argv) const
+int TxSendingClient::run(int argc, char **argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";
     const string version = "1.0";
@@ -524,7 +524,7 @@ int SendingClient::run(int argc, char **argv) const
 
     bool conn_use_config_file = options.is_set("conn-use-config-file");
 
-    SenderHandler handler = SenderHandler(
+    TxSenderHandler handler = TxSenderHandler(
         address,
         conn_urls,
         is_topic,
@@ -556,13 +556,19 @@ int SendingClient::run(int argc, char **argv) const
     );
 
     handler.setMessage(msg);
-    
+
     int count = 1;
     if (options.is_set("count")) {
         count = static_cast<int> (options.get("count"));
     }
     handler.setCount(count);
     
+    int tx_size = 1;
+    if (options.is_set("tx-size")) {
+        tx_size = static_cast<int> (options.get("tx-size"));
+    }
+    handler.setBatchSize(tx_size);
+
     try {
         container(handler).run();
 
