@@ -489,6 +489,16 @@ int TxSendingClient::run(int argc, char **argv) const
         enableTracing("aac3_sender");
     }
 
+    string tx_action = "commit";
+    if (options.is_set("tx-action")) {
+        tx_action = options["tx-action"];
+    }
+
+    string tx_endloop_action = "commit";
+    if (options.is_set("tx-endloop-action")) {
+        tx_endloop_action = options["tx-endloop-action"];
+    }
+
     message msg;
 
     setMessageOptions(setter, msg);
@@ -552,7 +562,9 @@ int TxSendingClient::run(int argc, char **argv) const
         conn_heartbeat,
         max_frame_size,
         conn_use_config_file,
-        log_msgs
+        log_msgs,
+        tx_action,
+        tx_endloop_action
     );
 
     handler.setMessage(msg);

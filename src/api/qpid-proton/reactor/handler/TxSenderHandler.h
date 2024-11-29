@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxSenderHandler.h
  * Author: pematous
  *
@@ -111,9 +111,11 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
         uint32_t conn_heartbeat = 0,
         uint32_t max_frame_size = -1,
         bool conn_use_config_file = false,
-        string log_msgs = ""
+        string log_msgs = "",
+        string tx_action = "commit",
+        string tx_endloop_action = "commit"
     );
-    
+
     void timerEvent();
 
     virtual ~TxSenderHandler();
@@ -123,13 +125,13 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
      * @param count the message count
      */
     void setCount(int count);
-    
+
     /**
      * Gets the message count
      * @return the message count
      */
     int getCount() const;
-    
+
     /**
      * Sets the transaction batch size
      * @param batch_size the transaction batch size
@@ -150,7 +152,7 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
 
     void checkIfCanSend();
     void send();
-    
+
     /**
      * Gets the message to send
      * @return the message to send
@@ -159,7 +161,7 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
 
     transaction_handler th;
 
-    // reactor methods
+    // common reactor methods
     void on_container_start(container &c);
     void on_sendable(sender &s);
     void on_tracker_accept(tracker &t);
@@ -168,14 +170,13 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     void on_transport_close(transport &t);
     void on_connection_error(connection &c);
     void on_connection_close(connection &c);
-
-    // TODO TX Support
     void on_sender_close(sender &s);
-    void on_transaction_declared(transaction &t);
-    void on_transaction_committed(transaction &t);
-    void on_transaction_aborted(transaction &t);
-//    void on_transaction_declare_failed(transaction &t);
-//    void on_transaction_commit_failed(transaction &t);
+    // reactor transaction methods
+    void on_transaction_declared(transaction t);
+    void on_transaction_committed(transaction t);
+    void on_transaction_aborted(transaction t);
+    void on_transaction_declare_failed(transaction t);
+    void on_transaction_commit_failed(transaction t);
 
   private:
     typedef CommonHandler super;
@@ -183,22 +184,21 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     int count;
     int duration_time;
     string duration_mode;
-    int sent;
-    int confirmedSent;
 
-    // transact
+    // transactions related variables
     int batch_size = 0;
     int current_batch = 0;
     int committed = 0;
-    int confirmed = 0;
-    int total = 0;
+    int confirmedSent = 0;
+    string tx_action = "commit";
+    string tx_endloop_action = "commit";
 
     sender sndr;
-    transaction *tx;
+    transaction tx;
     container *cont;
 
     message m;
-    
+
     struct timer_event_t : public void_function0 {
         TxSenderHandler &parent;
         timer_event_t(TxSenderHandler &handler) : parent(handler) {}
@@ -206,7 +206,7 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
             parent.timerEvent();
         }
     };
-    
+
     timer_event_t timer_event;
 
     duration interval;

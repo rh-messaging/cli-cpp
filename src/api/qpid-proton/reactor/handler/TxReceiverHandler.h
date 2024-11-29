@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxReceiverHandler.h
  * Author: pematous
  *
@@ -64,7 +64,7 @@ using proton::transaction_handler;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
-#endif 
+#endif
 
 namespace dtests {
 namespace proton {
@@ -162,7 +162,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
         int recv_credit_window = -1,
         bool recv_drain_after_credit_window = false
     );
-    
+
     virtual ~TxReceiverHandler();
 
     void timerEvent();
@@ -185,7 +185,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
      * Gets the transaction batch size
      * @return the transaction batch size
      */
-    int getBatchSize() const;    
+    int getBatchSize() const;
 
     transaction_handler th;
 
@@ -206,11 +206,11 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     listener lsnr;
     container *cont;
     double ts;
-    
+
     struct timer_event_t : public void_function0 {
         TxReceiverHandler &parent;
         timer_event_t(TxReceiverHandler &handler): parent(handler) { }
-        void operator()() { 
+        void operator()() {
             parent.timerEvent();
         }
     };
@@ -247,7 +247,6 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     int current_batch = 0;
     int committed = 0;
     int confirmed = 0;
-    int total = 0;
 
     transaction *tx;
 };

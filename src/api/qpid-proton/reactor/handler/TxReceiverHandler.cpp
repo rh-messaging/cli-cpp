@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxReceiverHandler.cpp
  * Author: pematous
- * 
+ *
  * Created on October 20, 2024
  */
 
@@ -132,7 +132,7 @@ void TxReceiverHandler::timerEvent() {
     } else {
         timer--;
         logger(debug) << "Waiting ...";
-        
+
         if (recv_listen != "true") {
             work_q->schedule(duration::SECOND, make_work(&TxReceiverHandler::timerEvent, this));
         } else {
@@ -204,7 +204,7 @@ void TxReceiverHandler::setSelector(string selector)
         << symbol("apache.org:selector-filter:string")
         << selector
         << finish();
-    
+
     fm.put(filter_key, filter_value);
 }
 
@@ -248,7 +248,7 @@ void TxReceiverHandler::on_container_start(container &c)
     logger(debug) << "Password: " << password;
     logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
     logger(debug) << "SASL enabled: " << conn_sasl_enabled;
-    
+
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
     logger(debug) << "Topic: " << is_topic;
@@ -290,7 +290,7 @@ void TxReceiverHandler::on_container_start(container &c)
 
     logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
     logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
-    
+
     configure_reconnect(conn_opts);
     configure_ssl(c);
 
@@ -513,7 +513,7 @@ void TxReceiverHandler::on_transport_close(transport &t) {
 
 void TxReceiverHandler::on_transport_error(transport &t) {
     logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
-    
+
     if (t.error().what().find("unauthorized") != string::npos) {
         exit(1);
     }
