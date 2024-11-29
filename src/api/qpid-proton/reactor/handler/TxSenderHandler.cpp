@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxSenderHandler.cpp
  * Author: pematous
- * 
+ *
  * Created on November 20, 2024
  */
 
@@ -52,7 +52,9 @@ TxSenderHandler::TxSenderHandler(
     uint32_t conn_heartbeat,
     uint32_t max_frame_size,
     bool conn_use_config_file,
-    string log_msgs
+    string log_msgs,
+    string tx_action,
+    string tx_endloop_action
 )
     : super(
         url,
@@ -86,13 +88,12 @@ TxSenderHandler::TxSenderHandler(
     count(1),
     duration_time(duration_time),
     duration_mode(duration_mode),
-    sent(0),
-    confirmedSent(0),
     batch_size(1),
     current_batch(0),
     committed(0),
-    confirmed(0),
-    total(0),
+    confirmedSent(0),
+    tx_action(tx_action),
+    tx_endloop_action(tx_endloop_action),
     // TODO whats this ?
     m(),
     timer_event(*this),
@@ -152,7 +153,7 @@ message TxSenderHandler::getMessage() const
 }
 
 void TxSenderHandler::checkIfCanSend() {
-    if (sent < count) {
+    if (confirmedSent < count) {
         work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
 
         if (sndr.credit() > 0) {
@@ -162,8 +163,6 @@ void TxSenderHandler::checkIfCanSend() {
         }
     }
 }
-
-// TODO VIP TRANSACTIONS
 
 void TxSenderHandler::send()
 {
@@ -176,8 +175,6 @@ void TxSenderHandler::send()
 
     logger(debug) << "The handler has enough credit to send " << credit
             << " message" << (credit > 1 ? "s" : "" );
-    logger(debug) << "The handler has sent " << sent << " messages"  
-            << (sent > 1 ? "s" : "" );
 
     logger(trace) << "Sending messages through the link";
 
@@ -187,16 +184,23 @@ void TxSenderHandler::send()
         if (get<string>(message_to_send.body()).find("%d") != string::npos) {
             size_t percent_position = get<string>(message_to_send.body()).find("%d");
             stringstream ss;
-            ss << sent;
+            ss << confirmedSent;
             string replaced_number = get<string>(message_to_send.body()).replace(percent_position, 2, ss.str());
             message_to_send.body(replaced_number);
         }
     } catch (conversion_error &) {
     }
 
-    while (tx && sndr.credit() && (committed + current_batch) < total)
+    logger(trace) << "Transaction variables";
+    logger(trace) << "confirmed: " << confirmedSent;
+    logger(trace) << "commited: " << committed;
+    logger(trace) << "count: " << count;
+    logger(trace) << "is_empty: " << tx.is_empty();
+    logger(trace) << "current_batch: " << current_batch;
+
+    while (!tx.is_empty() && sndr.credit() && (committed + current_batch) < count)
     {
-        sndr.send(message_to_send);
+        tx.send(sndr, message_to_send);
 
         if (log_msgs == "dict") {
             ReactorDecoder decoder = ReactorDecoder(message_to_send);
@@ -218,37 +222,35 @@ void TxSenderHandler::send()
         if (duration_time > 0 && duration_mode == "after-send-tx-action") {
             // TODO: Transactions are not supported yet
         }
-            
-	// TODO both ??
-        sent++;
-        confirmed++;
 
-        // TX
+        confirmedSent++;
+
         current_batch += 1;
-        if(current_batch == batch_size)
-        {
-            tx->commit();
-            tx = NULL;
-	    // reject 
-              // tx->rollback();
-            // tx = NULL;
-	    // TODO none
-              // if (confirmed + current_batch == total) {
-              //     std::cout << "All messages committed";
-              //     conn.close();
-              // } else {
-              //     current_batch = 0;
-	      //     confirmed += current_batch; 
-              //     cont->declare_transaction(conn, th);
-              // }
-        } else if (confirmed + current_batch == total) {
-		// DO ENDLOOP ACTION
-            tx->commit();
-	    // reject 
-              // tx->rollback();
-	    // TODO none
-              // conn.close()
-	}
+
+        logger(trace) << "Transaction variables";
+        logger(trace) << "confirmed: " << confirmedSent;
+        logger(trace) << "commited: " << committed;
+        logger(trace) << "count: " << count;
+        logger(trace) << "is_empty: " << tx.is_empty();
+        logger(trace) << "current_batch: " << current_batch;
+
+        if (confirmedSent + current_batch == count) {
+            logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
+            if (tx_endloop_action == "commit") {
+                tx.commit();
+            } else if (tx_endloop_action == "rollback") {
+                tx.abort();
+            }
+            sndr.connection().close();
+        } else if(current_batch == batch_size) {
+            logger(debug) << "[send] Transaction attempt: " << tx_action;
+            if (tx_endloop_action == "commit") {
+                tx.commit();
+            } else if (tx_endloop_action == "rollback") {
+                tx.abort();
+            }
+            tx = transaction();
+	      }
     }
 
 #if defined(__REACTOR_HAS_TIMER)
@@ -257,9 +259,10 @@ void TxSenderHandler::send()
     ready = false;
 }
 
-// reactor methods    
+// reactor methods
 void TxSenderHandler::on_sendable(sender &s)
 {
+    logger(trace) <<  "[on_sendable] transaction: " << &tx;
     if (ready) {
         send();
     }
@@ -268,24 +271,16 @@ void TxSenderHandler::on_sendable(sender &s)
 
 void TxSenderHandler::on_tracker_accept(tracker &t)
 {
-    logger(trace) << "Message accepted. Now obtaining the connection reference object";
+    logger(trace) << "[on_tracker_accept] Message accepted. Now obtaining the connection reference object";
     connection conn = t.connection();
- 
-    logger(trace) << "Confirmed message delivery";
-    confirmed += 1;
-//     confirmedSent++;
-//     
-//     if (confirmedSent == count) { 
-//         logger(trace) << "Closing the sender after sending " << confirmedSent 
-//             << " message" << (confirmedSent > 1 ? "s" : "" );
-//         conn.close();
-//     }
+
+    confirmedSent += 1;
+    logger(trace) << "[on_tracker_accept] Confirmed message delivery " << confirmedSent;
 }
 
 void TxSenderHandler::on_tracker_reject(tracker &t)
 {
     std::cerr << "[error] Delivery rejected" << std::endl;
-
     exit(1);
 }
 
@@ -308,12 +303,10 @@ void TxSenderHandler::on_transport_close(transport &t) {
 void TxSenderHandler::on_connection_close(connection &c)
 {
     logger(debug) << "Closing connection";
-    logger(info) << "Transactions";
-    logger(info) << "Transaction total: " << total;
-    logger(info) << "Transaction sent: " << sent;
+    logger(info) << "Transactions status";
     logger(info) << "Transaction batch size: " << batch_size;
     logger(info) << "Transaction current batch: " << current_batch;
-    logger(info) << "Transaction confirmed: " << confirmed;
+    logger(info) << "Transaction confirmed: " << confirmedSent;
     logger(info) << "Transaction committed: " << committed;
     current_batch = 0;
 }
@@ -327,48 +320,38 @@ void TxSenderHandler::on_connection_error(connection &c)
     }
 }
 
-void TxSenderHandler::on_transaction_declared(transaction &t) {
-    tx = &t;
+void TxSenderHandler::on_transaction_declared(transaction t) {
+    logger(trace) << "[on_transaction_declared] txn called " << (&t);
+    tx = t;
     send();
+    logger(trace) << "[on_transaction_declared] txn is_empty " << (t.is_empty())
+                  << "\t" << tx.is_empty();
 }
 
-void TxSenderHandler::on_transaction_committed(transaction &t) {
+void TxSenderHandler::on_transaction_committed(transaction t) {
+    logger(trace) << "[on_transaction_commited] Messages committed";
     committed += current_batch;
+    current_batch = 0;
     connection conn = sndr.connection();
-    if(committed == total) {
-        std::cout << "All messages committed";
+    if(committed == count) {
+        logger(trace) << "[on_transaction_commited] All messages committed";
         conn.close();
     }
     else {
-        current_batch = 0;
-        cont->declare_transaction(conn, th);
+        cont->declare_transaction(conn, *this);
     }
 }
 
 // TODO jak je to s temi override ?
 // ?? python to tak ma ?? stejne jak commited
 // void TxSenderHandler::on_transaction_aborted(transaction t) override {
-void TxSenderHandler::on_transaction_aborted(transaction &t) {
-    committed += current_batch;
-    connection conn = sndr.connection();
-    if(committed == total) {
-        std::cout << "All messages committed";
-        conn.close();
-    }
-    else {
-        current_batch = 0;
-        cont->declare_transaction(conn, th);
-    }
+void TxSenderHandler::on_transaction_aborted(transaction t) {
+    logger(debug) << "[on_transaction_aborted] Mesages Aborted";
+    current_batch = 0;
+    cont->declare_transaction(sndr.connection(), *this);
 }
 
 void TxSenderHandler::on_sender_close(sender &s) {
-    logger(info) << "Transactions";
-    logger(info) << "Transaction total: " << total;
-    logger(info) << "Transaction sent: " << sent;
-    logger(info) << "Transaction batch size: " << batch_size;
-    logger(info) << "Transaction current batch: " << current_batch;
-    logger(info) << "Transaction confirmed: " << confirmed;
-    logger(info) << "Transaction committed: " << committed;
     current_batch = 0;
 }
 
@@ -383,13 +366,7 @@ void TxSenderHandler::on_container_start(container &c)
 
     logger(debug) << "Maximum frame size: " << max_frame_size;
 
-    logger(info) << "Transactions";
-    logger(info) << "Transaction total: " << total;
-    logger(info) << "Transaction sent: " << sent;
-    logger(info) << "Transaction batch size: " << batch_size;
-    logger(info) << "Transaction current batch: " << current_batch;
-    logger(info) << "Transaction confirmed: " << confirmed;
-    logger(info) << "Transaction committed: " << committed;
+    logger(info) << "Transaction batch size" << batch_size;
 
     logger(debug) << "Topic: " << is_topic;
 
@@ -421,7 +398,7 @@ void TxSenderHandler::on_container_start(container &c)
 //
 //    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
 //    logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
-//    
+//
 //    configure_reconnect(conn_opts);
 //    configure_ssl(c);
 //
@@ -452,7 +429,7 @@ void TxSenderHandler::on_container_start(container &c)
     );
 
 //    work_q = &sndr.work_queue();
-//    
+//
 //    logger(trace) << "Setting up timer";
 //
 //    if (duration_time > 0 && count > 0) {
@@ -467,20 +444,25 @@ void TxSenderHandler::on_container_start(container &c)
 //        work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
 //    } else if (duration_time > 0 && duration_mode == "before-send") {
 //        work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
-//    } else { 
+//    } else {
 //        work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
 //    }
 //#endif
 
-    tx = NULL;
-    // currently causes seqfault
-    c.declare_transaction(conn, th);
+    tx = transaction();
+    logger(debug) << "[on_container_start] declare_txn started...";
+    c.declare_transaction(conn, *this);
     cont = &c;
+    logger(debug) << "[on_container_start] completed (container:" << &c << ", transaction: " << &tx << ")";
 }
 
-// void TxSenderHandler::on_transaction_aborted(transaction) {}
-// void TxSenderHandler::on_transaction_declare_failed(transaction) {}
-// void TxSenderHandler::on_transaction_commit_failed(transaction) {}
+void TxSenderHandler::on_transaction_declare_failed(transaction) {}
+
+void TxSenderHandler::on_transaction_commit_failed(transaction) {
+    logger(error) << "[on_transaction_commit_failed] Transaction Commit Failed";
+    sndr.connection().close();
+    exit(1);
+}
 
 } /* namespace reactor */
 } /* namespace proton */
