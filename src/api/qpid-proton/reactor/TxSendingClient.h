@@ -63,4 +63,4 @@ class TxSendingClient : public ModernClient {
 } /* namespace dtests */
 
 
-#endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_SENDINGCLIENT_H_ */
+#endif /* DTESTS_NODE_DATA_CLIENTS_LANG_CPP_APIS_PROTON_REACTOR_TXSENDINGCLIENT_H_ */

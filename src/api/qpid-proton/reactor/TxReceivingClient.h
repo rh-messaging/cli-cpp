@@ -60,5 +60,5 @@ class TxReceivingClient : public ModernClient {
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif /* RECEIVINGCLIENT_H */
+#endif /* TXRECEIVINGCLIENT_H */
 
