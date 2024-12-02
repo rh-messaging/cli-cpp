@@ -160,7 +160,9 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
         string recv_listen = "false",
         int recv_listen_port = 5672,
         int recv_credit_window = -1,
-        bool recv_drain_after_credit_window = false
+        bool recv_drain_after_credit_window = false,
+        string tx_action = "commit",
+        string tx_endloop_action = "commit"
     );
 
     virtual ~TxReceiverHandler();
@@ -242,11 +244,13 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
 
     void do_disconnect();
 
-    // transact
+    // transaction variables
     int batch_size = 0;
     int current_batch = 0;
     int committed = 0;
     int confirmed = 0;
+    string tx_action = "commit";
+    string tx_endloop_action = "commit";
 
     transaction *tx;
 };
