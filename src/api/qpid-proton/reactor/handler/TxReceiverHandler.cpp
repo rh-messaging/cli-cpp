@@ -456,7 +456,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     }
 
     if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
-        // TODO: Transactions are not supported yet
+        // TODO: not implemented yet
     }
 
     logger(debug) << "Process-reply-to: " << process_reply_to;

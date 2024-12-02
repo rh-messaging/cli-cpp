@@ -94,7 +94,6 @@ TxSenderHandler::TxSenderHandler(
     confirmedSent(0),
     tx_action(tx_action),
     tx_endloop_action(tx_endloop_action),
-    // TODO whats this ?
     m(),
     timer_event(*this),
     interval(duration::IMMEDIATE)
@@ -220,7 +219,7 @@ void TxSenderHandler::send()
         }
 
         if (duration_time > 0 && duration_mode == "after-send-tx-action") {
-            // TODO: Transactions are not supported yet
+            // TODO: Not implemented yet
         }
 
         confirmedSent++;
@@ -341,8 +340,6 @@ void TxSenderHandler::on_transaction_committed(transaction t) {
     }
 }
 
-// TODO jak je to s temi override ?
-// void TxSenderHandler::on_transaction_aborted(transaction t) override {
 void TxSenderHandler::on_transaction_aborted(transaction t) {
     logger(trace) << "[on_transaction_aborted] Messages aborted";
     processed += current_batch;
