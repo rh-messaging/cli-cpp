@@ -217,5 +217,5 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif /* SENDERHANDLER_H */
+#endif /* TXSENDERHANDLER_H */
 

@@ -259,5 +259,5 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif /* RECEIVERHANDLER_H */
+#endif /* TXRECEIVERHANDLER_H */
 

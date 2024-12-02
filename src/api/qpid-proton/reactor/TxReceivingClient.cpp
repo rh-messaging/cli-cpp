@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxReceivingClient.cpp
  * Author: pematous
- * 
+ *
  * Created on November 20, 2024
  */
 
@@ -108,14 +108,14 @@ int TxReceivingClient::run(int argc, char **argv) const
     } else {
         user = uri_parser.getUser();
     }
-    
+
     string password = "";
     if (options.is_set("password")) {
         password = options["password"];
     } else {
         password = uri_parser.getPassword();
     }
-    
+
     string sasl_mechanisms = "";
     if (options.is_set("sasl-mechanisms")) {
         sasl_mechanisms = options["sasl-mechanisms"];
@@ -273,7 +273,7 @@ int TxReceivingClient::run(int argc, char **argv) const
     }
 
     OptionsSetter setter = OptionsSetter(options);
-    
+
     int timeout = -1;
     if (options.is_set("timeout")) {
         timeout = static_cast<int> (options.get("timeout"));

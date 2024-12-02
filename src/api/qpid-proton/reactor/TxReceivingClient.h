@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   TxReceivingClient.h
  * Author: pematous
  *

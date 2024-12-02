@@ -355,7 +355,7 @@ void TxSenderHandler::on_sender_close(sender &s) {
     current_batch = 0;
 }
 
-void TxSenderHandler::on_container_start(container &c) 
+void TxSenderHandler::on_container_start(container &c)
 {
     logger(debug) << "Starting messaging handler";
 
