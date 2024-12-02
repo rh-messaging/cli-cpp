@@ -63,7 +63,9 @@ TxReceiverHandler::TxReceiverHandler(
     string recv_listen,
     int recv_listen_port,
     int recv_credit_window,
-    bool recv_drain_after_credit_window
+    bool recv_drain_after_credit_window,
+    string tx_action,
+    string tx_endloop_action
 )
     : super(
         url,
@@ -111,7 +113,9 @@ TxReceiverHandler::TxReceiverHandler(
     recv_listen(recv_listen),
     recv_listen_port(recv_listen_port),
     recv_credit_window(recv_credit_window),
-    recv_drain_after_credit_window(recv_drain_after_credit_window)
+    recv_drain_after_credit_window(recv_drain_after_credit_window),
+    tx_action(tx_action),
+    tx_endloop_action(tx_endloop_action)
 {
 }
 
