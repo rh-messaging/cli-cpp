@@ -19,7 +19,7 @@
 #include <proton/connection.hpp>
 #include <proton/connection_options.hpp>
 #include <proton/reconnect_options.hpp>
-#include <proton/transaction.hpp>
+
 
 #include <proton/function.hpp>
 
@@ -35,7 +35,6 @@
 #include "logger/LoggerWrapper.h"
 
 using proton::messaging_handler;
-using proton::transaction;
 using proton::container;
 using proton::void_function0;
 using proton::duration;
@@ -121,7 +120,7 @@ class CommonHandler : public messaging_handler {
     virtual ~CommonHandler();
     
     virtual void timerEvent() = 0;
-
+        
   protected:    
     
       
