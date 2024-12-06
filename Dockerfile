@@ -21,8 +21,8 @@ RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/protobuf/repo/epel-9/kpvdr-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
 RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/json/repo/epel-9/kpvdr-json-epel-9.repo > /etc/yum.repos.d/kpvdr-json-epel-9.repo
 
-RUN dnf install -y 'dnf-command(copr)' \
-&& dnf copr enable -y kpvdr/opentelemetry-cpp
+RUN dnf install -y 'dnf-command(copr)'
+RUN dnf copr enable -y kpvdr/opentelemetry-cpp
 
 #CMake Error at /usr/lib64/cmake/protobuf/protobuf-targets.cmake:106 (message):
 #  The imported target "protobuf::libprotobuf-lite" references the file
