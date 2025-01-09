@@ -270,11 +270,8 @@ void TxSenderHandler::on_sendable(sender &s)
 
 void TxSenderHandler::on_tracker_accept(tracker &t)
 {
-    logger(trace) << "[on_tracker_accept] Message accepted. Now obtaining the connection reference object";
-    connection conn = t.connection();
-
     confirmedSent += 1;
-    logger(trace) << "[on_tracker_accept] Confirmed message delivery " << confirmedSent;
+    logger(trace) << "[on_tracker_accept] Message accepted, confirmed message delivery: " << confirmedSent;
 }
 
 void TxSenderHandler::on_tracker_reject(tracker &t)
@@ -330,32 +327,37 @@ void TxSenderHandler::on_transaction_declared(transaction t) {
 void TxSenderHandler::on_transaction_committed(transaction t) {
     logger(trace) << "[on_transaction_committed] Messages committed";
     processed += current_batch;
-    connection conn = sndr.connection();
     if (processed == count) {
         logger(trace) << "[on_transaction_committed] All messages processed";
-        conn.close();
+        t.connection().close();
     } else {
         current_batch = 0;
-        cont->declare_transaction(conn, *this);
+        sess.declare_transaction(*this);
     }
 }
 
 void TxSenderHandler::on_transaction_aborted(transaction t) {
     logger(trace) << "[on_transaction_aborted] Messages aborted";
     processed += current_batch;
-    connection conn = sndr.connection();
     if (processed == count) {
         logger(trace) << "[on_transaction_aborted] All messages processed";
-        conn.close();
+        t.connection().close();
     } else {
         current_batch = 0;
-        cont->declare_transaction(conn, *this);
+        sess.declare_transaction(*this);
     }
 }
 
 void TxSenderHandler::on_sender_close(sender &s) {
     current_batch = 0;
 }
+
+void TxSenderHandler::on_session_open(session &s) {
+     sess = s;
+     std::cout << "    [on_session_open] declare_txn started..." << std::endl;
+     s.declare_transaction(*this);
+     std::cout << "    [on_session_open] declare_txn ended..." << std::endl;
+ }
 
 void TxSenderHandler::on_container_start(container &c)
 {
@@ -451,17 +453,13 @@ void TxSenderHandler::on_container_start(container &c)
 #endif
 
     tx = transaction();
-    logger(debug) << "[on_container_start] declare_txn started...";
-    c.declare_transaction(conn, *this);
-    cont = &c;
-    logger(debug) << "[on_container_start] completed (container:" << &c << ", transaction: " << &tx << ")";
 }
 
 void TxSenderHandler::on_transaction_declare_failed(transaction) {}
 
-void TxSenderHandler::on_transaction_commit_failed(transaction) {
+void TxSenderHandler::on_transaction_commit_failed(transaction t) {
     logger(error) << "[on_transaction_commit_failed] Transaction Commit Failed";
-    sndr.connection().close();
+    t.connection().close();
     exit(1);
 }
 
