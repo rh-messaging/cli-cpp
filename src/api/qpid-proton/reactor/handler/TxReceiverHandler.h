@@ -202,6 +202,13 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
 
+    // TX
+    void on_session_open(session &s);
+    void on_transaction_declare_failed(transaction);
+    void on_transaction_commit_failed(transaction t);
+    void on_transaction_declared(transaction t);
+    void on_transaction_committed(transaction t);
+
   private:
     typedef CommonHandler super;
     receiver recv;
@@ -253,6 +260,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     string tx_endloop_action = "commit";
 
     transaction *tx;
+    session sess;
 };
 
 } /* namespace reactor */
