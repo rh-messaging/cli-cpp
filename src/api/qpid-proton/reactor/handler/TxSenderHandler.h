@@ -39,6 +39,7 @@ using proton::tracker;
 using proton::connection_options;
 using proton::sender;
 using proton::transaction;
+using proton::session;
 using proton::transaction_handler;
 
 namespace dtests {
@@ -159,10 +160,11 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
      */
     message getMessage() const;
 
-    transaction_handler th;
+    session sess;
 
     // common reactor methods
     void on_container_start(container &c);
+    void on_session_open(session &s);
     void on_sendable(sender &s);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
@@ -195,7 +197,6 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
 
     sender sndr;
     transaction tx;
-    container *cont;
 
     message m;
 
