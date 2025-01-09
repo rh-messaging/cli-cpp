@@ -60,6 +60,7 @@ using proton::codec::encoder;
 using proton::binary;
 using proton::uuid;
 using proton::transaction;
+using proton::session;
 using proton::transaction_handler;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
@@ -194,9 +195,9 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     // reactor methods
     void on_container_start(container &c);
     void on_message(delivery &d, message &m);
-    void on_receiver_drain_finish(receiver &r);
-    void on_tracker_accept(tracker &t);
-    void on_tracker_reject(tracker &t);
+//    void on_receiver_drain_finish(receiver &r);
+//    void on_tracker_accept(tracker &t);
+//    void on_tracker_reject(tracker &t);
     void on_transport_close(transport &t);
     void on_transport_error(transport &t);
     void on_connection_close(connection &conn);
@@ -259,7 +260,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     string tx_action = "commit";
     string tx_endloop_action = "commit";
 
-    transaction *tx;
+    transaction tx;
     session sess;
 };
 
