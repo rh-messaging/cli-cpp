@@ -239,44 +239,44 @@ int TxReceiverHandler::getBatchSize() const
 
 // reactor methods
 
-    void TxReceiverHandler::on_session_open(session &s) override {
+    void TxReceiverHandler::on_session_open(session &s) {
         sess = s;
         std::cout << "    [on_session_open] declare_txn started..." << std::endl;
         s.declare_transaction(*this);
         std::cout << "    [on_session_open] declare_txn ended..." << std::endl;
     }
 
-    void on_transaction_declare_failed(transaction) {}
+    void TxReceiverHandler::on_transaction_declare_failed(transaction) {}
 
-    void on_transaction_commit_failed(proton::transaction t) {
+    void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
         std::cout << "Transaction Commit Failed" << std::endl;
         t.connection().close();
         exit(-1);
     }
 
-    void TxReceiverHandler::on_transaction_declared(transaction t) override {
+    void TxReceiverHandler::on_transaction_declared(transaction t) {
         std::cout << "[on_transaction_declared] txn called " << (&t)
                   << std::endl;
         std::cout << "[on_transaction_declared] txn is_empty " << (t.is_empty())
-                  << "\t" << transaction.is_empty() << std::endl;
+                  << "\t" << tx.is_empty() << std::endl;
         recv.add_credit(batch_size);
-        transaction = t;
+        tx = t;
     }
 
-    void TxReceiverHandler::on_message(delivery &d, message &msg) override {
+    void TxReceiverHandler::on_message(delivery &d, message &msg) {
         std::cout<<"# MESSAGE: " << msg.id() <<": "  << msg.body() << std::endl;
-        transaction.accept(d);
+        tx.accept(d);
         current_batch += 1;
         if(current_batch == batch_size) {
-            transaction = proton::transaction(); // null
+            tx = transaction(); // null
         }
     }
 
-    void TxReceiverHandler::on_transaction_committed(transaction t) override {
-        committed += current_batch;
+    void TxReceiverHandler::on_transaction_committed(transaction t) {
+        processed += current_batch;
         current_batch = 0;
-        std::cout<<"    [OnTxnCommitted] Committed:"<< committed<< std::endl;
-        if(committed == expected) {
+        std::cout<<"    [OnTxnCommitted] Processed:"<< processed  << std::endl;
+        if(processed == count) {
             std::cout << "All messages committed" << std::endl;
             t.connection().close();
         }
