@@ -318,10 +318,10 @@ void TxSenderHandler::on_connection_error(connection &c)
 
 void TxSenderHandler::on_transaction_declared(transaction t) {
     logger(trace) << "[on_transaction_declared] txn called " << (&t);
-    tx = t;
-    send();
     logger(trace) << "[on_transaction_declared] txn is_empty " << (t.is_empty())
                   << "\t" << tx.is_empty();
+    tx = t;
+    send();
 }
 
 void TxSenderHandler::on_transaction_committed(transaction t) {
