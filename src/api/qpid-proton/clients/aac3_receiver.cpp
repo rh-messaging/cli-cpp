@@ -24,10 +24,10 @@ int main(int argc, char** argv)
     }
 
     if (tx_mode) {
-        ReceivingClient client = ReceivingClient();
+        TxReceivingClient client = TxReceivingClient();
         return client.run(argc, argv);
     } else {
-        TxReceivingClient client = TxReceivingClient();
+        ReceivingClient client = ReceivingClient();
         return client.run(argc, argv);
     }
 }
