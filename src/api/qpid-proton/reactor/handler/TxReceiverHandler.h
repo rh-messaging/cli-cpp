@@ -195,9 +195,9 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     // reactor methods
     void on_container_start(container &c);
     void on_message(delivery &d, message &m);
-//    void on_receiver_drain_finish(receiver &r);
-//    void on_tracker_accept(tracker &t);
-//    void on_tracker_reject(tracker &t);
+    void on_receiver_drain_finish(receiver &r);
+    void on_tracker_accept(tracker &t);
+    void on_tracker_reject(tracker &t);
     void on_transport_close(transport &t);
     void on_transport_error(transport &t);
     void on_connection_close(connection &conn);
@@ -209,6 +209,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     void on_transaction_commit_failed(transaction t);
     void on_transaction_declared(transaction t);
     void on_transaction_committed(transaction t);
+    void on_transaction_aborted(transaction t);
 
   private:
     typedef CommonHandler super;
