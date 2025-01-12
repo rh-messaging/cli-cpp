@@ -239,51 +239,49 @@ int TxReceiverHandler::getBatchSize() const
 
 // reactor methods
 
-    void TxReceiverHandler::on_session_open(session &s) {
-        sess = s;
-        std::cout << "    [on_session_open] declare_txn started..." << std::endl;
-        s.declare_transaction(*this);
-        std::cout << "    [on_session_open] declare_txn ended..." << std::endl;
-    }
+void TxReceiverHandler::on_session_open(session &s) {
+    sess = s;
+    std::cout << "    [on_session_open] declare_txn started..." << std::endl;
+    s.declare_transaction(*this);
+    std::cout << "    [on_session_open] declare_txn ended..." << std::endl;
+}
 
-    void TxReceiverHandler::on_transaction_declare_failed(transaction) {}
+void TxReceiverHandler::on_transaction_declare_failed(transaction) {}
 
-    void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
-        std::cout << "Transaction Commit Failed" << std::endl;
+void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
+    std::cout << "Transaction Commit Failed" << std::endl;
+    t.connection().close();
+    exit(-1);
+}
+
+void TxReceiverHandler::on_transaction_declared(transaction t) {
+    std::cout << "[on_transaction_declared] txn called " << (&t)
+              << std::endl;
+    std::cout << "[on_transaction_declared] txn is_empty " << (t.is_empty())
+              << "\t" << tx.is_empty() << std::endl;
+    // TODO needed?
+    // recv.add_credit(batch_size);
+    tx = t;
+}
+
+void TxReceiverHandler::on_transaction_aborted(transaction t) {
+    confirmed += current_batch;
+    std::cout << "messages aborted" << std::endl;
+}
+
+void TxReceiverHandler::on_transaction_committed(transaction t) {
+    confirmed += current_batch;
+    current_batch = 0;
+    std::cout<<"    [OnTxnCommitted] Processed:"<< processed << std::endl;
+    std::cout<<"    [OnTxnCommitted] Committed:"<< confirmed << std::endl;
+    if(confirmed == count) {
+        std::cout << "All messages committed" << std::endl;
         t.connection().close();
-        exit(-1);
     }
-
-    void TxReceiverHandler::on_transaction_declared(transaction t) {
-        std::cout << "[on_transaction_declared] txn called " << (&t)
-                  << std::endl;
-        std::cout << "[on_transaction_declared] txn is_empty " << (t.is_empty())
-                  << "\t" << tx.is_empty() << std::endl;
-        recv.add_credit(batch_size);
-        tx = t;
+    else {
+        sess.declare_transaction(*this);
     }
-
-    void TxReceiverHandler::on_message(delivery &d, message &msg) {
-        std::cout<<"# MESSAGE: " << msg.id() <<": "  << msg.body() << std::endl;
-        tx.accept(d);
-        current_batch += 1;
-        if(current_batch == batch_size) {
-            tx = transaction(); // null
-        }
-    }
-
-    void TxReceiverHandler::on_transaction_committed(transaction t) {
-        processed += current_batch;
-        current_batch = 0;
-        std::cout<<"    [OnTxnCommitted] Processed:"<< processed  << std::endl;
-        if(processed == count) {
-            std::cout << "All messages committed" << std::endl;
-            t.connection().close();
-        }
-        else {
-            sess.declare_transaction(*this);
-        }
-    }
+}
 
 void TxReceiverHandler::on_container_start(container &c)
 {
@@ -463,92 +461,104 @@ void TxReceiverHandler::on_container_start(container &c)
 
 }
 
-//void TxReceiverHandler::on_message(delivery &d, message &m)
-//{
-//    msg_received_cnt += 1;
-//
-//    logger(debug) << "Processing received message";
-//
-//    if (log_msgs == "dict") {
-//        logger(trace) << "Decoding message";
-//        ReactorDecoder decoder = ReactorDecoder(m);
-//
-//        std::ostringstream stream;
-//        DictWriter writer = DictWriter(&stream);
-//
-//        DictFormatter formatter = DictFormatter();
-//        formatter.printMessage(&decoder, &writer);
-//
-//        writer.endLine();
-//        std::cout << writer.toString();
-//    } else if (log_msgs == "interop") {
-//        DictFormatter formatter = DictFormatter();
-//
-//        formatter.printMessageInterop(m);
-//    }
-//
-//    if (duration_time > 0 && duration_mode == "after-receive") {
-//        logger(debug) << "Waiting...";
-//        sleep4next(ts, count, duration_time, msg_received_cnt);
-//    }
-//
-//    if((msg_received_cnt % msg_action_size) == 0) {
-//        do_message_action(d);
-//    }
-//
-//    if (duration_time > 0 && duration_mode == "after-receive-action") {
-//        sleep4next(ts, count, duration_time, msg_received_cnt);
-//    }
-//
-//    if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
-//        // TODO: not implemented yet
-//    }
-//
-//    logger(debug) << "Process-reply-to: " << process_reply_to;
-//
-//    if (process_reply_to) {
-//        if (m.reply_to() != "") {
-//            logger(debug) << "Reply-to address: " << m.reply_to();
-//
-//            do_process_reply_to(m);
-//        } else {
-//            logger(debug) << "Reply-to address is not set";
-//        }
-//    }
-//
-//    if (recv_drain_after_credit_window && msg_received_cnt == recv_credit_window) {
-//        logger(debug) << "Scheduling drain";
-//        d.receiver().work_queue().add(make_work(&TxReceiverHandler::drain, this));
-//    }
-//
-//    if (!process_reply_to && msg_received_cnt == count) {
-//        if (durable_subscriber) {
-//            d.receiver().detach();
-//        } else {
-//            d.receiver().close();
-//        }
-//        d.connection().close();
-//    } else {
-//#if defined(__REACTOR_HAS_TIMER)
-//        super::timer.reset();
-//#endif
-//    }
-//}
-//
-//void TxReceiverHandler::on_receiver_drain_finish(receiver &r) {
-//    logger(debug) << "Receiver drain finished";
-//}
-//
-//void TxReceiverHandler::on_tracker_accept(tracker &t)
-//{
-//    logger(debug) << "Delivery accepted";
-//}
-//
-//
-//void TxReceiverHandler::on_tracker_reject(tracker &t)
-//{
-//    logger(debug) << "Delivery rejected";
-//}
+void TxReceiverHandler::on_message(delivery &d, message &m)
+{
+    msg_received_cnt += 1;
+
+    logger(debug) << "Processing received message";
+
+    if (log_msgs == "dict") {
+        logger(trace) << "Decoding message";
+        ReactorDecoder decoder = ReactorDecoder(m);
+
+        std::ostringstream stream;
+        DictWriter writer = DictWriter(&stream);
+
+        DictFormatter formatter = DictFormatter();
+        formatter.printMessage(&decoder, &writer);
+
+        writer.endLine();
+        std::cout << writer.toString();
+    } else if (log_msgs == "interop") {
+        DictFormatter formatter = DictFormatter();
+
+        formatter.printMessageInterop(m);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-receive") {
+        logger(debug) << "Waiting...";
+        sleep4next(ts, count, duration_time, msg_received_cnt);
+    }
+
+    if((msg_received_cnt % msg_action_size) == 0) {
+        do_message_action(d);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-receive-action") {
+        sleep4next(ts, count, duration_time, msg_received_cnt);
+    }
+
+    if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
+        // TODO: not implemented yet
+    }
+
+    logger(debug) << "Process-reply-to: " << process_reply_to;
+
+    if (process_reply_to) {
+        if (m.reply_to() != "") {
+            logger(debug) << "Reply-to address: " << m.reply_to();
+
+            do_process_reply_to(m);
+        } else {
+            logger(debug) << "Reply-to address is not set";
+        }
+    }
+
+    if (recv_drain_after_credit_window && msg_received_cnt == recv_credit_window) {
+        logger(debug) << "Scheduling drain";
+        d.receiver().work_queue().add(make_work(&TxReceiverHandler::drain, this));
+    }
+
+    if (!process_reply_to && msg_received_cnt == count) {
+        if (durable_subscriber) {
+            d.receiver().detach();
+        } else {
+            d.receiver().close();
+        }
+        d.connection().close();
+    } else {
+#if defined(__REACTOR_HAS_TIMER)
+        super::timer.reset();
+#endif
+    }
+
+    // TODO
+    tx.accept(d);
+    current_batch += 1;
+    std::cout<<"# CURRENT VS SIZE: " << current_batch <<": "  << batch_size << std::endl;
+    if(current_batch == batch_size) {
+        //tx = transaction(); // null
+        // TODO: I think we should do a commit here ! rakhi is not doing
+        std::cout<<"# COMMIT: " << current_batch <<": "  << batch_size << std::endl;
+        tx.commit();
+        //sess.declare_transaction(*this);
+    }
+}
+
+void TxReceiverHandler::on_receiver_drain_finish(receiver &r) {
+    logger(debug) << "Receiver drain finished";
+}
+
+void TxReceiverHandler::on_tracker_accept(tracker &t)
+{
+    logger(debug) << "Delivery accepted";
+}
+
+
+void TxReceiverHandler::on_tracker_reject(tracker &t)
+{
+    logger(debug) << "Delivery rejected";
+}
 
 void TxReceiverHandler::on_transport_close(transport &t) {
     logger(debug) << "Closing the transport";
