@@ -354,9 +354,9 @@ void TxSenderHandler::on_sender_close(sender &s) {
 
 void TxSenderHandler::on_session_open(session &s) {
      sess = s;
-     std::cout << "    [on_session_open] declare_txn started..." << std::endl;
+     logger(trace) << "[on_session_open] declare_txn started...";
      s.declare_transaction(*this);
-     std::cout << "    [on_session_open] declare_txn ended..." << std::endl;
+     logger(trace) << "[on_session_open] declare_txn ended...";
  }
 
 void TxSenderHandler::on_container_start(container &c)
