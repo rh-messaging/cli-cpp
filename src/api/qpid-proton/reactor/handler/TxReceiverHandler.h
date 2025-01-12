@@ -256,7 +256,6 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     // transaction variables
     int batch_size = 0;
     int current_batch = 0;
-    int processed = 0;
     int confirmed = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";

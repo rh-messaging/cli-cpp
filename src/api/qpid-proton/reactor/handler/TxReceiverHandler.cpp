@@ -272,7 +272,6 @@ void TxReceiverHandler::on_transaction_aborted(transaction t) {
 void TxReceiverHandler::on_transaction_committed(transaction t) {
     confirmed += current_batch;
     current_batch = 0;
-    std::cout<<"    [OnTxnCommitted] Processed:"<< processed << std::endl;
     std::cout<<"    [OnTxnCommitted] Committed:"<< confirmed << std::endl;
     if(confirmed == count) {
         std::cout << "All messages committed" << std::endl;
