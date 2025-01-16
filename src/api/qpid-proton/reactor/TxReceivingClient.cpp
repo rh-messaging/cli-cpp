@@ -344,7 +344,7 @@ int TxReceivingClient::run(int argc, char **argv) const
         tx_action = options["tx-action"];
     }
 
-    string tx_endloop_action = "commit";
+    string tx_endloop_action = "none";
     if (options.is_set("tx-endloop-action")) {
         tx_endloop_action = options["tx-endloop-action"];
     }
@@ -398,7 +398,7 @@ int TxReceivingClient::run(int argc, char **argv) const
         handler.setSelector(selector);
     }
 
-    int tx_size = 1;
+    int tx_size = 0;
     if (options.is_set("tx-size")) {
         tx_size = static_cast<int> (options.get("tx-size"));
     }
