@@ -266,6 +266,13 @@ void TxReceiverHandler::on_transaction_declared(transaction t) {
 void TxReceiverHandler::on_transaction_aborted(transaction t) {
     confirmed += current_batch;
     logger(debug) << "[on_transaction_aborted] messages aborted";
+    if(confirmed == count) {
+        logger(info) << "[on_transaction_committed] All messages proccessed";
+        t.connection().close();
+    }
+    else {
+        sess.declare_transaction(*this);
+    }
 }
 
 void TxReceiverHandler::on_transaction_committed(transaction t) {
@@ -273,7 +280,7 @@ void TxReceiverHandler::on_transaction_committed(transaction t) {
     current_batch = 0;
     logger(trace) << "[on_transaction_committed] Committed:"<< confirmed;
     if(confirmed == count) {
-        logger(info) << "[on_transaction_committed] All messages committed";
+        logger(info) << "[on_transaction_committed] All messages proccessed";
         t.connection().close();
     }
     else {
@@ -461,6 +468,7 @@ void TxReceiverHandler::on_container_start(container &c)
 
 void TxReceiverHandler::on_message(delivery &d, message &m)
 {
+    // TODO useless now ?? usew confirmed ?
     msg_received_cnt += 1;
 
     logger(debug) << "Processing received message";
@@ -534,11 +542,23 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     tx.accept(d);
     current_batch += 1;
     logger(debug) << "[on_message] current batch: " << current_batch;
-    if(current_batch == batch_size) {
+    if (confirmed + current_batch == count) {
+        logger(debug) << "[on_message] Transaction attempt (endloop): " << tx_endloop_action;
+        if (tx_endloop_action == "commit") {
+            tx.commit();
+        } else if (tx_endloop_action == "rollback") {
+            tx.abort();
+        }
+    } else if(current_batch == batch_size) {
         //tx = transaction(); // null
         // TODO: I think we should do a commit here ! rakhi is not doing
         logger(debug) << "[on_message] messages commited: " << current_batch;
-        tx.commit();
+        if (tx_endloop_action == "commit") {
+            tx.commit();
+        } else if (tx_endloop_action == "rollback") {
+            tx.abort();
+        }
+	// Rakhi ?
         //sess.declare_transaction(*this);
     }
 }

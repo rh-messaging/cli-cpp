@@ -165,7 +165,7 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     // common reactor methods
     void on_container_start(container &c);
     void on_session_open(session &s);
-    void on_sendable(sender &s);
+//    void on_sendable(sender &s);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     void on_transport_error(transport &t);
@@ -191,7 +191,6 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     int batch_size = 0;
     int current_batch = 0;
     int processed = 0;
-    int confirmedSent = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";
 
