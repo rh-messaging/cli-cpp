@@ -277,7 +277,7 @@ void TxSenderHandler::on_tracker_accept(tracker &t)
 
 void TxSenderHandler::on_tracker_reject(tracker &t)
 {
-    std::cerr << "[error] Delivery rejected" << std::endl;
+    std::cerr << "[on_tracker_reject] Delivery rejected" << std::endl;
     exit(1);
 }
 
@@ -305,7 +305,7 @@ void TxSenderHandler::on_connection_close(connection &c)
 
 void TxSenderHandler::on_connection_error(connection &c)
 {
-    logger(error) << "Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
+    logger(error) << "[on_connection_error] Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     if (c.error().what().find("Unable to validate user") != string::npos) {
         exit(1);
@@ -372,7 +372,7 @@ void TxSenderHandler::on_container_start(container &c)
     logger(debug) << "[on_container_start] Transaction action: " << tx_action;
     logger(debug) << "[on_container_start] Transaction endloop action: " << tx_endloop_action;
     logger(trace) << "[on_container_start] Messages count: " << count;
-    logger(debug) << "[on_container_start] Messages Processed: " << processed;
+    logger(debug) << "[on_container_start] Messages processed: " << processed;
 
     std::vector< ::proton::symbol > caps;
 
