@@ -260,14 +260,13 @@ void TxSenderHandler::send()
 
 // reactor methods
 
-// TODO I guess not needed
-// void TxSenderHandler::on_sendable(sender &s)
-// {
-//     logger(trace) <<  "[on_sendable] transaction: " << &tx;
-//     if (ready) {
-//         send();
-//     }
-// }
+void TxSenderHandler::on_sendable(sender &s)
+{
+    logger(trace) <<  "[on_sendable] transaction: " << &tx;
+    if (ready) {
+        send();
+    }
+}
 
 
 void TxSenderHandler::on_tracker_accept(tracker &t)
@@ -277,7 +276,7 @@ void TxSenderHandler::on_tracker_accept(tracker &t)
 
 void TxSenderHandler::on_tracker_reject(tracker &t)
 {
-    std::cerr << "[on_tracker_reject] Delivery rejected" << std::endl;
+    logger(trace) << "[on_tracker_reject] Delivery rejected";
     exit(1);
 }
 
