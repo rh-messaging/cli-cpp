@@ -17,9 +17,9 @@ RUN rpm -ivh epel-release-latest-9.noarch.rpm
 RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-opentelemetry-cpp/repo/epel-9/kvanderr-rh-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-protobuf/repo/epel-9/kvanderr-rh-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-json/repo/epel-9/kvanderr-rh-json-epel-9.repo > /etc/yum.repos.d/kpvdr-json-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/opentelemetry-cpp-rhel/repo/epel-9/kpvdr-opentelemetry-cpp-rhel-epel-9.repo > /etc/yum.repos.d/kpvdr-opentelemetry-cpp-rhel-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/protobuf/repo/epel-9/kpvdr-protobuf-epel-9.repo > /etc/yum.repos.d/kpvdr-protobuf-epel-9.repo
+RUN curl -L https://copr.fedorainfracloud.org/coprs/kpvdr/json/repo/epel-9/kpvdr-json-epel-9.repo > /etc/yum.repos.d/kpvdr-json-epel-9.repo
 
 #CMake Error at /usr/lib64/cmake/protobuf/protobuf-targets.cmake:106 (message):
 #  The imported target "protobuf::libprotobuf-lite" references the file

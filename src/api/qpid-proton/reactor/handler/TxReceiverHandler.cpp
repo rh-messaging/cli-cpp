@@ -265,7 +265,7 @@ void TxReceiverHandler::on_transaction_declared(transaction t) {
 
 void TxReceiverHandler::on_transaction_aborted(transaction t) {
     confirmed += current_batch;
-    logger(debug) << "[on_transaction_aborted] messages aborted";
+    logger(debug) << "[on_transaction_aborted] messages aborted, confirmed: " << confirmed;
     if(confirmed == count) {
         logger(info) << "[on_transaction_committed] All messages proccessed";
         t.connection().close();
@@ -278,7 +278,7 @@ void TxReceiverHandler::on_transaction_aborted(transaction t) {
 void TxReceiverHandler::on_transaction_committed(transaction t) {
     confirmed += current_batch;
     current_batch = 0;
-    logger(trace) << "[on_transaction_committed] Committed:"<< confirmed;
+    logger(debug) << "[on_transaction_aborted] messages committed, confirmed: " << confirmed;
     if(confirmed == count) {
         logger(info) << "[on_transaction_committed] All messages proccessed";
         t.connection().close();
@@ -290,20 +290,23 @@ void TxReceiverHandler::on_transaction_committed(transaction t) {
 
 void TxReceiverHandler::on_container_start(container &c)
 {
-    logger(debug) << "Starting messaging handler";
+    logger(debug) << "[on_container_start] Starting messaging transaction handler";
+    logger(debug) << "[on_container_start] User: " << user;
+    logger(debug) << "[on_container_start] Password: " << password;
+    logger(debug) << "[on_container_start] SASL mechanisms: " << sasl_mechanisms;
+    logger(debug) << "[on_container_start] SASL enabled: " << conn_sasl_enabled;
+    logger(debug) << "[on_container_start] Maximum frame size: " << max_frame_size;
+    logger(debug) << "[on_container_start] Topic: " << is_topic;
+    logger(debug) << "[on_container_start] Transaction batch size: " << batch_size;
+    logger(debug) << "[on_container_start] Transaction action: " << tx_action;
+    logger(debug) << "[on_container_start] Transaction endloop action: " << tx_endloop_action;
+    logger(trace) << "[on_container_start] Messages count: " << count;
+    logger(debug) << "[on_container_start] Messages confirmed: " << confirmed;
+    logger(debug) << "[on_container_start] Peer to Peer: " << recv_listen;
 
     if (recv_listen == "true") {
         cont = &c;
     }
-
-    logger(debug) << "User: " << user;
-    logger(debug) << "Password: " << password;
-    logger(debug) << "SASL mechanisms: " << sasl_mechanisms;
-    logger(debug) << "SASL enabled: " << conn_sasl_enabled;
-
-    logger(debug) << "Maximum frame size: " << max_frame_size;
-
-    logger(debug) << "Topic: " << is_topic;
 
     connection_options conn_opts;
     std::vector< ::proton::symbol > caps;
@@ -321,7 +324,7 @@ void TxReceiverHandler::on_container_start(container &c)
         }
     }
 
-    logger(debug) << "Source capabilities: ";
+    logger(debug) << "[on_container_start] Source capabilities: ";
     for (std::vector< ::proton::symbol >::const_iterator i = caps.begin(); i != caps.end(); ++i) {
         logger(debug) << *i;
     }
@@ -340,24 +343,24 @@ void TxReceiverHandler::on_container_start(container &c)
     // conn_opts.max_frame_size(max_frame_size);
     conn_opts.failover_urls(conn_urls);
 
-    logger(debug) << "Setting a reconnect timer: " << conn_reconnect;
-    logger(debug) << "Custom reconnect: " << conn_reconnect_custom;
+    logger(debug) << "[on_container_start] Setting a reconnect timer: " << conn_reconnect;
+    logger(debug) << "[on_container_start] Custom reconnect: " << conn_reconnect_custom;
 
     configure_reconnect(conn_opts);
     configure_ssl(c);
 
     if (conn_heartbeat != 0) {
-        logger(debug) << "Heartbeat: " << conn_heartbeat;
+        logger(debug) << "[on_container_start] Heartbeat: " << conn_heartbeat;
 
         duration heartbeat_seconds = conn_heartbeat * duration::SECOND;
 
         conn_opts.idle_timeout(heartbeat_seconds);
     }
 
-    logger(debug) << "Browsing: " << browse;
+    logger(debug) << "[on_container_start] Browsing: " << browse;
 
     if (browse) {
-        logger(debug) << "Creating a receiver and connecting to the server";
+        logger(debug) << "[on_container_start] Creating a receiver and connecting to the server";
 
         source_options s_opts = source_options()
             .distribution_mode(source::COPY)
@@ -398,18 +401,18 @@ void TxReceiverHandler::on_container_start(container &c)
 
         work_q = &recv.work_queue();
     } else {
-        logger(debug) << "Peer-to-peer: " << recv_listen;
-        logger(debug) << "Peer-to-peer port: " << recv_listen_port;
+        logger(debug) << "[on_container_start] Peer-to-peer: " << recv_listen;
+        logger(debug) << "[on_container_start] Peer-to-peer port: " << recv_listen_port;
 
         if (recv_listen == "true") {
-            logger(debug) << "Creating a listener";
+            logger(debug) << "[on_container_start] Creating a listener";
             // P2P
             stringstream ss;
             ss << "0.0.0.0:";
             ss << recv_listen_port;
             lsnr = c.listen(ss.str(), conn_opts);
         } else {
-            logger(debug) << "Creating a receiver and connecting to the server";
+            logger(debug) << "[on_container_start] Creating a receiver and connecting to the server";
 
             source_options s_opts = source_options().filters(this->fm).capabilities(caps);
 
@@ -448,7 +451,7 @@ void TxReceiverHandler::on_container_start(container &c)
             work_q = &recv.work_queue();
         }
     }
-    logger(debug) << "Connected to the broker/p2p and waiting for messages";
+    logger(debug) << "[on_container_start] Connected to the broker/p2p and waiting for messages";
 
     if (subscriber_unsubscribe && durable_subscriber_name != "") {
         recv.close();
@@ -471,10 +474,10 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     // TODO useless now ?? usew confirmed ?
     msg_received_cnt += 1;
 
-    logger(debug) << "Processing received message";
+    logger(debug) << "[on_message] Processing received message";
 
     if (log_msgs == "dict") {
-        logger(trace) << "Decoding message";
+        logger(trace) << "[on_message] Decoding message";
         ReactorDecoder decoder = ReactorDecoder(m);
 
         std::ostringstream stream;
@@ -492,7 +495,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     }
 
     if (duration_time > 0 && duration_mode == "after-receive") {
-        logger(debug) << "Waiting...";
+        logger(debug) << "[on_message] Waiting...";
         sleep4next(ts, count, duration_time, msg_received_cnt);
     }
 
@@ -508,20 +511,20 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         // TODO: not implemented yet
     }
 
-    logger(debug) << "Process-reply-to: " << process_reply_to;
+    logger(debug) << "[on_message] Process-reply-to: " << process_reply_to;
 
     if (process_reply_to) {
         if (m.reply_to() != "") {
-            logger(debug) << "Reply-to address: " << m.reply_to();
+            logger(debug) << "[on_message] Reply-to address: " << m.reply_to();
 
             do_process_reply_to(m);
         } else {
-            logger(debug) << "Reply-to address is not set";
+            logger(debug) << "[on_message] Reply-to address is not set";
         }
     }
 
     if (recv_drain_after_credit_window && msg_received_cnt == recv_credit_window) {
-        logger(debug) << "Scheduling drain";
+        logger(debug) << "[on_message] Scheduling drain";
         d.receiver().work_queue().add(make_work(&TxReceiverHandler::drain, this));
     }
 
@@ -564,22 +567,22 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 }
 
 void TxReceiverHandler::on_receiver_drain_finish(receiver &r) {
-    logger(debug) << "Receiver drain finished";
+    logger(debug) << "[on_receiver_drain_finish] Receiver drain finished";
 }
 
 void TxReceiverHandler::on_tracker_accept(tracker &t)
 {
-    logger(debug) << "Delivery accepted";
+    logger(debug) << "[on_tracker_accept] Delivery accepted";
 }
 
 
 void TxReceiverHandler::on_tracker_reject(tracker &t)
 {
-    logger(debug) << "Delivery rejected";
+    logger(debug) << "[on_tracker_reject] Delivery rejected";
 }
 
 void TxReceiverHandler::on_transport_close(transport &t) {
-    logger(debug) << "Closing the transport";
+    logger(debug) << "[on_transport_close] Closing the transport";
 
     if (conn_reconnect == "false") {
         exit(1);
@@ -589,7 +592,8 @@ void TxReceiverHandler::on_transport_close(transport &t) {
 }
 
 void TxReceiverHandler::on_transport_error(transport &t) {
-    logger(error) << "The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
+    logger(error) << "[on_transport_error] The connection with " << broker_url.getHost() << ":"
+                  << broker_url.getPort() << " was interrupted: " << t.error().what();
 
     if (t.error().what().find("unauthorized") != string::npos) {
         exit(1);
@@ -598,20 +602,16 @@ void TxReceiverHandler::on_transport_error(transport &t) {
 
 void TxReceiverHandler::on_connection_close(connection &conn)
 {
-    logger(debug) << "Disconnecting ...";
+    logger(debug) << "[on_connection_close] Disconnecting ...";
 }
 
 void TxReceiverHandler::on_connection_error(connection &c)
 {
-    logger(error) << "Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
+    logger(error) << "[on_connection_error] Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
 
     if (c.error().what().find("Unable to validate user") != string::npos) {
         exit(1);
     }
 }
 
-void TxReceiverHandler::do_disconnect()
-{
-
-}
-
+void TxReceiverHandler::do_disconnect() {}
