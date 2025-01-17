@@ -165,7 +165,7 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     // common reactor methods
     void on_container_start(container &c);
     void on_session_open(session &s);
-//    void on_sendable(sender &s);
+    void on_sendable(sender &s);
     void on_tracker_accept(tracker &t);
     void on_tracker_reject(tracker &t);
     void on_transport_error(transport &t);
