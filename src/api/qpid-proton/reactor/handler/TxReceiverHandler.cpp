@@ -493,7 +493,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         sleep4next(ts, count, duration_time, confirmed);
     }
 
-    if((confirmed % sg_action_size) == 0) {
+    if((confirmed % msg_action_size) == 0) {
         do_message_action(d);
     }
 
