@@ -176,8 +176,6 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     void setSelector(string selector);
     void createSubscriptionName(string customPrefix);
 
-    // TODO transaction reactor methods on_transaction_<something>
-
     /**
      * Sets the transaction batch size
      * @param batch_size the transaction batch size
@@ -203,7 +201,7 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
     void on_connection_close(connection &conn);
     void on_connection_error(connection &conn);
 
-    // TX
+    // reactor transaction methods
     void on_session_open(session &s);
     void on_transaction_declare_failed(transaction);
     void on_transaction_commit_failed(transaction t);
@@ -239,7 +237,6 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
 
     string msg_action;
     int msg_action_size;
-    int msg_received_cnt;
     bool process_reply_to;
     bool browse;
     int count;

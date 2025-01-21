@@ -230,18 +230,18 @@ void TxSenderHandler::send()
             } else if (tx_action == "rollback") {
                 tx.abort();
             }
-            tx = transaction();  // null ?
+            tx = transaction();
 
-	    if (tx_action == "none") {
-                if (processed + current_batch == count) {
-                    sndr.connection().close();
-                } else {
-                    processed += current_batch;
-                    current_batch = 0;
-                    sess.declare_transaction(*this);
-                }
-	    }
-	} else if (processed + current_batch == count) {
+            if (tx_action == "none") {
+               if (processed + current_batch == count) {
+                   sndr.connection().close();
+               } else {
+                   processed += current_batch;
+                   current_batch = 0;
+                   sess.declare_transaction(*this);
+               }
+            }
+      	} else if (processed + current_batch == count) {
             logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
             if (tx_endloop_action == "commit") {
                 tx.commit();

@@ -104,7 +104,6 @@ TxReceiverHandler::TxReceiverHandler(
     timer_event(*this),
     msg_action(msg_action),
     msg_action_size(msg_action_size),
-    msg_received_cnt(0),
     process_reply_to(process_reply_to),
     browse(browse),
     count(count),
@@ -258,8 +257,6 @@ void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
 void TxReceiverHandler::on_transaction_declared(transaction t) {
     logger(trace) << "[on_transaction_declared] txn called " << (&t);
     logger(debug) << "[on_transaction_declared] txn is_empty " << (t.is_empty());
-    // TODO needed?
-    // recv.add_credit(batch_size);
     tx = t;
 }
 
@@ -471,9 +468,6 @@ void TxReceiverHandler::on_container_start(container &c)
 
 void TxReceiverHandler::on_message(delivery &d, message &m)
 {
-    // TODO useless now ?? usew confirmed ?
-    msg_received_cnt += 1;
-
     logger(debug) << "[on_message] Processing received message";
 
     if (log_msgs == "dict") {
@@ -496,15 +490,15 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 
     if (duration_time > 0 && duration_mode == "after-receive") {
         logger(debug) << "[on_message] Waiting...";
-        sleep4next(ts, count, duration_time, msg_received_cnt);
+        sleep4next(ts, count, duration_time, confirmed);
     }
 
-    if((msg_received_cnt % msg_action_size) == 0) {
+    if((confirmed % sg_action_size) == 0) {
         do_message_action(d);
     }
 
     if (duration_time > 0 && duration_mode == "after-receive-action") {
-        sleep4next(ts, count, duration_time, msg_received_cnt);
+        sleep4next(ts, count, duration_time, confirmed);
     }
 
     if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
@@ -523,12 +517,12 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         }
     }
 
-    if (recv_drain_after_credit_window && msg_received_cnt == recv_credit_window) {
+    if (recv_drain_after_credit_window && confirmed== recv_credit_window) {
         logger(debug) << "[on_message] Scheduling drain";
         d.receiver().work_queue().add(make_work(&TxReceiverHandler::drain, this));
     }
 
-    if (!process_reply_to && msg_received_cnt == count) {
+    if (!process_reply_to && confirmed == count) {
         if (durable_subscriber) {
             d.receiver().detach();
         } else {
@@ -541,7 +535,6 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 #endif
     }
 
-    // TODO
     tx.accept(d);
     current_batch += 1;
     logger(debug) << "[on_message] current batch: " << current_batch;
@@ -553,16 +546,12 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
             tx.abort();
         }
     } else if(current_batch == batch_size) {
-        //tx = transaction(); // null
-        // TODO: I think we should do a commit here ! rakhi is not doing
         logger(debug) << "[on_message] messages commited: " << current_batch;
         if (tx_endloop_action == "commit") {
             tx.commit();
         } else if (tx_endloop_action == "rollback") {
             tx.abort();
         }
-	// Rakhi ?
-        //sess.declare_transaction(*this);
     }
 }
 
@@ -586,7 +575,7 @@ void TxReceiverHandler::on_transport_close(transport &t) {
 
     if (conn_reconnect == "false") {
         exit(1);
-    } else if (msg_received_cnt == count) {
+    } else if (confirmed == count) {
         exit(0);
     }
 }
