@@ -16,7 +16,7 @@
 #include <proton/types.hpp>
 #include <proton/duration.hpp>
 
-#include "ModernClient.h"
+#include "SendingClient.h"
 #include "handler/TxSenderHandler.h"
 #include "options/modern/SenderOptionsParser.h"
 #include "options/OptionsHelper.h"
@@ -30,14 +30,12 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
-using dtests::proton::common::ModernClient;
-
 using namespace dtests::common;
 
 /**
  * Implements a connecting client using the proton reactive API
  */
-class TxSendingClient : public ModernClient {
+class TxSendingClient : public SendingClient {
   public:
     TxSendingClient();
     virtual ~TxSendingClient();
@@ -45,17 +43,7 @@ class TxSendingClient : public ModernClient {
     virtual int run(int argc, char **argv) const;
 
   private:
-    typedef ModernClient super;
-
-    void setMessageOptions(const OptionsSetter &setter, message &msg) const;
-    bool nameVal(const string& in, string& name, string& value, string& separator) const;
-    void setMessageProperty(message *msg, const string &property) const;
-    void setMessageListItem(message *msg, const string &property, std::list<value> &messageList) const;
-    void setMessageMapItem(message *msg, const string &property, std::map<std::string, value> &messageMap) const;
-    void setMessageProperties(StringAppendCallback &callbackProperty, message *msg) const;
-    void setMessageList(StringAppendCallback &callbackList, message *msg) const;
-    void setMessageMap(StringAppendCallback &callbackMap, message *msg) const;
-    void setMessageText(string content, message *msg) const;
+    typedef SendingClient super;
 };
 
 } /* namespace reactor */

@@ -32,11 +32,6 @@ TxReceivingClient::~TxReceivingClient()
 {
 }
 
-void TxReceivingClient::setMessageOptions(const OptionsSetter &setter, message &msg) const
-{
-
-}
-
 int TxReceivingClient::run(int argc, char **argv) const
 {
     const string usage = "usage: %prog [OPTION]... DIR [FILE]...";

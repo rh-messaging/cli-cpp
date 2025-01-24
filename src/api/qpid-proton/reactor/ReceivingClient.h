@@ -52,6 +52,7 @@ class ReceivingClient : public ModernClient {
   private:
     typedef ModernClient super;
 
+  protected:
     void setMessageOptions(const OptionsSetter &setter, message &msg) const;
 
 };
