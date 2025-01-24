@@ -21,7 +21,7 @@
 #include <proton/container.hpp>
 #include <proton/uuid.hpp>
 
-#include "ModernClient.h"
+#include "ReceivingClient.h"
 #include "handler/TxReceiverHandler.h"
 #include "options/modern/ReceiverOptionsParser.h"
 #include "options/OptionsHelper.h"
@@ -35,14 +35,12 @@ namespace dtests {
 namespace proton {
 namespace reactor {
 
-using dtests::proton::common::ModernClient;
-
 using namespace dtests::common;
 
 /**
  * Implements a receiving client using the proton reactive API
  */
-class TxReceivingClient : public ModernClient {
+class TxReceivingClient : public ReceivingClient {
   public:
     TxReceivingClient();
     virtual ~TxReceivingClient();
@@ -50,10 +48,7 @@ class TxReceivingClient : public ModernClient {
     virtual int run(int argc, char **argv) const;
 
   private:
-    typedef ModernClient super;
-
-    void setMessageOptions(const OptionsSetter &setter, message &msg) const;
-
+    typedef ReceivingClient super;
 };
 
 } /* namespace reactor */

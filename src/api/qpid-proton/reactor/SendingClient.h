@@ -47,6 +47,7 @@ class SendingClient : public ModernClient {
   private:
     typedef ModernClient super;
 
+  protected:
     void setMessageOptions(const OptionsSetter &setter, message &msg) const;
     bool nameVal(const string& in, string& name, string& value, string& separator) const;
     void setMessageProperty(message *msg, const string &property) const;
