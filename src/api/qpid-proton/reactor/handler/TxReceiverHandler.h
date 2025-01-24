@@ -188,8 +188,6 @@ class TxReceiverHandler : public CommonHandler, transaction_handler {
      */
     int getBatchSize() const;
 
-    transaction_handler th;
-
     // reactor methods
     void on_container_start(container &c);
     void on_message(delivery &d, message &m);
