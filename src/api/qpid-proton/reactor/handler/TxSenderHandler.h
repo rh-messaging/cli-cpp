@@ -14,30 +14,10 @@
 #ifndef TXSENDERHANDLER_H
 #define TXSENDERHANDLER_H
 
-#include <proton/tracker.hpp>
-#include <proton/transport.hpp>
-#include <proton/error_condition.hpp>
-#include <proton/message_id.hpp>
-#include <proton/source_options.hpp>
-#include <proton/connection_options.hpp>
-#include <proton/sender_options.hpp>
-#include <proton/thread_safe.hpp>
 #include <proton/transaction.hpp>
 
 #include "SenderHandler.h"
-#include "Timer.h"
-#include "Utils.h"
 
-using proton::message;
-using proton::message_id;
-using proton::connection;
-using proton::sender;
-using proton::delivery;
-using proton::source_options;
-using proton::transport;
-using proton::tracker;
-using proton::connection_options;
-using proton::sender;
 using proton::transaction;
 using proton::session;
 using proton::transaction_handler;
@@ -49,7 +29,7 @@ namespace reactor {
 using dtests::common::Timer;
 
 /**
- * A proton message handler that handles message send events
+ * A proton transaction message handler that handles message send events
  */
 class TxSenderHandler : public SenderHandler, transaction_handler {
   public:

@@ -14,51 +14,10 @@
 #ifndef TXRECEIVERHANDLER_H
 #define TXRECEIVERHANDLER_H
 
-#include <proton/binary.hpp>
-#include <proton/delivery.hpp>
-#include <proton/tracker.hpp>
-#include <proton/listener.hpp>
-#include <proton/transport.hpp>
-#include <proton/error_condition.hpp>
-#include <proton/source_options.hpp>
-#include <proton/connection_options.hpp>
-#include <proton/receiver_options.hpp>
-#include <proton/thread_safe.hpp>
-#include <proton/codec/encoder.hpp>
-#include <proton/uuid.hpp>
 #include <proton/transaction.hpp>
 
 #include "ReceiverHandler.h"
 
-#include "reactor/formatter/ReactorDecoder.h"
-#include "formatter/DictFormatter.h"
-#include "formatter/DictWriter.h"
-
-#include "formatter/UpstreamFormatter.h"
-#include "formatter/UpstreamWriter.h"
-#include "Utils.h"
-
-using proton::message;
-using proton::container;
-using proton::connection;
-using proton::sender;
-using proton::receiver;
-using proton::listener;
-using proton::delivery;
-using proton::tracker;
-using proton::void_function0;
-using proton::endpoint;
-using proton::source;
-using proton::source_options;
-using proton::transport;
-using proton::connection_options;
-using proton::receiver_options;
-using proton::symbol;
-using proton::codec::start;
-using proton::codec::finish;
-using proton::codec::encoder;
-using proton::binary;
-using proton::uuid;
 using proton::transaction;
 using proton::session;
 using proton::transaction_handler;
@@ -72,7 +31,7 @@ namespace proton {
 namespace reactor {
 
 /**
- * A proton message handler that handles message receive events
+ * A proton transaction message handler that handles message receive events
  */
 class TxReceiverHandler : public ReceiverHandler, transaction_handler {
   public:
