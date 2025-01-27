@@ -168,14 +168,6 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
 
     virtual ~TxReceiverHandler();
 
-//     void timerEvent();
-// 
-//     void do_message_action(delivery &d);
-//     void do_process_reply_to(message &m);
-//     void drain();
-//     void setSelector(string selector);
-//     void createSubscriptionName(string customPrefix);
-
     /**
      * Sets the transaction batch size
      * @param batch_size the transaction batch size
@@ -188,19 +180,7 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
      */
     int getBatchSize() const;
 
-    // reactor methods
-    void on_container_start(container &c);
-    void on_message(delivery &d, message &m);
-// TODO define so they do nothing ? or leave and check they are unchanged (same func as receiverHandler)
-//   void on_receiver_drain_finish(receiver &r);
-//    void on_tracker_accept(tracker &t);
-//    void on_tracker_reject(tracker &t);
-//    void on_transport_close(transport &t);
-//    void on_transport_error(transport &t);
-//    void on_connection_close(connection &conn);
-//    void on_connection_error(connection &conn);
-
-    // reactor transaction methods
+    // reactor method
     void on_session_open(session &s);
     void on_transaction_declare_failed(transaction);
     void on_transaction_commit_failed(transaction t);
@@ -208,46 +188,13 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
     void on_transaction_committed(transaction t);
     void on_transaction_aborted(transaction t);
 
+    // overrides
+    void on_container_start(container &c);
+    void on_message(delivery &d, message &m);
+    void on_transport_close(transport &t);
+
   private:
     typedef ReceiverHandler super;
-//    receiver recv;
-//    listener lsnr;
-//    container *cont;
-//    double ts;
-
-//struct timer_event_t : public void_function0 {
-//    TxReceiverHandler &parent;
-//    timer_event_t(TxReceiverHandler &handler): parent(handler) { }
-//    void operator()() {
-//        parent.timerEvent();
-//    }
-//};
-//
-//    source::filter_map fm;
-//
-//    bool durable_subscriber;
-//    bool subscriber_unsubscribe;
-//    string durable_subscriber_prefix;
-//    string durable_subscriber_name;
-//    bool shared_subscriber;
-//
-//    duration interval;
-//    timer_event_t timer_event;
-//
-//    string msg_action;
-//    int msg_action_size;
-//    bool process_reply_to;
-//    bool browse;
-//    int count;
-//    int duration_time;
-//    string duration_mode;
-//    std::map<string, sender> senders;
-//    string recv_listen;
-//    int recv_listen_port;
-//    int recv_credit_window;
-//    bool recv_drain_after_credit_window;
-//
-//    void do_disconnect();
 
     // transaction variables
     int batch_size = 0;
@@ -255,7 +202,6 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
     int confirmed = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";
-
     transaction tx;
     session sess;
 };
