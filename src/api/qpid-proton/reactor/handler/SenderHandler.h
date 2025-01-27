@@ -151,7 +151,7 @@ class SenderHandler : public CommonHandler {
      */
     message getMessage() const;
 
-  private:
+  protected:
     typedef CommonHandler super;
     bool ready;
     int count;

@@ -24,7 +24,7 @@
 #include <proton/thread_safe.hpp>
 #include <proton/transaction.hpp>
 
-#include "CommonHandler.h"
+#include "SenderHandler.h"
 #include "Timer.h"
 #include "Utils.h"
 
@@ -51,7 +51,7 @@ using dtests::common::Timer;
 /**
  * A proton message handler that handles message send events
  */
-class TxSenderHandler : public CommonHandler, transaction_handler {
+class TxSenderHandler : public SenderHandler, transaction_handler {
   public:
     /**
      * Constructor
@@ -117,21 +117,21 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
         string tx_endloop_action = "commit"
     );
 
-    void timerEvent();
-
     virtual ~TxSenderHandler();
 
-    /**
-     * Sets the message count
-     * @param count the message count
-     */
-    void setCount(int count);
-
-    /**
-     * Gets the message count
-     * @return the message count
-     */
-    int getCount() const;
+//     void timerEvent();
+//
+//    /**
+//     * Sets the message count
+//     * @param count the message count
+//     */
+//    void setCount(int count);
+//
+//    /**
+//     * Gets the message count
+//     * @return the message count
+//     */
+//    int getCount() const;
 
     /**
      * Sets the transaction batch size
@@ -145,20 +145,20 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
      */
     int getBatchSize() const;
 
-    /**
-     * Sets the message to send
-     * @param m the message to send
-     */
-    void setMessage(message &m);
+//     /**
+//      * Sets the message to send
+//      * @param m the message to send
+//      */
+//     void setMessage(message &m);
 
     void checkIfCanSend();
     void send();
 
-    /**
-     * Gets the message to send
-     * @return the message to send
-     */
-    message getMessage() const;
+//    /**
+//     * Gets the message to send
+//     * @return the message to send
+//     */
+//    message getMessage() const;
 
     session sess;
 
@@ -166,12 +166,12 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     void on_container_start(container &c);
     void on_session_open(session &s);
     void on_sendable(sender &s);
-    void on_tracker_accept(tracker &t);
-    void on_tracker_reject(tracker &t);
-    void on_transport_error(transport &t);
-    void on_transport_close(transport &t);
-    void on_connection_error(connection &c);
-    void on_connection_close(connection &c);
+//    void on_tracker_accept(tracker &t);
+//    void on_tracker_reject(tracker &t);
+//    void on_transport_error(transport &t);
+//    void on_transport_close(transport &t);
+//    void on_connection_error(connection &c);
+//    void on_connection_close(connection &c);
     void on_sender_close(sender &s);
     // reactor transaction methods
     void on_transaction_declared(transaction t);
@@ -181,12 +181,12 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
     void on_transaction_commit_failed(transaction t);
 
   private:
-    typedef CommonHandler super;
-    bool ready;
-    int count;
-    int duration_time;
-    string duration_mode;
-
+    typedef SenderHandler super;
+//    bool ready;
+//    int count;
+//    int duration_time;
+//    string duration_mode;
+//
     // transactions related variables
     int batch_size = 0;
     int current_batch = 0;
@@ -196,20 +196,20 @@ class TxSenderHandler : public CommonHandler, transaction_handler {
 
     sender sndr;
     transaction tx;
-
-    message m;
-
-    struct timer_event_t : public void_function0 {
-        TxSenderHandler &parent;
-        timer_event_t(TxSenderHandler &handler) : parent(handler) {}
-        void operator()() {
-            parent.timerEvent();
-        }
-    };
-
-    timer_event_t timer_event;
-
-    duration interval;
+//
+//    message m;
+//
+//    struct timer_event_t : public void_function0 {
+//        TxSenderHandler &parent;
+//        timer_event_t(TxSenderHandler &handler) : parent(handler) {}
+//        void operator()() {
+//            parent.timerEvent();
+//        }
+//    };
+//
+//    timer_event_t timer_event;
+//
+//    duration interval;
 
 };
 
