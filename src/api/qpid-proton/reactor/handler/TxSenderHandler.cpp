@@ -201,7 +201,7 @@ void TxSenderHandler::send()
                    sess.declare_transaction(*this);
                }
             }
-      	} else if (processed + current_batch == count) {
+        } else if (processed + current_batch == count) {
             logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
             if (tx_endloop_action == "commit") {
                 tx.commit();
