@@ -181,13 +181,13 @@ class ReceiverHandler : public CommonHandler {
     void setSelector(string selector);
     void createSubscriptionName(string customPrefix);
 
-  private:
+  protected:
     typedef CommonHandler super;
     receiver recv;
     listener lsnr;
     container *cont;
     double ts;
-    
+
     struct timer_event_t : public void_function0 {
         ReceiverHandler &parent;
         timer_event_t(ReceiverHandler &handler): parent(handler) { }

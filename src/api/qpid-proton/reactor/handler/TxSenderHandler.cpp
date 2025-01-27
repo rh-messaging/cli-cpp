@@ -71,6 +71,8 @@ TxSenderHandler::TxSenderHandler(
         conn_ssl_verify_peer,
         conn_ssl_verify_peer_name,
         timeout,
+    duration_time,
+    duration_mode,
         conn_reconnect,
         conn_reconnect_interval,
         conn_reconnect_limit,
@@ -84,18 +86,16 @@ TxSenderHandler::TxSenderHandler(
         conn_use_config_file,
         log_msgs
     ),
-    ready(false),
-    count(1),
-    duration_time(duration_time),
-    duration_mode(duration_mode),
+//    ready(false),
+//    count(1)
     batch_size(0),
     current_batch(0),
     processed(0),
     tx_action(tx_action),
-    tx_endloop_action(tx_endloop_action),
-    m(),
-    timer_event(*this),
-    interval(duration::IMMEDIATE)
+    tx_endloop_action(tx_endloop_action)
+//    m(),
+//    timer_event(*this),
+//    interval(duration::IMMEDIATE)
 {
 
 }
@@ -105,30 +105,30 @@ TxSenderHandler::~TxSenderHandler()
     logger(debug) << "Destroying the sender handler";
 }
 
-void TxSenderHandler::timerEvent() {
-#if defined(__REACTOR_HAS_TIMER)
-    if (timer.isExpired()) {
-        logger(info) << "Timed out";
-
-        exit(EXIT_SUCCESS);
-    } else {
-        timer--;
-        logger(debug) << "Waiting ...";
-
-        work_q->schedule(duration::SECOND, make_work(&TxSenderHandler::timerEvent, this));
-    }
-#endif
-}
-
-void TxSenderHandler::setCount(int count)
-{
-    this->count = count;
-}
-
-int TxSenderHandler::getCount() const
-{
-    return count;
-}
+//void TxSenderHandler::timerEvent() {
+//#if defined(__REACTOR_HAS_TIMER)
+//    if (timer.isExpired()) {
+//        logger(info) << "Timed out";
+//
+//        exit(EXIT_SUCCESS);
+//    } else {
+//        timer--;
+//        logger(debug) << "Waiting ...";
+//
+//        work_q->schedule(duration::SECOND, make_work(&TxSenderHandler::timerEvent, this));
+//    }
+//#endif
+//}
+//
+//void TxSenderHandler::setCount(int count)
+//{
+//    this->count = count;
+//}
+//
+//int TxSenderHandler::getCount() const
+//{
+//    return count;
+//}
 
 void TxSenderHandler::setBatchSize(int batchSize)
 {
@@ -140,15 +140,15 @@ int TxSenderHandler::getBatchSize() const
     return batch_size;
 }
 
-void TxSenderHandler::setMessage(message &msg)
-{
-    this->m = msg;
-}
-
-message TxSenderHandler::getMessage() const
-{
-    return m;
-}
+// void TxSenderHandler::setMessage(message &msg)
+// {
+//     this->m = msg;
+// }
+// 
+// message TxSenderHandler::getMessage() const
+// {
+//     return m;
+// }
 
 void TxSenderHandler::checkIfCanSend() {
     if (processed < count) {
@@ -269,47 +269,47 @@ void TxSenderHandler::on_sendable(sender &s)
 }
 
 
-void TxSenderHandler::on_tracker_accept(tracker &t)
-{
-    logger(trace) << "[on_tracker_accept] Message accepted, confirmed message delivery: " << processed;
-}
-
-void TxSenderHandler::on_tracker_reject(tracker &t)
-{
-    logger(trace) << "[on_tracker_reject] Delivery rejected";
-    exit(1);
-}
-
-void TxSenderHandler::on_transport_error(transport &t) {
-    logger(error) << "[on_transport_error] The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
-
-    if (t.error().what().find("unauthorized") != string::npos) {
-        exit(1);
-    }
-}
-
-void TxSenderHandler::on_transport_close(transport &t) {
-    logger(debug) << "[on_transport_close] Closing the transport";
-
-    if (conn_reconnect == "false") {
-        exit(1);
-    }
-}
-
-void TxSenderHandler::on_connection_close(connection &c)
-{
-    current_batch = 0;
-    logger(debug) << "[on_connection_close] Closing connection";
-}
-
-void TxSenderHandler::on_connection_error(connection &c)
-{
-    logger(error) << "[on_connection_error] Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
-
-    if (c.error().what().find("Unable to validate user") != string::npos) {
-        exit(1);
-    }
-}
+// void TxSenderHandler::on_tracker_accept(tracker &t)
+// {
+//     logger(trace) << "[on_tracker_accept] Message accepted, confirmed message delivery: " << processed;
+// }
+// 
+// void TxSenderHandler::on_tracker_reject(tracker &t)
+// {
+//     logger(trace) << "[on_tracker_reject] Delivery rejected";
+//     exit(1);
+// }
+// 
+// void TxSenderHandler::on_transport_error(transport &t) {
+//     logger(error) << "[on_transport_error] The connection with " << broker_url.getHost() << ":" << broker_url.getPort() << " was interrupted: " << t.error().what();
+// 
+//     if (t.error().what().find("unauthorized") != string::npos) {
+//         exit(1);
+//     }
+// }
+// 
+// void TxSenderHandler::on_transport_close(transport &t) {
+//     logger(debug) << "[on_transport_close] Closing the transport";
+// 
+//     if (conn_reconnect == "false") {
+//         exit(1);
+//     }
+// }
+// 
+// void TxSenderHandler::on_connection_close(connection &c)
+// {
+//     current_batch = 0;
+//     logger(debug) << "[on_connection_close] Closing connection";
+// }
+// 
+// void TxSenderHandler::on_connection_error(connection &c)
+// {
+//     logger(error) << "[on_connection_error] Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
+// 
+//     if (c.error().what().find("Unable to validate user") != string::npos) {
+//         exit(1);
+//     }
+// }
 
 void TxSenderHandler::on_transaction_declared(transaction t) {
     logger(trace) << "[on_transaction_declared] txn called " << (&t);
