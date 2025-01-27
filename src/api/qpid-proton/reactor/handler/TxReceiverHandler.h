@@ -77,6 +77,10 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
      * @param browse enable browsing receiver
      * @param recv_listen enable p2p listener
      * @param recv_listen_port p2p listener port
+     * @param recv_credit_window receiver credit window
+     * @param recv_drain_after_credit_window drain aqfter credit window
+     * @param tx_action transaction action on batch
+     * @param tx_endloop_action transaction action on last batch
      */
     TxReceiverHandler(
         const string &url,
@@ -155,7 +159,6 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
   private:
     typedef ReceiverHandler super;
 
-    // transaction variables
     int batch_size = 0;
     int current_batch = 0;
     int confirmed = 0;
