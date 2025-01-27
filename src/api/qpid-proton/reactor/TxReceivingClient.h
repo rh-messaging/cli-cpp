@@ -14,19 +14,8 @@
 #ifndef TXRECEIVINGCLIENT_H
 #define TXRECEIVINGCLIENT_H
 
-#include <sstream>
-#include <string>
-
-#include <proton/message.hpp>
-#include <proton/container.hpp>
-#include <proton/uuid.hpp>
-
 #include "ReceivingClient.h"
 #include "handler/TxReceiverHandler.h"
-#include "options/modern/ReceiverOptionsParser.h"
-#include "options/OptionsHelper.h"
-#include "TypeUtils.h"
-#include "UriParser.h"
 
 using proton::message;
 using proton::uuid;
