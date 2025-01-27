@@ -122,110 +122,6 @@ TxReceiverHandler::~TxReceiverHandler()
 {
 }
 
-//void TxReceiverHandler::timerEvent() {
-//#if defined(__REACTOR_HAS_TIMER)
-//    if (timer.isExpired()) {
-//        logger(info) << "Timed out";
-//
-//        if (recv_listen != "true") {
-//            exit(EXIT_SUCCESS);
-//        } else {
-//            exit(0);
-//        }
-//    } else {
-//        timer--;
-//        logger(debug) << "Waiting ...";
-//
-//        if (recv_listen != "true") {
-//            work_q->schedule(duration::SECOND, make_work(&TxReceiverHandler::timerEvent, this));
-//        } else {
-//            cont->schedule(duration::SECOND, make_work(&TxReceiverHandler::timerEvent, this));
-//        }
-//    }
-//#endif
-//}
-//
-// void TxReceiverHandler::do_message_action(delivery &d)
-// {
-//     logger(debug) << "Message action: " << msg_action;
-//     logger(debug) << "Message action size: " << msg_action_size;
-// 
-//     if(msg_action == "ack") {
-//         d.accept();
-// 
-//         logger(debug) << "Message acknowledged";
-//     } else if(msg_action == "reject") {
-//         d.reject();
-// 
-//         logger(debug) << "Message rejected";
-//     } else if(msg_action == "release") {
-//         d.release();
-// 
-//         logger(debug) << "Message released";
-//     }
-// }
-// 
-// void TxReceiverHandler::do_process_reply_to(message &m)
-// {
-//     logger(debug) << "Processing reply-to";
-// 
-//     map<string, sender>::iterator it = senders.find(m.reply_to());
-// 
-//     if (it != senders.end()) {
-//         logger(debug) << "Sender for " << m.reply_to() << " found";
-//     } else {
-//         logger(debug) << "Sender for " << m.reply_to() << " not found";
-//         logger(debug) << "Creating sender for " << m.reply_to();
-// 
-//         senders[m.reply_to()] = recv.connection().open_sender(m.reply_to());
-// 
-//         logger(debug) << "Sender for " << m.reply_to() << " created";
-//     }
-// 
-//     message replyToMessage = message(m);
-//     replyToMessage.to(m.reply_to());
-// 
-//     logger(debug) << "Sending reply to " << replyToMessage.to();
-// 
-//     senders[m.reply_to()].send(replyToMessage);
-// }
-// 
-// 
-// void TxReceiverHandler::drain() {
-//     logger(debug) << "Draining...";
-//     recv.drain();
-// }
-// 
-// void TxReceiverHandler::setSelector(string selector)
-// {
-//     source::filter_map map;
-//     symbol filter_key("selector");
-//     value filter_value;
-//     encoder enc(filter_value);
-// 
-//     enc << start::described()
-//         << symbol("apache.org:selector-filter:string")
-//         << selector
-//         << finish();
-// 
-//     fm.put(filter_key, filter_value);
-// }
-// 
-//void TxReceiverHandler::createSubscriptionName(string customPrefix)
-//{
-//    if (durable_subscriber_name == "") {
-//        uuid client_uuid = ::proton::uuid::random();
-//
-//        if (customPrefix == "") {
-//            durable_subscriber_name = "qpid-proton-cpp-" + client_uuid.str();
-//        } else {
-//            durable_subscriber_name = customPrefix + client_uuid.str();
-//        }
-//    }
-//
-//    logger(debug) << "Durable subscription name: " << durable_subscriber_name;
-//}
-
 void TxReceiverHandler::setBatchSize(int batchSize)
 {
     this->batch_size = batchSize;
@@ -555,52 +451,12 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     }
 }
 
-// void TxReceiverHandler::on_receiver_drain_finish(receiver &r) {
-//     logger(debug) << "[on_receiver_drain_finish] Receiver drain finished";
-// }
-// 
-// void TxReceiverHandler::on_tracker_accept(tracker &t)
-// {
-//     logger(debug) << "[on_tracker_accept] Delivery accepted";
-// }
-// 
-// 
-// void TxReceiverHandler::on_tracker_reject(tracker &t)
-// {
-//     logger(debug) << "[on_tracker_reject] Delivery rejected";
-// }
-// 
-// void TxReceiverHandler::on_transport_close(transport &t) {
-//     logger(debug) << "[on_transport_close] Closing the transport";
-// 
-//     if (conn_reconnect == "false") {
-//         exit(1);
-//     } else if (confirmed == count) {
-//         exit(0);
-//     }
-// }
-// 
-// void TxReceiverHandler::on_transport_error(transport &t) {
-//     logger(error) << "[on_transport_error] The connection with " << broker_url.getHost() << ":"
-//                   << broker_url.getPort() << " was interrupted: " << t.error().what();
-// 
-//     if (t.error().what().find("unauthorized") != string::npos) {
-//         exit(1);
-//     }
-// }
-// 
-// void TxReceiverHandler::on_connection_close(connection &conn)
-// {
-//     logger(debug) << "[on_connection_close] Disconnecting ...";
-// }
-// 
-// void TxReceiverHandler::on_connection_error(connection &c)
-// {
-//     logger(error) << "[on_connection_error] Failed to connect to " << broker_url.getHost() << ":" << broker_url.getPort();
-// 
-//     if (c.error().what().find("Unable to validate user") != string::npos) {
-//         exit(1);
-//     }
-// }
+void TxReceiverHandler::on_transport_close(transport &t) {
+    logger(debug) << "[on_transport_close] Closing the transport";
 
-// void TxReceiverHandler::do_disconnect() {}
+    if (conn_reconnect == "false") {
+        exit(1);
+    } else if (confirmed == count) {
+        exit(0);
+    }
+}

@@ -119,20 +119,6 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
 
     virtual ~TxSenderHandler();
 
-//     void timerEvent();
-//
-//    /**
-//     * Sets the message count
-//     * @param count the message count
-//     */
-//    void setCount(int count);
-//
-//    /**
-//     * Gets the message count
-//     * @return the message count
-//     */
-//    int getCount() const;
-
     /**
      * Sets the transaction batch size
      * @param batch_size the transaction batch size
@@ -145,72 +131,34 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
      */
     int getBatchSize() const;
 
-//     /**
-//      * Sets the message to send
-//      * @param m the message to send
-//      */
-//     void setMessage(message &m);
-
+    // overrides
     void checkIfCanSend();
     void send();
 
-//    /**
-//     * Gets the message to send
-//     * @return the message to send
-//     */
-//    message getMessage() const;
-
-    session sess;
-
-    // common reactor methods
-    void on_container_start(container &c);
-    void on_session_open(session &s);
-    void on_sendable(sender &s);
-//    void on_tracker_accept(tracker &t);
-//    void on_tracker_reject(tracker &t);
-//    void on_transport_error(transport &t);
-//    void on_transport_close(transport &t);
-//    void on_connection_error(connection &c);
-//    void on_connection_close(connection &c);
+    // reactor methods
     void on_sender_close(sender &s);
-    // reactor transaction methods
     void on_transaction_declared(transaction t);
     void on_transaction_committed(transaction t);
     void on_transaction_aborted(transaction t);
     void on_transaction_declare_failed(transaction t);
     void on_transaction_commit_failed(transaction t);
 
+    // overrides
+    void on_container_start(container &c);
+    void on_session_open(session &s);
+    void on_sendable(sender &s);
+    void on_tracker_accept(tracker &t);
+    void on_connection_close(connection &c);
+
   private:
     typedef SenderHandler super;
-//    bool ready;
-//    int count;
-//    int duration_time;
-//    string duration_mode;
-//
-    // transactions related variables
     int batch_size = 0;
     int current_batch = 0;
     int processed = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";
-
-    sender sndr;
     transaction tx;
-//
-//    message m;
-//
-//    struct timer_event_t : public void_function0 {
-//        TxSenderHandler &parent;
-//        timer_event_t(TxSenderHandler &handler) : parent(handler) {}
-//        void operator()() {
-//            parent.timerEvent();
-//        }
-//    };
-//
-//    timer_event_t timer_event;
-//
-//    duration interval;
-
+    session sess;
 };
 
 } /* namespace reactor */
