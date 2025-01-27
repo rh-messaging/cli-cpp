@@ -110,13 +110,12 @@ int TxSenderHandler::getBatchSize() const
     return batch_size;
 }
 
-// TODO parametrize and remove
 void TxSenderHandler::checkIfCanSend() {
     if (processed < count) {
         work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
 
         if (sndr.credit() > 0) {
-		send();
+            send();
         } else {
             ready = true;
         }
