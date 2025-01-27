@@ -63,6 +63,8 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
      * @param max_frame_size maximum frame size
      * @param conn_use_config_file use configuration file for connection
      * @param log_msgs message log format
+     * @param tx_action transaction action on batch
+     * @param tx_endloop_action transaction action on last batch
      */
     TxSenderHandler(
         const string &url,
@@ -132,6 +134,7 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
 
   private:
     typedef SenderHandler super;
+
     int batch_size = 0;
     int current_batch = 0;
     int processed = 0;
