@@ -110,7 +110,7 @@ TxReceiverHandler::TxReceiverHandler(
         recv_listen_port,
         recv_credit_window,
         recv_drain_after_credit_window
-    ),	
+    ),
     tx_action(tx_action),
     tx_endloop_action(tx_endloop_action)
 {
@@ -149,33 +149,39 @@ void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
 }
 
 void TxReceiverHandler::on_transaction_declared(transaction t) {
+    // TODO python some weird magic around count 0, doesn't make much sense to me yet
+    // when fixes take care about all count checks ofr zero
+    if (count != 0 && processed + batch_size > count) {
+        batch_size = count % batch_size;
+    } else if (count != 0) {
+        batch_size = count;
+    }
     logger(trace) << "[on_transaction_declared] txn called " << (&t);
     logger(debug) << "[on_transaction_declared] txn is_empty " << (t.is_empty());
     tx = t;
 }
 
 void TxReceiverHandler::on_transaction_aborted(transaction t) {
-    confirmed += current_batch;
-    logger(debug) << "[on_transaction_aborted] messages aborted, confirmed: " << confirmed;
-    if(confirmed == count) {
-        logger(info) << "[on_transaction_committed] All messages proccessed";
-        t.connection().close();
-    }
-    else {
+    processed += current_batch;
+    current_batch = 0;
+    logger(debug) << "[on_transaction_aborted] messages aborted, processed: " << processed;
+    if (count == 0 || processed < count) {
         sess.declare_transaction(*this);
+    } else {
+        logger(info) << "[on_transaction_committed] All messages processed";
+        t.connection().close();
     }
 }
 
 void TxReceiverHandler::on_transaction_committed(transaction t) {
-    confirmed += current_batch;
+    processed += current_batch;
     current_batch = 0;
-    logger(debug) << "[on_transaction_aborted] messages committed, confirmed: " << confirmed;
-    if(confirmed == count) {
-        logger(info) << "[on_transaction_committed] All messages proccessed";
-        t.connection().close();
-    }
-    else {
+    logger(debug) << "[on_transaction_aborted] messages committed, processed: " << processed;
+    if (count == 0 || processed < count) {
         sess.declare_transaction(*this);
+    } else {
+        logger(info) << "[on_transaction_committed] All messages processed";
+        t.connection().close();
     }
 }
 
@@ -192,7 +198,7 @@ void TxReceiverHandler::on_container_start(container &c)
     logger(debug) << "[on_container_start] Transaction action: " << tx_action;
     logger(debug) << "[on_container_start] Transaction endloop action: " << tx_endloop_action;
     logger(trace) << "[on_container_start] Messages count: " << count;
-    logger(debug) << "[on_container_start] Messages confirmed: " << confirmed;
+    logger(debug) << "[on_container_start] Messages processed: " << processed;
     logger(debug) << "[on_container_start] Peer to Peer: " << recv_listen;
 
     if (recv_listen == "true") {
@@ -364,6 +370,11 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 {
     logger(debug) << "[on_message] Processing received message";
 
+    tx.accept(d);
+    current_batch += 1;
+
+    logger(debug) << "[on_message] current batch: " << current_batch;
+
     if (log_msgs == "dict") {
         logger(trace) << "[on_message] Decoding message";
         ReactorDecoder decoder = ReactorDecoder(m);
@@ -384,19 +395,15 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 
     if (duration_time > 0 && duration_mode == "after-receive") {
         logger(debug) << "[on_message] Waiting...";
-        sleep4next(ts, count, duration_time, confirmed);
+        sleep4next(ts, count, duration_time, processed + current_batch);
     }
 
-    if((confirmed % msg_action_size) == 0) {
+    if(((processed + current_batch) % msg_action_size) == 0) {
         do_message_action(d);
     }
 
     if (duration_time > 0 && duration_mode == "after-receive-action") {
-        sleep4next(ts, count, duration_time, confirmed);
-    }
-
-    if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
-        // TODO: not implemented yet
+        sleep4next(ts, count, duration_time, processed + current_batch);
     }
 
     logger(debug) << "[on_message] Process-reply-to: " << process_reply_to;
@@ -411,12 +418,12 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         }
     }
 
-    if (recv_drain_after_credit_window && confirmed== recv_credit_window) {
+    if (recv_drain_after_credit_window && processed + current_batch == recv_credit_window) {
         logger(debug) << "[on_message] Scheduling drain";
         d.receiver().work_queue().add(make_work(&TxReceiverHandler::drain, this));
     }
 
-    if (!process_reply_to && confirmed == count) {
+    if (!process_reply_to && processed + current_batch == count) {
         if (durable_subscriber) {
             d.receiver().detach();
         } else {
@@ -429,32 +436,46 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 #endif
     }
 
-    tx.accept(d);
-    current_batch += 1;
-    logger(debug) << "[on_message] current batch: " << current_batch;
-    if (confirmed + current_batch == count) {
-        logger(debug) << "[on_message] Transaction attempt (endloop): " << tx_endloop_action;
-        if (tx_endloop_action == "commit") {
+    if(current_batch == batch_size) {
+        logger(debug) << "[send] Transaction attempt: " << tx_action;
+        if (tx_action == "commit") {
             tx.commit();
-        } else if (tx_endloop_action == "rollback") {
+        } else if (tx_action == "rollback") {
             tx.abort();
         }
-    } else if(current_batch == batch_size) {
-        logger(debug) << "[on_message] messages commited: " << current_batch;
+
+        if (tx_action == "none") {
+           if (processed + current_batch == count) {
+               recv.connection().close();
+           } else {
+               processed += current_batch;
+               current_batch = 0;
+               sess.declare_transaction(*this);
+           }
+        }
+
+        if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
+            // TODO: not implemented yet
+        }
+
+    } else if (count != 0 && processed + current_batch == count) {
+        logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
         if (tx_endloop_action == "commit") {
             tx.commit();
         } else if (tx_endloop_action == "rollback") {
             tx.abort();
+        } else {
+          recv.connection().close();
         }
     }
 }
 
 void TxReceiverHandler::on_transport_close(transport &t) {
     logger(debug) << "[on_transport_close] Closing the transport";
-
+    current_batch = 0;
     if (conn_reconnect == "false") {
         exit(1);
-    } else if (confirmed == count) {
+    } else if (processed == count) {
         exit(0);
     }
 }
