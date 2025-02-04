@@ -393,6 +393,8 @@ int TxReceivingClient::run(int argc, char **argv) const
         handler.setSelector(selector);
     }
 
+    // TODO python defaults to 10
+    // int tx_size = 10;
     int tx_size = 0;
     if (options.is_set("tx-size")) {
         tx_size = static_cast<int> (options.get("tx-size"));

@@ -151,7 +151,6 @@ void TxSenderHandler::send()
 
 
     logger(trace) << "[send] Transaction is empty: " << tx.is_empty();
-    logger(trace) << "[send] Current_batch: " << sndr.credit();
     logger(debug) << "[send] Messages processed: " << processed;
     logger(trace) << "[send] Current batch: " << current_batch;
     while (!tx.is_empty() && sndr.credit() && (processed + current_batch) < count)
