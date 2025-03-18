@@ -222,8 +222,6 @@ void TxSenderHandler::send(session s)
 
 void TxSenderHandler::on_sendable(sender &s)
 {
-    // TODO
-    logger(trace) <<  "[on_sendable] IS THIS METHOD EVER CALLED IN TX MODE???";
     logger(trace) <<  "[on_sendable] transaction: " << &s;
     if (ready) {
         send(s.session());
