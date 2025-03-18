@@ -110,19 +110,20 @@ int TxSenderHandler::getBatchSize() const
     return batch_size;
 }
 
-void TxSenderHandler::checkIfCanSend() {
-    if (processed < count) {
-        work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
+// void TxSenderHandler::checkIfCanSend() {
+//     if (processed < count) {
+//         work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
+// 
+//         if (sndr.credit() > 0) {
+//             logger(debug) << "[checkIfCanSend] Preparing to send message";
+//             send();
+//         } else {
+//             ready = true;
+//         }
+//     }
+// }
 
-        if (sndr.credit() > 0) {
-            send();
-        } else {
-            ready = true;
-        }
-    }
-}
-
-void TxSenderHandler::send()
+void TxSenderHandler::send(session s)
 {
     logger(debug) << "[send] Preparing to send message";
     int credit = sndr.credit();
@@ -150,12 +151,14 @@ void TxSenderHandler::send()
     }
 
 
-    logger(trace) << "[send] Transaction is empty: " << tx.is_empty();
+    logger(trace) << "[send] Transaction is empty: " << s.txn_is_empty();
     logger(debug) << "[send] Messages processed: " << processed;
     logger(trace) << "[send] Current batch: " << current_batch;
-    while (!tx.is_empty() && sndr.credit() && (processed + current_batch) < count)
+    while (s.txn_is_declared() && sndr.credit() && (processed + current_batch) < count)
     {
-        tx.send(sndr, message_to_send);
+    logger(trace) << "[send] Sending messages through the link NAZDAR";
+        s.txn_send(sndr, message_to_send);
+    logger(trace) << "[send] Sending messages through the link BAZAR";
         current_batch += 1;
 
         if (log_msgs == "dict") {
@@ -185,11 +188,10 @@ void TxSenderHandler::send()
         if(current_batch == batch_size) {
             logger(debug) << "[send] Transaction attempt: " << tx_action;
             if (tx_action == "commit") {
-                tx.commit();
+                s.txn_commit();
             } else if (tx_action == "rollback") {
-                tx.abort();
+                s.txn_abort();
             }
-            tx = transaction();
 
             if (tx_action == "none") {
                if (processed + current_batch == count) {
@@ -197,15 +199,15 @@ void TxSenderHandler::send()
                } else {
                    processed += current_batch;
                    current_batch = 0;
-                   sess.declare_transaction(*this);
+                   s.declare_transaction(*this);
                }
             }
         } else if (processed + current_batch == count) {
             logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
             if (tx_endloop_action == "commit") {
-                tx.commit();
+                s.txn_commit();
             } else if (tx_endloop_action == "rollback") {
-                tx.abort();
+                s.txn_abort();
             }
             sndr.connection().close();
         }
@@ -221,9 +223,10 @@ void TxSenderHandler::send()
 
 void TxSenderHandler::on_sendable(sender &s)
 {
-    logger(trace) <<  "[on_sendable] transaction: " << &tx;
+    logger(trace) <<  "[on_sendable] IS THIS METHOD EVER CALLED IN TX MODE???";
+    logger(trace) <<  "[on_sendable] transaction: " << &s;
     if (ready) {
-        send();
+        send(s.session());
     }
 }
 
@@ -238,39 +241,39 @@ void TxSenderHandler::on_connection_close(connection &c)
     logger(debug) << "[on_connection_close] Closing connection";
 }
 
-void TxSenderHandler::on_transaction_declared(transaction t) {
-    logger(trace) << "[on_transaction_declared] txn called " << (&t);
-    logger(trace) << "[on_transaction_declared] txn is_empty " << (t.is_empty())
-                  << "\t" << tx.is_empty();
-    tx = t;
-    send();
+void TxSenderHandler::on_transaction_declared(session s) {
+    logger(trace) << "[on_transaction_declared] txn called " << (&s);
+    logger(trace) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty())
+                  << "\t" << s.txn_is_empty();
+    // tx = t;
+    send(s);
 }
 
-void TxSenderHandler::on_transaction_committed(transaction t) {
+void TxSenderHandler::on_transaction_committed(session s) {
     logger(trace) << "[on_transaction_committed] Messages committed";
     processed += current_batch;
     logger(debug) << "[on_transaction_committed] Messages processed" << processed;
     if (processed == count) {
         logger(trace) << "[on_transaction_committed] All messages processed";
-        t.connection().close();
+        s.connection().close();
     } else {
         logger(trace) << "[on_transaction_committed] Declaring new transaction";
         current_batch = 0;
-        sess.declare_transaction(*this);
+        s.declare_transaction(*this);
     }
 }
 
-void TxSenderHandler::on_transaction_aborted(transaction t) {
+void TxSenderHandler::on_transaction_aborted(session s) {
     logger(trace) << "[on_transaction_aborted] Messages aborted";
     processed += current_batch;
-    logger(debug) << "[on_transaction_committed] Messages processed" << processed;
+    logger(debug) << "[on_transaction_aborted] Messages processed" << processed;
     if (processed == count) {
         logger(trace) << "[on_transaction_aborted] All messages processed";
-        t.connection().close();
+        s.connection().close();
     } else {
-        logger(trace) << "[on_transaction_committed] Declaring new transaction";
+        logger(trace) << "[on_transaction_aborted] Declaring new transaction";
         current_batch = 0;
-        sess.declare_transaction(*this);
+        s.declare_transaction(*this);
     }
 }
 
@@ -279,7 +282,6 @@ void TxSenderHandler::on_sender_close(sender &s) {
 }
 
 void TxSenderHandler::on_session_open(session &s) {
-     sess = s;
      logger(trace) << "[on_session_open] declare_txn started...";
      s.declare_transaction(*this);
      logger(trace) << "[on_session_open] declare_txn ended...";
@@ -366,26 +368,27 @@ void TxSenderHandler::on_container_start(container &c)
 
         logger(trace) << "[on_container_start] Interval for duration: " << interval.milliseconds() << " ms";
     }
-#if defined(__REACTOR_HAS_TIMER)
-    work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::timerEvent, this));
+// TODO
+// #if defined(__REACTOR_HAS_TIMER)
+//     work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::timerEvent, this));
+// 
+//     if (duration_time > 0 && duration_mode == "after-send") {
+//         work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
+//     } else if (duration_time > 0 && duration_mode == "before-send") {
+//         work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
+//     } else {
+//         work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
+//     }
+// #endif
 
-    if (duration_time > 0 && duration_mode == "after-send") {
-        work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
-    } else if (duration_time > 0 && duration_mode == "before-send") {
-        work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
-    } else {
-        work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
-    }
-#endif
-
-    tx = transaction();
+//    tx = transaction();
 }
 
-void TxSenderHandler::on_transaction_declare_failed(transaction) {}
+void TxSenderHandler::on_transaction_declare_failed(session) {}
 
-void TxSenderHandler::on_transaction_commit_failed(transaction t) {
+void TxSenderHandler::on_transaction_commit_failed(session s) {
     logger(error) << "[on_transaction_commit_failed] Transaction Commit Failed";
-    t.connection().close();
+    s.connection().close();
     exit(1);
 }
 

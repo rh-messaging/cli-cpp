@@ -145,11 +145,11 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
 
     // reactor method
     void on_session_open(session &s);
-    void on_transaction_declare_failed(transaction);
-    void on_transaction_commit_failed(transaction t);
-    void on_transaction_declared(transaction t);
-    void on_transaction_committed(transaction t);
-    void on_transaction_aborted(transaction t);
+    void on_transaction_declare_failed(session);
+    void on_transaction_commit_failed(session s);
+    void on_transaction_declared(session s);
+    void on_transaction_committed(session s);
+    void on_transaction_aborted(session s);
 
     // overrides
     void on_container_start(container &c);
@@ -164,8 +164,6 @@ class TxReceiverHandler : public ReceiverHandler, transaction_handler {
     int processed = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";
-    transaction tx;
-    session sess;
 };
 
 } /* namespace reactor */
