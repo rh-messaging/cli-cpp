@@ -115,7 +115,7 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
 
     // overrides
     void checkIfCanSend();
-    void send(session sess);
+    void send(session s);
 
     // reactor methods
     void on_sender_close(sender &s);

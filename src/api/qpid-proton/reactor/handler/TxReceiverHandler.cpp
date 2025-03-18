@@ -157,8 +157,6 @@ void TxReceiverHandler::on_transaction_declared(session s) {
     }
     logger(trace) << "[on_transaction_declared] txn called " << (&s);
     logger(debug) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty());
-    // TODO
-    // tx = t;
 }
 
 void TxReceiverHandler::on_transaction_aborted(session s) {
@@ -168,7 +166,7 @@ void TxReceiverHandler::on_transaction_aborted(session s) {
     if (count == 0 || processed < count) {
         s.declare_transaction(*this);
     } else {
-        logger(info) << "[on_transaction_committed] All messages processed";
+        logger(info) << "[on_transaction_aborted] All messages processed";
         s.connection().close();
     }
 }
@@ -176,7 +174,7 @@ void TxReceiverHandler::on_transaction_aborted(session s) {
 void TxReceiverHandler::on_transaction_committed(session s) {
     processed += current_batch;
     current_batch = 0;
-    logger(debug) << "[on_transaction_aborted] messages committed, processed: " << processed;
+    logger(debug) << "[on_transaction_committed] messages committed, processed: " << processed;
     if (count == 0 || processed < count) {
         s.declare_transaction(*this);
     } else {
@@ -370,7 +368,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 {
     logger(debug) << "[on_message] Processing received message";
 
+    // TODO legit?
     session s = d.session();
+
     s.txn_accept(d);
     current_batch += 1;
 
