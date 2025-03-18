@@ -117,7 +117,7 @@ void TxSenderHandler::checkIfCanSend() {
         if (sndr.credit() > 0) {
             logger(debug) << "[checkIfCanSend] Preparing to send message";
             // TODO test w/ session defined
-            send();
+            // send();
         } else {
             ready = true;
         }
