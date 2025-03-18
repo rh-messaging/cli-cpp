@@ -110,18 +110,19 @@ int TxSenderHandler::getBatchSize() const
     return batch_size;
 }
 
-// void TxSenderHandler::checkIfCanSend() {
-//     if (processed < count) {
-//         work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
-// 
-//         if (sndr.credit() > 0) {
-//             logger(debug) << "[checkIfCanSend] Preparing to send message";
-//             send();
-//         } else {
-//             ready = true;
-//         }
-//     }
-// }
+void TxSenderHandler::checkIfCanSend() {
+    if (processed < count) {
+        work_q->schedule(interval, make_work(&TxSenderHandler::checkIfCanSend, this));
+
+        if (sndr.credit() > 0) {
+            logger(debug) << "[checkIfCanSend] Preparing to send message";
+            // TODO test w/ session defined
+            send();
+        } else {
+            ready = true;
+        }
+    }
+}
 
 void TxSenderHandler::send(session s)
 {
@@ -156,9 +157,7 @@ void TxSenderHandler::send(session s)
     logger(trace) << "[send] Current batch: " << current_batch;
     while (s.txn_is_declared() && sndr.credit() && (processed + current_batch) < count)
     {
-    logger(trace) << "[send] Sending messages through the link NAZDAR";
         s.txn_send(sndr, message_to_send);
-    logger(trace) << "[send] Sending messages through the link BAZAR";
         current_batch += 1;
 
         if (log_msgs == "dict") {
@@ -223,6 +222,7 @@ void TxSenderHandler::send(session s)
 
 void TxSenderHandler::on_sendable(sender &s)
 {
+    // TODO
     logger(trace) <<  "[on_sendable] IS THIS METHOD EVER CALLED IN TX MODE???";
     logger(trace) <<  "[on_sendable] transaction: " << &s;
     if (ready) {
@@ -245,7 +245,6 @@ void TxSenderHandler::on_transaction_declared(session s) {
     logger(trace) << "[on_transaction_declared] txn called " << (&s);
     logger(trace) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty())
                   << "\t" << s.txn_is_empty();
-    // tx = t;
     send(s);
 }
 
@@ -368,10 +367,11 @@ void TxSenderHandler::on_container_start(container &c)
 
         logger(trace) << "[on_container_start] Interval for duration: " << interval.milliseconds() << " ms";
     }
+
 // TODO
 // #if defined(__REACTOR_HAS_TIMER)
 //     work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::timerEvent, this));
-// 
+//
 //     if (duration_time > 0 && duration_mode == "after-send") {
 //         work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
 //     } else if (duration_time > 0 && duration_mode == "before-send") {
@@ -380,8 +380,6 @@ void TxSenderHandler::on_container_start(container &c)
 //         work_q->schedule(duration::IMMEDIATE, make_work(&TxSenderHandler::checkIfCanSend, this));
 //     }
 // #endif
-
-//    tx = transaction();
 }
 
 void TxSenderHandler::on_transaction_declare_failed(session) {}
