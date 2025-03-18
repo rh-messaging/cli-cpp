@@ -133,22 +133,21 @@ int TxReceiverHandler::getBatchSize() const
 // reactor methods
 
 void TxReceiverHandler::on_session_open(session &s) {
-    sess = s;
     logger(trace) << "[on_session_open] declare_txn started...";
     s.declare_transaction(*this);
     logger(trace) << "[on_session_open] declare_txn ended...";
     logger(debug) << "[on_session_open] transaction batch size: " << batch_size;
 }
 
-void TxReceiverHandler::on_transaction_declare_failed(transaction) {}
+void TxReceiverHandler::on_transaction_declare_failed(session) {}
 
-void TxReceiverHandler::on_transaction_commit_failed(transaction t) {
+void TxReceiverHandler::on_transaction_commit_failed(session s) {
     logger(debug) << "[on_transaction_commit_failed] Transaction Commit Failed";
-    t.connection().close();
+    s.connection().close();
     exit(-1);
 }
 
-void TxReceiverHandler::on_transaction_declared(transaction t) {
+void TxReceiverHandler::on_transaction_declared(session s) {
     // TODO python some weird magic around count 0, doesn't make much sense to me yet
     // when fixes take care about all count checks ofr zero
     if (count != 0 && processed + batch_size > count) {
@@ -156,32 +155,33 @@ void TxReceiverHandler::on_transaction_declared(transaction t) {
     } else if (count != 0) {
         batch_size = count;
     }
-    logger(trace) << "[on_transaction_declared] txn called " << (&t);
-    logger(debug) << "[on_transaction_declared] txn is_empty " << (t.is_empty());
-    tx = t;
+    logger(trace) << "[on_transaction_declared] txn called " << (&s);
+    logger(debug) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty());
+    // TODO
+    // tx = t;
 }
 
-void TxReceiverHandler::on_transaction_aborted(transaction t) {
+void TxReceiverHandler::on_transaction_aborted(session s) {
     processed += current_batch;
     current_batch = 0;
     logger(debug) << "[on_transaction_aborted] messages aborted, processed: " << processed;
     if (count == 0 || processed < count) {
-        sess.declare_transaction(*this);
+        s.declare_transaction(*this);
     } else {
         logger(info) << "[on_transaction_committed] All messages processed";
-        t.connection().close();
+        s.connection().close();
     }
 }
 
-void TxReceiverHandler::on_transaction_committed(transaction t) {
+void TxReceiverHandler::on_transaction_committed(session s) {
     processed += current_batch;
     current_batch = 0;
     logger(debug) << "[on_transaction_aborted] messages committed, processed: " << processed;
     if (count == 0 || processed < count) {
-        sess.declare_transaction(*this);
+        s.declare_transaction(*this);
     } else {
         logger(info) << "[on_transaction_committed] All messages processed";
-        t.connection().close();
+        s.connection().close();
     }
 }
 
@@ -370,7 +370,8 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 {
     logger(debug) << "[on_message] Processing received message";
 
-    tx.accept(d);
+    session s = d.session();
+    s.txn_accept(d);
     current_batch += 1;
 
     logger(debug) << "[on_message] current batch: " << current_batch;
@@ -439,9 +440,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     if(current_batch == batch_size) {
         logger(debug) << "[send] Transaction attempt: " << tx_action;
         if (tx_action == "commit") {
-            tx.commit();
+            s.txn_commit();
         } else if (tx_action == "rollback") {
-            tx.abort();
+            s.txn_abort();
         }
 
         if (tx_action == "none") {
@@ -450,7 +451,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
            } else {
                processed += current_batch;
                current_batch = 0;
-               sess.declare_transaction(*this);
+               s.declare_transaction(*this);
            }
         }
 
@@ -461,9 +462,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     } else if (count != 0 && processed + current_batch == count) {
         logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
         if (tx_endloop_action == "commit") {
-            tx.commit();
+            s.txn_commit();
         } else if (tx_endloop_action == "rollback") {
-            tx.abort();
+            s.txn_abort();
         } else {
           recv.connection().close();
         }

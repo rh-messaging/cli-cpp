@@ -115,15 +115,15 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
 
     // overrides
     void checkIfCanSend();
-    void send();
+    void send(session sess);
 
     // reactor methods
     void on_sender_close(sender &s);
-    void on_transaction_declared(transaction t);
-    void on_transaction_committed(transaction t);
-    void on_transaction_aborted(transaction t);
-    void on_transaction_declare_failed(transaction t);
-    void on_transaction_commit_failed(transaction t);
+    void on_transaction_declared(session s);
+    void on_transaction_committed(session s);
+    void on_transaction_aborted(session s);
+    void on_transaction_declare_failed(session s);
+    void on_transaction_commit_failed(session s);
 
     // overrides
     void on_container_start(container &c);
@@ -140,8 +140,6 @@ class TxSenderHandler : public SenderHandler, transaction_handler {
     int processed = 0;
     string tx_action = "commit";
     string tx_endloop_action = "commit";
-    transaction tx;
-    session sess;
 };
 
 } /* namespace reactor */
