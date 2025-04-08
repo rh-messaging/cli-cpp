@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20.0)
 project(cli-cpp)
 enable_language(CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -97,7 +97,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
     set(CMAKE_C_FLAGS "-Wall -Wshadow -fdiagnostics-color=auto" CACHE STRING
         "Flags used by the compiler during all build types." FORCE
