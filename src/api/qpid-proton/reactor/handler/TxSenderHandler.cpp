@@ -152,12 +152,12 @@ void TxSenderHandler::send(session s)
     }
 
 
-    logger(trace) << "[send] Transaction is empty: " << s.txn_is_empty();
+    logger(trace) << "[send] Transaction is empty: " << s.transaction_is_empty();
     logger(debug) << "[send] Messages processed: " << processed;
     logger(trace) << "[send] Current batch: " << current_batch;
-    while (s.txn_is_declared() && sndr.credit() && (processed + current_batch) < count)
+    while (s.transaction_is_declared() && sndr.credit() && (processed + current_batch) < count)
     {
-        s.txn_send(sndr, message_to_send);
+        sndr.send(message_to_send);
         current_batch += 1;
 
         if (log_msgs == "dict") {
@@ -187,9 +187,9 @@ void TxSenderHandler::send(session s)
         if(current_batch == batch_size) {
             logger(debug) << "[send] Transaction attempt: " << tx_action;
             if (tx_action == "commit") {
-                s.txn_commit();
+                s.transaction_commit();
             } else if (tx_action == "rollback") {
-                s.txn_abort();
+                s.transaction_abort();
             }
 
             if (tx_action == "none") {
@@ -204,9 +204,9 @@ void TxSenderHandler::send(session s)
         } else if (processed + current_batch == count) {
             logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
             if (tx_endloop_action == "commit") {
-                s.txn_commit();
+                s.transaction_commit();
             } else if (tx_endloop_action == "rollback") {
-                s.txn_abort();
+                s.transaction_abort();
             }
             sndr.connection().close();
         }
@@ -241,8 +241,8 @@ void TxSenderHandler::on_connection_close(connection &c)
 
 void TxSenderHandler::on_transaction_declared(session s) {
     logger(trace) << "[on_transaction_declared] txn called " << (&s);
-    logger(trace) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty())
-                  << "\t" << s.txn_is_empty();
+    logger(trace) << "[on_transaction_declared] txn is_empty " << (s.transaction_is_empty())
+                  << "\t" << s.transaction_is_empty();
     send(s);
 }
 

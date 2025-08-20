@@ -14,11 +14,10 @@
 #ifndef TXRECEIVERHANDLER_H
 #define TXRECEIVERHANDLER_H
 
-#include <proton/transaction.hpp>
+#include <proton/transaction_handler.hpp>
 
 #include "ReceiverHandler.h"
 
-using proton::transaction;
 using proton::session;
 using proton::transaction_handler;
 
