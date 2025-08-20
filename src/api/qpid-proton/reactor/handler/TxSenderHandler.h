@@ -14,11 +14,10 @@
 #ifndef TXSENDERHANDLER_H
 #define TXSENDERHANDLER_H
 
-#include <proton/transaction.hpp>
+#include <proton/transaction_handler.hpp>
 
 #include "SenderHandler.h"
 
-using proton::transaction;
 using proton::session;
 using proton::transaction_handler;
 

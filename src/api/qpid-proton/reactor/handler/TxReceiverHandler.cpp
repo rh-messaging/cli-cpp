@@ -156,7 +156,7 @@ void TxReceiverHandler::on_transaction_declared(session s) {
         batch_size = count;
     }
     logger(trace) << "[on_transaction_declared] txn called " << (&s);
-    logger(debug) << "[on_transaction_declared] txn is_empty " << (s.txn_is_empty());
+    logger(debug) << "[on_transaction_declared] txn is_empty " << (s.transaction_is_empty());
 }
 
 void TxReceiverHandler::on_transaction_aborted(session s) {
@@ -371,7 +371,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     // TODO legit?
     session s = d.session();
 
-    s.txn_accept(d);
+    s.transaction_accept(d);
     current_batch += 1;
 
     logger(debug) << "[on_message] current batch: " << current_batch;
@@ -440,9 +440,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     if(current_batch == batch_size) {
         logger(debug) << "[send] Transaction attempt: " << tx_action;
         if (tx_action == "commit") {
-            s.txn_commit();
+            s.transaction_commit();
         } else if (tx_action == "rollback") {
-            s.txn_abort();
+            s.transaction_abort();
         }
 
         if (tx_action == "none") {
@@ -462,9 +462,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     } else if (count != 0 && processed + current_batch == count) {
         logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
         if (tx_endloop_action == "commit") {
-            s.txn_commit();
+            s.transaction_commit();
         } else if (tx_endloop_action == "rollback") {
-            s.txn_abort();
+            s.transaction_abort();
         } else {
           recv.connection().close();
         }
