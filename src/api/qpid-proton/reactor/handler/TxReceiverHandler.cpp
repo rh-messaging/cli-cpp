@@ -134,7 +134,7 @@ int TxReceiverHandler::getBatchSize() const
 
 void TxReceiverHandler::on_session_open(session &s) {
     logger(trace) << "[on_session_open] declare_txn started...";
-    s.declare_transaction(*this);
+    s.transaction_declare(*this);
     logger(trace) << "[on_session_open] declare_txn ended...";
     logger(debug) << "[on_session_open] transaction batch size: " << batch_size;
 }
@@ -155,8 +155,7 @@ void TxReceiverHandler::on_transaction_declared(session s) {
     } else if (count != 0) {
         batch_size = count;
     }
-    logger(trace) << "[on_transaction_declared] txn called " << (&s);
-    logger(debug) << "[on_transaction_declared] txn is_empty " << (s.transaction_is_empty());
+    logger(trace) << "[on_transaction_declared] txn called " << s.transaction_id();
 }
 
 void TxReceiverHandler::on_transaction_aborted(session s) {
@@ -164,7 +163,7 @@ void TxReceiverHandler::on_transaction_aborted(session s) {
     current_batch = 0;
     logger(debug) << "[on_transaction_aborted] messages aborted, processed: " << processed;
     if (count == 0 || processed < count) {
-        s.declare_transaction(*this);
+        s.transaction_declare(*this);
     } else {
         logger(info) << "[on_transaction_aborted] All messages processed";
         s.connection().close();
@@ -176,7 +175,7 @@ void TxReceiverHandler::on_transaction_committed(session s) {
     current_batch = 0;
     logger(debug) << "[on_transaction_committed] messages committed, processed: " << processed;
     if (count == 0 || processed < count) {
-        s.declare_transaction(*this);
+        s.transaction_declare(*this);
     } else {
         logger(info) << "[on_transaction_committed] All messages processed";
         s.connection().close();
@@ -371,7 +370,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
     // TODO legit?
     session s = d.session();
 
-    s.transaction_accept(d);
+    d.accept();
     current_batch += 1;
 
     logger(debug) << "[on_message] current batch: " << current_batch;
@@ -451,7 +450,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
            } else {
                processed += current_batch;
                current_batch = 0;
-               s.declare_transaction(*this);
+               s.transaction_declare(*this);
            }
         }
 

@@ -152,7 +152,6 @@ void TxSenderHandler::send(session s)
     }
 
 
-    logger(trace) << "[send] Transaction is empty: " << s.transaction_is_empty();
     logger(debug) << "[send] Messages processed: " << processed;
     logger(trace) << "[send] Current batch: " << current_batch;
     while (s.transaction_is_declared() && sndr.credit() && (processed + current_batch) < count)
@@ -198,7 +197,7 @@ void TxSenderHandler::send(session s)
                } else {
                    processed += current_batch;
                    current_batch = 0;
-                   s.declare_transaction(*this);
+                   s.transaction_declare(*this);
                }
             }
         } else if (processed + current_batch == count) {
@@ -240,9 +239,7 @@ void TxSenderHandler::on_connection_close(connection &c)
 }
 
 void TxSenderHandler::on_transaction_declared(session s) {
-    logger(trace) << "[on_transaction_declared] txn called " << (&s);
-    logger(trace) << "[on_transaction_declared] txn is_empty " << (s.transaction_is_empty())
-                  << "\t" << s.transaction_is_empty();
+    logger(trace) << "[on_transaction_declared] txn called " << s.transaction_id();
     send(s);
 }
 
@@ -256,7 +253,7 @@ void TxSenderHandler::on_transaction_committed(session s) {
     } else {
         logger(trace) << "[on_transaction_committed] Declaring new transaction";
         current_batch = 0;
-        s.declare_transaction(*this);
+        s.transaction_declare(*this);
     }
 }
 
@@ -270,7 +267,7 @@ void TxSenderHandler::on_transaction_aborted(session s) {
     } else {
         logger(trace) << "[on_transaction_aborted] Declaring new transaction";
         current_batch = 0;
-        s.declare_transaction(*this);
+        s.transaction_declare(*this);
     }
 }
 
@@ -280,7 +277,7 @@ void TxSenderHandler::on_sender_close(sender &s) {
 
 void TxSenderHandler::on_session_open(session &s) {
      logger(trace) << "[on_session_open] declare_txn started...";
-     s.declare_transaction(*this);
+     s.transaction_declare(*this);
      logger(trace) << "[on_session_open] declare_txn ended...";
 }
 
