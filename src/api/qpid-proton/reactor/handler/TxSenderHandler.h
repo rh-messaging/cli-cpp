@@ -14,12 +14,9 @@
 #ifndef TXSENDERHANDLER_H
 #define TXSENDERHANDLER_H
 
-#include <proton/transaction_handler.hpp>
-
 #include "SenderHandler.h"
 
 using proton::session;
-using proton::transaction_handler;
 
 namespace dtests {
 namespace proton {
@@ -30,7 +27,7 @@ using dtests::common::Timer;
 /**
  * A proton transaction message handler that handles message send events
  */
-class TxSenderHandler : public SenderHandler, transaction_handler {
+class TxSenderHandler : public SenderHandler {
   public:
     /**
      * Constructor

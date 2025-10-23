@@ -14,12 +14,9 @@
 #ifndef TXRECEIVERHANDLER_H
 #define TXRECEIVERHANDLER_H
 
-#include <proton/transaction_handler.hpp>
-
 #include "ReceiverHandler.h"
 
 using proton::session;
-using proton::transaction_handler;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
@@ -32,7 +29,7 @@ namespace reactor {
 /**
  * A proton transaction message handler that handles message receive events
  */
-class TxReceiverHandler : public ReceiverHandler, transaction_handler {
+class TxReceiverHandler : public ReceiverHandler {
   public:
     /**
      * Constructor
