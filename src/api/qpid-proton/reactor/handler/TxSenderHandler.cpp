@@ -124,8 +124,9 @@ void TxSenderHandler::checkIfCanSend() {
     }
 }
 
-void TxSenderHandler::send(session s)
+void TxSenderHandler::send()
 {
+    session s = sndr.session();
     logger(debug) << "[send] Preparing to send message";
     int credit = sndr.credit();
 
@@ -223,13 +224,8 @@ void TxSenderHandler::on_sendable(sender &s)
 {
     logger(trace) <<  "[on_sendable] transaction: " << &s;
     if (ready) {
-        send(s.session());
+        send();
     }
-}
-
-void TxSenderHandler::on_tracker_accept(tracker &t)
-{
-    logger(trace) << "[on_tracker_accept] Message accepted, confirmed message delivery: " << processed;
 }
 
 void TxSenderHandler::on_connection_close(connection &c)
@@ -238,34 +234,29 @@ void TxSenderHandler::on_connection_close(connection &c)
     logger(debug) << "[on_connection_close] Closing connection";
 }
 
-void TxSenderHandler::on_transaction_declared(session s) {
-    logger(trace) << "[on_transaction_declared] txn called " << s.transaction_id();
-    send(s);
-}
-
-void TxSenderHandler::on_transaction_committed(session s) {
-    logger(trace) << "[on_transaction_committed] Messages committed";
+void TxSenderHandler::on_session_transaction_committed(session &s) {
+    logger(trace) << "[on_session_transaction_committed] Messages committed";
     processed += current_batch;
-    logger(debug) << "[on_transaction_committed] Messages processed" << processed;
+    logger(debug) << "[on_session_transaction_committed] Messages processed: " << processed;
     if (processed == count) {
-        logger(trace) << "[on_transaction_committed] All messages processed";
+        logger(trace) << "[on_session_transaction_committed] All messages processed";
         s.connection().close();
     } else {
-        logger(trace) << "[on_transaction_committed] Declaring new transaction";
+        logger(trace) << "[on_session_transaction_committed] Declaring new transaction";
         current_batch = 0;
         s.transaction_declare(*this);
     }
 }
 
-void TxSenderHandler::on_transaction_aborted(session s) {
-    logger(trace) << "[on_transaction_aborted] Messages aborted";
+void TxSenderHandler::on_session_transaction_aborted(session &s) {
+    logger(trace) << "[on_session_transaction_aborted] Messages aborted";
     processed += current_batch;
-    logger(debug) << "[on_transaction_aborted] Messages processed" << processed;
+    logger(debug) << "[on_session_transaction_aborted] Messages processed: " << processed;
     if (processed == count) {
-        logger(trace) << "[on_transaction_aborted] All messages processed";
+        logger(trace) << "[on_session_transaction_aborted] All messages processed";
         s.connection().close();
     } else {
-        logger(trace) << "[on_transaction_aborted] Declaring new transaction";
+        logger(trace) << "[on_session_transaction_aborted] Declaring new transaction";
         current_batch = 0;
         s.transaction_declare(*this);
     }
@@ -276,9 +267,13 @@ void TxSenderHandler::on_sender_close(sender &s) {
 }
 
 void TxSenderHandler::on_session_open(session &s) {
-     logger(trace) << "[on_session_open] declare_txn started...";
-     s.transaction_declare(*this);
-     logger(trace) << "[on_session_open] declare_txn ended...";
+    if(!s.transaction_is_declared()) {
+        logger(trace) << "[on_session_open] New session is open";
+        s.transaction_declare(*this);
+    } else {
+        logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
+        send();
+    }
 }
 
 void TxSenderHandler::on_container_start(container &c)
@@ -377,10 +372,8 @@ void TxSenderHandler::on_container_start(container &c)
 // #endif
 }
 
-void TxSenderHandler::on_transaction_declare_failed(session) {}
-
-void TxSenderHandler::on_transaction_commit_failed(session s) {
-    logger(error) << "[on_transaction_commit_failed] Transaction Commit Failed";
+void TxSenderHandler::on_session_transaction_commit_failed(session &s) {
+    logger(error) << "[on_session_transaction_commit_failed] Transaction Commit Failed";
     s.connection().close();
     exit(1);
 }
