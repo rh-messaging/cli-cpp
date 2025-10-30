@@ -133,51 +133,47 @@ int TxReceiverHandler::getBatchSize() const
 // reactor methods
 
 void TxReceiverHandler::on_session_open(session &s) {
-    logger(trace) << "[on_session_open] declare_txn started...";
-    s.transaction_declare(*this);
-    logger(trace) << "[on_session_open] declare_txn ended...";
-    logger(debug) << "[on_session_open] transaction batch size: " << batch_size;
+    if(!s.transaction_is_declared()) {
+        logger(trace) << "[on_session_open] New session is open";
+        s.transaction_declare(*this);
+    } else {
+        logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
+        recv.add_credit(batch_size);
+        logger(debug) << "[on_session_open] Receiver credit: " << recv.credit();
+        if (count != 0 && processed + batch_size > count) {
+            batch_size = count % batch_size;
+	}
+    }
 }
 
-void TxReceiverHandler::on_transaction_declare_failed(session) {}
-
-void TxReceiverHandler::on_transaction_commit_failed(session s) {
-    logger(debug) << "[on_transaction_commit_failed] Transaction Commit Failed";
+void TxReceiverHandler::on_session_transaction_commit_failed(session &s) {
+    logger(debug) << "[on_session_transaction_commit_failed] Transaction Commit Failed";
     s.connection().close();
     exit(-1);
 }
 
-void TxReceiverHandler::on_transaction_declared(session s) {
-    // TODO python some weird magic around count 0, doesn't make much sense to me yet
-    // when fixes take care about all count checks ofr zero
-    if (count != 0 && processed + batch_size > count) {
-        batch_size = count % batch_size;
-    } else if (count != 0) {
-        batch_size = count;
-    }
-    logger(trace) << "[on_transaction_declared] txn called " << s.transaction_id();
-}
-
-void TxReceiverHandler::on_transaction_aborted(session s) {
+void TxReceiverHandler::on_session_transaction_aborted(session &s) {
     processed += current_batch;
     current_batch = 0;
-    logger(debug) << "[on_transaction_aborted] messages aborted, processed: " << processed;
+    logger(debug) << "[on_session_transaction_aborted] messages aborted, processed: " << processed;
     if (count == 0 || processed < count) {
+        logger(info) << "[on_session_transaction_aborted] re-declaring transaction";
         s.transaction_declare(*this);
     } else {
-        logger(info) << "[on_transaction_aborted] All messages processed";
+        logger(info) << "[on_session_transaction_aborted] All messages processed";
         s.connection().close();
     }
 }
 
-void TxReceiverHandler::on_transaction_committed(session s) {
+void TxReceiverHandler::on_session_transaction_committed(session &s) {
     processed += current_batch;
     current_batch = 0;
-    logger(debug) << "[on_transaction_committed] messages committed, processed: " << processed;
+    logger(debug) << "[on_session_transaction_committed] messages committed, processed: " << processed;
     if (count == 0 || processed < count) {
+        logger(info) << "[on_session_transaction_committed] re-declaring transaction";
         s.transaction_declare(*this);
     } else {
-        logger(info) << "[on_transaction_committed] All messages processed";
+        logger(info) << "[on_session_transaction_committed] All messages processed";
         s.connection().close();
     }
 }
@@ -367,13 +363,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 {
     logger(debug) << "[on_message] Processing received message";
 
-    // TODO legit?
     session s = d.session();
-
     d.accept();
     current_batch += 1;
-
-    logger(debug) << "[on_message] current batch: " << current_batch;
 
     if (log_msgs == "dict") {
         logger(trace) << "[on_message] Decoding message";
@@ -436,8 +428,10 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 #endif
     }
 
+    logger(debug) << "[on_message] Receiver credit: " << recv.credit();
+    logger(debug) << "[on_message] Current batch: " << current_batch;
     if(current_batch == batch_size) {
-        logger(debug) << "[send] Transaction attempt: " << tx_action;
+        logger(debug) << "[on_message] Transaction attempt: " << tx_action;
         if (tx_action == "commit") {
             s.transaction_commit();
         } else if (tx_action == "rollback") {
@@ -459,7 +453,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         }
 
     } else if (count != 0 && processed + current_batch == count) {
-        logger(debug) << "[send] Transaction attempt (endloop): " << tx_endloop_action;
+        logger(debug) << "[on_message] Transaction attempt (endloop): " << tx_endloop_action;
         if (tx_endloop_action == "commit") {
             s.transaction_commit();
         } else if (tx_endloop_action == "rollback") {
