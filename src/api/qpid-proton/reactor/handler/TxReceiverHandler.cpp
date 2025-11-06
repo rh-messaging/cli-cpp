@@ -438,6 +438,9 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
             s.transaction_commit();
         } else if (tx_action == "rollback") {
             s.transaction_abort();
+            if (count == 0) {
+                recv.connection().close();
+            }
         }
 
         if (tx_action == "none") {
@@ -453,7 +456,6 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         if (duration_time > 0 && duration_mode == "after-receive-action-tx-action") {
             // TODO: not implemented yet
         }
-
     } else if (count != 0 && processed + current_batch == count) {
         logger(debug) << "[on_message] Transaction attempt (endloop): " << tx_endloop_action;
         if (tx_endloop_action == "commit") {
@@ -461,9 +463,10 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
         } else if (tx_endloop_action == "rollback") {
             s.transaction_abort();
         } else {
-          recv.connection().close();
+            recv.connection().close();
         }
     }
+
 }
 
 void TxReceiverHandler::on_transport_close(transport &t) {

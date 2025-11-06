@@ -315,7 +315,7 @@ int TxReceivingClient::run(int argc, char **argv) const
         std::transform(recv_listen.begin(), recv_listen.end(), recv_listen.begin(), ::tolower);
     }
 
-    int recv_credit_window = -1;
+    int recv_credit_window = 0;
     if(options.is_set("recv-credit-window")) {
         recv_credit_window = atoi(options["recv-credit-window"].c_str());
     }
@@ -386,16 +386,16 @@ int TxReceivingClient::run(int argc, char **argv) const
         recv_listen,
         recv_listen_port,
         recv_credit_window,
-        recv_drain_after_credit_window
+        recv_drain_after_credit_window,
+        tx_action,
+        tx_endloop_action
     );
 
     if (selector != "") {
         handler.setSelector(selector);
     }
 
-    // TODO python defaults to 10
-    // int tx_size = 10;
-    int tx_size = 0;
+    int tx_size = 10;
     if (options.is_set("tx-size")) {
         tx_size = static_cast<int> (options.get("tx-size"));
     }
