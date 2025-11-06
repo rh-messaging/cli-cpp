@@ -154,7 +154,7 @@ class TxReceiverHandler : public ReceiverHandler {
   private:
     typedef ReceiverHandler super;
 
-    int batch_size = 0;
+    int batch_size = 10;
     int current_batch = 0;
     int processed = 0;
     string tx_action = "commit";
