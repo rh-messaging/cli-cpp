@@ -138,12 +138,14 @@ void TxReceiverHandler::on_session_open(session &s) {
         s.transaction_declare(*this);
     } else {
         logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
+        credit = batch_size;
         if (count != 0 && (processed + batch_size > count)) {
-           batch_size = count % batch_size;
+            credit = count % batch_size;
         } else if (count == 0) {
             batch_size = 1;
+            credit = batch_size;
         }
-        recv.add_credit(batch_size);
+        recv.add_credit(credit);
         logger(debug) << "[on_session_open] Receiver credit: " << recv.credit();
     }
 }
