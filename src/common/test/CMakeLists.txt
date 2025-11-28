@@ -2,7 +2,7 @@ PROJECT(dtests-proton-cpp-tests)
    
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/tests/bin)
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_executable(ut_beanutils_test
 	ut_beanutils_test.cpp
 	FakeBean.cpp
@@ -16,7 +16,7 @@ add_test(NAME BeanUtilsTest
     COMMAND ut_beanutils_test)
 
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_executable(ut_stlutils_test
 	ut_stlutils_test.cpp
 )
