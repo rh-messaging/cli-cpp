@@ -2,7 +2,7 @@ PROJECT(dtests-proton-cpp-tests)
    
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/target/tests/bin)
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_executable(ut_printer_test
 	ut_printer_test.cpp
 )
