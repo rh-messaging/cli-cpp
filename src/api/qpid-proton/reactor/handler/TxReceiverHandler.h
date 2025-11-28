@@ -141,8 +141,9 @@ class TxReceiverHandler : public ReceiverHandler {
 
     // reactor method
     void on_session_open(session &s);
-    void on_transaction_declare_failed(session);
-    void on_session_transaction_commit_failed(session &s);
+    void on_session_transaction_declared(session &s);
+    void on_session_error(session &s);
+    void on_session_transaction_error(session &s);
     void on_session_transaction_committed(session &s);
     void on_session_transaction_aborted(session &s);
 
