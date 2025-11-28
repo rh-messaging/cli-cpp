@@ -133,27 +133,33 @@ int TxReceiverHandler::getBatchSize() const
 // reactor methods
 
 void TxReceiverHandler::on_session_open(session &s) {
-    if(!s.transaction_is_declared()) {
-        logger(trace) << "[on_session_open] New session is open";
-        s.transaction_declare(*this);
-    } else {
-        logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
-        credit = batch_size;
-        if (count != 0 && (processed + batch_size > count)) {
-            credit = count % batch_size;
-        } else if (count == 0) {
-            batch_size = 1;
-            credit = batch_size;
-        }
-        recv.add_credit(credit);
-        logger(debug) << "[on_session_open] Receiver credit: " << recv.credit();
-    }
+    logger(trace) << "[on_session_open] New session is open";
+    s.transaction_declare();
 }
 
-void TxReceiverHandler::on_session_transaction_commit_failed(session &s) {
-    logger(debug) << "[on_session_transaction_commit_failed] Transaction Commit Failed";
+void TxReceiverHandler::on_session_transaction_declared(session &s) {
+    logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
+    credit = batch_size;
+    if (count != 0 && (processed + batch_size > count)) {
+        credit = count % batch_size;
+    } else if (count == 0) {
+        batch_size = 1;
+        credit = batch_size;
+    }
+    recv.add_credit(credit);
+    logger(debug) << "[on_session_open] Receiver credit: " << recv.credit();
+}
+
+void TxReceiverHandler::on_session_error(session &s) {
+    logger(debug) << "[on_session_error] Session error: " << s.error().what();
     s.connection().close();
     exit(-1);
+}
+
+void TxReceiverHandler::on_session_transaction_error(session &s) {
+    logger(error) << "[on_session_transaction_commit_failed] Transaction Error: " << s.error().what();
+    s.connection().close();
+    exit(1);
 }
 
 void TxReceiverHandler::on_session_transaction_aborted(session &s) {
@@ -162,7 +168,7 @@ void TxReceiverHandler::on_session_transaction_aborted(session &s) {
     logger(debug) << "[on_session_transaction_aborted] messages aborted, processed: " << processed;
     if (count == 0 || processed < count) {
         logger(info) << "[on_session_transaction_aborted] re-declaring transaction";
-        s.transaction_declare(*this);
+        s.transaction_declare();
     } else {
         logger(info) << "[on_session_transaction_aborted] All messages processed";
         s.connection().close();
@@ -175,7 +181,7 @@ void TxReceiverHandler::on_session_transaction_committed(session &s) {
     logger(debug) << "[on_session_transaction_committed] messages committed, processed: " << processed;
     if (count == 0 || processed < count) {
         logger(info) << "[on_session_transaction_committed] re-declaring transaction";
-        s.transaction_declare(*this);
+        s.transaction_declare();
     } else {
         logger(info) << "[on_session_transaction_committed] All messages processed";
         s.connection().close();
@@ -451,7 +457,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
            } else {
                processed += current_batch;
                current_batch = 0;
-               s.transaction_declare(*this);
+               s.transaction_declare();
            }
         }
 

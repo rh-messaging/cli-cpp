@@ -198,7 +198,7 @@ void TxSenderHandler::send()
                } else {
                    processed += current_batch;
                    current_batch = 0;
-                   s.transaction_declare(*this);
+                   s.transaction_declare();
                }
             }
         } else if (processed + current_batch == count) {
@@ -244,7 +244,7 @@ void TxSenderHandler::on_session_transaction_committed(session &s) {
     } else {
         logger(trace) << "[on_session_transaction_committed] Declaring new transaction";
         current_batch = 0;
-        s.transaction_declare(*this);
+        s.transaction_declare();
     }
 }
 
@@ -258,7 +258,7 @@ void TxSenderHandler::on_session_transaction_aborted(session &s) {
     } else {
         logger(trace) << "[on_session_transaction_aborted] Declaring new transaction";
         current_batch = 0;
-        s.transaction_declare(*this);
+        s.transaction_declare();
     }
 }
 
@@ -267,13 +267,13 @@ void TxSenderHandler::on_sender_close(sender &s) {
 }
 
 void TxSenderHandler::on_session_open(session &s) {
-    if(!s.transaction_is_declared()) {
-        logger(trace) << "[on_session_open] New session is open";
-        s.transaction_declare(*this);
-    } else {
-        logger(trace) << "[on_session_open] Transaction is declared: " << s.transaction_id();
-        send();
-    }
+       logger(trace) << "[on_session_open] New session is open";
+       s.transaction_declare();
+}
+
+void TxSenderHandler::on_session_transaction_declared(session& s) {
+       logger(trace) << "[on_session_transaction_declared] Transaction is declared: " << s.transaction_id();
+       send();
 }
 
 void TxSenderHandler::on_container_start(container &c)
@@ -372,8 +372,8 @@ void TxSenderHandler::on_container_start(container &c)
 // #endif
 }
 
-void TxSenderHandler::on_session_transaction_commit_failed(session &s) {
-    logger(error) << "[on_session_transaction_commit_failed] Transaction Commit Failed";
+void TxSenderHandler::on_session_transaction_error(session &s) {
+    logger(error) << "[on_session_transaction_commit_failed] Transaction Error: " << s.error().what();
     s.connection().close();
     exit(1);
 }

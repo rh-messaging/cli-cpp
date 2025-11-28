@@ -115,9 +115,10 @@ class TxSenderHandler : public SenderHandler {
 
     // reactor methods
     void on_sender_close(sender &s);
-    void on_session_transaction_commit_failed(session &s);
+    void on_session_transaction_error(session &s);
     void on_session_transaction_committed(session &s);
     void on_session_transaction_aborted(session &s);
+    void on_session_transaction_declared(session &s);
 
     // overrides
     void on_container_start(container &c);
