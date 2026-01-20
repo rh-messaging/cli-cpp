@@ -375,7 +375,6 @@ void TxSenderHandler::on_container_start(container &c)
 void TxSenderHandler::on_session_transaction_error(session &s) {
     logger(error) << "[on_session_transaction_commit_failed] Transaction Error: " << s.error().what();
     s.connection().close();
-    exit(1);
 }
 
 } /* namespace reactor */

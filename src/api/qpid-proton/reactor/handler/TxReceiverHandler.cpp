@@ -153,13 +153,11 @@ void TxReceiverHandler::on_session_transaction_declared(session &s) {
 void TxReceiverHandler::on_session_error(session &s) {
     logger(debug) << "[on_session_error] Session error: " << s.error().what();
     s.connection().close();
-    exit(-1);
 }
 
 void TxReceiverHandler::on_session_transaction_error(session &s) {
     logger(error) << "[on_session_transaction_commit_failed] Transaction Error: " << s.error().what();
     s.connection().close();
-    exit(1);
 }
 
 void TxReceiverHandler::on_session_transaction_aborted(session &s) {
