@@ -35,6 +35,9 @@ RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
 COPY . /src
 WORKDIR /src
 
+# Apply patch to make OPENTELEMETRY_ENABLED respect command-line flag
+RUN patch -p1 < disable-opentelemetry.patch
+
 # can't put $(arch) to CCACHE_DIR, https://github.com/moby/moby/issues/29110
 # ENV CCACHE_DIR=
 ENV CCACHE_COMPRESS=true

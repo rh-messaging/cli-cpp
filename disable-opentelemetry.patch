@@ -1,0 +1,24 @@
+--- a/src/api/qpid-proton/CMakeLists.txt
++++ b/src/api/qpid-proton/CMakeLists.txt
+@@ -18,11 +18,15 @@ else(${DTEST_BUILD_PLATFORM} EQUAL "64")
+     )
+ endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
+ 
+-if (UNIX AND ProtonCpp_VERSION VERSION_GREATER_EQUAL 0.38.0)
+-    set(OPENTELEMETRY_ENABLED ON)
+-    set(MODERNClient_tracing_src common/ModernClient_tracing_opentracing.cpp)
+-else ()
++if (NOT DEFINED OPENTELEMETRY_ENABLED)
++    if (UNIX AND ProtonCpp_VERSION VERSION_GREATER_EQUAL 0.38.0)
++        set(OPENTELEMETRY_ENABLED ON)
++        set(MODERNClient_tracing_src common/ModernClient_tracing_opentracing.cpp)
++    else ()
++        set(OPENTELEMETRY_ENABLED OFF)
++        set(MODERNClient_tracing_src common/ModernClient_tracing_none.cpp)
++    endif ()
++else()
+     set(OPENTELEMETRY_ENABLED OFF)
+     set(MODERNClient_tracing_src common/ModernClient_tracing_none.cpp)
+ endif ()
+
+# Made with Bob
