@@ -28,12 +28,6 @@ RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     cmake ninja-build \
     gcc gcc-c++ \
     \
-    protobuf-lite-devel \
-    \
-    opentelemetry-cpp-devel \
-    opentelemetry-cpp-exporter-otlp-devel \
-    opentelemetry-cpp-zpages-devel \
-    \
     cyrus-sasl-devel \
     openssl-devel \
     python-devel
@@ -80,8 +74,6 @@ RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
-    protobuf-lite \
-    opentelemetry-cpp opentelemetry-cpp-exporter-otlp opentelemetry-cpp-zpages \
     cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-lib cyrus-sasl-plain \
     openssl
 

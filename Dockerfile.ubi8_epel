@@ -13,8 +13,6 @@ RUN yum install -y dnf \
     \
     boost-devel \
     \
-    opentelemetry-cpp-devel \
-    \
     qpid-proton-cpp-devel \
     \
 && yum clean all \
