@@ -1,6 +1,6 @@
 --- a/src/api/qpid-proton/CMakeLists.txt
 +++ b/src/api/qpid-proton/CMakeLists.txt
-@@ -18,11 +18,15 @@ else(${DTEST_BUILD_PLATFORM} EQUAL "64")
+@@ -18,11 +18,15 @@
      )
  endif(${DTEST_BUILD_PLATFORM} EQUAL "64")
  
