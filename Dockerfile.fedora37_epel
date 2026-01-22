@@ -1,7 +1,7 @@
 FROM docker.io/library/fedora:37
 
 RUN dnf install -y 'dnf-command(copr)' \
-&& dnf copr enable -y copr.devel.redhat.com/kvanderr/rh-opentelemetry-cpp \
+&& dnf copr enable -y kvanderr/rh-opentelemetry-cpp \
 && dnf install -y \
     npm \
     \

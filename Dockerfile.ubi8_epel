@@ -1,7 +1,7 @@
 FROM docker.io/almalinux/8-base
 
 RUN dnf install -y 'dnf-command(copr)' \
-&& dnf copr enable -y copr.devel.redhat.com/kvanderr/rh-opentelemetry-cpp \
+&& dnf copr enable -y kvanderr/rh-opentelemetry-cpp \
 && yum install -y dnf \
 && dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 && dnf install -y \

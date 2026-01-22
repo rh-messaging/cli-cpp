@@ -17,9 +17,10 @@ RUN rpm -ivh epel-release-latest-9.noarch.rpm
 RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-opentelemetry-cpp/repo/epel-9/kvanderr-rh-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-opentelemetry-cpp-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-protobuf/repo/epel-9/kvanderr-rh-protobuf-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-protobuf-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-json/repo/epel-9/kvanderr-rh-json-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-json-epel-9.repo
+RUN dnf install -y 'dnf-command(copr)' \
+&& dnf copr enable -y kvanderr/rh-opentelemetry-cpp \
+&& dnf copr enable -y kvanderr/rh-protobuf \
+&& dnf copr enable -y kvanderr/rh-json
 
 #CMake Error at /usr/lib64/cmake/protobuf/protobuf-targets.cmake:106 (message):
 #  The imported target "protobuf::libprotobuf-lite" references the file
@@ -83,9 +84,10 @@ RUN rpm -ivh epel-release-latest-9.noarch.rpm
 RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-opentelemetry-cpp/repo/epel-9/kvanderr-rh-opentelemetry-cpp-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-opentelemetry-cpp-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-protobuf/repo/epel-9/kvanderr-rh-protobuf-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-protobuf-epel-9.repo
-RUN curl -L https://copr.devel.redhat.com/coprs/kvanderr/rh-json/repo/epel-9/kvanderr-rh-json-epel-9.repo > /etc/yum.repos.d/kvanderr-rh-json-epel-9.repo
+RUN dnf install -y 'dnf-command(copr)' \
+&& dnf copr enable -y kvanderr/rh-opentelemetry-cpp \
+&& dnf copr enable -y kvanderr/rh-protobuf \
+&& dnf copr enable -y kvanderr/rh-json
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     protobuf-lite \
