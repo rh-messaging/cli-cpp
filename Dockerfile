@@ -23,7 +23,7 @@ RUN /usr/bin/crb enable
 #     "/usr/lib64/libprotobuf-lite.so.3.19.6.0"
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
-    ccache findutils git patchelf \
+    ccache findutils git patchelf patch \
     \
     cmake ninja-build \
     gcc gcc-c++ \
