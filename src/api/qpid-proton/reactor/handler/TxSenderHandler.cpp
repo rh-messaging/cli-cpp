@@ -262,6 +262,24 @@ void TxSenderHandler::on_session_transaction_aborted(session &s) {
     }
 }
 
+void TxSenderHandler::on_transactional_accept(tracker &t) {
+    logger(debug) << "Delivery Accepted";
+}
+
+void TxSenderHandler::on_transactional_reject(tracker &t) {
+    logger(debug) << "Delivery rejected";
+    t.session().transaction_abort();
+}
+
+void TxSenderHandler::on_transactional_release(tracker &t) {
+    logger(debug) << "Delivery released";
+    t.session().transaction_abort();
+}
+
+void TxSenderHandler::on_tracker_settle(tracker &t) {
+     logger(trace) << "Broker settled tracker: " << t.tag();
+}
+
 void TxSenderHandler::on_sender_close(sender &s) {
     current_batch = 0;
 }

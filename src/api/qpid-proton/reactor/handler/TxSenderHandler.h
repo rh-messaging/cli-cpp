@@ -119,6 +119,10 @@ class TxSenderHandler : public SenderHandler {
     void on_session_transaction_committed(session &s);
     void on_session_transaction_aborted(session &s);
     void on_session_transaction_declared(session &s);
+    void on_transactional_accept(tracker &t);
+    void on_transactional_reject(tracker &t);
+    void on_transactional_release(tracker &t);
+    void on_tracker_settle(tracker &t);
 
     // overrides
     void on_container_start(container &c);
