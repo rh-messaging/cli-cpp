@@ -28,32 +28,16 @@ RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
     cmake ninja-build \
     gcc gcc-c++ \
     \
-    protobuf-devel \
-    grpc-devel grpc-plugins \
-    c-ares-devel \
-    re2-devel \
-    \
     cyrus-sasl-devel \
     openssl-devel \
     python-devel
 
-# Build opentelemetry-cpp from source
-ENV OTEL_VERSION=v1.16.1
-RUN git clone --branch=${OTEL_VERSION} --depth=1 --recurse-submodules --shallow-submodules https://github.com/open-telemetry/opentelemetry-cpp.git && \
-    cmake -S opentelemetry-cpp -B cmake-build-opentelemetry -GNinja \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DWITH_EXAMPLES=OFF \
-    -DWITH_OTLP_GRPC=ON \
-    -DWITH_OTLP_HTTP=ON \
-    -DWITH_ZPAGES=ON && \
-    cmake --build cmake-build-opentelemetry && \
-    cmake --install cmake-build-opentelemetry && \
-    rm -rf opentelemetry-cpp cmake-build-opentelemetry
-
 COPY . /src
 WORKDIR /src
+
+# Patch CMakeLists.txt to make opentelemetry-cpp optional
+RUN sed -i 's/find_package(opentelemetry-cpp REQUIRED)/find_package(opentelemetry-cpp QUIET)/' src/api/qpid-proton/CMakeLists.txt && \
+    sed -i '/find_package(opentelemetry-cpp QUIET)/a\    if(NOT opentelemetry-cpp_FOUND)\n        set(OPENTELEMETRY_ENABLED OFF)\n    endif()' src/api/qpid-proton/CMakeLists.txt
 
 # can't put $(arch) to CCACHE_DIR, https://github.com/moby/moby/issues/29110
 # ENV CCACHE_DIR=
@@ -94,14 +78,9 @@ RUN dnf install -y 'dnf-command(config-manager)'
 RUN /usr/bin/crb enable
 
 RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
-    protobuf \
-    grpc \
-    c-ares \
-    re2 \
     cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-lib cyrus-sasl-plain \
     openssl
 
-COPY --from=build /usr/local/ /usr/local/
 COPY --from=build /src/cmake-install/ /usr/local
 
 RUN mkdir /var/lib/cli-cpp && \
