@@ -35,10 +35,6 @@ RUN dnf -y --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install \
 COPY . /src
 WORKDIR /src
 
-# Patch CMakeLists.txt to make opentelemetry-cpp optional
-RUN sed -i 's/find_package(opentelemetry-cpp REQUIRED)/find_package(opentelemetry-cpp QUIET)/' src/api/qpid-proton/CMakeLists.txt && \
-    sed -i '/find_package(opentelemetry-cpp QUIET)/a\    if(NOT opentelemetry-cpp_FOUND)\n        set(OPENTELEMETRY_ENABLED OFF)\n    endif()' src/api/qpid-proton/CMakeLists.txt
-
 # can't put $(arch) to CCACHE_DIR, https://github.com/moby/moby/issues/29110
 # ENV CCACHE_DIR=
 ENV CCACHE_COMPRESS=true
@@ -61,7 +57,8 @@ RUN CCACHE_DIR=/ccache/$(arch) cmake --install cmake-build-qpid-proton --config 
 RUN CCACHE_DIR=/ccache/$(arch) cmake -S . -B cmake-build-cli-cpp -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-    -DCMAKE_INSTALL_PREFIX=cmake-install
+    -DCMAKE_INSTALL_PREFIX=cmake-install \
+    -DOPENTELEMETRY_ENABLED=OFF
     #-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE \
     #-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
 RUN CCACHE_DIR=/ccache/$(arch) cmake --build cmake-build-cli-cpp
