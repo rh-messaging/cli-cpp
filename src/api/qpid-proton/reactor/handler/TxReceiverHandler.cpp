@@ -162,9 +162,18 @@ void TxReceiverHandler::on_session_transaction_error(session &s) {
 
 void TxReceiverHandler::on_session_transaction_aborted(session &s) {
     processed += current_batch;
+
+    logger(debug) << "[on_session_transaction_aborted] Transaction aborted, releasing unsettled deliveries";
+    for (auto d : recv.unsettled_deliveries()) {
+        d.release();
+    }
+
     current_batch = 0;
     logger(debug) << "[on_session_transaction_aborted] messages aborted, processed: " << processed;
-    if (count == 0 || processed < count) {
+
+    if (count == 0) {
+        s.connection().close();
+    } else if (processed < count) {
         logger(info) << "[on_session_transaction_aborted] re-declaring transaction";
         s.transaction_declare();
     } else {
@@ -373,6 +382,7 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
 
     session s = d.session();
     d.accept();
+
     current_batch += 1;
 
     if (log_msgs == "dict") {
@@ -444,9 +454,6 @@ void TxReceiverHandler::on_message(delivery &d, message &m)
             s.transaction_commit();
         } else if (tx_action == "rollback") {
             s.transaction_abort();
-            if (count == 0) {
-                recv.connection().close();
-            }
         }
 
         if (tx_action == "none") {
