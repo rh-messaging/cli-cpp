@@ -1,6 +1,6 @@
 PROJECT(dtests-proton-cpp)
 
-set(PROTON_DIR /usr CACHE String "QPID Proton base directory")
+set(PROTON_DIR /usr CACHE STRING "QPID Proton base directory")
 
 include_directories(
     ${PROTON_DIR}/include
@@ -27,10 +27,10 @@ else ()
 endif ()
 
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_library(
     dtests-proton-common
-    
+
     common/ModernClient.cpp
     ${MODERNClient_tracing_src}
 )
@@ -53,7 +53,7 @@ else (WIN32)
     )
 endif (WIN32)
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_library(
     dtests-proton-reactor
     
@@ -61,10 +61,14 @@ add_library(
     reactor/handler/CommonHandler.cpp
     reactor/handler/ConnectorHandler.cpp
     reactor/handler/SenderHandler.cpp
+    reactor/handler/TxSenderHandler.cpp
     reactor/handler/ReceiverHandler.cpp
+    reactor/handler/TxReceiverHandler.cpp
     reactor/ConnectingClient.cpp
     reactor/SendingClient.cpp
+    reactor/TxSendingClient.cpp
     reactor/ReceivingClient.cpp
+    reactor/TxReceivingClient.cpp
 )
 
 target_link_libraries(
@@ -100,7 +104,7 @@ set(proton-reactor-clients
 )
 
 foreach(client ${proton-reactor-clients})
-    cmake_policy(SET CMP0003 OLD)
+    cmake_policy(SET CMP0003 NEW)
     add_executable(${client}
             clients/${client}.cpp
     )

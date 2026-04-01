@@ -205,7 +205,7 @@ void ConnectorHandler::on_transport_close(transport &t) {
 
 void ConnectorHandler::on_session_error(session &s) {
     logger(error) << "The remote peer at " << broker_url.getHost() << ":" << broker_url.getPort() <<
-            " closed the session with an error condition";
+            " closed the session with an error condition: " + s.error().what();
     closeObjects();
 } 
 

@@ -63,7 +63,7 @@ else (WIN32)
     )
 endif (WIN32)
 
-cmake_policy(SET CMP0003 OLD)
+cmake_policy(SET CMP0003 NEW)
 add_library(dtests-cpp-common-options
 
     options/modern/StringAppendCallback.cpp

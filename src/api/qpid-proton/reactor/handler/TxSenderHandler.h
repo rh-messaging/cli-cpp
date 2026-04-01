@@ -4,38 +4,19 @@
  * and open the template in the editor.
  */
 
-/* 
- * File:   SenderHandler.h
- * Author: opiske
+/*
+ * File:   TxSenderHandler.h
+ * Author: pematous
  *
- * Created on October 16, 2015, 10:19 AM
+ * Created on November 20, 2024
  */
 
-#ifndef SENDERHANDLER_H
-#define SENDERHANDLER_H
+#ifndef TXSENDERHANDLER_H
+#define TXSENDERHANDLER_H
 
-#include <proton/tracker.hpp>
-#include <proton/transport.hpp>
-#include <proton/error_condition.hpp>
-#include <proton/message_id.hpp>
-#include <proton/source_options.hpp>
-#include <proton/connection_options.hpp>
-#include <proton/sender_options.hpp>
-#include <proton/thread_safe.hpp>
+#include "SenderHandler.h"
 
-#include "CommonHandler.h"
-#include "Timer.h"
-#include "Utils.h"
-
-using proton::message;
-using proton::message_id;
-using proton::connection;
-using proton::sender;
-using proton::delivery;
-using proton::source_options;
-using proton::transport;
-using proton::tracker;
-using proton::connection_options;
+using proton::session;
 
 namespace dtests {
 namespace proton {
@@ -44,9 +25,9 @@ namespace reactor {
 using dtests::common::Timer;
 
 /**
- * A proton message handler that handles message send events
+ * A proton transaction message handler that handles message send events
  */
-class SenderHandler : public CommonHandler {
+class TxSenderHandler : public SenderHandler {
   public:
     /**
      * Constructor
@@ -78,8 +59,10 @@ class SenderHandler : public CommonHandler {
      * @param max_frame_size maximum frame size
      * @param conn_use_config_file use configuration file for connection
      * @param log_msgs message log format
+     * @param tx_action transaction action on batch
+     * @param tx_endloop_action transaction action on last batch
      */
-    SenderHandler(
+    TxSenderHandler(
         const string &url,
         vector<string> conn_urls,
         bool is_topic,
@@ -107,79 +90,59 @@ class SenderHandler : public CommonHandler {
         uint32_t conn_heartbeat = 0,
         uint32_t max_frame_size = -1,
         bool conn_use_config_file = false,
-        string log_msgs = ""
+        string log_msgs = "",
+        string tx_action = "commit",
+        string tx_endloop_action = "commit"
     );
-    
-    void timerEvent();
 
-    virtual ~SenderHandler();
-
-    void on_container_start(container &c);
-    void on_sendable(sender &s);
-    void on_connection_error(connection &c);
-    void on_connection_close(connection &c);
-    void on_tracker_accept(tracker &t);
-    void on_tracker_reject(tracker &t);
-    
-    void on_transport_error(transport &t);
-    void on_transport_close(transport &t);
+    virtual ~TxSenderHandler();
 
     /**
-     * Sets the message count
-     * @param count the message count
+     * Sets the transaction batch size
+     * @param batch_size the transaction batch size
      */
-    void setCount(int count);
-    
-    /**
-     * Gets the message count
-     * @return the message count
-     */
-    int getCount() const;
-    
-    /**
-     * Sets the message to send
-     * @param m the message to send
-     */
-    void setMessage(message &m);
+    void setBatchSize(int batchSize);
 
-    void send();
+    /**
+     * Gets the transaction batch size
+     * @return the transaction batch size
+     */
+    int getBatchSize() const;
+
+    // overrides
     void checkIfCanSend();
-    
-    /**
-     * Gets the message to send
-     * @return the message to send
-     */
-    message getMessage() const;
+    void send();
 
-  protected:
-    typedef CommonHandler super;
-    bool ready;
-    int count;
-    int duration_time;
-    string duration_mode;
-    int sent;
-    int confirmedSent;
-    sender sndr;
+    // reactor methods
+    void on_sender_close(sender &s);
+    void on_session_transaction_error(session &s);
+    void on_session_transaction_committed(session &s);
+    void on_session_transaction_aborted(session &s);
+    void on_session_transaction_declared(session &s);
+    void on_transactional_accept(tracker &t);
+    void on_transactional_reject(tracker &t);
+    void on_transactional_release(tracker &t);
+    void on_tracker_settle(tracker &t);
 
-    message m;
-    
-    struct timer_event_t : public void_function0 {
-        SenderHandler &parent;
-        timer_event_t(SenderHandler &handler) : parent(handler) {}
-        void operator()() {
-            parent.timerEvent();
-        }
-    };
-    
-    timer_event_t timer_event;
+    // overrides
+    void on_container_start(container &c);
+    void on_session_open(session &s);
+    void on_sendable(sender &s);
+    void on_connection_close(connection &c);
 
-    duration interval;
+  private:
+    typedef SenderHandler super;
 
+    int batch_size = 10;
+    int current_batch = 0;
+    int processed = 0;
+    string tx_action = "commit";
+    string tx_endloop_action = "none";
 };
 
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif /* SENDERHANDLER_H */
+#endif /* TXSENDERHANDLER_H */
 

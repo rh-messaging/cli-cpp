@@ -4,73 +4,32 @@
  * and open the template in the editor.
  */
 
-/* 
- * File:   ReceiverHandler.h
- * Author: opiske
+/*
+ * File:   TxReceiverHandler.h
+ * Author: pematous
  *
- * Created on October 19, 2015, 4:43 PM
+ * Created on November 20, 2024
  */
 
-#ifndef RECEIVERHANDLER_H
-#define RECEIVERHANDLER_H
+#ifndef TXRECEIVERHANDLER_H
+#define TXRECEIVERHANDLER_H
 
-#include <proton/binary.hpp>
-#include <proton/delivery.hpp>
-#include <proton/tracker.hpp>
-#include <proton/listener.hpp>
-#include <proton/transport.hpp>
-#include <proton/error_condition.hpp>
-#include <proton/source_options.hpp>
-#include <proton/connection_options.hpp>
-#include <proton/receiver_options.hpp>
-#include <proton/thread_safe.hpp>
-#include <proton/codec/encoder.hpp>
-#include <proton/uuid.hpp>
+#include "ReceiverHandler.h"
 
-#include "CommonHandler.h"
-
-#include "reactor/formatter/ReactorDecoder.h"
-#include "formatter/DictFormatter.h"
-#include "formatter/DictWriter.h"
-
-#include "formatter/UpstreamFormatter.h"
-#include "formatter/UpstreamWriter.h"
-#include "Utils.h"
-
-using proton::message;
-using proton::container;
-using proton::connection;
-using proton::sender;
-using proton::receiver;
-using proton::listener;
-using proton::delivery;
-using proton::tracker;
-using proton::void_function0;
-using proton::endpoint;
-using proton::source;
-using proton::source_options;
-using proton::transport;
-using proton::connection_options;
-using proton::receiver_options;
-using proton::symbol;
-using proton::codec::start;
-using proton::codec::finish;
-using proton::codec::encoder;
-using proton::binary;
-using proton::uuid;
+using proton::session;
 
 #ifdef PN_CPP_HAS_STD_FUNCTION
 #undef PN_CPP_HAS_STD_FUNCTION
-#endif 
+#endif
 
 namespace dtests {
 namespace proton {
 namespace reactor {
 
 /**
- * A proton message handler that handles message receive events
+ * A proton transaction message handler that handles message receive events
  */
-class ReceiverHandler : public CommonHandler {
+class TxReceiverHandler : public ReceiverHandler {
   public:
     /**
      * Constructor
@@ -114,8 +73,12 @@ class ReceiverHandler : public CommonHandler {
      * @param browse enable browsing receiver
      * @param recv_listen enable p2p listener
      * @param recv_listen_port p2p listener port
+     * @param recv_credit_window receiver credit window
+     * @param recv_drain_after_credit_window drain aqfter credit window
+     * @param tx_action transaction action on batch
+     * @param tx_endloop_action transaction action on last batch
      */
-    ReceiverHandler(
+    TxReceiverHandler(
         const string &url,
         vector<string> conn_urls,
         bool is_topic,
@@ -157,76 +120,52 @@ class ReceiverHandler : public CommonHandler {
         string recv_listen = "false",
         int recv_listen_port = 5672,
         int recv_credit_window = -1,
-        bool recv_drain_after_credit_window = false
+        bool recv_drain_after_credit_window = false,
+        string tx_action = "commit",
+        string tx_endloop_action = "commit"
     );
-    
-    void timerEvent();
 
-    virtual ~ReceiverHandler();
+    virtual ~TxReceiverHandler();
 
+    /**
+     * Sets the transaction batch size
+     * @param batch_size the transaction batch size
+     */
+    void setBatchSize(int batchSize);
+
+    /**
+     * Gets the transaction batch size
+     * @return the transaction batch size
+     */
+    int getBatchSize() const;
+
+    // reactor method
+    void on_session_open(session &s);
+    void on_session_transaction_declared(session &s);
+    void on_session_error(session &s);
+    void on_session_transaction_error(session &s);
+    void on_session_transaction_committed(session &s);
+    void on_session_transaction_aborted(session &s);
+
+    // overrides
     void on_container_start(container &c);
-    void do_message_action(delivery &d);
-    void do_process_reply_to(message &m);
     void on_message(delivery &d, message &m);
-    void drain();
-    void on_receiver_drain_finish(receiver &r);
-    void on_tracker_accept(tracker &t);
-    void on_tracker_reject(tracker &t);
-    void on_connection_close(connection &conn);
-    void on_connection_error(connection &conn);
-
-    void on_transport_error(transport &t);
     void on_transport_close(transport &t);
 
-    void setSelector(string selector);
-    void createSubscriptionName(string customPrefix);
+  private:
+    typedef ReceiverHandler super;
 
-  protected:
-    typedef CommonHandler super;
-    receiver recv;
-    listener lsnr;
-    container *cont;
-    double ts;
-
-    struct timer_event_t : public void_function0 {
-        ReceiverHandler &parent;
-        timer_event_t(ReceiverHandler &handler): parent(handler) { }
-        void operator()() { 
-            parent.timerEvent();
-        }
-    };
-
-    source::filter_map fm;
-
-    bool durable_subscriber;
-    bool subscriber_unsubscribe;
-    string durable_subscriber_prefix;
-    string durable_subscriber_name;
-    bool shared_subscriber;
-
-    duration interval;
-    timer_event_t timer_event;
-
-    string msg_action;
-    int msg_action_size;
-    int msg_received_cnt;
-    bool process_reply_to;
-    bool browse;
-    int count;
-    int duration_time;
-    string duration_mode;
-    std::map<string, sender> senders;
-    string recv_listen;
-    int recv_listen_port;
-    int recv_credit_window;
-    bool recv_drain_after_credit_window;
-
-    void do_disconnect();
+    int batch_size = 10;
+    int current_batch = 0;
+    int processed = 0;
+    int credit = 0;
+    string tx_action = "commit";
+    string tx_endloop_action = "none";
 };
 
 } /* namespace reactor */
 } /* namespace proton */
 } /* namespace dtests */
 
-#endif /* RECEIVERHANDLER_H */
+#endif /* TXRECEIVERHANDLER_H */
 
